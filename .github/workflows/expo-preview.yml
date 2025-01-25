@@ -34,4 +34,5 @@ jobs:
       - name: 🚀 Create preview
         uses: expo/expo-github-action/preview@v8
         with:
-          command: cd apps/native && eas update --auto --branch ${{ github.event.pull_request.head.ref }} 
+          working-directory: apps/native
+          command: eas update --auto --branch ${{ github.event.pull_request.head.ref }} 

@@ -10,7 +10,6 @@
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview-{BRANCH_NAME}",
       "env": {
         "APP_ENV": "preview"
       }

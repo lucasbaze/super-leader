@@ -5,7 +5,7 @@ import { Button } from "@repo/ui";
 export default function Native() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Native IRL</Text>
+      <Text style={styles.header}>Super Leader</Text>
       <Button
         onClick={() => {
           console.log("Pressed!");

@@ -31,6 +31,9 @@ jobs:
       - name: 📦 Install dependencies
         run: yarn install
 
+      - name: 🏗 Build packages
+        run: yarn turbo build --filter=native^...
+
       - name: 🚀 Create preview
         uses: expo/expo-github-action/preview@v8
         with:

@@ -1,0 +1,60 @@
+### Cursor Rules for Superleader TurboRepo Project
+
+YOU ARE A SENIOR ARCHITECT. YOU ARE IN CHARGE OF THE PROJECT STRUCTURE AND YOU MUST MAKE SURE THAT THE PROJECT IS WELL ORGANIZED AND THAT THE CODE IS WELL ARCHITECTED.
+
+1. **General Project Structure**  
+   - This project is a monorepo using TurboRepo and includes multiple applications:
+     - **Expo React Native Application** for mobile development.
+     - **Next.js Application** using the `app` router for the web interface.
+     - **Supabase** as the database and backend service layer.
+   - Each application is organized in its own directory within the monorepo, alongside shared packages and configurations.
+- WE ARE IN A TURBO REPO WITH A MONOREPO STRUCTURE. BE SMART ABOUT WHERE YOU ARE RUNNING COMMANDS AND WHICH APPLICATIONS YOU ARE WORKING ON. 
+
+BE A SENIOR ARCHITECT AND CREATE TURBO REPO PACKAGES WHERE APPROPRIATE.
+
+1a. **Naming Conventions**  
+   - All files should be hypen cased such as find-person.ts or message-board.tsx
+
+2. **Package Management**  
+   - **Yarn** is the required package manager for all installations and dependency management.
+   - All scripts, CI/CD workflows, and developer commands must ensure Yarn is used instead of npm.
+
+3. **Working in the Correct Directory**  
+   - Before installing or updating dependencies, always navigate (`cd`) into the specific directory of the application or package you’re working on. For example:
+     - Use `cd apps/expo` before installing dependencies for the React Native app.
+     - Use `cd apps/nextjs` for the Next.js app.
+     - Use `cd apps/backend` for backend-specific packages or Supabase-related dependencies.
+
+4. **Dependency Installation Guidelines**  
+   - Install dependencies using Yarn in the appropriate directory. For example:
+     - `cd apps/expo && yarn add <package>` for the React Native app.
+     - `cd apps/nextjs && yarn add <package>` for the Next.js app.
+   - For shared packages within the `packages/` directory, navigate to the package’s directory before running installation commands.
+
+5. **Consistency Across the Monorepo**  
+   - Yarn workspaces should be utilized for managing dependencies across applications to avoid duplicate installations.
+   - Any shared dependencies between the Expo and Next.js apps should be installed at the root level using `yarn workspace`.
+
+6. **TurboRepo Caching and Builds**  
+   - TurboRepo’s caching system should be configured for both Expo and Next.js builds to improve CI/CD efficiency.
+   - Ensure that commands like `yarn dev` and `yarn build` are scoped to the correct app using `turbo run` where appropriate.
+
+7. **Scripts and Commands**  
+   - Use consistent naming conventions for Yarn scripts in each app. For example:
+     - `yarn dev` for local development.
+     - `yarn build` for production builds.
+     - `yarn start` for running production servers.
+   - Document any app-specific commands clearly in the README files of their respective directories.
+
+8. **Environment Management**  
+   - All environment variables required for Supabase, Expo, and Next.js should be stored in `.env` files at the appropriate directory level. Ensure sensitive values are not hardcoded.
+
+9. **Automation and CI/CD**  
+    - Configure CI/CD pipelines to:
+      - Install dependencies with Yarn.
+      - Use TurboRepo to build and deploy only the applications that have changed.
+    - Ensure the pipeline correctly navigates to the relevant directories before executing build or deploy commands.
+
+10. Styling 
+
+- Styling should be as simple as possible making adjustments to the core structure of the application to facilitate fixes

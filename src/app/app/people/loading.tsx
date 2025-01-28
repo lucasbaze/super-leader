@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 export default function LoadingPeople() {
   return (
     <div className='py-2'>
-      <div className='rounded-md border'>
+      <div className='border'>
         <Table>
           <TableHeader>
             <TableRow>

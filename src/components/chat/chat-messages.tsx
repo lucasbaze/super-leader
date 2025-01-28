@@ -1,6 +1,9 @@
 import { cn } from '@/lib/utils';
 
 import { Message } from 'ai';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -19,7 +22,41 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
               'max-w-[90%] break-words',
               message.role === 'user' ? 'ml-auto bg-primary text-primary-foreground' : 'bg-muted'
             )}>
-            {message.content}
+            <ReactMarkdown
+              components={{
+                // Style different markdown elements
+                p: ({ children }) => <p className='mb-2 last:mb-0'>{children}</p>,
+                code: ({ node, inline, className, children, ...props }) => {
+                  const match = /language-(\w+)/.exec(className || '');
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      style={oneDark}
+                      language={match[1]}
+                      PreTag='div'
+                      className='rounded-md'
+                      {...props}>
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code
+                      className={cn(
+                        'rounded bg-muted-foreground/20 px-1.5 py-0.5 font-mono text-sm',
+                        inline ? 'inline-block' : 'block p-4',
+                        className
+                      )}
+                      {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+                ul: ({ children }) => <ul className='mb-2 list-disc pl-4 last:mb-0'>{children}</ul>,
+                ol: ({ children }) => <ol className='mb-2 list-decimal pl-4 last:mb-0'>{children}</ol>,
+                li: ({ children }) => <li className='mb-1 last:mb-0'>{children}</li>,
+                h3: ({ children }) => <h3 className='mb-2 text-base font-medium last:mb-0'>{children}</h3>,
+                h4: ({ children }) => <h4 className='mb-2 text-sm font-medium last:mb-0'>{children}</h4>
+              }}>
+              {message.content}
+            </ReactMarkdown>
           </div>
         ))}
         {isLoading && (

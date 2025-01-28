@@ -1,31 +1,31 @@
-'use client'
+'use client';
 
-import { createClient } from '@/utils/supabase/client'
-import { useAuthStore } from '@/stores/auth-store'
+import { useEffect } from 'react';
 
-import { useEffect } from 'react'
+import { useAuthStore } from '@/stores/auth-store';
+import { createClient } from '@/utils/supabase/client';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const setUser = useAuthStore((state) => state.setUser)
-  const supabase = createClient()
+    const setUser = useAuthStore((state) => state.setUser);
+    const supabase = createClient();
 
-  useEffect(() => {
-    // Get initial session
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user)
-    })
+    useEffect(() => {
+        // Get initial session
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            setUser(user);
+        });
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
+        // Listen for auth changes
+        const {
+            data: { subscription }
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
 
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [setUser])
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [setUser]);
 
-  return children
+    return children;
 }

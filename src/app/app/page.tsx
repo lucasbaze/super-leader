@@ -1,5 +1,4 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation';
 
 import { AppSidebar } from '@/components/app-sidebar';
 import {
@@ -12,12 +11,12 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-
+import { createClient } from '@/utils/supabase/server';
 
 export default async function Page() {
-    const supabase = await createClient()
+    const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser();
     if (error || !data?.user) {
         redirect('/login');
     }

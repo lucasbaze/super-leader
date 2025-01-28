@@ -1,23 +1,23 @@
 'use client';
 
 import * as React from 'react';
-import { User } from '@supabase/supabase-js';
 
-import { MainNav } from '@/components/sidebar/main-nav';
 import { NavMain } from '@/components/nav-main';
 import { NavProjects } from '@/components/nav-projects';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
+import { MainNav } from '@/components/sidebar/main-nav';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuItem,
-    SidebarMenuButton
+    SidebarMenuButton,
+    SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
+import { User } from '@supabase/supabase-js';
 
 import { BookOpen, Bot, Command, Frame, LifeBuoy, Map, PieChart, Send, Settings2, SquareTerminal } from 'lucide-react';
 
@@ -26,15 +26,15 @@ const mainNavItems = [
         title: 'Home',
         url: '/app',
         icon: SquareTerminal,
-        isActive: true,
+        isActive: true
     },
     {
         title: 'People',
         url: '/app/people',
         icon: SquareTerminal,
-        isActive: false,
+        isActive: false
     }
-]
+];
 
 const data = {
     user: {
@@ -166,11 +166,13 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
     // Transform Supabase user data to match the expected format for NavUser
-    const userData = user ? {
-        name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'User',
-        email: user.email || '',
-        avatar: user.user_metadata?.avatar_url || ''
-    } : data.user;
+    const userData = user
+        ? {
+              name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'User',
+              email: user.email || '',
+              avatar: user.user_metadata?.avatar_url || ''
+          }
+        : data.user;
 
     return (
         <Sidebar variant='inset' {...props}>

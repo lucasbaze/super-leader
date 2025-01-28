@@ -1,22 +1,8 @@
-// import { OpenAIStream, StreamingTextResponse } from 'ai';
-// import { Configuration, OpenAIApi } from 'openai-edge';
-// const config = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY
-// });
-// const openai = new OpenAIApi(config);
-// export async function POST(req: Request) {
-//   const { messages } = await req.json();
-//   const response = await openai.createChatCompletion({
-//     model: 'gpt-4',
-//     stream: true,
-//     messages
-//   });
-//   const stream = OpenAIStream(response);
-//   return new StreamingTextResponse(stream);
-// }
 import { openai } from '@ai-sdk/openai';
+import { createClient } from '@supabase/supabase-js';
 
 import { streamText } from 'ai';
+import { z } from 'zod';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -26,8 +12,18 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai('gpt-4-turbo'),
-    system: 'You are a helpful assistant.',
-    messages
+    messages,
+    tools: {
+      createPerson: {
+        description: 'Create a new person record with an associated interaction note',
+        parameters: z.object({
+          first_name: z.string(),
+          last_name: z.string().optional(),
+          note: z.string(),
+          date_met: z.string().optional()
+        })
+      }
+    }
   });
 
   return result.toDataStreamResponse();

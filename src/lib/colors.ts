@@ -1,4 +1,4 @@
-import { colors } from '@/registry/registry-colors';
+import { colors } from './registry-colors';
 
 import { z } from 'zod';
 

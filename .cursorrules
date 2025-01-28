@@ -14,6 +14,10 @@ YOU ARE A SENIOR ARCHITECT. YOU ARE IN CHARGE OF THE PROJECT STRUCTURE AND YOU M
  - None of the Next.jspages should ever call supabase directly and should all be done via the API routes.
  - The API routes can then call the supabase client to get the data.
 
+**Database**
+- We are using Supabase as our database and we are using the Supabase client to get the data.
+- There is a requirement for using Row Level Security (RLS) and must create policies for each table. Remind me to create policies for each table.
+
 **Package Management**  
    - **Yarn** is the required package manager for all installations and dependency management.
    - All scripts, CI/CD workflows, and developer commands must ensure Yarn is used instead of npm.

@@ -1,18 +1,13 @@
-import { NextResponse } from 'next/server';
-
-import { Database } from '@/types/database';
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        console.log('Getting people');
-        const supabase = await createClient();
-
+        const supabase = await createClient()
         // Get authenticated user
-        const {
-            data: { user }
-        } = await supabase.auth.getUser();
-        console.log(user);
+        const { data: { user } } = await supabase.auth.getUser();
+        
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -30,6 +25,7 @@ export async function GET() {
 
         return NextResponse.json(people);
     } catch (error) {
+        console.error('API Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

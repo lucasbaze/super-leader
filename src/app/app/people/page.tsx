@@ -1,38 +1,27 @@
-import { headers } from 'next/headers';
+'use client';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Person } from '@/types/people';
-import { createClient } from '@/utils/supabase/server';
+import { useEffect, useState } from 'react';
 
 import { format } from 'date-fns';
 
-async function getPeople(): Promise<Person[]> {
-    const headersList = await headers();
-    const host = headersList.get('host') || '';
-    const protocol = process?.env?.NODE_ENV === 'development' ? 'http' : 'https';
+export default function PeoplePage() {
 
-    const response = await fetch(`${protocol}://${host}/api/person`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
+const [people, setPeople] = useState<Person[]>([]);
+
+  useEffect(() => {
+    fetch('/api/person', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          setPeople(data);
         }
-    });
-
-    if (!response.ok) {
-        // Handle error appropriately
-        return [];
-    }
-
-    const data = await response.json();
-    console.log(data);
-    return data;
-}
-
-export default async function PeoplePage() {
-    const people = await getPeople();
+      });
+  }, []);
 
     return (
-        <div className='p-6'>
+        <div className='py-2'>
             <div className='rounded-md border'>
                 <Table>
                     <TableHeader>

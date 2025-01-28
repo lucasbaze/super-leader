@@ -175,7 +175,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         : data.user;
 
     return (
-        <Sidebar variant='inset' {...props}>
+        <Sidebar collapsible='icon' variant='inset' {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>

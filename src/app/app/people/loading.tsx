@@ -1,17 +1,10 @@
-import { 
-    Table, 
-    TableHeader, 
-    TableBody, 
-    TableHead, 
-    TableRow, 
-    TableCell 
-} from '@/components/ui/table'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export default function LoadingPeople() {
     return (
-        <div className="p-6">
-            <div className="rounded-md border">
+        <div className='p-6'>
+            <div className='rounded-md border'>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -26,19 +19,19 @@ export default function LoadingPeople() {
                         {[...Array(5)].map((_, i) => (
                             <TableRow key={i}>
                                 <TableCell>
-                                    <Skeleton className="h-4 w-[150px]" />
+                                    <Skeleton className='h-4 w-[150px]' />
                                 </TableCell>
                                 <TableCell>
-                                    <Skeleton className="h-4 w-[100px]" />
+                                    <Skeleton className='h-4 w-[100px]' />
                                 </TableCell>
                                 <TableCell>
-                                    <Skeleton className="h-4 w-[100px]" />
+                                    <Skeleton className='h-4 w-[100px]' />
                                 </TableCell>
                                 <TableCell>
-                                    <Skeleton className="h-4 w-[200px]" />
+                                    <Skeleton className='h-4 w-[200px]' />
                                 </TableCell>
                                 <TableCell>
-                                    <Skeleton className="h-4 w-[200px]" />
+                                    <Skeleton className='h-4 w-[200px]' />
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -46,5 +39,5 @@ export default function LoadingPeople() {
                 </Table>
             </div>
         </div>
-    )
+    );
 }

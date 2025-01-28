@@ -1,7 +1,9 @@
 'use client';
 
 import * as React from 'react';
+import { User } from '@supabase/supabase-js';
 
+import { MainNav } from '@/components/sidebar/main-nav';
 import { NavMain } from '@/components/nav-main';
 import { NavProjects } from '@/components/nav-projects';
 import { NavSecondary } from '@/components/nav-secondary';
@@ -12,12 +14,27 @@ import {
     SidebarFooter,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem
+    SidebarMenuItem,
+    SidebarMenuButton
 } from '@/components/ui/sidebar';
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
 
 import { BookOpen, Bot, Command, Frame, LifeBuoy, Map, PieChart, Send, Settings2, SquareTerminal } from 'lucide-react';
+
+const mainNavItems = [
+    {
+        title: 'Home',
+        url: '/app',
+        icon: SquareTerminal,
+        isActive: true,
+    },
+    {
+        title: 'People',
+        url: '/app/people',
+        icon: SquareTerminal,
+        isActive: false,
+    }
+]
 
 const data = {
     user: {
@@ -143,7 +160,18 @@ const data = {
     ]
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+    user: User | null;
+}
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
+    // Transform Supabase user data to match the expected format for NavUser
+    const userData = user ? {
+        name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'User',
+        email: user.email || '',
+        avatar: user.user_metadata?.avatar_url || ''
+    } : data.user;
+
     return (
         <Sidebar variant='inset' {...props}>
             <SidebarHeader>
@@ -164,12 +192,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
+                <MainNav items={mainNavItems} />
                 <NavMain items={data.navMain} />
                 <NavProjects projects={data.projects} />
                 <NavSecondary items={data.navSecondary} className='mt-auto' />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user} />
+                <NavUser user={userData} />
             </SidebarFooter>
         </Sidebar>
     );

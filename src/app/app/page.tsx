@@ -1,3 +1,6 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server'
+
 import { AppSidebar } from '@/components/app-sidebar';
 import {
     Breadcrumb,
@@ -10,10 +13,18 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
-export default function Page() {
+
+export default async function Page() {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.auth.getUser()
+    if (error || !data?.user) {
+        redirect('/login');
+    }
+
     return (
         <SidebarProvider>
-            <AppSidebar />
+            <AppSidebar user={data.user} />
             <SidebarInset>
                 <header className='flex h-16 shrink-0 items-center gap-2'>
                     <div className='flex items-center gap-2 px-4'>

@@ -18,13 +18,13 @@ export async function middleware(request: NextRequest) {
     }
 
     // If user is not logged in and tries to access /app/*, redirect to /login
-    // if (pathname.startsWith('/app')) {
-    //     if (!user || error) {
-    //         const redirectUrl = new URL('/login', request.url)
-    //         redirectUrl.searchParams.set('redirect_to', pathname)
-    //         return NextResponse.redirect(redirectUrl)
-    //     }
-    // }
+    if (pathname.startsWith('/app')) {
+        if (!user || error) {
+            const redirectUrl = new URL('/login', request.url)
+            redirectUrl.searchParams.set('redirect_to', pathname)
+            return NextResponse.redirect(redirectUrl)
+        }
+    }
 
     return response
 }

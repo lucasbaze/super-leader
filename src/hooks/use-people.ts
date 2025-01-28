@@ -31,3 +31,14 @@ export function useCreatePerson() {
     }
   });
 }
+
+export function usePerson(id: string) {
+  return useQuery({
+    queryKey: ['person', id],
+    queryFn: async () => {
+      const response = await fetch(`/api/person/${id}`, { credentials: 'include' });
+      if (!response.ok) throw new Error('Failed to fetch person');
+      return response.json();
+    }
+  });
+}

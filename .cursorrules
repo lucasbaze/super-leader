@@ -2,47 +2,62 @@
 
 YOU ARE A SENIOR ARCHITECT. YOU ARE IN CHARGE OF THE PROJECT STRUCTURE AND YOU MUST MAKE SURE THAT THE PROJECT IS WELL ORGANIZED AND THAT THE CODE IS WELL ARCHITECTED.
 
-**General Project Structure**  
-   - This project is a Next.js project:
-     - **Next.js Application** using the `app` router for the web interface.
-     - **Supabase** as the database and backend service layer.
+**General Project Structure**
 
-**Naming Conventions**  
-   - All files should be hypen cased such as find-person.ts or message-board.tsx
+- This project is a Next.js project:
+  - **Next.js Application** using the `app` router for the web interface.
+  - **Supabase** as the database and backend service layer.
+
+**Naming Conventions**
+
+- All files should be hypen cased such as find-person.ts or message-board.tsx
 
 **API Routes**
- - None of the Next.jspages should ever call supabase directly and should all be done via the API routes.
- - The API routes can then call the supabase client to get the data.
+
+- None of the Next.jspages should ever call supabase directly and should all be done via the API routes.
+- The API routes can then call the supabase client to get the data.
 
 **Database**
+
 - We are using Supabase as our database and we are using the Supabase client to get the data.
 - There is a requirement for using Row Level Security (RLS) and must create policies for each table. Remind me to create policies for each table.
 
-**Package Management**  
-   - **Yarn** is the required package manager for all installations and dependency management.
-   - All scripts, CI/CD workflows, and developer commands must ensure Yarn is used instead of npm.
+**Data Fetching**
 
-**Working in the Correct Directory**  
-   - Before installing or updating dependencies, always navigate (`cd`) into the specific directory of the application or package you’re working on. For example:
-     - Use `cd apps/expo` before installing dependencies for the React Native app.
-     - Use `cd apps/nextjs` for the Next.js app.
-     - Use `cd apps/backend` for backend-specific packages or Supabase-related dependencies.
+- We are using the Tanstack Query library to fetch data from the database.
+- We are using the useQuery hook to fetch data from the database.
 
-**Dependency Installation Guidelines**  
-   - Install dependencies using Yarn in the appropriate directory. For example:
-     - `cd apps/expo && yarn add <package>` for the React Native app.
-     - `cd apps/nextjs && yarn add <package>` for the Next.js app.
-   - For shared packages within the `packages/` directory, navigate to the package’s directory before running installation commands.
+**Package Management**
 
-**Scripts and Commands**  
-   - Use consistent naming conventions for Yarn scripts in each app. For example:
-     - `yarn dev` for local development.
-     - `yarn build` for production builds.
-     - `yarn start` for running production servers.
-   - Document any app-specific commands clearly in the README files of their respective directories.
+- **Yarn** is the required package manager for all installations and dependency management.
+- All scripts, CI/CD workflows, and developer commands must ensure Yarn is used instead of npm.
 
-**Environment Management**  
-   - All environment variables required for Supabase, Expo, and Next.js should be stored in `.env` files at the appropriate directory level. Ensure sensitive values are not hardcoded.
+**Working in the Correct Directory**
 
-**Styling** 
+- Before installing or updating dependencies, always navigate (`cd`) into the specific directory of the application or package you’re working on. For example:
+  - Use `cd apps/expo` before installing dependencies for the React Native app.
+  - Use `cd apps/nextjs` for the Next.js app.
+  - Use `cd apps/backend` for backend-specific packages or Supabase-related dependencies.
+
+**Dependency Installation Guidelines**
+
+- Install dependencies using Yarn in the appropriate directory. For example:
+  - `cd apps/expo && yarn add <package>` for the React Native app.
+  - `cd apps/nextjs && yarn add <package>` for the Next.js app.
+- For shared packages within the `packages/` directory, navigate to the package’s directory before running installation commands.
+
+**Scripts and Commands**
+
+- Use consistent naming conventions for Yarn scripts in each app. For example:
+  - `yarn dev` for local development.
+  - `yarn build` for production builds.
+  - `yarn start` for running production servers.
+- Document any app-specific commands clearly in the README files of their respective directories.
+
+**Environment Management**
+
+- All environment variables required for Supabase, Expo, and Next.js should be stored in `.env` files at the appropriate directory level. Ensure sensitive values are not hardcoded.
+
+**Styling**
+
 - Styling should be as simple as possible making adjustments to the core structure of the application to facilitate fixes

@@ -16,6 +16,7 @@ export function ChatInterface() {
     type: string;
     name: string;
     arguments: any;
+    toolCallId: string;
   } | null>(null);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, addToolResult } = useChat({
@@ -24,6 +25,7 @@ export function ChatInterface() {
       setPendingAction({
         type: 'function',
         name: toolCall.toolName,
+        toolCallId: toolCall.toolCallId,
         arguments: toolCall.args
       });
     }
@@ -36,11 +38,18 @@ export function ChatInterface() {
 
     try {
       const result = await createPerson.mutateAsync(pendingAction.arguments);
-      addToolResult({ toolCallId: pendingAction.name, result: result.message });
+      console.log('Create Person result:', result);
+      addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
       setPendingAction(null);
     } catch (error) {
       console.error('Error creating person:', error);
     }
+  };
+
+  const handleCancelAction = () => {
+    if (!pendingAction) return;
+    addToolResult({ toolCallId: pendingAction.toolCallId, result: 'No' });
+    setPendingAction(null);
   };
 
   return (
@@ -54,7 +63,7 @@ export function ChatInterface() {
               <ActionCard
                 person={pendingAction.arguments}
                 onConfirm={handleConfirmAction}
-                onCancel={() => setPendingAction(null)}
+                onCancel={handleCancelAction}
               />
             </div>
           )}

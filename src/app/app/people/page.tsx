@@ -1,12 +1,20 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { usePeople } from '@/hooks/use-people';
+import { Person } from '@/types/people';
 
 import { format } from 'date-fns';
 
 export default function PeoplePage() {
+  const router = useRouter();
   const { data: people = [], isLoading, error } = usePeople();
+
+  const handleRowClick = (personId: string) => {
+    router.push(`/app/people/${personId}`);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading people</div>;
@@ -25,8 +33,11 @@ export default function PeoplePage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {people.map((person) => (
-              <TableRow key={person.id}>
+            {people.map((person: Person) => (
+              <TableRow
+                key={person.id}
+                className='cursor-pointer hover:bg-muted/50'
+                onClick={() => handleRowClick(person.id)}>
                 <TableCell>
                   {person.first_name} {person.last_name}
                 </TableCell>

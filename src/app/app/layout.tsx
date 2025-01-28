@@ -3,6 +3,7 @@ import * as React from 'react';
 import { redirect } from 'next/navigation';
 
 import { AppSidebar } from '@/components/app-sidebar';
+import { ChatInterface } from '@/components/chat/chat-interface';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -34,12 +35,14 @@ export default async function Page({ children }: { children: React.ReactNode }) 
         </div>
         {/* Main Content Area */}
         <div className='flex flex-1'>
+          {/* AI Chat Component */}
           <div
             className={cn(
               'relative flex min-h-svh basis-1/3 flex-col bg-background',
               'min-h-[calc(100svh-theme(spacing.20))] md:m-1 md:rounded-md md:border md:border-slate-200 md:shadow-md'
-            )}
-          />
+            )}>
+            <ChatInterface />
+          </div>
           <SidebarInset className='basis-2/3'>
             <header className='flex h-16 shrink-0 items-center gap-2'>
               <div className='flex items-center gap-2 px-4'>

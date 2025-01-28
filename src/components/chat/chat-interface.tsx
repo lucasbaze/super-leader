@@ -13,15 +13,19 @@ export function ChatInterface() {
   });
 
   return (
-    <div className={cn('flex h-full flex-col', 'rounded-lg bg-background')}>
-      <ChatHeader />
-      <ChatMessages messages={messages} isLoading={isLoading} />
-      <ChatInput
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        isLoading={isLoading}
-      />
+    <div className='relative h-full'>
+      <div className='absolute inset-0 flex flex-col'>
+        <ChatHeader />
+        <div className='relative flex-1 overflow-hidden'>
+          <ChatMessages messages={messages} isLoading={isLoading} />
+        </div>
+        <ChatInput
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   );
 }

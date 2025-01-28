@@ -1,5 +1,4 @@
 import { colors } from './registry-colors';
-
 import { z } from 'zod';
 
 const colorSchema = z.object({

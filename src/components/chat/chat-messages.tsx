@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Message } from 'ai';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -26,11 +26,12 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
               components={{
                 // Style different markdown elements
                 p: ({ children }) => <p className='mb-2 last:mb-0'>{children}</p>,
-                code: ({ node, inline, className, children, ...props }) => {
+                code: ({ node, className, children, ...props }) => {
                   const match = /language-(\w+)/.exec(className || '');
-                  return !inline && match ? (
+                  return match ? (
                     <SyntaxHighlighter
-                      style={oneDark}
+                      // @ts-ignore
+                      style={dark}
                       language={match[1]}
                       PreTag='div'
                       className='rounded-md'
@@ -39,11 +40,7 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
                     </SyntaxHighlighter>
                   ) : (
                     <code
-                      className={cn(
-                        'rounded bg-muted-foreground/20 px-1.5 py-0.5 font-mono text-sm',
-                        inline ? 'inline-block' : 'block p-4',
-                        className
-                      )}
+                      className={cn('rounded bg-muted-foreground/20 px-1.5 py-0.5 font-mono text-sm', className)}
                       {...props}>
                       {children}
                     </code>

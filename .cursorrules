@@ -10,6 +10,10 @@ YOU ARE A SENIOR ARCHITECT. YOU ARE IN CHARGE OF THE PROJECT STRUCTURE AND YOU M
 **Naming Conventions**  
    - All files should be hypen cased such as find-person.ts or message-board.tsx
 
+**API Routes**
+ - None of the Next.jspages should ever call supabase directly and should all be done via the API routes.
+ - The API routes can then call the supabase client to get the data.
+
 **Package Management**  
    - **Yarn** is the required package manager for all installations and dependency management.
    - All scripts, CI/CD workflows, and developer commands must ensure Yarn is used instead of npm.

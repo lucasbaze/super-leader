@@ -35,13 +35,7 @@ This Turborepo has some additional tools already setup for you:
 Getting types from local Supabase CLI:
 
 ```bash
-> npx supabase gen types typescript --local > ./packages/types/src/database.ts
-```
-
-Then you must rebuild the database package so those type are available to the other apps:
-
-```bash
-> yarn turbo run build --filter=@repo/database
+> npx supabase gen types typescript --local > ./src/types/database.ts
 ```
 
 Getting diff of migrations from local Supabase CLI:

@@ -269,20 +269,9 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<'bu
 );
 SidebarRail.displayName = 'SidebarRail';
 
-const SidebarLayout = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
-    ({ className, ...props }, ref) => {
-        return (
-            <div
-                ref={ref}
-                className={cn(
-                    'flex flex-1 flex-col',
-                    className
-                )}
-                {...props}
-            />
-        );
-    }
-);
+const SidebarLayout = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({ className, ...props }, ref) => {
+    return <div ref={ref} className={cn('flex flex-1 flex-col', className)} {...props} />;
+});
 SidebarLayout.displayName = 'SidebarLayout';
 
 const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main'>>(({ className, ...props }, ref) => {
@@ -291,7 +280,7 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main
             ref={ref}
             className={cn(
                 'relative flex min-h-svh flex-1 flex-col bg-background',
-                'min-h-[calc(100svh-theme(spacing.20))] md:m-2 md:peer-data-[state=collapsed]:ml-2 md:rounded-xl md:shadow-md md:border-slate-300 md:border',
+                'min-h-[calc(100svh-theme(spacing.20))] md:m-2 md:rounded-xl md:border md:border-slate-300 md:shadow-md md:peer-data-[state=collapsed]:ml-2',
                 // 'peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-md md:peer-data-[variant=inset]:border-slate-300 md:peer-data-[variant=inset]:border',
                 className
             )}

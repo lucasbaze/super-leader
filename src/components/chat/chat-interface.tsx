@@ -52,10 +52,17 @@ export function ChatInterface() {
     setPendingAction(null);
   };
 
+  const handleHeaderAction = (message: string) => {
+    handleSubmit({
+      preventDefault: () => {},
+      currentTarget: { message: message }
+    } as any);
+  };
+
   return (
     <div className='relative h-full'>
       <div className='absolute inset-0 flex flex-col'>
-        <ChatHeader />
+        <ChatHeader onAction={handleHeaderAction} />
         <div className='relative flex-1 overflow-hidden'>
           <ChatMessages messages={messages} isLoading={isLoading} />
           {pendingAction?.name === 'createPerson' && (

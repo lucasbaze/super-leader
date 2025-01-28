@@ -1,8 +1,28 @@
-export function ChatHeader() {
+'use client';
+
+import { useParams, usePathname, useRouter, useSelectedLayoutSegment } from 'next/navigation';
+
+import { usePerson } from '@/hooks/use-people';
+
+import { ChatHeaderActions } from './chat-header-actions';
+
+interface ChatHeaderProps {
+  onAction?: (message: string) => void;
+}
+
+export function ChatHeader({ onAction }: ChatHeaderProps) {
+  const params = useParams();
+  const pathname = usePathname();
+  const { data: person, isLoading } = usePerson(params.id as string);
+
+  const isPersonPage = pathname.startsWith('/app/person/');
+
   return (
-    <div className='border-b border-border px-4 py-3'>
-      <h2 className='text-lg font-semibold'>AI Assistant</h2>
-      <p className='text-sm text-muted-foreground'>Ask me anything about your project</p>
+    <div className='flex items-center justify-between border-b px-4 py-2'>
+      <div className='font-semibold'>
+        {isPersonPage ? `${person?.first_name} ${person?.last_name}` : 'Chat Assistant'}
+      </div>
+      <ChatHeaderActions onAction={onAction} />
     </div>
   );
 }

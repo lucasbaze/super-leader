@@ -17,10 +17,13 @@ export async function POST(req: Request) {
       createPerson: {
         description: 'Create a new person record with an associated interaction note',
         parameters: z.object({
-          first_name: z.string(),
-          last_name: z.string().optional(),
-          note: z.string(),
-          date_met: z.string().optional()
+          first_name: z.string().describe("The person's first name"),
+          last_name: z.string().optional().describe("The person's last name"),
+          note: z.string().describe('Details about the person, the interaction or meeting'),
+          date_met: z
+            .string()
+            .optional()
+            .describe('Date when the person was met (ISO format) otherwise the current date today')
         })
       }
     }

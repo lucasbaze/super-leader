@@ -1,24 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Person } from '@/types/people';
+import { usePeople } from '@/hooks/use-people';
 
 import { format } from 'date-fns';
 
 export default function PeoplePage() {
-  const [people, setPeople] = useState<Person[]>([]);
+  const { data: people = [], isLoading, error } = usePeople();
 
-  useEffect(() => {
-    fetch('/api/person', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.error) {
-          setPeople(data);
-        }
-      });
-  }, []);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading people</div>;
 
   return (
     <div className='py-2'>

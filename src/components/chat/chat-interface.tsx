@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useCreatePerson } from '@/hooks/use-people';
 import { cn } from '@/lib/utils';
 
 import { ActionCard } from './action-card';
@@ -28,24 +29,14 @@ export function ChatInterface() {
     }
   });
 
+  const createPerson = useCreatePerson();
+
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
 
     try {
-      const response = await fetch('/api/people/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(pendingAction.arguments)
-      });
-
-      if (!response.ok) throw new Error('Failed to create person');
-
-      const result = await response.json();
+      const result = await createPerson.mutateAsync(pendingAction.arguments);
       addToolResult({ toolCallId: pendingAction.name, result: result.message });
-
-      // Clear the pending action after successful creation
       setPendingAction(null);
     } catch (error) {
       console.error('Error creating person:', error);

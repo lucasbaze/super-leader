@@ -53,15 +53,13 @@ export function ChatInterface() {
   };
 
   const handleHeaderAction = (message: string) => {
-    handleSubmit({
-      preventDefault: () => {},
-      currentTarget: { message: message }
-    } as any);
+    handleInputChange({ target: { value: message } } as unknown as React.ChangeEvent<HTMLTextAreaElement>);
   };
 
   return (
     <div className='relative h-full'>
       <div className='absolute inset-0 flex flex-col'>
+        {/* This will be conditional depending upon the route / page. */}
         <ChatHeader onAction={handleHeaderAction} />
         <div className='relative flex-1 overflow-hidden'>
           <ChatMessages messages={messages} isLoading={isLoading} />

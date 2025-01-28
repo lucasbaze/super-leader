@@ -7,7 +7,7 @@ import { usePerson } from '@/hooks/use-people';
 import { ChatHeaderActions } from './chat-header-actions';
 
 interface ChatHeaderProps {
-  onAction?: (message: string) => void;
+  onAction: (message: string) => void;
 }
 
 export function ChatHeader({ onAction }: ChatHeaderProps) {

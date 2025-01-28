@@ -26,7 +26,11 @@ export function ChatHeaderActions({ onAction }: ChatHeaderActionsProps) {
       <Button
         variant='ghost'
         size='icon'
-        onClick={() => onAction(`Create a new note for this person (ID: ${params.id})`)}
+        onClick={() =>
+          onAction(`Create a new note for this person (ID: ${params.id}): 
+          
+          `)
+        }
         title='Create new note'>
         <Plus className='h-4 w-4' />
       </Button>

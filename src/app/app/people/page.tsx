@@ -13,7 +13,7 @@ export default function PeoplePage() {
   const { data: people = [], isLoading, error } = usePeople();
 
   const handleRowClick = (personId: string) => {
-    router.push(`/app/people/${personId}`);
+    router.push(`/app/person/${personId}`);
   };
 
   if (isLoading) return <div>Loading...</div>;

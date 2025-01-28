@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useParams, useRouter, useSelectedLayoutSegment } from 'next/navigation';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -29,7 +30,9 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
         <Breadcrumb className='mb-4'>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href='/app/people'>People</BreadcrumbLink>
+              <BreadcrumbLink asChild>
+                <Link href='/app/people'>People</Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

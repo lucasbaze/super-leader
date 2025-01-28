@@ -8,7 +8,10 @@ export function usePeople() {
       const response = await fetch('/api/person', { credentials: 'include' });
       if (!response.ok) throw new Error('Failed to fetch people');
       return response.json();
-    }
+    },
+    staleTime: 1000 * 60 * 5, // Serve cached data for 5 minutes
+    refetchOnMount: false, // Avoid refetch on remount
+    refetchOnWindowFocus: false // No refetch on tab focus
   });
 }
 
@@ -39,6 +42,9 @@ export function usePerson(id: string) {
       const response = await fetch(`/api/person/${id}`, { credentials: 'include' });
       if (!response.ok) throw new Error('Failed to fetch person');
       return response.json();
-    }
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
 }

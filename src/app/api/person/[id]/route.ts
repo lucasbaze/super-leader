@@ -2,8 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+type RouteParams = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    // Validate id parameter
+    const { id } = await Promise.resolve(params);
+
     const supabase = await createClient();
     const {
       data: { user }
@@ -16,7 +25,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const { data: person, error } = await supabase
       .from('person')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single();
 

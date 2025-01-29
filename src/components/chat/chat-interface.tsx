@@ -56,11 +56,19 @@ export function ChatInterface() {
     handleInputChange({ target: { value: message } } as unknown as React.ChangeEvent<HTMLTextAreaElement>);
   };
 
+  const handleSuggestions = async () => {
+    const response = await fetch('/api/suggestions', { credentials: 'include', method: 'POST' });
+    if (!response.ok) throw new Error('Failed to fetch suggestions');
+    const responseData = await response.json();
+    console.log('Suggestions:', responseData);
+    return responseData;
+  };
+
   return (
     <div className='relative h-full'>
       <div className='absolute inset-0 flex flex-col'>
         {/* This will be conditional depending upon the route / page. */}
-        <ChatHeader onAction={handleHeaderAction} />
+        <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
         <div className='relative flex-1 overflow-hidden'>
           <ChatMessages messages={messages} isLoading={isLoading} />
           {pendingAction?.name === 'createPerson' && (

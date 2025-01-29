@@ -2,11 +2,28 @@
 # yarn lockfile v1
 
 
+"@ai-sdk/openai-compatible@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@ai-sdk/openai-compatible/-/openai-compatible-0.1.6.tgz#f871a6bc5702af9044364c1a9e8f3d32fe48b0da"
+  integrity sha512-8byBCRZqdhIP4C6ch4kZ1yjJF6yLUCXik82+71KF3okv5Jl+Gi6qo3P7MJb/LpkdSvXa6lEroNXPr4itThWbxA==
+  dependencies:
+    "@ai-sdk/provider" "1.0.6"
+    "@ai-sdk/provider-utils" "2.1.5"
+
 "@ai-sdk/openai@^1.1.5":
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/@ai-sdk/openai/-/openai-1.1.5.tgz#6d03802e8368b4be528fd51db32aa2e663724b13"
   integrity sha512-pmZPeb99oWlV3PqMH5DVWtMGZgwWznInjdF0Bi4q1mKoEjomDXSYw+imvzMoSbpCrcGB9uFFTVx2VeR/jvcppg==
   dependencies:
+    "@ai-sdk/provider" "1.0.6"
+    "@ai-sdk/provider-utils" "2.1.5"
+
+"@ai-sdk/perplexity@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@ai-sdk/perplexity/-/perplexity-0.0.4.tgz#f5063f9593eb35aa498647eec5f11e1eebeeadec"
+  integrity sha512-ZWk+Qk0SSxu7a7eZwUTC7PBGyo+ktY96YZYriQ967c58pzvZgnP4rioYri0Wn7jd/VE9JiOIghYI/NxvRUtMZA==
+  dependencies:
+    "@ai-sdk/openai-compatible" "0.1.6"
     "@ai-sdk/provider" "1.0.6"
     "@ai-sdk/provider-utils" "2.1.5"
 

@@ -60,7 +60,7 @@ Workflow:
 ```
 > npx supabase migration new <migration-name>
 Add your changes to the new migration file (e.g. via composer)
-> npx supabase db push --local
+> npx supabase reset
 You can add multiple migrations at a time if needed or delete the migration file, and rewrite.
 
 > rm -rf supabase/migrations

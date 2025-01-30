@@ -12,7 +12,9 @@
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "prepare": "husky",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "generate-types": "npx supabase gen types typescript --local > ./src/types/database.ts",
+    "seed": "ts-node --project supabase/seeds/tsconfig.seeds.json supabase/seeds/index.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.5",
@@ -98,6 +100,7 @@
     "@types/node": "^22.10.10",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
+    "dotenv": "^16.4.7",
     "eslint": "^9.19.0",
     "eslint-config-next": "15.1.6",
     "eslint-config-prettier": "^10.0.1",
@@ -111,6 +114,7 @@
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.21.0"
   },

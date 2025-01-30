@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
+import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -42,12 +43,12 @@ export default async function Page({ children }: { children: React.ReactNode }) 
         </div>
 
         <ResizablePanels
-          leftPanel={<ChatInterface />}
-          rightPanel={
-            <SidebarInset>
-              <div className='flex flex-1 flex-col gap-4'>{children}</div>
-            </SidebarInset>
+          leftPanel={
+            <MainContentLayout>
+              <ChatInterface />
+            </MainContentLayout>
           }
+          rightPanel={<MainContentLayout>{children}</MainContentLayout>}
         />
       </main>
     </SidebarProvider>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import { useCreatePerson } from '@/hooks/use-people';
-import { cn } from '@/lib/utils';
 
 import { ActionCard } from './action-card';
 import { ChatHeader } from './chat-header';
@@ -65,29 +64,26 @@ export function ChatInterface() {
   };
 
   return (
-    <div className='relative h-full'>
-      <div className='absolute inset-0 flex flex-col'>
-        {/* This will be conditional depending upon the route / page. */}
-        <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
-        <div className='relative flex-1 overflow-hidden'>
-          <ChatMessages messages={messages} isLoading={isLoading} />
-          {pendingAction?.name === 'createPerson' && (
-            <div className='absolute bottom-0 left-0 right-0 bg-background/80 p-4 backdrop-blur'>
-              <ActionCard
-                person={pendingAction.arguments}
-                onConfirm={handleConfirmAction}
-                onCancel={handleCancelAction}
-              />
-            </div>
-          )}
-        </div>
-        <ChatInput
-          input={input}
-          handleInputChange={handleInputChange}
-          handleSubmit={handleSubmit}
-          isLoading={isLoading}
-        />
+    <div className='absolute inset-0 flex flex-col'>
+      <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
+      <div className='relative flex-1 overflow-hidden'>
+        <ChatMessages messages={messages} isLoading={isLoading} />
+        {pendingAction?.name === 'createPerson' && (
+          <div className='absolute bottom-0 left-0 right-0 bg-background/80 p-4 backdrop-blur'>
+            <ActionCard
+              person={pendingAction.arguments}
+              onConfirm={handleConfirmAction}
+              onCancel={handleCancelAction}
+            />
+          </div>
+        )}
       </div>
+      <ChatInput
+        input={input}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

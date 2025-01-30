@@ -41,7 +41,7 @@ Getting types from local Supabase CLI:
 Getting diff of migrations from local Supabase CLI:
 
 ```bash
-> npx supabase db diff
+> npx supabase db diff --local
 ```
 
 Creating a new migration:
@@ -56,3 +56,17 @@ Running migrations:
 > npx supabase migration up
 ```
 
+Workflow:
+```
+> npx supabase migration new <migration-name>
+Add your changes to the new migration file (e.g. via composer)
+> npx supabase db push --local
+You can add multiple migrations at a time if needed or delete the migration file, and rewrite.
+
+> rm -rf supabase/migrations
+> npx supabase db pull --remote
+> npx supabase db pull --local
+
+> supabase db reset // will reapply the migrations
+> npx supabase migration up
+```

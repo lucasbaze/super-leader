@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { DragHandle } from '@/components/ui/drag-handle';
-import { cn } from '@/lib/utils';
 
 const STORAGE_KEY = 'chat-width';
 
@@ -38,14 +37,7 @@ export function ResizablePanels({
 
   return (
     <div className='flex flex-1'>
-      <div
-        style={{ width: chatWidth }}
-        className={cn(
-          'relative flex min-h-svh flex-col bg-background',
-          'min-h-[calc(100svh-theme(spacing.20))] md:m-1 md:rounded-md md:border md:shadow-md'
-        )}>
-        {leftPanel}
-      </div>
+      <div style={{ width: chatWidth }}>{leftPanel}</div>
 
       <DragHandle onWidthChange={handleWidthChange} initialWidth={chatWidth} minWidth={minWidth} maxWidth={maxWidth} />
 

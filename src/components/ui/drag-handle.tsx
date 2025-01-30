@@ -52,7 +52,7 @@ export function DragHandle({ onWidthChange, initialWidth = 400, minWidth = 300, 
 
   return (
     <div
-      className={cn('hover:cursor-col-resize hover:bg-accent', 'mx-1 w-1 transition-colors', isDragging && 'bg-accent')}
+      className={cn('hover:cursor-col-resize hover:bg-accent', 'w-1 transition-colors', isDragging && 'bg-accent')}
       onMouseDown={handleMouseDown}
     />
   );

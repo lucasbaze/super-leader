@@ -52,7 +52,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
           <div
             className={cn(
               'relative flex min-h-svh basis-1/3 flex-col bg-background',
-              'min-h-[calc(100svh-theme(spacing.20))] md:m-1 md:rounded-md md:border md:border-slate-200 md:shadow-md'
+              'min-h-[calc(100svh-theme(spacing.20))] md:m-1 md:rounded-md md:border md:shadow-md'
             )}>
             <ChatInterface />
           </div>

@@ -15,6 +15,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
+import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
@@ -32,9 +33,11 @@ export default async function Page({ children }: { children: React.ReactNode }) 
     <SidebarProvider>
       <AppSidebar user={data.user} />
       <main className='flex flex-1 flex-col'>
-        <div className='flex h-12 shrink-0 items-center gap-4 px-4'>
+        <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
           <SidebarTrigger className='-ml-1' />
-          <input type='text' placeholder='Search' />
+          <div className='m-auto flex-1 basis-1/3'>
+            <Input className='rounded-full border bg-background md:max-w-sm' type='text' placeholder='Search' />
+          </div>
           <div className='ml-auto flex items-center gap-2'>
             <OneRing />
             <TwoRing />
@@ -57,22 +60,6 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             <ChatInterface />
           </div>
           <SidebarInset className='basis-2/3'>
-            <header className='flex h-16 shrink-0 items-center gap-2'>
-              <div className='flex items-center gap-2 px-4'>
-                <Separator orientation='vertical' className='h-4' />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem className='hidden md:block'>
-                      <BreadcrumbLink href='#'>Building Your Application</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className='hidden md:block' />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-            </header>
             <div className='flex flex-1 flex-col gap-4'>{children}</div>
           </SidebarInset>
         </div>

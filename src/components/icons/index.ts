@@ -2,7 +2,10 @@
 export {
   BookOpen,
   Bot,
+  Orbit,
+  CircleUser,
   Command,
+  Home,
   Frame,
   LifeBuoy,
   Map,
@@ -19,7 +22,8 @@ export {
   Sparkles,
   Plus,
   Activity,
-  SendHorizontal
+  SendHorizontal,
+  Users
 } from 'lucide-react';
 export * as LogoIcons from './logos';
 export { CaretSortIcon, ComponentPlaceholderIcon, ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';

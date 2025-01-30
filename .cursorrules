@@ -19,6 +19,10 @@ Developer Experience (DX)
 
 - All files should be hypen cased such as find-person.ts or message-board.tsx
 
+**Code Conventions**
+
+- Link from next/link should be used instead of a href for all internal links. Otherwise the full external URL should be used in an anchor tag.
+
 **API Routes**
 
 - None of the Next.jspages should ever call supabase directly and should all be done via the API routes.

@@ -3,16 +3,21 @@
 import * as React from 'react';
 
 import {
+  Bell,
   BookOpen,
   Bot,
+  CircleUser,
   Command,
   Frame,
+  Home,
   LifeBuoy,
   Map,
+  Orbit,
   PieChart,
   Send,
   Settings2,
-  SquareTerminal
+  SquareTerminal,
+  Users
 } from '@/components/icons';
 import { NavMain } from '@/components/nav-main';
 import { NavProjects } from '@/components/nav-projects';
@@ -34,13 +39,25 @@ const mainNavItems = [
   {
     title: 'Home',
     url: '/app',
-    icon: SquareTerminal,
+    icon: Home,
     isActive: true
   },
   {
     title: 'People',
     url: '/app/people',
-    icon: SquareTerminal,
+    icon: CircleUser,
+    isActive: false
+  },
+  {
+    title: 'Network',
+    url: '/app/network',
+    icon: Orbit,
+    isActive: false
+  },
+  {
+    title: 'Notifications',
+    url: '/app/notifications',
+    icon: Bell,
     isActive: false
   }
 ];
@@ -53,7 +70,7 @@ const data = {
   },
   navMain: [
     {
-      title: 'Playground',
+      title: '5, 50, 100',
       url: '#',
       icon: SquareTerminal,
       isActive: true,
@@ -149,23 +166,6 @@ const data = {
       url: '#',
       icon: Send
     }
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map
-    }
   ]
 };
 
@@ -205,7 +205,6 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarContent>
         <MainNav items={mainNavItems} />
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
         <NavSecondary items={data.navSecondary} className='mt-auto' />
       </SidebarContent>
       <SidebarFooter>

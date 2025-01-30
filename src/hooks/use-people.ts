@@ -5,7 +5,7 @@ export function usePeople() {
   return useQuery({
     queryKey: ['people'],
     queryFn: async () => {
-      const response = await fetch('/api/person', { credentials: 'include' });
+      const response = await fetch('/api/people', { credentials: 'include' });
       if (!response.ok) throw new Error('Failed to fetch people');
       return response.json();
     },

@@ -22,7 +22,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
   if (!data) return null;
 
   return (
-    <div className='space-y-8'>
+    <div className='flex flex-col space-y-8 overflow-y-auto'>
       {/* Bio Section */}
       {data.person.bio && (
         <section className='space-y-3'>

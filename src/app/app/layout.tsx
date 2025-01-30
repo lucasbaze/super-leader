@@ -5,11 +5,11 @@ import { redirect } from 'next/navigation';
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
+import { ResizablePanels } from '@/components/layout/resizable-panels';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function Page({ children }: { children: React.ReactNode }) {
@@ -40,20 +40,15 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             </Avatar>
           </div>
         </div>
-        {/* Main Content Area */}
-        <div className='flex flex-1'>
-          {/* AI Chat Component */}
-          <div
-            className={cn(
-              'relative flex min-h-svh basis-1/3 flex-col bg-background',
-              'min-h-[calc(100svh-theme(spacing.20))] md:m-1 md:rounded-md md:border md:shadow-md'
-            )}>
-            <ChatInterface />
-          </div>
-          <SidebarInset className='basis-2/3'>
-            <div className='flex flex-1 flex-col gap-4'>{children}</div>
-          </SidebarInset>
-        </div>
+
+        <ResizablePanels
+          leftPanel={<ChatInterface />}
+          rightPanel={
+            <SidebarInset>
+              <div className='flex flex-1 flex-col gap-4'>{children}</div>
+            </SidebarInset>
+          }
+        />
       </main>
     </SidebarProvider>
   );

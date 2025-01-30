@@ -80,14 +80,14 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
                   Activity
                 </TabsTrigger>
                 <TabsTrigger
-                  value='emails'
+                  value='about'
                   variant='underline'
                   onClick={() => router.push(`/app/person/${params.id}/about`)}>
                   About
                   {/* <span className='ml-2 rounded-full bg-muted px-2 text-xs'>39</span> */}
                 </TabsTrigger>
                 <TabsTrigger
-                  value='files'
+                  value='discovered'
                   variant='underline'
                   onClick={() => router.push(`/app/person/${params.id}/discovered`)}>
                   Discovered

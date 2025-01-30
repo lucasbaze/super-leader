@@ -7,16 +7,7 @@ import { ChatInterface } from '@/components/chat/chat-interface';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/utils/supabase/server';

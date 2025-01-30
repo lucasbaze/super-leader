@@ -21,7 +21,7 @@ export function ChatHeader({ onAction, onSuggestions }: ChatHeaderProps) {
   const isPersonPage = pathname.startsWith('/app/person/');
 
   return (
-    <div className='flex items-center justify-between border-b px-4 py-2'>
+    <div className='flex items-center justify-between border-b px-4 py-1'>
       <div className='font-semibold'>
         {isPersonPage ? `${person?.first_name} ${person?.last_name}` : 'Chat Assistant'}
       </div>

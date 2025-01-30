@@ -75,27 +75,22 @@ export async function POST(req: Request) {
     };
 
     console.log('Fetching with Options:', options);
-    const response = await fetch('https://api.perplexity.ai/chat/completions', options);
-    const data = await response.json();
+    // const response = await fetch('https://api.perplexity.ai/chat/completions', options);
+    // const data = await response.json();
 
-    console.log('Data:', data);
+    // console.log('Data:', data);
 
-    // Parse the JSON string from the content
-    const contentString = data.choices[0].message.content;
-    console.log('Content String:', contentString);
-    // const message = {
-    //   role: 'assistant',
-    //   content:
-    //     'Here is more information about Michael Jordan: ```json\n{\n  "first_name": "Michael",\n  "last_name": "Jordan",\n  "year_of_birth": 1963,\n  "num_seasons_in_nba": 15\n}\n```'
-    // };
+    // const contentString = data.choices[0].message.content;
+    // console.log('Content String:', contentString);
 
-    let parsedJson;
-    const jsonMatch = contentString.match(/```json\s*([\s\S]*?)\s*```/);
-    if (jsonMatch && jsonMatch[1]) {
-      parsedJson = JSON.parse(jsonMatch[1]);
-    } else {
-      parsedJson = null;
-    }
+    // let parsedJson;
+    let parsedJson = null;
+    // const jsonMatch = contentString.match(/```json\s*([\s\S]*?)\s*```/);
+    // if (jsonMatch && jsonMatch[1]) {
+    //   parsedJson = JSON.parse(jsonMatch[1]);
+    // } else {
+    //   parsedJson = null;
+    // }
     // console.log(parsedJson);
 
     // const content = message.content.replace(/```json\n/, '').replace(/\n```/, '');

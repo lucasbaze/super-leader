@@ -20,7 +20,7 @@ import { Users } from 'lucide-react';
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const router = useRouter();
-  const segment = useSelectedLayoutSegment() || 'activity';
+  const segment = useSelectedLayoutSegment() || 'summary';
   const { data: person, isLoading } = usePerson(params.id as string);
 
   if (isLoading) return <div>Loading...</div>;
@@ -30,7 +30,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
   return (
     <div className='flex flex-col'>
       <div className='border-b'>
-        <div className='px-6 py-4'>
+        <div className='mx-auto max-w-6xl px-5 py-3'>
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -47,12 +47,15 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-
+        </div>
+      </div>
+      <div>
+        <div className='mx-auto max-w-6xl px-5'>
           <div className='mt-4 flex items-center gap-3'>
             <Avatar className='h-8 w-8'>
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
-            <h1 className='text-xl font-semibold'>
+            <h1 className='text-lg font-medium'>
               {person?.first_name} {person?.last_name}
             </h1>
             <div className='flex gap-2'>
@@ -61,30 +64,41 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
             </div>
           </div>
 
-          <Tabs value={segment} className='mt-6'>
-            <TabsList variant='underline' className='w-full justify-start gap-2'>
-              <TabsTrigger value='activity' variant='underline' onClick={() => router.push(`/app/person/${params.id}`)}>
-                Activity
-              </TabsTrigger>
-              <TabsTrigger
-                value='emails'
-                variant='underline'
-                onClick={() => router.push(`/app/person/${params.id}/emails`)}>
-                Emails
-                <span className='ml-2 rounded-full bg-muted px-2 text-xs'>39</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value='files'
-                variant='underline'
-                onClick={() => router.push(`/app/person/${params.id}/files`)}>
-                Files
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className='-mx-5'>
+            <Tabs value={segment} className='mt-6'>
+              <TabsList variant='underline' className='w-full justify-start gap-2 px-5'>
+                <TabsTrigger
+                  value='summary'
+                  variant='underline'
+                  onClick={() => router.push(`/app/person/${params.id}`)}>
+                  Summary
+                </TabsTrigger>
+                <TabsTrigger
+                  value='activity'
+                  variant='underline'
+                  onClick={() => router.push(`/app/person/${params.id}/activity`)}>
+                  Activity
+                </TabsTrigger>
+                <TabsTrigger
+                  value='emails'
+                  variant='underline'
+                  onClick={() => router.push(`/app/person/${params.id}/about`)}>
+                  About
+                  {/* <span className='ml-2 rounded-full bg-muted px-2 text-xs'>39</span> */}
+                </TabsTrigger>
+                <TabsTrigger
+                  value='files'
+                  variant='underline'
+                  onClick={() => router.push(`/app/person/${params.id}/discovered`)}>
+                  Discovered
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
       </div>
 
-      <div className='px-6 py-4'>{children}</div>
+      <div className='mx-auto w-full max-w-6xl px-5 py-4'>{children}</div>
     </div>
   );
 }

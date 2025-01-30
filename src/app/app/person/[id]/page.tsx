@@ -10,9 +10,9 @@ export default function PersonActivityPage() {
 
   return (
     <div className='space-y-4'>
-      <h2 className='text-xl font-semibold'>Recent Activity</h2>
+      <h2 className='text-xl font-semibold'>Summary</h2>
       {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>No recent activity</div>
+      <div className='text-muted-foreground'>A generated summary will appear here</div>
     </div>
   );
 }

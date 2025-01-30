@@ -1,5 +1,6 @@
 'use client';
 
+import { DotsHorizontalIcon, Folder, type LucideIcon, Share, Trash2 } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +17,6 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-
-import { Folder, type LucideIcon, Share, Trash2 } from 'lucide-react';
 
 export function NavProjects({
   projects

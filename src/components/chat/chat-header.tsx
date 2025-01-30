@@ -2,11 +2,11 @@
 
 import { useParams, usePathname, useRouter, useSelectedLayoutSegment } from 'next/navigation';
 
+import { Activity } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { usePerson } from '@/hooks/use-people';
 
 import { ChatHeaderActions } from './chat-header-actions';
-import { Activity } from 'lucide-react';
 
 interface ChatHeaderProps {
   onAction: (message: string) => void;

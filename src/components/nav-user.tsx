@@ -1,5 +1,6 @@
 'use client';
 
+import { BadgeCheck, Bell, CaretSortIcon, ComponentPlaceholderIcon, LogOut, Sparkles } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -11,9 +12,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { CaretSortIcon, ComponentPlaceholderIcon } from '@radix-ui/react-icons';
-
-import { BadgeCheck, Bell, LogOut, Sparkles } from 'lucide-react';
 
 export function NavUser({
   user

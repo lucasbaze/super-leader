@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';
+import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,7 +15,7 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import { SidebarInset, SidebarLayout, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/utils/supabase/server';
 
@@ -29,9 +31,18 @@ export default async function Page({ children }: { children: React.ReactNode }) 
     <SidebarProvider>
       <AppSidebar user={data.user} />
       <main className='flex flex-1 flex-col'>
-        <div className='flex h-14 shrink-0 items-center gap-4 px-4'>
+        <div className='flex h-12 shrink-0 items-center gap-4 px-4'>
           <SidebarTrigger className='-ml-1' />
           <input type='text' placeholder='Search' />
+          <div className='ml-auto flex items-center gap-2'>
+            <OneRing />
+            <TwoRing />
+            <ThreeRing />
+            <Avatar className='size-8'>
+              <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </div>
         </div>
         {/* Main Content Area */}
         <div className='flex flex-1'>

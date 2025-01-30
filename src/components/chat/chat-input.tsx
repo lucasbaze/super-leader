@@ -2,10 +2,9 @@
 
 import * as React from 'react';
 
+import { SendHorizontal } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-
-import { SendHorizontal } from 'lucide-react';
 
 interface ChatInputProps {
   input: string;

@@ -2,9 +2,8 @@
 
 import { useParams, usePathname } from 'next/navigation';
 
+import { Plus } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-
-import { Plus } from 'lucide-react';
 
 interface ChatHeaderActionsProps {
   onAction: (message: string) => void;

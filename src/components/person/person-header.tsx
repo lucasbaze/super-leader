@@ -33,15 +33,6 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
           <Badge variant='secondary'>Label 1</Badge>
           <Badge variant='secondary'>Label 2</Badge>
         </div>
-        <div className='ml-auto flex gap-2'>
-          {contactMethods.map((method) => (
-            <Button key={method.id} variant='ghost' size='sm' className='h-8 w-8 p-0'>
-              {method.type === 'email' && <Mail className='h-4 w-4' />}
-              {method.type === 'phone' && <Phone className='h-4 w-4' />}
-              {method.type === 'website' && <Globe className='h-4 w-4' />}
-            </Button>
-          ))}
-        </div>
       </div>
 
       <div className='-mx-5'>

@@ -20,42 +20,56 @@ export default function PeoplePage() {
   if (error) return <div>Error loading people</div>;
 
   return (
-    <div className='py-2'>
-      <div className='border'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Birthday</TableHead>
-              <TableHead>Date Met</TableHead>
-              <TableHead>Bio</TableHead>
-              <TableHead>AI Summary</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {people.map((person: Person) => (
-              <TableRow
-                key={person.id}
-                className='cursor-pointer hover:bg-muted/50'
-                onClick={() => handleRowClick(person.id)}>
-                <TableCell>
-                  {person.first_name} {person.last_name}
-                </TableCell>
-                <TableCell>{person.birthday ? format(new Date(person.birthday), 'PP') : 'Not set'}</TableCell>
-                <TableCell>{person.date_met ? format(new Date(person.date_met), 'PP') : 'Not set'}</TableCell>
-                <TableCell className='max-w-[200px] truncate'>{person.bio || 'No bio'}</TableCell>
-                <TableCell className='max-w-[200px] truncate'>{person.ai_summary || 'No summary'}</TableCell>
+    <div className='absolute inset-0'>
+      {/* Fixed Headers */}
+      <div className='absolute inset-x-0 top-0 z-20 bg-background'>
+        <div className='border-b'>
+          <div className='flex h-12 items-center justify-between px-4'>People filtering and viewing actions</div>
+        </div>
+        <div className='bg-background px-4'>
+          <Table>
+            <TableHeader>
+              <TableRow className='text-left'>
+                <TableHead>Name</TableHead>
+                <TableHead>Birthday</TableHead>
+                <TableHead>Date Met</TableHead>
+                <TableHead>Bio</TableHead>
+                <TableHead>AI Summary</TableHead>
               </TableRow>
-            ))}
-            {people.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={5} className='h-24 text-center'>
-                  No contacts found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+          </Table>
+        </div>
+      </div>
+
+      {/* Scrollable Content */}
+      <div className='absolute inset-0 top-[88px] overflow-y-auto'>
+        <div className='px-4'>
+          <Table>
+            <TableBody>
+              {people.map((person: Person) => (
+                <TableRow
+                  key={person.id}
+                  className='cursor-pointer hover:bg-muted/50'
+                  onClick={() => handleRowClick(person.id)}>
+                  <TableCell>
+                    {person.first_name} {person.last_name}
+                  </TableCell>
+                  <TableCell>{person.birthday ? format(new Date(person.birthday), 'PP') : 'Not set'}</TableCell>
+                  <TableCell>{person.date_met ? format(new Date(person.date_met), 'PP') : 'Not set'}</TableCell>
+                  <TableCell className='max-w-[200px] truncate'>{person.bio || 'No bio'}</TableCell>
+                  <TableCell className='max-w-[200px] truncate'>{person.ai_summary || 'No summary'}</TableCell>
+                </TableRow>
+              ))}
+              {people.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={5} className='h-24 text-center'>
+                    No contacts found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

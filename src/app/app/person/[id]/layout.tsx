@@ -12,9 +12,12 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePerson } from '@/hooks/use-people';
+import { usePersonAbout } from '@/hooks/use-person-about';
 
+import { Globe, Mail, Phone } from 'lucide-react';
 import { Users } from 'lucide-react';
 
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
@@ -22,6 +25,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
   const router = useRouter();
   const segment = useSelectedLayoutSegment() || 'summary';
   const { data: person, isLoading } = usePerson(params.id as string);
+  const { data: aboutData } = usePersonAbout(params.id as string);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -61,6 +65,15 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
             <div className='flex gap-2'>
               <Badge variant='secondary'>Label 1</Badge>
               <Badge variant='secondary'>Label 2</Badge>
+            </div>
+            <div className='ml-auto flex gap-2'>
+              {aboutData?.contactMethods.map((method) => (
+                <Button key={method.id} variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                  {method.type === 'email' && <Mail className='h-4 w-4' />}
+                  {method.type === 'phone' && <Phone className='h-4 w-4' />}
+                  {method.type === 'website' && <Globe className='h-4 w-4' />}
+                </Button>
+              ))}
             </div>
           </div>
 

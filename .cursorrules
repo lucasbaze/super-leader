@@ -27,6 +27,7 @@ Developer Experience (DX)
 
 - None of the Next.jspages should ever call supabase directly and should all be done via the API routes.
 - The API routes can then call the supabase client to get the data.
+- API routes should use `import { createClient } from '@/utils/supabase/server'`;
 
 **Database**
 

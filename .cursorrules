@@ -22,6 +22,7 @@ Developer Experience (DX)
 **Code Conventions**
 
 - Link from next/link should be used instead of a href for all internal links. Otherwise the full external URL should be used in an anchor tag.
+- All icons should come from the `@/components/icons` directory.
 
 **API Routes**
 
@@ -37,7 +38,7 @@ Developer Experience (DX)
 - Seed files should reference the database.ts file to get the base types.
 - Seed files should be dynamic and not hardcoded in a seed.sql file, but instead with TS
 
-  **Data Fetching**
+**Data Fetching**
 
 - We are using the Tanstack Query library to fetch data from the database.
 - We are using the useQuery hook to fetch data from the database.

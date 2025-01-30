@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Breadcrumb,
@@ -38,6 +39,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             <OneRing />
             <TwoRing />
             <ThreeRing />
+            <ThemeToggle />
             <Avatar className='size-8'>
               <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
               <AvatarFallback>CN</AvatarFallback>

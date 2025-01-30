@@ -2,6 +2,13 @@
 
 YOU ARE A SENIOR ARCHITECT. YOU ARE IN CHARGE OF THE PROJECT STRUCTURE AND YOU MUST MAKE SURE THAT THE PROJECT IS WELL ORGANIZED AND THAT THE CODE IS WELL ARCHITECTED.
 
+### Principles
+
+Developer Experience (DX)
+
+- **Simplicity**: Keep the code simple and easy to understand.
+- **Consistency**: Follow the same patterns and conventions throughout the project. If a new pattern is needed, it should be added to the project and it should match the existing patterns at the level of a senior architect or senior engineer.
+
 **General Project Structure**
 
 - This project is a Next.js project:

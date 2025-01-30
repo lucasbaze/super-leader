@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { usePeople } from '@/hooks/use-people';
 import { Person } from '@/types/people';
@@ -52,7 +53,15 @@ export default function PeoplePage() {
                   className='cursor-pointer hover:bg-muted/50'
                   onClick={() => handleRowClick(person.id)}>
                   <TableCell>
-                    {person.first_name} {person.last_name}
+                    <div className='flex items-center gap-2'>
+                      <Avatar className='h-6 w-6'>
+                        <AvatarFallback className='text-xs'>
+                          {person.first_name?.[0]}
+                          {person.last_name?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      {person.first_name} {person.last_name}
+                    </div>
                   </TableCell>
                   <TableCell>{person.birthday ? format(new Date(person.birthday), 'PP') : 'Not set'}</TableCell>
                   <TableCell>{person.date_met ? format(new Date(person.date_met), 'PP') : 'Not set'}</TableCell>

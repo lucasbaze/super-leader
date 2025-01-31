@@ -194,8 +194,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                   <Command className='size-4' />
                 </div>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>Acme Inc</span>
-                  <span className='truncate text-xs'>Enterprise</span>
+                  <span className='truncate font-semibold'>Superleader</span>
+                  <span className='truncate text-xs'>Go forth and build</span>
                 </div>
               </a>
             </SidebarMenuButton>

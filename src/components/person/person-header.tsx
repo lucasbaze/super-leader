@@ -14,6 +14,7 @@ interface PersonHeaderProps {
   segment: string | null;
 }
 
+// TODO: Do something with thhe "contact Methods"
 export function PersonHeader({ person, contactMethods = [], segment }: PersonHeaderProps) {
   const router = useRouter();
   const initials = `${person.first_name[0]}${person.last_name?.[0] || ''}`;

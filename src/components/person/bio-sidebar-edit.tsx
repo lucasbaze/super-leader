@@ -29,9 +29,10 @@ import { useFieldArray, useForm } from 'react-hook-form';
 interface BioSidebarEditProps {
   data: BioSidebarData;
   onSubmit: (data: PersonEditFormData) => Promise<void>;
+  onCancel: () => void;
 }
 
-export function BioSidebarEdit({ data, onSubmit }: BioSidebarEditProps) {
+export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps) {
   const form = useForm<PersonEditFormData>({
     resolver: zodResolver(personEditSchema),
     defaultValues: {
@@ -106,7 +107,7 @@ export function BioSidebarEdit({ data, onSubmit }: BioSidebarEditProps) {
 
   return (
     <Form {...form}>
-      <form className='relative space-y-8'>
+      <form className='space-y-8'>
         {/* Bio Section */}
         <FormField
           control={form.control}
@@ -352,7 +353,10 @@ export function BioSidebarEdit({ data, onSubmit }: BioSidebarEditProps) {
           </div>
         </div>
 
-        <div className='sticky bottom-0 -ml-4 flex w-full justify-center gap-2 border-t bg-background py-4'>
+        <div className='flex w-full justify-end gap-2 border-t bg-background p-4'>
+          <Button type='button' variant='outline' onClick={onCancel}>
+            Cancel
+          </Button>
           <Button type='button' disabled={form.formState.isSubmitting} onClick={handleFormSubmit}>
             {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
           </Button>

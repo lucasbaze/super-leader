@@ -1,12 +1,21 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 
 export default function LoadingPeople() {
   return (
     <div className='absolute inset-0'>
       {/* Fixed Headers */}
       <div className='absolute inset-x-0 top-0 z-20 border-b bg-background'>
-        <div className='flex h-12 items-center justify-between px-4'>People filtering and viewing actions</div>
+        <div className='flex h-12 items-center justify-between px-4'>
+          <i>People filtering and viewing actions</i>
+        </div>
         <div className='border-b bg-background px-4'>
           <Table>
             <TableHeader>

@@ -3,7 +3,14 @@
 import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import { usePeople } from '@/hooks/use-people';
 import { Person } from '@/types/people';
 
@@ -25,7 +32,9 @@ export default function PeoplePage() {
       {/* Fixed Headers */}
       <div className='absolute inset-x-0 top-0 z-20 bg-background'>
         <div className='border-b'>
-          <div className='flex h-12 items-center justify-between px-4'>People filtering and viewing actions</div>
+          <div className='flex h-12 items-center justify-between px-4'>
+            <i>People filtering and viewing actions will go here</i>
+          </div>
         </div>
         <div className='bg-background px-4'>
           <Table>
@@ -63,10 +72,16 @@ export default function PeoplePage() {
                       {person.first_name} {person.last_name}
                     </div>
                   </TableCell>
-                  <TableCell>{person.birthday ? format(new Date(person.birthday), 'PP') : 'Not set'}</TableCell>
-                  <TableCell>{person.date_met ? format(new Date(person.date_met), 'PP') : 'Not set'}</TableCell>
+                  <TableCell>
+                    {person.birthday ? format(new Date(person.birthday), 'PP') : 'Not set'}
+                  </TableCell>
+                  <TableCell>
+                    {person.date_met ? format(new Date(person.date_met), 'PP') : 'Not set'}
+                  </TableCell>
                   <TableCell className='max-w-[200px] truncate'>{person.bio || 'No bio'}</TableCell>
-                  <TableCell className='max-w-[200px] truncate'>{person.ai_summary || 'No summary'}</TableCell>
+                  <TableCell className='max-w-[200px] truncate'>
+                    {person.ai_summary || 'No summary'}
+                  </TableCell>
                 </TableRow>
               ))}
               {people.length === 0 && (

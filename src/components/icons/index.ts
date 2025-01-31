@@ -38,3 +38,7 @@ export { TwoRing } from './custom/two-ring';
 export { ThreeRing } from './custom/three-ring';
 
 export { type LucideIcon } from 'lucide-react';
+
+// Add Edit icon export
+export { Pencil as Edit } from 'lucide-react';
+export { Trash2 as Trash } from 'lucide-react';

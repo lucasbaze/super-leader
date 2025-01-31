@@ -1,9 +1,7 @@
 import { useRouter } from 'next/navigation';
 
-import { Globe, Mail, Phone } from '@/components/icons';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Database } from '@/types/database';
 
@@ -38,7 +36,10 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
       <div className='-mx-5'>
         <Tabs value={segment || 'summary'} className='mt-6'>
           <TabsList variant='underline' className='w-full justify-start gap-2 px-5'>
-            <TabsTrigger value='summary' variant='underline' onClick={() => router.push(`/app/person/${person.id}`)}>
+            <TabsTrigger
+              value='summary'
+              variant='underline'
+              onClick={() => router.push(`/app/person/${person.id}`)}>
               Summary
             </TabsTrigger>
             <TabsTrigger

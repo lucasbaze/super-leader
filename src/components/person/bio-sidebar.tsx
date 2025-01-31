@@ -7,14 +7,14 @@ type ContactMethod = Database['public']['Tables']['contact_methods']['Row'];
 type Address = Database['public']['Tables']['addresses']['Row'];
 type Website = Database['public']['Tables']['websites']['Row'];
 
-interface BioSidebarData {
+export interface BioSidebarData {
   person: Person;
   contactMethods: ContactMethod[];
   addresses: Address[];
   websites: Website[];
 }
 
-interface PersonBioSidebarProps {
+export interface PersonBioSidebarProps {
   data: BioSidebarData | undefined;
 }
 

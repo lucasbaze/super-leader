@@ -9,7 +9,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     const supabase = await createClient();
 
-    const { data: person, error: personError } = await supabase.from('person').select('*').eq('id', id).single();
+    console.log('params id', id);
+
+    const { data: person, error: personError } = await supabase
+      .from('person')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    console.log('person & error', person, personError);
 
     if (personError) {
       return NextResponse.json({ error: personError.message }, { status: 500 });
@@ -20,9 +28,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
       .select('*')
       .eq('person_id', id);
 
-    const { data: addresses, error: addressError } = await supabase.from('addresses').select('*').eq('person_id', id);
+    const { data: addresses, error: addressError } = await supabase
+      .from('addresses')
+      .select('*')
+      .eq('person_id', id);
 
-    const { data: websites, error: websiteError } = await supabase.from('websites').select('*').eq('person_id', id);
+    const { data: websites, error: websiteError } = await supabase
+      .from('websites')
+      .select('*')
+      .eq('person_id', id);
 
     if (contactError || addressError || websiteError) {
       return NextResponse.json({ error: 'Error fetching related data' }, { status: 500 });

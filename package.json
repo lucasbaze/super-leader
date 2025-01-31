@@ -14,7 +14,10 @@
     "prepare": "husky",
     "type-check": "tsc --noEmit",
     "generate-types": "npx supabase gen types typescript --local > ./src/types/database.ts",
-    "seed": "ts-node --project supabase/seeds/tsconfig.seeds.json supabase/seeds/index.ts"
+    "seed": "ts-node --project supabase/seeds/tsconfig.seeds.json supabase/seeds/index.ts",
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
+    "test:api": "NODE_ENV=test jest --testPathPattern=src/tests/api"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.5",
@@ -97,9 +100,11 @@
     "@next/bundle-analyzer": "15.1.6",
     "@next/eslint-plugin-next": "15.1.6",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
+    "@types/jest": "^29.5.12",
     "@types/node": "^22.10.10",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
+    "@types/supertest": "^6.0.2",
     "dotenv": "^16.4.7",
     "eslint": "^9.19.0",
     "eslint-config-next": "15.1.6",
@@ -110,10 +115,14 @@
     "eslint-plugin-tailwindcss": "^3.18.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-node": "^29.7.0",
     "lint-staged": "^15.4.3",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.21.0"

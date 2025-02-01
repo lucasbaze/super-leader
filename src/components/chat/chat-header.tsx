@@ -2,10 +2,10 @@
 
 import { useParams, usePathname, useRouter, useSelectedLayoutSegment } from 'next/navigation';
 
-import { ChatHeaderActions } from './chat-header-actions';
 import { Activity } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { usePerson } from '@/hooks/use-people';
+import { ChatHeaderActions } from './chat-header-actions';
 
 
 interface ChatHeaderProps {

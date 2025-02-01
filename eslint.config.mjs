@@ -1,6 +1,5 @@
 import pluginJs from '@eslint/js';
 import nextPlugin from '@next/eslint-plugin-next';
-
 import eslintConfigPrettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
 import pluginPromise from 'eslint-plugin-promise';
@@ -54,20 +53,6 @@ export default [
           maxDepth: 10,
           ignoreExternal: true,
           allowUnsafeDynamicCyclicDependency: false
-        }
-      ],
-      'import/order': [
-        'error',
-        {
-          groups: [
-            ['builtin', 'external'],
-            ['internal', 'parent', 'sibling', 'index', 'object', 'type']
-          ],
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true
-          },
-          pathGroupsExcludedImportTypes: ['builtin', 'external']
         }
       ],
       // ! TO COMPILE SHADCN EXAMPLES, PLEASE REMOVE AS NEEDED

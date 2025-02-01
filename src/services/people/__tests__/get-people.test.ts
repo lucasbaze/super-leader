@@ -1,11 +1,12 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { getPeople } from '../get-people';
+
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { ServiceErrorType } from '@/types/service-response';
 import { createClient } from '@/utils/supabase/server';
 
+import { getPeople } from '../get-people';
 
 describe('getPeople service', () => {
   let supabase: SupabaseClient;

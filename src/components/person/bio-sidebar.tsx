@@ -3,7 +3,6 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 
-import type { Address, ContactMethod, Person, Website } from '@/types/database';
 import { Globe, Mail, MapPin, Phone , Edit } from '@/components/icons';
 import { BioSidebarEdit } from '@/components/person/bio-sidebar-edit';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -11,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { PersonEditFormData } from '@/lib/schemas/person-edit';
+import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 export interface BioSidebarData {
   person: Person;

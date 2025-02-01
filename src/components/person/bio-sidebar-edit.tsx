@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
-import type { BioSidebarData } from './bio-sidebar';
 import { Plus, Trash } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -24,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { PersonEditFormData, personEditSchema } from '@/lib/schemas/person-edit';
+import type { BioSidebarData } from './bio-sidebar';
 
 
 interface BioSidebarEditProps {

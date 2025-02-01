@@ -1,9 +1,9 @@
 import { useRouter } from 'next/navigation';
 
-import type { ContactMethod, Person } from '@/types/database';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { ContactMethod, Person } from '@/types/database';
 
 interface PersonHeaderProps {
   person: Person;

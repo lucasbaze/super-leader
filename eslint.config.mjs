@@ -48,21 +48,25 @@ export default [
       'tailwindcss/migration-from-tailwind-2': 'off',
       'import/no-unresolved': 'off',
       'import/no-named-as-default': 'off',
+      'import/no-cycle': [
+        'error',
+        {
+          maxDepth: 10,
+          ignoreExternal: true,
+          allowUnsafeDynamicCyclicDependency: false
+        }
+      ],
       'import/order': [
         'error',
         {
           groups: [
-            ['builtin', 'external'], // Node.js built-in modules and installed dependencies at top
-            ['internal', 'parent', 'sibling', 'index', 'object', 'type'] // All relative/internal imports below
+            ['builtin', 'external'],
+            ['internal', 'parent', 'sibling', 'index', 'object', 'type']
           ],
-          'newlines-between': 'always',
-          pathGroups: [
-            {
-              pattern: '@/**',
-              group: 'internal',
-              position: 'after'
-            }
-          ],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true
+          },
           pathGroupsExcludedImportTypes: ['builtin', 'external']
         }
       ],

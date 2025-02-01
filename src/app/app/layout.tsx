@@ -1,6 +1,6 @@
+import { redirect } from 'next/navigation';
 import * as React from 'react';
 
-import { redirect } from 'next/navigation';
 
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';

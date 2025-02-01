@@ -2,11 +2,11 @@
 
 import { useParams, usePathname, useRouter, useSelectedLayoutSegment } from 'next/navigation';
 
+import { ChatHeaderActions } from './chat-header-actions';
 import { Activity } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { usePerson } from '@/hooks/use-people';
 
-import { ChatHeaderActions } from './chat-header-actions';
 
 interface ChatHeaderProps {
   onAction: (message: string) => void;
@@ -27,7 +27,7 @@ export function ChatHeader({ onAction, onSuggestions }: ChatHeaderProps) {
       </div>
 
       <Button variant='ghost' size='icon' onClick={() => onSuggestions()} title='Create new note'>
-        <Activity className='h-4 w-4' />
+        <Activity className='size-4' />
       </Button>
       <ChatHeaderActions onAction={onAction} />
     </div>

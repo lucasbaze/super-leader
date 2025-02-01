@@ -11,9 +11,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
+    supabase.auth
+      .getUser()
+      .then(({ data: { user } }) => {
+        setUser(user);
+
+        return user;
+      })
+      .catch((error) => {
+        console.error('Error fetching user:', error);
+        setUser(null);
+      });
 
     // Listen for auth changes
     const {

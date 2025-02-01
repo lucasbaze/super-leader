@@ -1,14 +1,14 @@
 'use client';
 
+import { useChat } from 'ai/react';
 import { useState } from 'react';
 
-import { useCreatePerson } from '@/hooks/use-people';
 
 import { ActionCard } from './action-card';
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
-import { useChat } from 'ai/react';
+import { useCreatePerson } from '@/hooks/use-people';
 
 export function ChatInterface() {
   const [pendingAction, setPendingAction] = useState<{
@@ -60,7 +60,8 @@ export function ChatInterface() {
     if (!response.ok) throw new Error('Failed to fetch suggestions');
     const responseData = await response.json();
     console.log('Suggestions:', responseData);
-    return responseData;
+    
+return responseData;
   };
 
   return (
@@ -69,7 +70,7 @@ export function ChatInterface() {
       <div className='relative flex-1 overflow-hidden'>
         <ChatMessages messages={messages} isLoading={isLoading} />
         {pendingAction?.name === 'createPerson' && (
-          <div className='absolute bottom-0 left-0 right-0 bg-background/80 p-4 backdrop-blur'>
+          <div className='absolute bottom-0 inset-x-0 bg-background/80 p-4 backdrop-blur'>
             <ActionCard
               person={pendingAction.arguments}
               onConfirm={handleConfirmAction}

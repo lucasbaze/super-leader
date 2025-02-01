@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from '@supabase/supabase-js';
 import * as React from 'react';
 
 import {
@@ -20,7 +21,6 @@ import {
   Users
 } from '@/components/icons';
 import { NavMain } from '@/components/nav-main';
-import { NavProjects } from '@/components/nav-projects';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import { MainNav } from '@/components/sidebar/main-nav';
@@ -33,7 +33,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar';
-import { User } from '@supabase/supabase-js';
 
 const mainNavItems = [
   {

@@ -1,6 +1,6 @@
+import initializeBundleAnalyzer from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 
-import initializeBundleAnalyzer from '@next/bundle-analyzer';
 
 // https://www.npmjs.com/package/@next/bundle-analyzer
 const withBundleAnalyzer = initializeBundleAnalyzer({

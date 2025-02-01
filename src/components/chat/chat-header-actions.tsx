@@ -31,7 +31,7 @@ export function ChatHeaderActions({ onAction }: ChatHeaderActionsProps) {
           `)
         }
         title='Create new note'>
-        <Plus className='h-4 w-4' />
+        <Plus className='size-4' />
       </Button>
     </div>
   );

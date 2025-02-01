@@ -1,5 +1,6 @@
 'use client';
 
+import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -12,9 +13,8 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { usePeople } from '@/hooks/use-people';
-import { Person } from '@/types/people';
+import { Person } from '@/types/database';
 
-import { format } from 'date-fns';
 
 export default function PeoplePage() {
   const router = useRouter();
@@ -63,7 +63,7 @@ export default function PeoplePage() {
                   onClick={() => handleRowClick(person.id)}>
                   <TableCell>
                     <div className='flex items-center gap-2'>
-                      <Avatar className='h-6 w-6'>
+                      <Avatar className='size-6'>
                         <AvatarFallback className='text-xs'>
                           {person.first_name?.[0]}
                           {person.last_name?.[0]}

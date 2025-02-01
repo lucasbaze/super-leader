@@ -1,7 +1,7 @@
-import { cookies } from 'next/headers';
 
 import { createServerClient } from '@supabase/ssr';
 import { createClient as createTestClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 
 export async function createClient() {
   if (process.env.NODE_ENV === 'test') {

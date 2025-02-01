@@ -9,8 +9,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     const supabase = await createClient();
 
-    console.log('params id', id);
-
     const { data: person, error: personError } = await supabase
       .from('person')
       .select('*')
@@ -50,6 +48,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     });
   } catch (error) {
     console.error('Error fetching person details:', error);
-    return NextResponse.json({ error: 'Failed to fetch person details' }, { status: 500 });
+    
+return NextResponse.json({ error: 'Failed to fetch person details' }, { status: 500 });
   }
 }

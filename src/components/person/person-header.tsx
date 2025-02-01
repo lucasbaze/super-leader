@@ -1,12 +1,9 @@
 import { useRouter } from 'next/navigation';
 
+import type { ContactMethod, Person } from '@/types/database';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { Database } from '@/types/database';
-
-type Person = Database['public']['Tables']['person']['Row'];
-type ContactMethod = Database['public']['Tables']['contact_methods']['Row'];
 
 interface PersonHeaderProps {
   person: Person;
@@ -22,7 +19,7 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
   return (
     <div className='px-5'>
       <div className='mt-4 flex items-center gap-3'>
-        <Avatar className='h-8 w-8'>
+        <Avatar className='size-8'>
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <h1 className='text-lg font-medium'>

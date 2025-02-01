@@ -1,10 +1,5 @@
-import type { Database } from '@/types/database';
 import { useQuery } from '@tanstack/react-query';
-
-type Person = Database['public']['Tables']['person']['Row'];
-type ContactMethod = Database['public']['Tables']['contact_methods']['Row'];
-type Address = Database['public']['Tables']['addresses']['Row'];
-type Website = Database['public']['Tables']['websites']['Row'];
+import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 interface PersonAboutData {
   person: Person;
@@ -21,7 +16,8 @@ export function usePersonAbout(id: string) {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.json();
+      
+return response.json();
     }
   });
 }

@@ -84,7 +84,7 @@ export async function POST(req: Request) {
     // console.log('Content String:', contentString);
 
     // let parsedJson;
-    let parsedJson = null;
+    const parsedJson = null;
     // const jsonMatch = contentString.match(/```json\s*([\s\S]*?)\s*```/);
     // if (jsonMatch && jsonMatch[1]) {
     //   parsedJson = JSON.parse(jsonMatch[1]);
@@ -110,7 +110,8 @@ export async function POST(req: Request) {
 
     // Provide more specific error messages
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    
+return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'content-type': 'application/json'

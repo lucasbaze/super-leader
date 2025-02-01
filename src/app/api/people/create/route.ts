@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(req: Request) {
@@ -44,6 +43,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, person });
   } catch (error) {
     console.error('Error creating person:', error);
+
     return NextResponse.json({ error: 'Failed to create person' }, { status: 500 });
   }
 }

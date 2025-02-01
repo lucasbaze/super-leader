@@ -26,9 +26,9 @@ export default function PersonLoading() {
         </Breadcrumb>
 
         <div className='flex items-center gap-4'>
-          <Avatar className='h-16 w-16'>
+          <Avatar className='size-16'>
             <AvatarFallback>
-              <Skeleton className='h-full w-full rounded-full' />
+              <Skeleton className='size-full rounded-full' />
             </AvatarFallback>
           </Avatar>
           <div>

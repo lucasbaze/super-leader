@@ -1,5 +1,8 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useFieldArray, useForm } from 'react-hook-form';
+import type { BioSidebarData } from './bio-sidebar';
 import { Plus, Trash } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -21,10 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { PersonEditFormData, personEditSchema } from '@/lib/schemas/person-edit';
-import { zodResolver } from '@hookform/resolvers/zod';
 
-import type { BioSidebarData } from './bio-sidebar';
-import { useFieldArray, useForm } from 'react-hook-form';
 
 interface BioSidebarEditProps {
   data: BioSidebarData;
@@ -132,7 +132,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
               variant='outline'
               size='sm'
               onClick={() => appendContact({ type: 'email', value: '', is_primary: false })}>
-              <Plus className='mr-2 h-4 w-4' />
+              <Plus className='mr-2 size-4' />
               Add Contact
             </Button>
           </div>
@@ -192,7 +192,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                     variant='ghost'
                     size='sm'
                     onClick={() => removeContact(index)}>
-                    <Trash className='h-4 w-4' />
+                    <Trash className='size-4' />
                   </Button>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                   is_primary: false
                 })
               }>
-              <Plus className='mr-2 h-4 w-4' />
+              <Plus className='mr-2 size-4' />
               Add Address
             </Button>
           </div>
@@ -290,7 +290,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                     variant='ghost'
                     size='sm'
                     onClick={() => removeAddress(index)}>
-                    <Trash className='h-4 w-4' />
+                    <Trash className='size-4' />
                   </Button>
                 </div>
               </div>
@@ -307,7 +307,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
               variant='outline'
               size='sm'
               onClick={() => appendWebsite({ url: '', label: '' })}>
-              <Plus className='mr-2 h-4 w-4' />
+              <Plus className='mr-2 size-4' />
               Add Website
             </Button>
           </div>
@@ -345,7 +345,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                     variant='ghost'
                     size='sm'
                     onClick={() => removeWebsite(index)}>
-                    <Trash className='h-4 w-4' />
+                    <Trash className='size-4' />
                   </Button>
                 </div>
               </div>

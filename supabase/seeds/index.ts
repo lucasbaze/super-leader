@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-import { seedPeople } from './people';
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import { seedPeople } from './people';
 
 // Load environment variables
 config({ path: resolve(__dirname, '../../.env.local') });

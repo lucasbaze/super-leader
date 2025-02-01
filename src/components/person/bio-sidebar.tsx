@@ -1,22 +1,16 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
-import { useParams } from 'next/navigation';
 
-import { Globe, Mail, MapPin, Phone } from '@/components/icons';
-import { Edit } from '@/components/icons';
+import type { Address, ContactMethod, Person, Website } from '@/types/database';
+import { Globe, Mail, MapPin, Phone , Edit } from '@/components/icons';
 import { BioSidebarEdit } from '@/components/person/bio-sidebar-edit';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { PersonEditFormData } from '@/lib/schemas/person-edit';
-import type { Database } from '@/types/database';
-import { useQueryClient } from '@tanstack/react-query';
-
-type Person = Database['public']['Tables']['person']['Row'];
-type ContactMethod = Database['public']['Tables']['contact_methods']['Row'];
-type Address = Database['public']['Tables']['addresses']['Row'];
-type Website = Database['public']['Tables']['websites']['Row'];
 
 export interface BioSidebarData {
   person: Person;
@@ -69,7 +63,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         {/* Edit Button */}
         <div className='absolute right-2 top-2'>
           <Button variant='ghost' size='sm' className='ml-auto' onClick={() => setIsEditing(true)}>
-            <Edit className='h-4 w-4' />
+            <Edit className='size-4' />
           </Button>
         </div>
 
@@ -88,10 +82,10 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
             {data.contactMethods.map((method) => (
               <div key={method.id} className='flex items-start space-x-2'>
                 {method.type === 'email' && (
-                  <Mail className='mt-1 h-3.5 w-3.5 text-muted-foreground' />
+                  <Mail className='mt-1 size-3.5 text-muted-foreground' />
                 )}
                 {method.type === 'phone' && (
-                  <Phone className='mt-1 h-3.5 w-3.5 text-muted-foreground' />
+                  <Phone className='mt-1 size-3.5 text-muted-foreground' />
                 )}
                 <div className='flex-1'>
                   <p className='text-sm'>{method.value}</p>
@@ -115,7 +109,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
           <div className='space-y-3'>
             {data.addresses.map((address) => (
               <div key={address.id} className='flex items-start space-x-2'>
-                <MapPin className='mt-1 h-3.5 w-3.5 text-muted-foreground' />
+                <MapPin className='mt-1 size-3.5 text-muted-foreground' />
                 <div>
                   <p className='text-sm'>{address.street}</p>
                   <div className='flex items-center gap-2'>
@@ -141,7 +135,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
             <div className='space-y-2'>
               {data.websites.map((website) => (
                 <div key={website.id} className='flex items-center space-x-2'>
-                  <Globe className='h-3.5 w-3.5 text-muted-foreground' />
+                  <Globe className='size-3.5 text-muted-foreground' />
                   <a
                     href={website.url}
                     target='_blank'

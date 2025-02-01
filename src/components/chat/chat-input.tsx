@@ -40,7 +40,7 @@ export function ChatInput({ input, handleInputChange, handleSubmit, isLoading }:
         className='w-full'
       />
       <Button type='submit' size='icon' disabled={isLoading || !input.trim()}>
-        <SendHorizontal className='h-4 w-4' />
+        <SendHorizontal className='size-4' />
         <span className='sr-only'>Send message</span>
       </Button>
     </form>

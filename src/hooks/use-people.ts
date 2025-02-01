@@ -1,5 +1,5 @@
-import { Person } from '@/types/people';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Person } from '@/types/database';
 
 export function usePeople() {
   return useQuery({
@@ -7,7 +7,8 @@ export function usePeople() {
     queryFn: async () => {
       const response = await fetch('/api/people', { credentials: 'include' });
       if (!response.ok) throw new Error('Failed to fetch people');
-      return response.json();
+      
+return response.json();
     },
     staleTime: 1000 * 60 * 5, // Serve cached data for 5 minutes
     refetchOnMount: false, // Avoid refetch on remount
@@ -26,7 +27,8 @@ export function useCreatePerson() {
         body: JSON.stringify(personData)
       });
       if (!response.ok) throw new Error('Failed to create person');
-      return response.json();
+      
+return response.json();
     },
     onSuccess: () => {
       // Invalidate and refetch the people query
@@ -41,7 +43,8 @@ export function usePerson(id: string) {
     queryFn: async () => {
       const response = await fetch(`/api/person/${id}`, { credentials: 'include' });
       if (!response.ok) throw new Error('Failed to fetch person');
-      return response.json();
+      
+return response.json();
     },
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,

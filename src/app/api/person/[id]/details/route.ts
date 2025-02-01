@@ -36,7 +36,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return new NextResponse(null, { status: 200 });
   } catch (error) {
     console.error('Error updating person details:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to update person details' }), {
+    
+return new NextResponse(JSON.stringify({ error: 'Failed to update person details' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

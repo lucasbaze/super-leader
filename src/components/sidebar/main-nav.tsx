@@ -23,7 +23,8 @@ export function MainNav({
       <SidebarMenu>
         {items.map((item) => {
           const isActive = pathname === item.url;
-          return (
+          
+return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
                 <Link href={item.url}>

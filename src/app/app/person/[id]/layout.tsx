@@ -38,7 +38,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
                     <Link
                       href='/app/people'
                       className='flex items-center gap-2 text-muted-foreground'>
-                      <Users className='h-4 w-4' />
+                      <Users className='size-4' />
                       <span>People</span>
                     </Link>
                   </BreadcrumbLink>

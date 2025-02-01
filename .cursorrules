@@ -77,3 +77,24 @@ Developer Experience (DX)
 **Styling**
 
 - Styling should be as simple as possible making adjustments to the core structure of the application to facilitate fixes
+
+**Error Handling and Service Response Pattern**
+
+- **Service Response Structure**
+
+  - All service methods should return a `ServiceResponse<T>` type
+  - Response should always include both `data` and `error` and data should be null if there is an error
+  - Errors should use predefined `ServiceErrorType` enum
+  - Services should catch and transform all errors into `ServiceResponse` format
+
+- **Error Types**
+
+  - Use `ServiceErrorType` enum for categorizing errors
+  - Include meaningful error messages and details
+  - Map service errors to appropriate HTTP status codes in API layer
+  - Log detailed errors but return safe error messages to clients
+
+- **Testing**
+  - Test both success and error cases
+  - Verify error types and messages
+  - Database should be passed in as a parameter to the service method

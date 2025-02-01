@@ -1,9 +1,9 @@
-import { cn } from '@/lib/utils';
 
 import { Message } from 'ai';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { cn } from '@/lib/utils';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -28,7 +28,8 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
                 p: ({ children }) => <p className='mb-2 last:mb-0'>{children}</p>,
                 code: ({ node, className, children, ...props }) => {
                   const match = /language-(\w+)/.exec(className || '');
-                  return match ? (
+                  
+return match ? (
                     <SyntaxHighlighter
                       // @ts-ignore
                       style={dark}

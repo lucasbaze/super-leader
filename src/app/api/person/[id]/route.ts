@@ -40,6 +40,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json(person);
   } catch (error) {
     console.error('API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    
+return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

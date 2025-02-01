@@ -1,8 +1,8 @@
+import { useAtom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import { BaseColor } from '@/lib/base-colors';
 import { Style } from '@/lib/styles';
 
-import { useAtom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
 
 type Config = {
   style: Style['name'];

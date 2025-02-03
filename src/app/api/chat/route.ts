@@ -1,6 +1,5 @@
 import { openai } from '@ai-sdk/openai';
 import { createClient } from '@supabase/supabase-js';
-
 import { streamText } from 'ai';
 import { z } from 'zod';
 
@@ -8,11 +7,25 @@ import { z } from 'zod';
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, personId, personName } = await req.json();
+
+  const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
+  
+  ${personId ? ` The user is currently viewing the profile of ${personName} (ID: ${personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise.` : ''}
+  
+  `;
+
+  const contextualMessages = [
+    {
+      role: 'system',
+      content: systemPrompt
+    },
+    ...messages
+  ];
 
   const result = streamText({
     model: openai('gpt-4-turbo'),
-    messages,
+    messages: contextualMessages,
     tools: {
       createPerson: {
         description: 'Create a new person record with an associated interaction note',
@@ -24,6 +37,17 @@ export async function POST(req: Request) {
             .string()
             .optional()
             .describe('Date when the person was met (ISO format) otherwise the current date today')
+        })
+      },
+      createInteraction: {
+        description: 'Create a new interaction record for a person',
+        parameters: z.object({
+          person_id: z.string().describe('The ID of the person the interaction is for'),
+          type: z
+            .string()
+            .describe('The type of interaction such as phone call, email, meeting, etc.'),
+          note: z.string().describe('Details about the interaction'),
+          person_name: z.string().describe('The name of the person for display purposes')
         })
       }
     }

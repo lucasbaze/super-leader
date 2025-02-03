@@ -31,6 +31,13 @@ export const apiResponse = {
     );
   },
 
+  validationError(error: TError): NextResponse<ApiResponse<never>> {
+    return NextResponse.json(
+      { success: false, data: null, error },
+      { status: errorStatusMap[ErrorType.VALIDATION_ERROR] }
+    );
+  },
+
   unauthorized(error: TError): NextResponse<ApiResponse<never>> {
     return NextResponse.json(
       { success: false, data: null, error },

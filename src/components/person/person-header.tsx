@@ -1,5 +1,7 @@
 import { useRouter } from 'next/navigation';
 
+import { toast } from 'sonner';
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -46,12 +48,14 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
               onClick={() => router.push(`/app/person/${person?.id}/activity`)}>
               Activity
             </TabsTrigger>
-            {/* <TabsTrigger
+            <TabsTrigger
               value='discovered'
               variant='underline'
-              onClick={() => router.push(`/app/person/${person?.id}/discovered`)}>
+              onClick={() => {
+                toast.info('Coming soon');
+              }}>
               Discovered
-            </TabsTrigger> */}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>

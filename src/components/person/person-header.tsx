@@ -46,12 +46,12 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
               onClick={() => router.push(`/app/person/${person?.id}/activity`)}>
               Activity
             </TabsTrigger>
-            <TabsTrigger
+            {/* <TabsTrigger
               value='discovered'
               variant='underline'
               onClick={() => router.push(`/app/person/${person?.id}/discovered`)}>
               Discovered
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
         </Tabs>
       </div>

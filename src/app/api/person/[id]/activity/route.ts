@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
-import { getPersonActivity } from '@/services/people/person-activity-service';
+import { getPersonActivity } from '@/services/people/person-activity';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 

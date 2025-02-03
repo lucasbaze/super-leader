@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { TInteraction } from '@/services/people/person-activity-service';
+import { TInteraction } from '@/services/people/person-activity';
 
 export function usePersonActivity(personId: string) {
   return useQuery<TInteraction[]>({

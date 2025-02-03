@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 
-import { TInteraction } from '@/services/people/person-activity-service';
+import { TInteraction } from '@/services/people/person-activity';
 
 interface ActivityTimelineProps {
   interactions: TInteraction[];

@@ -20,7 +20,10 @@ export {
   Mail,
   Phone,
   Trash2,
+  Newspaper,
   BadgeCheck,
+  NotebookPen,
+  ExternalLink,
   Bell,
   LogOut,
   Sparkles,
@@ -30,7 +33,12 @@ export {
   Users
 } from 'lucide-react';
 export * as LogoIcons from './logos';
-export { CaretSortIcon, ComponentPlaceholderIcon, ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
+export {
+  CaretSortIcon,
+  ComponentPlaceholderIcon,
+  ChevronRightIcon,
+  DotsHorizontalIcon
+} from '@radix-ui/react-icons';
 
 // Export custom icons
 export { OneRing } from './custom/one-ring';

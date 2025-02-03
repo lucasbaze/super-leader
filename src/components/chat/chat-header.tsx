@@ -1,12 +1,9 @@
 'use client';
 
-import { useParams, usePathname, useRouter, useSelectedLayoutSegment } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
-import { Activity } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { usePerson } from '@/hooks/use-person';
-
-import { ChatHeaderActions } from './chat-header-actions';
+import { DefaultChatHeader } from './headers/default';
+import { PersonChatHeader } from './headers/person';
 
 interface ChatHeaderProps {
   onAction: (message: string) => void;
@@ -14,22 +11,13 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ onAction, onSuggestions }: ChatHeaderProps) {
-  const params = useParams();
   const pathname = usePathname();
-  const { data, isLoading } = usePerson(params.id as string);
 
-  const isPersonPage = pathname.startsWith('/app/person/');
+  const getHeader = () => {
+    const isPersonPage = pathname.startsWith('/app/person/');
+    if (isPersonPage) return <PersonChatHeader onAction={onAction} onSuggestions={onSuggestions} />;
+    return <DefaultChatHeader />;
+  };
 
-  return (
-    <div className='flex items-center justify-between border-b px-4 py-1'>
-      <div className='font-semibold'>
-        {isPersonPage ? `${data?.person?.first_name} ${data?.person?.last_name}` : 'Chat Assistant'}
-      </div>
-
-      <Button variant='ghost' size='icon' onClick={() => onSuggestions()} title='Create new note'>
-        <Activity className='size-4' />
-      </Button>
-      <ChatHeaderActions onAction={onAction} />
-    </div>
-  );
+  return <div className='flex h-12 items-center justify-between border-b px-4'>{getHeader()}</div>;
 }

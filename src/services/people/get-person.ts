@@ -4,11 +4,14 @@ import { Address, ContactMethod, DBClient, Person, Website } from '@/types/datab
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
+import { TInteraction } from './person-activity';
+
 export interface GetPersonResult {
   person: Person;
   contactMethods?: ContactMethod[];
   addresses?: Address[];
   websites?: Website[];
+  interactions?: TInteraction[];
 }
 
 export interface GetPersonParams {
@@ -17,6 +20,7 @@ export interface GetPersonParams {
   withContactMethods?: boolean;
   withAddresses?: boolean;
   withWebsites?: boolean;
+  withInteractions?: boolean;
 }
 
 export const ERRORS = {
@@ -50,6 +54,12 @@ export const ERRORS = {
       ErrorType.DATABASE_ERROR,
       'Failed to fetch websites',
       'Unable to load website information'
+    ),
+    INTERACTIONS_ERROR: createError(
+      'interactions_error',
+      ErrorType.DATABASE_ERROR,
+      'Failed to fetch interactions',
+      'Unable to load interaction history'
     )
   }
 };
@@ -59,7 +69,8 @@ export async function getPerson({
   personId,
   withContactMethods = false,
   withAddresses = false,
-  withWebsites = false
+  withWebsites = false,
+  withInteractions = false
 }: GetPersonParams): Promise<TServiceResponse<GetPersonResult>> {
   try {
     // Get person
@@ -127,6 +138,24 @@ export async function getPerson({
       }
 
       result.websites = websites;
+    }
+
+    // Add interactions fetch
+    if (withInteractions) {
+      const { data: interactions, error: interactionsError } = await db
+        .from('interactions')
+        .select('*')
+        .eq('person_id', personId)
+        .order('created_at', { ascending: false });
+
+      if (interactionsError) {
+        const error = { ...ERRORS.PERSON.INTERACTIONS_ERROR, details: interactionsError };
+        errorLogger.log(error);
+
+        return { data: null, error };
+      }
+
+      result.interactions = interactions;
     }
 
     return { data: result, error: null };

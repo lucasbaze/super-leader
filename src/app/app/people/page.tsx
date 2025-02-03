@@ -1,7 +1,8 @@
 'use client';
 
-import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+
+import { format } from 'date-fns';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -14,7 +15,6 @@ import {
 } from '@/components/ui/table';
 import { usePeople } from '@/hooks/use-people';
 import { Person } from '@/types/database';
-
 
 export default function PeoplePage() {
   const router = useRouter();

@@ -6,6 +6,10 @@ import { json } from 'stream/consumers';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
+import { getPerson, GetPersonResult } from '@/services/people/get-person';
+import { TInteraction } from '@/services/people/person-activity';
+import { createClient } from '@/utils/supabase/server';
+
 // Define the structure for a single suggestion
 interface Suggestion {
   contentUrl: string;
@@ -25,17 +29,38 @@ const SuggestionSchema = z.object({
   reason: z.string()
 });
 
-// const JordanSchema = z.object({
-//   first_name: z.string(),
-//   last_name: z.string(),
-//   year_of_birth: z.number(),
-//   num_seasons_in_nba: z.number()
-// });
-
 const jsonSchema = zodToJsonSchema(SuggestionSchema);
-// const jordanJsonSchema = zodToJsonSchema(JordanSchema);
+
+interface UserPersonPrompt {
+  person: GetPersonResult;
+}
+
+const createUserPersonPrompt = ({ person }: UserPersonPrompt) =>
+  `
+  Person: ${person.person.first_name} ${person.person.last_name}
+  Interactions: ${person.interactions?.map((interaction) => interaction.note).join(', ')}
+  `;
 
 export async function POST(req: Request) {
+  // Fetch the data for the person that we're getting suggestions for
+  const body = await req.json();
+  const personId = body.personId;
+
+  const supabase = await createClient();
+
+  let userPersonPrompt;
+  if (personId) {
+    const person = await getPerson({
+      db: supabase,
+      personId: personId,
+      withInteractions: true
+    });
+    if (person.data) {
+      userPersonPrompt = createUserPersonPrompt({ person: person.data });
+    }
+  }
+  console.log('User Person Prompt:', userPersonPrompt);
+
   try {
     const options = {
       method: 'POST',
@@ -46,19 +71,14 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: 'sonar',
         messages: [
-          // { role: 'system', content: 'Be precise and concise.' },
-          // {
-          //   role: 'user',
-          //   content:
-          //     'Tell me about Scottie Pippen. Please output a JSON object containing the following fields: first_name, last_name, year_of_birth, num_seasons_in_nba.'
-          // }
           {
             role: 'system',
             content: systemPrompt
           },
           {
             role: 'user',
-            content: kendallUserPrompt
+            content: userPersonPrompt || defaultUserPersonPrompt
+            // content: kendallUserPrompt
           }
         ],
         response_format: {
@@ -75,30 +95,24 @@ export async function POST(req: Request) {
     };
 
     console.log('Fetching with Options:', options);
-    // const response = await fetch('https://api.perplexity.ai/chat/completions', options);
-    // const data = await response.json();
+    const response = await fetch('https://api.perplexity.ai/chat/completions', options);
+    const data = await response.json();
 
-    // console.log('Data:', data);
+    console.log('Data:', data);
 
-    // const contentString = data.choices[0].message.content;
-    // console.log('Content String:', contentString);
+    const contentString = data.choices[0].message.content;
+    console.log('Content String:', contentString);
 
-    // let parsedJson;
-    const parsedJson = null;
-    // const jsonMatch = contentString.match(/```json\s*([\s\S]*?)\s*```/);
-    // if (jsonMatch && jsonMatch[1]) {
-    //   parsedJson = JSON.parse(jsonMatch[1]);
-    // } else {
-    //   parsedJson = null;
-    // }
-    // console.log(parsedJson);
+    let parsedJson;
+    // const parsedJson = null;
+    const jsonMatch = contentString.match(/```json\s*([\s\S]*?)\s*```/);
+    if (jsonMatch && jsonMatch[1]) {
+      parsedJson = JSON.parse(jsonMatch[1]);
+    } else {
+      parsedJson = null;
+    }
 
-    // const content = message.content.replace(/```json\n/, '').replace(/\n```/, '');
-    // const content = contentString.replace(/```json\n/, '').replace(/\n```/, '');
-    // const parsedContent = JSON.parse(content);
-
-    // Validate the parsed data against our schema
-    // const validatedData = JordanSchema.parse(parsedContent);
+    console.log('Parsed JSON:', parsedJson);
 
     return new Response(JSON.stringify(parsedJson), {
       headers: {
@@ -110,8 +124,8 @@ export async function POST(req: Request) {
 
     // Provide more specific error messages
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-    
-return new Response(JSON.stringify({ error: errorMessage }), {
+
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'content-type': 'application/json'
@@ -122,6 +136,8 @@ return new Response(JSON.stringify({ error: errorMessage }), {
 
 const systemPrompt = stripIndents`
   You are an AI-powered content recommendation assistant that helps curate high-quality, engaging, and contextually relevant content based on my relationship with another person. Your goal is to suggest articles, videos, events, or memes that would be of genuine interest to the other person and would make sense coming from me.
+
+  ALWAYS RETURN JSON CONTENT AS DEFINED IN THE OUTPUT FORMAT. NEVER RETURN AN EMPTY ARRAY.
 
   Guidelines for Content Selection:
   - Personal Relevance – The content should align with the recipient’s interests, profession, personal background, or recent conversations based on the relationship context provided.
@@ -166,6 +182,8 @@ const systemPrompt = stripIndents`
   - Default to cool, cutting-edge, or high-quality general content if no perfect match exists.
   - Only return content worth sharing—if nothing meets the standard, return fewer than 3 results.
 `;
+
+const defaultUserPersonPrompt = `I do not much about this person, so provide general content that is interesting to a wide audience.`;
 
 const localBasedSystemPrompt = stripIndents`
  You are an AI-powered content recommendation assistant that curates high-quality, location-based events, activities, news, and opportunities that align with a person's stage of life and interests. Your goal is to suggest hyper-relevant content based on the recipient’s location and life context, ensuring they receive fresh, interesting, and timely recommendations.

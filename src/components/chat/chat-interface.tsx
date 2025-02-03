@@ -1,10 +1,12 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { useChat } from 'ai/react';
+import { toast } from 'sonner';
 
+import { Button } from '@/components/ui/button';
 import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
@@ -13,6 +15,7 @@ import { ActionCard } from './action-card';
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
+import { TSuggestion } from './suggestion-card';
 
 export function ChatInterface() {
   const [pendingAction, setPendingAction] = useState<{
@@ -22,10 +25,18 @@ export function ChatInterface() {
     toolCallId: string;
   } | null>(null);
   const params = useParams();
+  const router = useRouter();
   const { data: personData } = usePerson(params.id as string);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, addToolResult } = useChat({
     api: '/api/chat',
+    initialMessages: [
+      {
+        role: 'assistant',
+        content: 'Hello, how can I help you today?',
+        id: '1'
+      }
+    ],
     body: {
       personId: params.id,
       personName: personData?.person
@@ -33,6 +44,7 @@ export function ChatInterface() {
         : undefined
     },
     onToolCall: ({ toolCall }) => {
+      console.log('Tool call:', toolCall);
       setPendingAction({
         type: 'function',
         name: toolCall.toolName,
@@ -45,6 +57,27 @@ export function ChatInterface() {
   const createPerson = useCreatePerson();
   const createInteraction = useCreateInteraction(pendingAction?.arguments?.person_id || params.id);
 
+  const [suggestions, setSuggestions] = useState<TSuggestion[]>([
+    {
+      contentUrl: 'https://www.nasa.gov/stennis/engineering-and-test-directorate/',
+      title: 'NASA Stennis Space Center: Propulsion Test Engineering',
+      reason:
+        "As a NASA scientist, Alexis might be interested in the latest developments and projects at NASA's Stennis Space Center, particularly in propulsion testing."
+    },
+    {
+      contentUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      title: "Beekeeping 101: A Beginner's Guide",
+      reason:
+        "Given Alexis's interest in beekeeping, this video could provide her with some new insights or tips for her hobby."
+    },
+    {
+      contentUrl: 'https://www.buzzfeed.com/animals/bunny-facts',
+      title: 'Adorable Bunny Facts You Never Knew',
+      reason:
+        'Alexis likes bunnies, so sharing some fun and interesting facts about them could bring a smile to her face.'
+    }
+  ]);
+
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
 
@@ -53,6 +86,22 @@ export function ChatInterface() {
         const result = await createPerson.mutateAsync(pendingAction.arguments);
         console.log('Create Person result:', result);
         addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
+
+        // Show toast with link to new person
+        toast.success(
+          <div className='flex flex-col gap-2'>
+            <p>
+              Successfully created {pendingAction.arguments.first_name}{' '}
+              {pendingAction.arguments.last_name}
+            </p>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => router.push(`/app/person/${result.data?.id}/activity`)}>
+              View Profile
+            </Button>
+          </div>
+        );
       } else if (pendingAction.name === 'createInteraction') {
         const result = await createInteraction.mutateAsync({
           type: pendingAction.arguments.type,
@@ -64,6 +113,7 @@ export function ChatInterface() {
       setPendingAction(null);
     } catch (error) {
       console.error('Error handling action:', error);
+      toast.error('Failed to create. Please try again.');
     }
   };
 
@@ -80,11 +130,17 @@ export function ChatInterface() {
   };
 
   const handleSuggestions = async () => {
-    const response = await fetch('/api/suggestions', { credentials: 'include', method: 'POST' });
+    const response = await fetch('/api/suggestions', {
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify({
+        personId: params.id
+      })
+    });
     if (!response.ok) throw new Error('Failed to fetch suggestions');
     const responseData = await response.json();
     console.log('Suggestions:', responseData);
-
+    setSuggestions(responseData.suggestions || []);
     return responseData;
   };
 
@@ -92,7 +148,7 @@ export function ChatInterface() {
     <div className='absolute inset-0 flex flex-col'>
       <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
       <div className='relative flex-1 overflow-hidden'>
-        <ChatMessages messages={messages} isLoading={isLoading} />
+        <ChatMessages messages={messages} isLoading={isLoading} suggestions={suggestions} />
         {pendingAction?.name === 'createPerson' && (
           <div className='absolute inset-x-0 bottom-0 bg-background/80 p-4 backdrop-blur'>
             <ActionCard

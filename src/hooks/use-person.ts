@@ -1,4 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
+
+import { errorToast } from '@/components/errors/error-toast';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 interface PersonAboutData {
@@ -8,16 +10,19 @@ interface PersonAboutData {
   websites: Website[];
 }
 
-export function usePersonAbout(id: string) {
+export function usePerson(id: string) {
   return useQuery<PersonAboutData>({
     queryKey: ['person', id, 'about'],
     queryFn: async () => {
-      const response = await fetch(`/api/person/${id}/about`);
+      const response = await fetch(`/api/person/${id}`);
+      const json = await response.json();
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        // TODO: Add Error Logger
+        errorToast.show(json.error);
       }
-      
-return response.json();
+
+      return json.data;
     }
   });
 }

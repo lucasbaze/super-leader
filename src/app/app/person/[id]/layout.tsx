@@ -14,16 +14,14 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { usePerson } from '@/hooks/use-people';
-import { usePersonAbout } from '@/hooks/use-person-about';
+import { usePerson } from '@/hooks/use-person';
 
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const segment = useSelectedLayoutSegment() || 'summary';
-  const { data: person, isLoading } = usePerson(params.id as string);
-  const { data: aboutData } = usePersonAbout(params.id as string);
+  const { data, isLoading } = usePerson(params.id as string);
 
-  if (isLoading || !aboutData) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
@@ -45,7 +43,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  {person?.first_name} {person?.last_name}
+                  {data?.person.first_name} {data?.person?.last_name}
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -57,8 +55,8 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
           {/* Main Content Area */}
           <div className='col-span-2 h-full overflow-hidden'>
             <PersonHeader
-              person={person}
-              contactMethods={aboutData?.contactMethods}
+              person={data?.person}
+              contactMethods={data?.contactMethods}
               segment={segment}
             />
             <ScrollArea className='col-span-2 h-[calc(100svh-theme(spacing.52))] px-5'>
@@ -69,7 +67,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
           {/* Sidebar - Independent Scroll */}
           <div className='flex h-full flex-col overflow-hidden border-l'>
             <div className='no-scrollbar flex-1 overflow-y-auto px-4 pb-4'>
-              <PersonBioSidebar data={aboutData} />
+              <PersonBioSidebar data={data} />
             </div>
           </div>
         </div>

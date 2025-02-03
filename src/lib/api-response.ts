@@ -1,38 +1,40 @@
 import { NextResponse } from 'next/server';
 
-import { ServiceError } from '@/types/service-response';
+import { errorLogger } from '@/lib/errors';
+import { ApiResponse } from '@/types/api-response';
+import { ErrorType, TError } from '@/types/errors';
 
-import { ErrorMessages, errorStatusMap } from './errors';
-
-export type ApiResponse<T> = {
-  data?: T;
-  error?: string;
-  details?: unknown;
+const errorStatusMap: Record<ErrorType, number> = {
+  [ErrorType.NOT_FOUND]: 404,
+  [ErrorType.UNAUTHORIZED]: 401,
+  [ErrorType.VALIDATION_ERROR]: 400,
+  [ErrorType.DATABASE_ERROR]: 503,
+  [ErrorType.INTERNAL_ERROR]: 500,
+  [ErrorType.CONFLICT]: 409,
+  [ErrorType.BAD_REQUEST]: 400,
+  [ErrorType.FORBIDDEN]: 403,
+  [ErrorType.NETWORK_ERROR]: 503,
+  [ErrorType.TIMEOUT]: 408
 };
 
 export const apiResponse = {
-  success<T>(data: T) {
-    return NextResponse.json(data);
+  success<T>(data: T): NextResponse<ApiResponse<T>> {
+    return NextResponse.json({ success: true, data, error: null });
   },
 
-  error(message: string, status: number = 500, details?: unknown) {
-    return NextResponse.json({ error: message, details }, { status });
-  },
+  error(error: TError): NextResponse<ApiResponse<never>> {
+    errorLogger.log(error);
 
-  serviceError(error: ServiceError) {
     return NextResponse.json(
-      { error: error.message, details: error.details },
+      { success: false, data: null, error },
       { status: errorStatusMap[error.type] }
     );
   },
 
-  unauthorized() {
-    return NextResponse.json({ error: ErrorMessages.UNAUTHORIZED }, { status: 401 });
-  },
-
-  internalError(error?: unknown) {
-    if (error) console.error('API Error:', error);
-
-    return NextResponse.json({ error: ErrorMessages.INTERNAL_SERVER_ERROR }, { status: 500 });
+  unauthorized(error: TError): NextResponse<ApiResponse<never>> {
+    return NextResponse.json(
+      { success: false, data: null, error },
+      { status: errorStatusMap[ErrorType.UNAUTHORIZED] }
+    );
   }
 };

@@ -78,6 +78,10 @@ Developer Experience (DX)
 
 - Styling should be as simple as possible making adjustments to the core structure of the application to facilitate fixes
 
+**Typescript Typing**
+
+- Prefix all types with `T` such as `TBaseError`
+
 **Error Handling and Service Response Pattern**
 
 - **Service Response Structure**

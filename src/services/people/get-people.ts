@@ -1,5 +1,19 @@
+import { createError } from '@/lib/errors/error-factory';
+import { errorLogger } from '@/lib/errors/error-logger';
 import { DBClient, Person } from '@/types/database';
-import { ServiceErrorType, ServiceException, ServiceResponse } from '@/types/service-response';
+import { ErrorType } from '@/types/errors';
+import { ServiceResponse } from '@/types/service-response';
+
+export const ERRORS = {
+  PEOPLE: {
+    FETCH_ERROR: createError(
+      'people_fetch_error',
+      ErrorType.DATABASE_ERROR,
+      'Error fetching people data',
+      'Unable to load your people at this time'
+    )
+  }
+};
 
 export interface GetPeopleParams {
   db: DBClient;
@@ -18,28 +32,20 @@ export async function getPeople({
       .order('first_name', { ascending: true });
 
     if (error) {
-      throw new ServiceException(ServiceErrorType.DATABASE_ERROR, 'Failed to fetch people', error);
+      const serviceError = ERRORS.PEOPLE.FETCH_ERROR;
+      errorLogger.log(serviceError, { details: error });
+
+      return { data: null, error: serviceError };
     }
 
-    return { data: people };
+    return { data: people, error: null };
   } catch (error) {
-    if (error instanceof ServiceException) {
-      return {
-        data: null,
-        error: {
-          type: error.type,
-          message: error.message,
-          details: error.details
-        }
-      };
-    }
-
-    return {
-      error: {
-        type: ServiceErrorType.INTERNAL_ERROR,
-        message: 'An unexpected error occurred while fetching people',
-        details: error
-      }
+    const serviceError = {
+      ...ERRORS.PEOPLE.FETCH_ERROR,
+      details: error
     };
+    errorLogger.log(serviceError);
+
+    return { data: null, error: serviceError };
   }
 }

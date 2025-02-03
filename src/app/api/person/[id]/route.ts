@@ -1,46 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
+import { apiResponse } from '@/lib/api-response';
+import { validateAuthentication } from '@/lib/auth/validate-authentication';
+import { toError } from '@/lib/errors';
+import { getPerson } from '@/services/people/get-person';
 import { createClient } from '@/utils/supabase/server';
 
-type RouteParams = {
-  params: {
-    id: string;
-  };
-};
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = await createClient();
+  const { id } = await params;
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
+  const authResult = await validateAuthentication(supabase);
+  if (authResult.error) {
+    return apiResponse.unauthorized(authResult.error);
+  }
+
   try {
-    // Validate id parameter
-    const { id } = await Promise.resolve(params);
+    const result = await getPerson({
+      db: supabase,
+      personId: id,
+      withContactMethods: true,
+      withAddresses: true,
+      withWebsites: true
+    });
 
-    const supabase = await createClient();
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (result.error) {
+      return apiResponse.error(result.error);
     }
 
-    const { data: person, error } = await supabase
-      .from('person')
-      .select('*')
-      .eq('id', id)
-      .eq('user_id', user.id)
-      .single();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    if (!person) {
-      return NextResponse.json({ error: 'Person not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(person);
+    return apiResponse.success(result.data);
   } catch (error) {
-    console.error('API Error:', error);
-    
-return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return apiResponse.error(toError(error));
   }
 }

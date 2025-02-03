@@ -3,10 +3,9 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
-import { ServiceErrorType } from '@/types/service-response';
 import { createClient } from '@/utils/supabase/server';
 
-import { getPeople } from '../get-people';
+import { ERRORS, getPeople } from '../get-people';
 
 describe('getPeople service', () => {
   let supabase: SupabaseClient;
@@ -22,7 +21,8 @@ describe('getPeople service', () => {
         const result = await getPeople({ db, userId: testUser.id });
 
         expect(result.data).toEqual([]);
-        expect(result.error).toBeUndefined();
+        console.log(result.error);
+        expect(result.error).toBeNull();
       });
     });
 
@@ -65,7 +65,7 @@ describe('getPeople service', () => {
             })
           ])
         );
-        expect(result.error).toBeUndefined();
+        expect(result.error).toBeNull();
       });
     });
 
@@ -110,11 +110,7 @@ describe('getPeople service', () => {
         const result = await getPeople({ db, userId: 'invalid-id' });
 
         expect(result.error).toBeDefined();
-        expect(result.error).toEqual({
-          type: ServiceErrorType.DATABASE_ERROR,
-          message: 'Failed to fetch people',
-          details: expect.any(Object)
-        });
+        expect(result.error).toEqual(ERRORS.PEOPLE.FETCH_ERROR);
         expect(result.data).toBeNull();
       });
     });

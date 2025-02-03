@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { usePerson } from '@/hooks/use-people';
+import { usePerson } from '@/hooks/use-person';
 
 export default function PersonActivityPage() {
   const params = useParams();

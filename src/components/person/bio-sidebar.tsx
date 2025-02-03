@@ -1,9 +1,9 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 
-import { Globe, Mail, MapPin, Phone , Edit } from '@/components/icons';
+import { Edit, Globe, Mail, MapPin, Phone } from '@/components/icons';
 import { BioSidebarEdit } from '@/components/person/bio-sidebar-edit';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';

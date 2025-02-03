@@ -6,7 +6,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { ContactMethod, Person } from '@/types/database';
 
 interface PersonHeaderProps {
-  person: Person;
+  person: Person | undefined;
   contactMethods?: ContactMethod[];
   segment: string | null;
 }
@@ -14,7 +14,7 @@ interface PersonHeaderProps {
 // TODO: Do something with thhe "contact Methods"
 export function PersonHeader({ person, contactMethods = [], segment }: PersonHeaderProps) {
   const router = useRouter();
-  const initials = `${person.first_name[0]}${person.last_name?.[0] || ''}`;
+  const initials = `${person?.first_name[0]}${person?.last_name?.[0] || ''}`;
 
   return (
     <div className='px-5'>
@@ -23,7 +23,7 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <h1 className='text-lg font-medium'>
-          {person.first_name} {person.last_name}
+          {person?.first_name} {person?.last_name}
         </h1>
         <div className='flex gap-2'>
           <Badge variant='secondary'>Label 1</Badge>
@@ -37,19 +37,19 @@ export function PersonHeader({ person, contactMethods = [], segment }: PersonHea
             <TabsTrigger
               value='summary'
               variant='underline'
-              onClick={() => router.push(`/app/person/${person.id}`)}>
+              onClick={() => router.push(`/app/person/${person?.id}`)}>
               Summary
             </TabsTrigger>
             <TabsTrigger
               value='activity'
               variant='underline'
-              onClick={() => router.push(`/app/person/${person.id}/activity`)}>
+              onClick={() => router.push(`/app/person/${person?.id}/activity`)}>
               Activity
             </TabsTrigger>
             <TabsTrigger
               value='discovered'
               variant='underline'
-              onClick={() => router.push(`/app/person/${person.id}/discovered`)}>
+              onClick={() => router.push(`/app/person/${person?.id}/discovered`)}>
               Discovered
             </TabsTrigger>
           </TabsList>

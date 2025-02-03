@@ -6,9 +6,9 @@ import { ApiResponse } from '@/types/api-response';
 import { Person } from '@/types/database';
 
 export function usePeople() {
-  return useQuery<ApiResponse<Person[]>, TBaseError>({
+  return useQuery<Person[]>({
     queryKey: ['people'],
-    queryFn: async (): Promise<ApiResponse<Person[]>> => {
+    queryFn: async (): Promise<Person[]> => {
       const response = await fetch('/api/people', { credentials: 'include' });
       const json = await response.json();
 

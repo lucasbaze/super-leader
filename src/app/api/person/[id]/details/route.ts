@@ -1,20 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { apiResponse } from '@/lib/api-response';
+import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { personEditSchema } from '@/lib/schemas/person-edit';
 import { updatePersonDetails } from '@/services/people/update-person-details';
 import { createClient } from '@/utils/supabase/server';
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const data = await request.json();
 
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authResult = await validateAuthentication(supabase);
+    if (authResult.error) {
+      return apiResponse.unauthorized(authResult.error);
     }
 
     // Await and validate id parameter

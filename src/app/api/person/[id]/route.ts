@@ -6,7 +6,7 @@ import { toError } from '@/lib/errors';
 import { getPerson } from '@/services/people/get-person';
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const { id } = await params;
 

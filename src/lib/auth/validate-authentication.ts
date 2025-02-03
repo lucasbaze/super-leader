@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { createError } from '@/lib/errors';
 import { AuthUser, Database } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { ServiceResponse } from '@/types/service-response';
+import { TServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   UNAUTHORIZED: createError(
@@ -22,7 +22,7 @@ export const ERRORS = {
 
 export async function validateAuthentication(
   supabase: SupabaseClient<Database>
-): Promise<ServiceResponse<AuthUser>> {
+): Promise<TServiceResponse<AuthUser>> {
   try {
     const {
       data: { user },

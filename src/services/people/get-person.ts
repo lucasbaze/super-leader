@@ -2,7 +2,7 @@ import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { Address, ContactMethod, DBClient, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { ServiceResponse } from '@/types/service-response';
+import { TServiceResponse } from '@/types/service-response';
 
 export interface GetPersonResult {
   person: Person;
@@ -60,7 +60,7 @@ export async function getPerson({
   withContactMethods = false,
   withAddresses = false,
   withWebsites = false
-}: GetPersonParams): Promise<ServiceResponse<GetPersonResult>> {
+}: GetPersonParams): Promise<TServiceResponse<GetPersonResult>> {
   try {
     // Get person
     const { data: person, error: personError } = await db

@@ -3,7 +3,7 @@ import { errorLogger } from '@/lib/errors/error-logger';
 import { TPersonEditFormData } from '@/lib/schemas/person-edit';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { ServiceResponse } from '@/types/service-response';
+import { TServiceResponse } from '@/types/service-response';
 
 export type TUpdatePersonDetailsParams = {
   db: DBClient;
@@ -32,7 +32,7 @@ export async function updatePersonDetails({
   db,
   personId,
   data
-}: TUpdatePersonDetailsParams): Promise<ServiceResponse<null>> {
+}: TUpdatePersonDetailsParams): Promise<TServiceResponse<null>> {
   try {
     // Start a transaction
     const { data: person, error: personError } = await db

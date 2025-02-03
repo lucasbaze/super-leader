@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const contactMethodSchema = z.object({
   id: z.string().optional(),
-  type: z.enum(['email', 'phone', 'telegram', 'whatsapp', 'signal', 'other']),
+  type: z.string(),
   value: z.string(),
   label: z.string().optional(),
   is_primary: z.boolean().default(false)
@@ -31,4 +31,4 @@ export const personEditSchema = z.object({
   websites: z.array(websiteSchema)
 });
 
-export type PersonEditFormData = z.infer<typeof personEditSchema>;
+export type TPersonEditFormData = z.infer<typeof personEditSchema>;

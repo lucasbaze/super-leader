@@ -1,10 +1,8 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { toError } from '@/lib/errors';
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
-import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
 import { ERRORS, getPerson } from '../get-person';

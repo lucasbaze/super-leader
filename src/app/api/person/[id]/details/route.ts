@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { personEditSchema } from '@/lib/schemas/person-edit';
+import { updatePersonDetails } from '@/services/people/update-person-details';
 import { createClient } from '@/utils/supabase/server';
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
@@ -23,12 +24,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const validated = personEditSchema.parse(data);
 
     // Start a transaction to update all related data
-    const { error } = await supabase.rpc('update_person_details', {
-      p_person_id: id,
-      p_bio: validated.bio,
-      p_contact_methods: validated.contactMethods,
-      p_addresses: validated.addresses,
-      p_websites: validated.websites
+    const { error } = await updatePersonDetails({
+      db: supabase,
+      personId: id,
+      data: validated
     });
 
     if (error) throw error;
@@ -36,8 +35,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return new NextResponse(null, { status: 200 });
   } catch (error) {
     console.error('Error updating person details:', error);
-    
-return new NextResponse(JSON.stringify({ error: 'Failed to update person details' }), {
+
+    return new NextResponse(JSON.stringify({ error: 'Failed to update person details' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

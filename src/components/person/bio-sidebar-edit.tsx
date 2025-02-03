@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
+
 import { Plus, Trash } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,18 +23,18 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { PersonEditFormData, personEditSchema } from '@/lib/schemas/person-edit';
-import type { BioSidebarData } from './bio-sidebar';
+import { personEditSchema, TPersonEditFormData } from '@/lib/schemas/person-edit';
 
+import type { BioSidebarData } from './bio-sidebar';
 
 interface BioSidebarEditProps {
   data: BioSidebarData;
-  onSubmit: (data: PersonEditFormData) => Promise<void>;
+  onSubmit: (data: TPersonEditFormData) => Promise<void>;
   onCancel: () => void;
 }
 
 export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps) {
-  const form = useForm<PersonEditFormData>({
+  const form = useForm<TPersonEditFormData>({
     resolver: zodResolver(personEditSchema),
     defaultValues: {
       bio: data.person.bio || '',
@@ -107,7 +108,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
 
   return (
     <Form {...form}>
-      <form className='space-y-8'>
+      <form className='space-y-8 pb-40'>
         {/* Bio Section */}
         <FormField
           control={form.control}
@@ -353,7 +354,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
           </div>
         </div>
 
-        <div className='flex w-full justify-end gap-2 border-t bg-background p-4'>
+        <div className='absolute bottom-0 right-1 flex w-full justify-end gap-2 border-t bg-background p-4'>
           <Button type='button' variant='outline' onClick={onCancel}>
             Cancel
           </Button>

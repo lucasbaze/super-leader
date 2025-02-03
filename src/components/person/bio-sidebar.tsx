@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { PersonEditFormData } from '@/lib/schemas/person-edit';
+import { TPersonEditFormData } from '@/lib/schemas/person-edit';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 export interface BioSidebarData {
@@ -28,7 +28,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
   const params = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
-  const handleEditSubmit = async (data: PersonEditFormData) => {
+  const handleEditSubmit = async (data: TPersonEditFormData) => {
     try {
       const response = await fetch(`/api/person/${params.id}/details`, {
         method: 'PUT',

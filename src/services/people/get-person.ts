@@ -69,8 +69,6 @@ export async function getPerson({
       .eq('id', personId)
       .single();
 
-    console.log('person', person, personError);
-
     if (!person || personError) {
       const error = { ...ERRORS.PERSON.NOT_FOUND, details: personError };
       errorLogger.log(error);

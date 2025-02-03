@@ -10,7 +10,7 @@ export function usePeople() {
     queryKey: ['people'],
     queryFn: async (): Promise<ApiResponse<Person[]>> => {
       const response = await fetch('/api/people', { credentials: 'include' });
-      const json: ApiResponse<Person[]> = await response.json();
+      const json = await response.json();
 
       if (!response.ok || !json.success) {
         // TODO: Add Error Logger

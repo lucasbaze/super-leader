@@ -50,7 +50,7 @@ Developer Experience (DX)
 
 **Working in the Correct Directory**
 
-- Before installing or updating dependencies, always navigate (`cd`) into the specific directory of the application or package you’re working on. For example:
+- Before installing or updating dependencies, always navigate (`cd`) into the specific directory of the application or package you're working on. For example:
   - Use `cd apps/expo` before installing dependencies for the React Native app.
   - Use `cd apps/nextjs` for the Next.js app.
   - Use `cd apps/backend` for backend-specific packages or Supabase-related dependencies.
@@ -60,7 +60,7 @@ Developer Experience (DX)
 - Install dependencies using Yarn in the appropriate directory. For example:
   - `cd apps/expo && yarn add <package>` for the React Native app.
   - `cd apps/nextjs && yarn add <package>` for the Next.js app.
-- For shared packages within the `packages/` directory, navigate to the package’s directory before running installation commands.
+- For shared packages within the `packages/` directory, navigate to the package's directory before running installation commands.
 
 **Scripts and Commands**
 
@@ -88,8 +88,10 @@ Developer Experience (DX)
 
   - All service methods should return a `ServiceResponse<T>` type
   - Response should always include both `data` and `error` and data should be null if there is an error
-  - Errors should use predefined `ServiceErrorType` enum
-  - Services should catch and transform all errors into `ServiceResponse` format
+  - Services should define their own ERRORS object using createError from error-factory
+  - Each service should export its ERRORS object for reuse in tests and API routes
+  - Error objects should include name, type, message, and displayMessage
+  - Services should use errorLogger.log for all errors before returning them
 
 - **Error Types**
 
@@ -97,8 +99,60 @@ Developer Experience (DX)
   - Include meaningful error messages and details
   - Map service errors to appropriate HTTP status codes in API layer
   - Log detailed errors but return safe error messages to clients
+  - Error types should be defined in the service and exported for reuse
 
 - **Testing**
-  - Test both success and error cases
-  - Verify error types and messages
-  - Database should be passed in as a parameter to the service method
+
+  - Use Jest as the testing framework
+  - Tests should be organized in describe blocks for different test categories:
+    - success cases
+    - error cases
+    - isolation tests (when updating data)
+  - Use withTestTransaction for database tests to ensure clean state
+  - Verify changes using service methods (e.g., use getPerson to verify updatePerson)
+  - Create test data using test builders (e.g., createTestUser, createTestPerson)
+  - Test both individual field updates and bulk updates
+  - Test data isolation (changes don't affect other records)
+  - Test deletion cases by verifying empty arrays/null values
+  - Match error objects exactly using toMatchObject
+  - Verify both the initial state and final state in modification tests
+
+**Service Method Patterns**
+
+- **Parameters**
+
+  - Accept a single params object with db as first parameter
+  - Use TypeScript interface for params (prefixed with T)
+  - Document all required and optional parameters
+
+- **Response Structure**
+
+  - Use ServiceResponse<T> type for all returns
+  - Return { data: null, error: serviceError } for errors
+  - Return { data: result, error: null } for success
+
+- **API Route Integration**
+
+  - Use apiResponse utility for consistent HTTP responses
+  - Map service errors to HTTP status codes
+  - Handle authentication in the route before calling service
+  - Validate input using zod schemas before calling service
+
+**Schema Patterns**
+
+- **Validation Schemas**
+
+  - Use zod for all validation schemas
+  - Export schema and types (prefixed with T)
+  - Keep validation rules in schema, not in service
+  - Match schema structure to database tables
+  - Export form data types for component use
+
+**Database Patterns**
+
+- **Transactions**
+
+  - Use withTestTransaction in tests
+  - Pass db client through all service calls
+  - Keep database logic in service layer
+  - Match table structure in types and schemas

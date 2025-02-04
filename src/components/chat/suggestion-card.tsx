@@ -2,6 +2,7 @@ import { ExternalLink, Newspaper, SendHorizontal } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
+// TODO: Use the type from the server or types file
 export interface TSuggestion {
   contentUrl: string;
   title: string;

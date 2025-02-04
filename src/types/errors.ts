@@ -8,7 +8,8 @@ export enum ErrorType {
   BAD_REQUEST = 'BAD_REQUEST',
   FORBIDDEN = 'FORBIDDEN',
   NETWORK_ERROR = 'NETWORK_ERROR',
-  TIMEOUT = 'TIMEOUT'
+  TIMEOUT = 'TIMEOUT',
+  API_ERROR = 'API_ERROR'
 }
 
 export interface TError extends Error {

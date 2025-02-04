@@ -14,7 +14,8 @@ const errorStatusMap: Record<ErrorType, number> = {
   [ErrorType.BAD_REQUEST]: 400,
   [ErrorType.FORBIDDEN]: 403,
   [ErrorType.NETWORK_ERROR]: 503,
-  [ErrorType.TIMEOUT]: 408
+  [ErrorType.TIMEOUT]: 408,
+  [ErrorType.API_ERROR]: 500
 };
 
 export const apiResponse = {

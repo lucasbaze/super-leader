@@ -1,16 +1,23 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { JSONValue, Message, streamText } from 'ai';
 import { z } from 'zod';
-
-import { fetchSuggestions } from '@/hooks/use-suggestions';
-import { queryClient } from '@/lib/react-query';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+const getDataFromMessage = (message: Message): JSONValue => {
+  if (message.data) {
+    return message.data;
+  }
+  return null;
+};
+
 export async function POST(req: Request) {
   const { messages, personId, personName } = await req.json();
   console.log('Chat Route: Messages: ', messages);
+
+  const lastMessage = messages.slice(-1)[0];
+  const messageData = getDataFromMessage(lastMessage);
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
   
@@ -53,12 +60,15 @@ export async function POST(req: Request) {
           person_name: z.string().describe('The name of the person for display purposes')
         })
       },
+      // TODO: Update to getPersonContentSuggestions
       getPersonSuggestions: {
         description: 'Get Suggestions for the person suggested by the user',
         parameters: z.object({
           person_id: z.string().describe('The ID of the person the suggestions are for')
+          // TODO: Add message body here & pass to the suggestions request, i.e. extend with gifts, etc..
         }),
         execute: async ({ person_id }) => {
+          // TODO: Move this back to the server
           try {
             console.log('Fetching suggestions for person:', person_id);
 
@@ -84,15 +94,50 @@ export async function POST(req: Request) {
             console.error('Error fetching suggestions:', error);
             throw error;
           }
-        },
-        experimental_toToolResultContent: (result) => {
-          console.log('Converting tool result:', result);
-          return [
-            {
-              type: 'text',
-              text: JSON.stringify(result)
+        }
+      },
+      createMessageSuggestionsFromArticleForUser: {
+        description:
+          "Create suggested messages for the person selected based on the article and the user's relationship with the person",
+        parameters: z.object({
+          content: z.string().describe('The article to get suggestions for'),
+          person_id: z.string().describe('The ID of the person the suggestions are for')
+        }),
+        execute: async ({ content, person_id }) => {
+          console.log('Creating message suggestions from article for user:', content, person_id);
+          console.log('Message Data:', messageData);
+          try {
+            console.log('Fetching suggestions for person:', person_id);
+
+            // TODO: Move to use-suggestions hook
+            const response = await fetch(`http://localhost:3000/api/suggestions/messages`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                personId: person_id,
+                // TODO: Type these properly
+                // @ts-ignore
+                contentUrl: messageData?.contentUrl,
+                // @ts-ignore
+                contentTitle: messageData?.contentTitle
+              })
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              console.error('Suggestions API error:', errorData);
+              throw new Error(errorData.error || 'Failed to fetch suggestions');
             }
-          ];
+
+            const json = await response.json();
+            console.log('Message Suggestions API response:', json);
+            return json.data;
+          } catch (error) {
+            console.error('Error fetching suggestions:', error);
+            throw error;
+          }
         }
       }
     }

@@ -1,3 +1,5 @@
+import { CreateMessage } from 'ai';
+
 import { ExternalLink, Newspaper, SendHorizontal } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -8,13 +10,28 @@ export interface TSuggestion {
   title: string;
   reason: string;
   category?: string;
+  append: (message: CreateMessage) => void;
 }
 
 interface SuggestionCardProps {
   suggestion: TSuggestion;
+  append: (message: CreateMessage) => void;
 }
 
-export function SuggestionCard({ suggestion }: SuggestionCardProps) {
+export function SuggestionCard({ suggestion, append }: SuggestionCardProps) {
+  const handleAppend = () => {
+    const prompt = 'Please create message variants based on the following content:';
+
+    append({
+      role: 'user',
+      content: `${prompt} ${suggestion.title}`,
+      data: {
+        contentUrl: suggestion.contentUrl,
+        contentTitle: suggestion.title
+      }
+    });
+  };
+
   return (
     <div className='flex items-center gap-2'>
       <Card className='w-full max-w-md'>
@@ -39,7 +56,7 @@ export function SuggestionCard({ suggestion }: SuggestionCardProps) {
           </Button>
         </CardFooter>
       </Card>
-      <Button variant='ghost' size='icon'>
+      <Button variant='ghost' size='icon' onClick={handleAppend}>
         <SendHorizontal className='size-4' />
       </Button>
     </div>

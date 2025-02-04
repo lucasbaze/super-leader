@@ -21,6 +21,8 @@ export {
   Phone,
   Trash2,
   Newspaper,
+  CheckIcon,
+  CopyIcon,
   BadgeCheck,
   NotebookPen,
   ExternalLink,

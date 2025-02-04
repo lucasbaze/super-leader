@@ -1,9 +1,6 @@
 // https://www.npmjs.com/package/openai-edge
 // https://docs.perplexity.ai/guides/getting-started
 import { stripIndents } from 'common-tags';
-import { Configuration, OpenAIApi } from 'openai-edge';
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';

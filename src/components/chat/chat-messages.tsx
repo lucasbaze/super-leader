@@ -1,28 +1,28 @@
-import { Message } from 'ai';
+import { CreateMessage, Message } from 'ai';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 import { ActionCard } from './action-card';
+import { MessageCard } from './cards/message-card';
 import { SuggestionCard, TSuggestion } from './suggestion-card';
 
 interface ChatMessagesProps {
   messages: Message[];
   isLoading: boolean;
-  suggestions?: TSuggestion[];
   handleConfirmAction: () => void;
   handleCancelAction: () => void;
+  append: (message: CreateMessage) => void;
 }
 
 export function ChatMessages({
   messages,
   isLoading,
-  suggestions,
   handleConfirmAction,
-  handleCancelAction
+  handleCancelAction,
+  append
 }: ChatMessagesProps) {
   console.log('Chat Messages:', messages);
   return (
@@ -116,7 +116,23 @@ export function ChatMessages({
                   <>
                     {/* @ts-ignore */}
                     {toolInvocation.result?.map((result: TSuggestion, index: number) => (
-                      <SuggestionCard key={index} suggestion={result} />
+                      <SuggestionCard key={index} suggestion={result} append={append} />
+                    ))}
+                  </>
+                );
+              }
+              if (toolInvocation.toolName === 'createMessageSuggestionsFromArticleForUser') {
+                return (
+                  <>
+                    {/* @ts-ignore */}
+                    {toolInvocation.result?.map((result: TMessageSuggestion, index: number) => (
+                      <MessageCard
+                        key={index}
+                        message={result.text}
+                        tone={result.tone}
+                        // TODO: Add url passed from state
+                        // url={result.url}
+                      />
                     ))}
                   </>
                 );

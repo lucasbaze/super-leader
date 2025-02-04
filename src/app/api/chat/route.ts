@@ -1,13 +1,16 @@
 import { openai } from '@ai-sdk/openai';
-import { createClient } from '@supabase/supabase-js';
 import { streamText } from 'ai';
 import { z } from 'zod';
+
+import { fetchSuggestions } from '@/hooks/use-suggestions';
+import { queryClient } from '@/lib/react-query';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const { messages, personId, personName } = await req.json();
+  console.log('Chat Route: Messages: ', messages);
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
   
@@ -49,6 +52,48 @@ export async function POST(req: Request) {
           note: z.string().describe('Details about the interaction'),
           person_name: z.string().describe('The name of the person for display purposes')
         })
+      },
+      getPersonSuggestions: {
+        description: 'Get Suggestions for the person suggested by the user',
+        parameters: z.object({
+          person_id: z.string().describe('The ID of the person the suggestions are for')
+        }),
+        execute: async ({ person_id }) => {
+          try {
+            console.log('Fetching suggestions for person:', person_id);
+
+            // TODO: Move to use-suggestions hook
+            const response = await fetch(`http://localhost:3000/api/suggestions`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ personId: person_id })
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              console.error('Suggestions API error:', errorData);
+              throw new Error(errorData.error || 'Failed to fetch suggestions');
+            }
+
+            const json = await response.json();
+            console.log('Suggestions API response:', json);
+            return json.data;
+          } catch (error) {
+            console.error('Error fetching suggestions:', error);
+            throw error;
+          }
+        },
+        experimental_toToolResultContent: (result) => {
+          console.log('Converting tool result:', result);
+          return [
+            {
+              type: 'text',
+              text: JSON.stringify(result)
+            }
+          ];
+        }
       }
     }
   });

@@ -10,8 +10,9 @@ import { Button } from '@/components/ui/button';
 import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
+import { fetchSuggestions } from '@/hooks/use-suggestions';
+import { queryClient } from '@/lib/react-query';
 
-import { ActionCard } from './action-card';
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
@@ -43,8 +44,17 @@ export function ChatInterface() {
         ? `${personData.person.first_name} ${personData.person.last_name}`
         : undefined
     },
-    onToolCall: ({ toolCall }) => {
-      console.log('Tool call:', toolCall);
+    onToolCall: async ({ toolCall }) => {
+      // TODO: Move server side tool calls to the server
+      // if (toolCall.toolName === 'getPersonSuggestions') {
+      //   const suggestions = await fetchSuggestions(queryClient, params.id as string);
+      //   console.log('Suggestions:', suggestions, toolCall.toolCallId);
+      //   addToolResult({ toolCallId: toolCall.toolCallId, result: 'Yes' });
+      // }
+      if (toolCall.toolName === 'getPersonSuggestions') {
+        console.log('getPersonSuggestions', toolCall);
+        return;
+      }
       setPendingAction({
         type: 'function',
         name: toolCall.toolName,
@@ -57,26 +67,27 @@ export function ChatInterface() {
   const createPerson = useCreatePerson();
   const createInteraction = useCreateInteraction(pendingAction?.arguments?.person_id || params.id);
 
-  const [suggestions, setSuggestions] = useState<TSuggestion[]>([
-    {
-      contentUrl: 'https://www.nasa.gov/stennis/engineering-and-test-directorate/',
-      title: 'NASA Stennis Space Center: Propulsion Test Engineering',
-      reason:
-        "As a NASA scientist, Alexis might be interested in the latest developments and projects at NASA's Stennis Space Center, particularly in propulsion testing."
-    },
-    {
-      contentUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      title: "Beekeeping 101: A Beginner's Guide",
-      reason:
-        "Given Alexis's interest in beekeeping, this video could provide her with some new insights or tips for her hobby."
-    },
-    {
-      contentUrl: 'https://www.buzzfeed.com/animals/bunny-facts',
-      title: 'Adorable Bunny Facts You Never Knew',
-      reason:
-        'Alexis likes bunnies, so sharing some fun and interesting facts about them could bring a smile to her face.'
-    }
-  ]);
+  // const [suggestions, setSuggestions] = useState<TSuggestion[]>([
+  //   {
+  //     contentUrl: 'https://www.nasa.gov/stennis/engineering-and-test-directorate/',
+  //     title: 'NASA Stennis Space Center: Propulsion Test Engineering',
+  //     reason:
+  //       "As a NASA scientist, Alexis might be interested in the latest developments and projects at NASA's Stennis Space Center, particularly in propulsion testing."
+  //   },
+  //   {
+  //     contentUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  //     title: "Beekeeping 101: A Beginner's Guide",
+  //     reason:
+  //       "Given Alexis's interest in beekeeping, this video could provide her with some new insights or tips for her hobby."
+  //   },
+  //   {
+  //     contentUrl: 'https://www.buzzfeed.com/animals/bunny-facts',
+  //     title: 'Adorable Bunny Facts You Never Knew',
+  //     reason:
+  //       'Alexis likes bunnies, so sharing some fun and interesting facts about them could bring a smile to her face.'
+  //   }
+  // ]);
+  const [suggestions, setSuggestions] = useState<TSuggestion[]>([]);
 
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
@@ -110,6 +121,14 @@ export function ChatInterface() {
         console.log('Create Interaction result:', result);
         addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
       }
+      // else if (pendingAction.name === 'getPersonSuggestions') {
+      //   const suggestions = await fetchSuggestions(queryClient, params.id as string);
+      //   console.log('Suggestions:', suggestions, pendingAction.toolCallId);
+      //   addToolResult({
+      //     toolCallId: pendingAction.toolCallId,
+      //     result: ` ${JSON.stringify(suggestions)}`
+      //   });
+      // }
       setPendingAction(null);
     } catch (error) {
       console.error('Error handling action:', error);
@@ -119,7 +138,7 @@ export function ChatInterface() {
 
   const handleCancelAction = () => {
     if (!pendingAction) return;
-    addToolResult({ toolCallId: pendingAction.toolCallId, result: 'No' });
+    addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Cancelled action' });
     setPendingAction(null);
   };
 
@@ -130,43 +149,25 @@ export function ChatInterface() {
   };
 
   const handleSuggestions = async () => {
-    const response = await fetch('/api/suggestions', {
-      credentials: 'include',
-      method: 'POST',
-      body: JSON.stringify({
-        personId: params.id
-      })
-    });
-    if (!response.ok) throw new Error('Failed to fetch suggestions');
-    const responseData = await response.json();
-    console.log('Suggestions:', responseData);
-    setSuggestions(responseData.suggestions || []);
-    return responseData;
+    const message = `Get suggestions for ${personData?.person?.first_name}`;
+
+    // Update input state first
+    handleInputChange({
+      target: { value: message }
+    } as unknown as React.ChangeEvent<HTMLTextAreaElement>);
   };
 
   return (
     <div className='absolute inset-0 flex flex-col'>
       <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
       <div className='relative flex-1 overflow-hidden'>
-        <ChatMessages messages={messages} isLoading={isLoading} suggestions={suggestions} />
-        {pendingAction?.name === 'createPerson' && (
-          <div className='absolute inset-x-0 bottom-0 bg-background/80 p-4 backdrop-blur'>
-            <ActionCard
-              person={pendingAction.arguments}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
-            />
-          </div>
-        )}
-        {pendingAction?.name === 'createInteraction' && (
-          <div className='absolute inset-x-0 bottom-0 bg-background/80 p-4 backdrop-blur'>
-            <ActionCard
-              interaction={pendingAction.arguments}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
-            />
-          </div>
-        )}
+        <ChatMessages
+          messages={messages}
+          isLoading={isLoading}
+          suggestions={suggestions}
+          handleConfirmAction={handleConfirmAction}
+          handleCancelAction={handleCancelAction}
+        />
       </div>
       <ChatInput
         input={input}

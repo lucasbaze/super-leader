@@ -1,6 +1,16 @@
 'use client';
 
-import { BadgeCheck, Bell, CaretSortIcon, ComponentPlaceholderIcon, LogOut, Sparkles } from '@/components/icons';
+import { useTransition } from 'react';
+
+import { logout } from '@/app/login/actions';
+import {
+  BadgeCheck,
+  Bell,
+  CaretSortIcon,
+  ComponentPlaceholderIcon,
+  LogOut,
+  Sparkles
+} from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -11,7 +21,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar
+} from '@/components/ui/sidebar';
 
 export function NavUser({
   user
@@ -23,6 +38,13 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const [isPending, startTransition] = useTransition();
+
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logout();
+    });
+  };
 
   return (
     <SidebarMenu>
@@ -83,9 +105,9 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} disabled={isPending}>
               <LogOut />
-              Log out
+              {isPending ? 'Logging out...' : 'Log out'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

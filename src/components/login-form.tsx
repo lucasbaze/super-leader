@@ -1,3 +1,8 @@
+'use client';
+
+import { useState } from 'react';
+
+import { Eye, EyeOff } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +15,8 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ className, onSubmit }: LoginFormProps) {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className={cn('flex flex-col gap-6', className)}>
       <Card className='overflow-hidden'>
@@ -28,7 +35,29 @@ export function LoginForm({ className, onSubmit }: LoginFormProps) {
                 <div className='flex items-center'>
                   <Label htmlFor='password'>Password</Label>
                 </div>
-                <Input id='password' name='password' type='password' required />
+                <div className='relative'>
+                  <Input
+                    id='password'
+                    name='password'
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                  />
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
+                    onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
+                      <EyeOff className='size-4 text-muted-foreground' />
+                    ) : (
+                      <Eye className='size-4 text-muted-foreground' />
+                    )}
+                    <span className='sr-only'>
+                      {showPassword ? 'Hide password' : 'Show password'}
+                    </span>
+                  </Button>
+                </div>
               </div>
               <Button type='submit' className='w-full'>
                 Login
@@ -48,7 +77,8 @@ export function LoginForm({ className, onSubmit }: LoginFormProps) {
         </CardContent>
       </Card>
       <div className='text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary'>
-        By clicking continue, you agree to our <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>.
+        By clicking continue, you agree to our <a href='#'>Terms of Service</a> and{' '}
+        <a href='#'>Privacy Policy</a>.
       </div>
     </div>
   );

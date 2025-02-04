@@ -24,3 +24,16 @@ export async function login(formData: FormData) {
   revalidatePath('/app', 'layout');
   redirect('/app');
 }
+
+export async function logout() {
+  const supabase = await createClient();
+
+  // Sign out the user
+  await supabase.auth.signOut();
+
+  // Revalidate all protected routes
+  revalidatePath('/app', 'layout');
+
+  // Redirect to login page
+  redirect('/login');
+}

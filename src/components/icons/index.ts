@@ -3,6 +3,8 @@ export {
   BookOpen,
   Bot,
   Orbit,
+  Eye,
+  EyeOff,
   CircleUser,
   Command,
   MapPin,

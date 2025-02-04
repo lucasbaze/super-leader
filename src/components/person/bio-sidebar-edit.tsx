@@ -33,6 +33,10 @@ interface BioSidebarEditProps {
   onCancel: () => void;
 }
 
+function SectionHeader({ children }: { children: React.ReactNode }) {
+  return <h3 className='mb-4 border-b pb-2 text-lg font-medium'>{children}</h3>;
+}
+
 export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps) {
   const form = useForm<TPersonEditFormData>({
     resolver: zodResolver(personEditSchema),
@@ -108,36 +112,27 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
 
   return (
     <Form {...form}>
-      <form className='space-y-8 pb-40'>
+      <form className='space-y-16 pb-40'>
         {/* Bio Section */}
-        <FormField
-          control={form.control}
-          name='bio'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='text-sm font-medium'>Bio</FormLabel>
-              <FormControl>
-                <Textarea {...field} className='min-h-[100px]' />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div>
+          <SectionHeader>Bio</SectionHeader>
+          <FormField
+            control={form.control}
+            name='bio'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea {...field} className='min-h-[100px]' />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* Contact Methods */}
         <div className='space-y-4'>
-          <div className='flex items-center justify-between'>
-            <FormLabel className='text-sm font-medium'>Contact Methods</FormLabel>
-            <Button
-              type='button'
-              variant='outline'
-              size='sm'
-              onClick={() => appendContact({ type: 'email', value: '', is_primary: false })}>
-              <Plus className='mr-2 size-4' />
-              Add Contact
-            </Button>
-          </div>
-
+          <SectionHeader>Contact Methods</SectionHeader>
           <div className='space-y-4'>
             {contactFields.map((field, index) => (
               <div key={field.id} className='space-y-3 rounded-md border p-3'>
@@ -193,35 +188,26 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                     variant='ghost'
                     size='sm'
                     onClick={() => removeContact(index)}>
-                    <Trash className='size-4' />
+                    <Trash className='size-4 stroke-red-600' />
                   </Button>
                 </div>
               </div>
             ))}
           </div>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            className='mt-4'
+            onClick={() => appendContact({ type: 'email', value: '', is_primary: false })}>
+            <Plus className='mr-2 size-4' />
+            Add Contact
+          </Button>
         </div>
 
         {/* Addresses */}
-        <div className='space-y-6'>
-          <div className='flex items-center justify-between'>
-            <FormLabel className='text-sm font-medium'>Addresses</FormLabel>
-            <Button
-              type='button'
-              variant='outline'
-              size='sm'
-              onClick={() =>
-                appendAddress({
-                  street: '',
-                  city: '',
-                  country: '',
-                  is_primary: false
-                })
-              }>
-              <Plus className='mr-2 size-4' />
-              Add Address
-            </Button>
-          </div>
-
+        <div className='space-y-4'>
+          <SectionHeader>Addresses</SectionHeader>
           <div className='space-y-4'>
             {addressFields.map((field, index) => (
               <div key={field.id} className='space-y-2 rounded-md border p-2'>
@@ -291,28 +277,33 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                     variant='ghost'
                     size='sm'
                     onClick={() => removeAddress(index)}>
-                    <Trash className='size-4' />
+                    <Trash className='size-4 stroke-red-600' />
                   </Button>
                 </div>
               </div>
             ))}
           </div>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            className='mt-4'
+            onClick={() =>
+              appendAddress({
+                street: '',
+                city: '',
+                country: '',
+                is_primary: false
+              })
+            }>
+            <Plus className='mr-2 size-4' />
+            Add Address
+          </Button>
         </div>
 
         {/* Websites */}
-        <div className='space-y-6'>
-          <div className='flex items-center justify-between'>
-            <FormLabel className='text-sm font-medium'>Websites & Social</FormLabel>
-            <Button
-              type='button'
-              variant='outline'
-              size='sm'
-              onClick={() => appendWebsite({ url: '', label: '' })}>
-              <Plus className='mr-2 size-4' />
-              Add Website
-            </Button>
-          </div>
-
+        <div className='space-y-4'>
+          <SectionHeader>Websites & Social</SectionHeader>
           <div className='space-y-4'>
             {websiteFields.map((field, index) => (
               <div key={field.id} className='space-y-3 rounded-md border p-4'>
@@ -352,6 +343,15 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
               </div>
             ))}
           </div>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            className='mt-4'
+            onClick={() => appendWebsite({ url: '', label: '' })}>
+            <Plus className='mr-2 size-4' />
+            Add Website
+          </Button>
         </div>
 
         <div className='absolute bottom-0 right-1 flex w-full justify-end gap-2 border-t bg-background p-4'>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useChat } from 'ai/react';
 import { toast } from 'sonner';
@@ -16,6 +16,8 @@ import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
 
 export function ChatInterface() {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [autoScroll, setAutoScroll] = useState(true);
   const [pendingAction, setPendingAction] = useState<{
     type: string;
     name: string;
@@ -119,6 +121,23 @@ export function ChatInterface() {
     });
   };
 
+  const scrollToBottom = () => {
+    if (messagesEndRef.current && autoScroll) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Scroll when new messages arrive
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 50;
+    setAutoScroll(isAtBottom);
+  };
+
   return (
     <div className='absolute inset-0 flex flex-col'>
       <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
@@ -129,6 +148,8 @@ export function ChatInterface() {
           handleConfirmAction={handleConfirmAction}
           handleCancelAction={handleCancelAction}
           append={append}
+          onScroll={handleScroll}
+          messagesEndRef={messagesEndRef}
         />
       </div>
       <ChatInput

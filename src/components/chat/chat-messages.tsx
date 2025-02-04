@@ -15,6 +15,8 @@ interface ChatMessagesProps {
   handleConfirmAction: () => void;
   handleCancelAction: () => void;
   append: (message: CreateMessage) => void;
+  onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function ChatMessages({
@@ -22,11 +24,13 @@ export function ChatMessages({
   isLoading,
   handleConfirmAction,
   handleCancelAction,
-  append
+  append,
+  onScroll,
+  messagesEndRef
 }: ChatMessagesProps) {
   console.log('Chat Messages:', messages);
   return (
-    <div className='absolute inset-0 overflow-y-auto p-4'>
+    <div className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
       <div className='flex flex-col gap-4'>
         {messages.map((message) => {
           if (message.role === 'user') {
@@ -151,6 +155,7 @@ export function ChatMessages({
             Thinking...
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );

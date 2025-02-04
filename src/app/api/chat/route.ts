@@ -73,7 +73,7 @@ export async function POST(req: Request) {
             console.log('Fetching suggestions for person:', person_id);
 
             // TODO: Move to use-suggestions hook
-            const response = await fetch(`http://localhost:3000/api/suggestions`, {
+            const response = await fetch(`/api/suggestions`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
             console.log('Fetching suggestions for person:', person_id);
 
             // TODO: Move to use-suggestions hook
-            const response = await fetch(`http://localhost:3000/api/suggestions/messages`, {
+            const response = await fetch(`/api/suggestions/messages`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

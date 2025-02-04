@@ -8,18 +8,18 @@ import { getSuggestionsForPerson } from '@/services/suggestions/get-suggestions-
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
-const MOCK_SUGGESTIONS = [
-  {
-    contentUrl: 'https://www.nature.com/articles/d41586-024-00589-5',
-    title: 'How AI is transforming scientific discovery',
-    reason: "A fascinating overview of AI's impact on research and innovation"
-  },
-  {
-    contentUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    title: 'The Future of Remote Work and Digital Collaboration',
-    reason: 'Insights into evolving workplace trends and technologies'
-  }
-];
+// const MOCK_SUGGESTIONS = [
+//   {
+//     contentUrl: 'https://www.nature.com/articles/d41586-024-00589-5',
+//     title: 'How AI is transforming scientific discovery',
+//     reason: "A fascinating overview of AI's impact on research and innovation"
+//   },
+//   {
+//     contentUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+//     title: 'The Future of Remote Work and Digital Collaboration',
+//     reason: 'Insights into evolving workplace trends and technologies'
+//   }
+// ];
 
 export async function POST(req: Request) {
   try {
@@ -38,11 +38,11 @@ export async function POST(req: Request) {
     const { personId } = body;
 
     // Call the service method
-    // const result = await getSuggestionsForPerson({
-    //   db: supabase,
-    //   personId
-    // });
-    const result = { data: MOCK_SUGGESTIONS, error: null };
+    const result = await getSuggestionsForPerson({
+      db: supabase,
+      personId
+    });
+    // const result = { data: MOCK_SUGGESTIONS, error: null };
 
     if (result.error) {
       return apiResponse.error(result.error);

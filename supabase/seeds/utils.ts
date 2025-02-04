@@ -19,7 +19,9 @@ export function generateAddresses(personId: string, userId: string, count: numbe
       state: faker.location.state(),
       country: countries[Math.floor(Math.random() * countries.length)],
       is_primary: i === 0,
-      label: ['Home', 'Work', 'Vacation', 'Summer House', 'Winter Home'][Math.floor(Math.random() * 5)]
+      label: ['Home', 'Work', 'Vacation', 'Summer House', 'Winter Home'][
+        Math.floor(Math.random() * 5)
+      ]
     });
   }
 
@@ -71,7 +73,7 @@ export function generateWebsites(personId: string, userId: string): Website[] {
     websites.push({
       person_id: personId,
       user_id: userId,
-      url: `https://${platform.domain}/${faker.internet.userName()}`,
+      url: `https://${platform.domain}/${faker.internet.username()}`,
       icon: platform.name,
       label: `${platform.name} Profile`
     });

@@ -73,7 +73,7 @@ describe('createMessageSuggestions', () => {
         }
       ];
 
-      mockOpenAI.mockResolvedValueOnce(mockSuggestions);
+      mockOpenAI.mockResolvedValueOnce({ suggestions: mockSuggestions });
 
       const result = await createMessageSuggestions({
         db,

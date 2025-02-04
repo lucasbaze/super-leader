@@ -15,7 +15,7 @@
     "type-check": "tsc --noEmit",
     "generate-types": "npx supabase gen types typescript --local > ./src/types/database/supabase.ts",
     "seed": "ts-node --project supabase/seeds/tsconfig.seeds.json supabase/seeds/index.ts",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest --silent",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:api": "NODE_ENV=test jest --testPathPattern=src/tests/api"
   },

@@ -73,7 +73,8 @@ export async function POST(req: Request) {
             console.log('Fetching suggestions for person:', person_id);
 
             // TODO: Move to use-suggestions hook
-            const response = await fetch(`/api/suggestions`, {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const response = await fetch(`${baseUrl}/api/suggestions`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -110,7 +111,8 @@ export async function POST(req: Request) {
             console.log('Fetching suggestions for person:', person_id);
 
             // TODO: Move to use-suggestions hook
-            const response = await fetch(`/api/suggestions/messages`, {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const response = await fetch(`${baseUrl}/api/suggestions/messages`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

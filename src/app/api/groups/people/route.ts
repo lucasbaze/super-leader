@@ -1,11 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
-import { toError } from '@/lib/errors';
+import { createError, toError } from '@/lib/errors';
 import { getGroupMembers } from '@/services/groups/get-group-members';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
+
+const ERRORS = {
+  MISSING_SLUG: createError(
+    'missing_slug',
+    ErrorType.VALIDATION_ERROR,
+    'Group slug is required',
+    'Group identifier is missing'
+  )
+};
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,12 +23,7 @@ export async function GET(request: NextRequest) {
     const slug = searchParams.get('slug');
 
     if (!slug) {
-      return apiResponse.error({
-        name: 'missing_slug',
-        type: ErrorType.VALIDATION_ERROR,
-        message: 'Group slug is required',
-        displayMessage: 'Group identifier is missing'
-      });
+      return apiResponse.error(ERRORS.MISSING_SLUG);
     }
 
     const authResult = await validateAuthentication(supabase);

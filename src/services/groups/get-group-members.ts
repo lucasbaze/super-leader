@@ -1,5 +1,4 @@
-import { createError } from '@/lib/errors';
-import { errorLogger } from '@/lib/errors/error-logger';
+import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
@@ -11,6 +10,18 @@ export const ERRORS = {
       ErrorType.DATABASE_ERROR,
       'Error fetching group members',
       'Unable to load group members at this time'
+    ),
+    MISSING_USER_ID: createError(
+      'missing_user_id',
+      ErrorType.VALIDATION_ERROR,
+      'User ID is required',
+      'User identifier is missing'
+    ),
+    MISSING_SLUG: createError(
+      'missing_slug',
+      ErrorType.VALIDATION_ERROR,
+      'Group slug is required',
+      'Group identifier is missing'
     )
   }
 };
@@ -27,6 +38,14 @@ export async function getGroupMembers({
   slug
 }: GetGroupMembersParams): Promise<TServiceResponse<Person[]>> {
   try {
+    if (!userId) {
+      return { data: null, error: ERRORS.GROUP_MEMBERS.MISSING_USER_ID };
+    }
+
+    if (!slug) {
+      return { data: null, error: ERRORS.GROUP_MEMBERS.MISSING_SLUG };
+    }
+
     const { data: people, error } = await db
       .from('group_member')
       .select(

@@ -29,6 +29,7 @@ import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import { CoreGroupsNav } from '@/components/sidebar/core-groups-nav';
 import { MainNav } from '@/components/sidebar/main-nav';
+import { UserGroupsNav } from '@/components/sidebar/user-groups-nav';
 import {
   Sidebar,
   SidebarContent,
@@ -226,6 +227,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarContent>
         <MainNav items={mainNavItems} />
         <CoreGroupsNav items={data.core} />
+        <UserGroupsNav />
         <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className='mt-auto' />
       </SidebarContent>

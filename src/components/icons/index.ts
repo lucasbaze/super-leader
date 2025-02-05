@@ -35,6 +35,7 @@ export {
   Activity,
   SendHorizontal,
   Search,
+  Loader,
   Users
 } from 'lucide-react';
 export * as LogoIcons from './logos';

@@ -1,3 +1,5 @@
+import { generateSlug } from '@/lib/utils';
+
 import { SeedContext } from './types';
 import { generateRandomNumber } from './utils';
 
@@ -9,14 +11,6 @@ const DEFAULT_GROUPS = [
   { name: 'Work', icon: '💼' },
   { name: 'Community', icon: '🏘️' }
 ] as const;
-
-// Utility function to generate a URL-safe slug
-function generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-    .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
-}
 
 export async function seedGroups({ supabase, userId }: SeedContext) {
   const groupIds: Record<string, string> = {};

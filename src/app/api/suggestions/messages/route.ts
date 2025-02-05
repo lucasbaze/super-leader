@@ -38,6 +38,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { personId, contentUrl, contentTitle } = body;
 
+    console.log('body', body);
     if (!personId || !contentUrl || !contentTitle) {
       return apiResponse.error(ERRORS.INVALID_REQUEST);
     }

@@ -68,6 +68,7 @@ export async function getSuggestionsForPerson({
       return { data: null, error: personResult.error };
     }
 
+    console.log('personResult', personResult);
     const userPersonPrompt = createUserPersonPrompt({ person: personResult.data });
 
     // Call AI service with prompts
@@ -89,6 +90,7 @@ export async function getSuggestionsForPerson({
     }
 
     const data = await response.json();
+    console.log('data', data);
     const contentString = data.choices[0].message.content;
     let suggestions: TSuggestion[] = [];
 

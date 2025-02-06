@@ -1,11 +1,12 @@
 'use client';
 
-import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { toast } from 'sonner';
 
 import { EmojiPicker } from '@/components/emoji-picker';
+import { SearchPersonItem } from '@/components/groups/search-person-item';
 import { Loader, Plus, Search, Users } from '@/components/icons';
 import { PeopleTable } from '@/components/tables/people-table';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { useCreateGroup } from '@/hooks/use-groups';
+import { useSimpleSearchPeople } from '@/hooks/use-simple-search-people';
 
 interface CreateGroupSheetProps {
   open: boolean;
@@ -22,11 +24,16 @@ interface CreateGroupSheetProps {
 
 export function CreateGroupSheet({ open, onOpenChange }: CreateGroupSheetProps) {
   const router = useRouter();
-  const [groupName, setGroupName] = React.useState('');
-  const [groupIcon, setGroupIcon] = React.useState('😀'); // Default emoji
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [selectedPersonIds, setSelectedPersonIds] = React.useState<string[]>([]);
+  const [groupName, setGroupName] = useState('');
+  const [groupIcon, setGroupIcon] = useState('😀'); // Default emoji
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [selectedPersonIds, setSelectedPersonIds] = useState<string[]>([]);
+
+  const { setSearchTerm, people, isLoading } = useSimpleSearchPeople();
+
+  useEffect(() => {
+    console.log('Search Results:', { people, isLoading });
+  }, [people, isLoading]);
 
   const createGroup = useCreateGroup();
 
@@ -49,7 +56,6 @@ export function CreateGroupSheet({ open, onOpenChange }: CreateGroupSheetProps) 
       setGroupName('');
       setGroupIcon('😀');
       setSelectedPersonIds([]);
-      setSearchQuery('');
 
       // Navigate to the new group
       router.push(`/app/groups/${group.slug}`);
@@ -59,6 +65,12 @@ export function CreateGroupSheet({ open, onOpenChange }: CreateGroupSheetProps) 
   };
 
   const isValid = groupName.trim().length > 0;
+
+  const handlePersonSelect = (personId: string) => {
+    setSelectedPersonIds((current) =>
+      current.includes(personId) ? current.filter((id) => id !== personId) : [...current, personId]
+    );
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -100,25 +112,38 @@ export function CreateGroupSheet({ open, onOpenChange }: CreateGroupSheetProps) 
               <Search className='absolute left-2 top-2.5 size-4 text-muted-foreground' />
               <Input
                 placeholder='Search people...'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className='pl-8'
               />
             </div>
           </div>
 
           {/* People List Section */}
-          {/* <div className='flex-1 overflow-auto py-4'>
-            <PeopleTable
-              people={[]} // We'll add the filtered people data here
-              emptyMessage='No people found'
-              selectedIds={selectedPersonIds}
-              onSelectedIdsChange={setSelectedPersonIds}
-            />
-          </div> */}
+          <div className='no-scrollbar flex-1 space-y-2 overflow-auto py-4'>
+            {isLoading ? (
+              <div className='flex items-center justify-center py-8'>
+                <Loader className='size-6 animate-spin text-muted-foreground' />
+              </div>
+            ) : people.length === 0 ? (
+              <div className='flex items-center justify-center py-8 text-muted-foreground'>
+                No people found
+              </div>
+            ) : (
+              <div className='space-y-2'>
+                {people.map((person) => (
+                  <SearchPersonItem
+                    key={person.id}
+                    person={person}
+                    isSelected={selectedPersonIds.includes(person.id)}
+                    onClick={() => handlePersonSelect(person.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Footer Actions */}
-          <div className='flex items-center justify-end gap-2 border-t py-4'>
+          <div className='flex items-center justify-end gap-2 border-t pt-4'>
             <Button variant='outline' onClick={() => onOpenChange(false)}>
               Cancel
             </Button>

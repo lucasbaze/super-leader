@@ -10,19 +10,15 @@ import {
   Bot,
   CircleUser,
   Command,
-  Frame,
   Home,
   LifeBuoy,
-  Map,
   OneRing,
   Orbit,
-  PieChart,
   Send,
   Settings2,
   SquareTerminal,
   ThreeRing,
-  TwoRing,
-  Users
+  TwoRing
 } from '@/components/icons';
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
@@ -228,7 +224,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         <MainNav items={mainNavItems} />
         <CoreGroupsNav items={data.core} />
         <UserGroupsNav />
-        <NavMain items={data.navMain} />
+        {/* <NavMain items={data.navMain} /> */}
         <NavSecondary items={data.navSecondary} className='mt-auto' />
       </SidebarContent>
       <SidebarFooter>

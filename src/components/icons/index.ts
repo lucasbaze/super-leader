@@ -37,6 +37,7 @@ export {
   Search,
   Loader,
   Users,
+  UserPlus,
   MoreHorizontal,
   Settings,
   PlusCircle

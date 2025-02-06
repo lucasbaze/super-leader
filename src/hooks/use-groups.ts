@@ -40,3 +40,59 @@ export function useCreateGroup() {
     }
   });
 }
+
+export function useAddGroupMembers() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      groupId,
+      groupSlug,
+      personIds
+    }: {
+      groupId: string;
+      groupSlug: string;
+      personIds: string[];
+    }) => {
+      const response = await fetch(`/api/groups/${groupId}/members`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ personIds, groupSlug })
+      });
+
+      const json = await response.json();
+      if (json.error) {
+        errorToast.show(json.error);
+        throw json.error;
+      }
+      return json.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['group-members', variables.groupSlug] });
+    }
+  });
+}
+
+export function useDeleteGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (groupId: string) => {
+      const response = await fetch(`/api/groups/${groupId}`, {
+        method: 'DELETE'
+      });
+
+      const json = await response.json();
+      if (json.error) {
+        errorToast.show(json.error);
+        throw json.error;
+      }
+      return json.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+    }
+  });
+}

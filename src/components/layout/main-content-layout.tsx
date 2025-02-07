@@ -14,7 +14,7 @@ export function MainContentLayout({ children, className }: MainContentLayoutProp
     <div
       className={cn(
         'relative flex min-h-svh flex-col bg-background',
-        'min-h-[calc(100svh-theme(spacing.16))] md:m-1 md:rounded-md md:border md:shadow-sm',
+        'min-h-[calc(100svh-theme(spacing.16))] md:m-1 md:rounded-md md:border',
         className
       )}>
       {children}

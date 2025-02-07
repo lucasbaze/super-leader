@@ -1,7 +1,8 @@
 'use client';
 
-import { User } from '@supabase/supabase-js';
 import * as React from 'react';
+
+import { User } from '@supabase/supabase-js';
 
 import {
   Bell,
@@ -9,21 +10,22 @@ import {
   Bot,
   CircleUser,
   Command,
-  Frame,
   Home,
   LifeBuoy,
-  Map,
+  OneRing,
   Orbit,
-  PieChart,
   Send,
   Settings2,
   SquareTerminal,
-  Users
+  ThreeRing,
+  TwoRing
 } from '@/components/icons';
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
+import { CoreGroupsNav } from '@/components/sidebar/core-groups-nav';
 import { MainNav } from '@/components/sidebar/main-nav';
+import { UserGroupsNav } from '@/components/sidebar/user-groups-nav';
 import {
   Sidebar,
   SidebarContent,
@@ -67,6 +69,23 @@ const data = {
     email: 'm@example.com',
     avatar: '/avatars/shadcn.jpg'
   },
+  core: [
+    {
+      title: 'Inner 5',
+      url: '/app/groups/inner-5',
+      icon: OneRing
+    },
+    {
+      title: 'Central 50',
+      url: '/app/groups/central-50',
+      icon: TwoRing
+    },
+    {
+      title: 'Strategic 100',
+      url: '/app/groups/strategic-100',
+      icon: ThreeRing
+    }
+  ],
   navMain: [
     {
       title: '5, 50, 100',
@@ -203,7 +222,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <MainNav items={mainNavItems} />
-        <NavMain items={data.navMain} />
+        <CoreGroupsNav items={data.core} />
+        <UserGroupsNav />
+        {/* <NavMain items={data.navMain} /> */}
         <NavSecondary items={data.navSecondary} className='mt-auto' />
       </SidebarContent>
       <SidebarFooter>

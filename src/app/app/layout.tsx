@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation';
 import * as React from 'react';
-
+import { redirect } from 'next/navigation';
 
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';
@@ -28,7 +27,11 @@ export default async function Page({ children }: { children: React.ReactNode }) 
         <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
           <SidebarTrigger className='-ml-1' />
           <div className='m-auto flex-1 basis-1/3'>
-            <Input className='rounded-full border bg-background md:max-w-sm' type='text' placeholder='Search' />
+            <Input
+              className='rounded-full border bg-background md:max-w-sm'
+              type='text'
+              placeholder='Search'
+            />
           </div>
           <div className='ml-auto flex items-center gap-2'>
             <OneRing />

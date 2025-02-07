@@ -34,7 +34,13 @@ export {
   Plus,
   Activity,
   SendHorizontal,
-  Users
+  Search,
+  Loader,
+  Users,
+  UserPlus,
+  MoreHorizontal,
+  Settings,
+  PlusCircle
 } from 'lucide-react';
 export * as LogoIcons from './logos';
 export {

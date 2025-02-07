@@ -1,14 +1,18 @@
 import { faker } from '@faker-js/faker';
 
 import { SeedContext } from './types';
-import { generateAddresses, generateContactMethods, generateRandomNumber, generateWebsites } from './utils';
+import {
+  generateAddresses,
+  generateContactMethods,
+  generateRandomNumber,
+  generateWebsites
+} from './utils';
 
 export async function seedPeople({ supabase, userId }: SeedContext) {
-  const totalPeople = 30;
+  const totalPeople = 100;
 
   for (let i = 0; i < totalPeople; i++) {
     // Create person
-    const personId = crypto.randomUUID();
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
 

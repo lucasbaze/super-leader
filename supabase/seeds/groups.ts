@@ -1,39 +1,21 @@
-import { generateSlug } from '@/lib/utils';
-
 import { SeedContext } from './types';
 import { generateRandomNumber } from './utils';
 
-const DEFAULT_GROUPS = [
-  { name: 'Inner 5', icon: '5' },
-  { name: 'Central 50', icon: '50' },
-  { name: 'Strategic 100', icon: '100' },
-  { name: 'School', icon: '🎓' },
-  { name: 'Work', icon: '💼' },
-  { name: 'Community', icon: '🏘️' }
-] as const;
-
 export async function seedGroups({ supabase, userId }: SeedContext) {
-  const groupIds: Record<string, string> = {};
+  // First, fetch all existing groups for this user
+  const { data: groups, error: groupsError } = await supabase
+    .from('group')
+    .select('id, name')
+    .eq('user_id', userId);
 
-  // Create the default groups
-  for (const group of DEFAULT_GROUPS) {
-    const slug = generateSlug(group.name);
-    const { data: insertedGroup, error: groupError } = await supabase
-      .from('group')
-      .insert({
-        name: group.name,
-        icon: group.icon,
-        slug,
-        user_id: userId
-      })
-      .select('id')
-      .single();
+  if (groupsError) throw groupsError;
+  if (!groups) throw new Error('No groups found');
 
-    if (groupError) throw groupError;
-    if (!insertedGroup) throw new Error(`Failed to create group ${group.name}`);
-
-    groupIds[group.name] = insertedGroup.id;
-  }
+  // Create a map of group names to their IDs
+  const groupIds = groups.reduce<Record<string, string>>((acc, group) => {
+    acc[group.name] = group.id;
+    return acc;
+  }, {});
 
   // Get all people IDs
   const { data: people, error: peopleError } = await supabase
@@ -98,7 +80,8 @@ export async function seedGroups({ supabase, userId }: SeedContext) {
   }
 
   // Assign members to categorical groups (School, Work, Community)
-  const categoricalGroups = ['School', 'Work', 'Community'];
+  // These match the default groups created by our trigger
+  const categoricalGroups = ['School', 'Work', 'Community'] as const;
 
   for (const groupName of categoricalGroups) {
     const randomCount = generateRandomNumber(1, 10);

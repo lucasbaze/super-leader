@@ -1,12 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
+import { GroupBadge } from '@/components/groups/group-badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { TPersonGroup } from '@/types/custom';
 import type { ContactMethod, Person } from '@/types/database';
@@ -43,12 +42,7 @@ export function PersonHeader({
         {groups.length > 0 && (
           <div className='flex flex-wrap gap-2'>
             {groups.map((group) => (
-              <Link href={`/app/group/${group.slug}`} key={group.id}>
-                <Badge key={group.id} variant='secondary' className='hover:bg-muted'>
-                  <span className='mr-2'>{group.icon}</span>
-                  {group.name}
-                </Badge>
-              </Link>
+              <GroupBadge key={group.id} group={group} asLink />
             ))}
           </div>
         )}

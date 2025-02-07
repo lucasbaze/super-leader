@@ -1,5 +1,5 @@
+import { GroupBadge } from '@/components/groups/group-badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { SimpleSearchPeopleResult } from '@/types/custom';
 
@@ -32,9 +32,7 @@ export function SearchPersonItem({ person, isSelected, onClick }: SearchPersonIt
         {person.groups && person.groups.length > 0 && (
           <div className='mt-2 flex flex-wrap gap-1'>
             {person.groups.map((group) => (
-              <Badge key={group.name} variant='secondary' className='text-xs'>
-                {group.name}
-              </Badge>
+              <GroupBadge key={group.id} group={group} size='sm' />
             ))}
           </div>
         )}

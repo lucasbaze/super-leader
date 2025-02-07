@@ -30,7 +30,7 @@ export interface SearchPeopleParams {
 // Define the raw database response type
 type DatabasePerson = Pick<Person, 'id' | 'first_name' | 'last_name' | 'bio' | 'ai_summary'> & {
   groups: {
-    group: Pick<Group, 'name'>;
+    group: Pick<Group, 'id' | 'name' | 'icon' | 'slug'>;
   }[];
 };
 
@@ -54,7 +54,7 @@ export async function simpleSearchPeople({
         bio,
         ai_summary,
         groups:group_member(
-          group(name)
+          group(id, name, icon, slug)
         )
       `
       )
@@ -90,7 +90,10 @@ export async function simpleSearchPeople({
     const formattedPeople: SimpleSearchPeopleResult[] = people.map((person) => ({
       ...person,
       groups: person.groups.map((g) => ({
-        name: g.group.name
+        id: g.group.id,
+        name: g.group.name,
+        icon: g.group.icon,
+        slug: g.group.slug
       }))
     }));
 

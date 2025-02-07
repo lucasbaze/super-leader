@@ -5,9 +5,9 @@ import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { cn } from '@/lib/utils';
 
-import { ActionCard } from './action-card';
+import { ActionCard } from './cards/action-card';
 import { MessageCard } from './cards/message-card';
-import { SuggestionCard, TSuggestion } from './suggestion-card';
+import { SuggestionCard, TSuggestion } from './cards/suggestion-card';
 
 interface ChatMessagesProps {
   messages: Message[];

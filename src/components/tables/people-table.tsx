@@ -58,7 +58,6 @@ export function PeopleTable({
                       <Avatar className='size-6'>
                         <AvatarFallback className='text-xs'>
                           {person.first_name?.[0]}
-                          {person.last_name?.[0]}
                         </AvatarFallback>
                       </Avatar>
                       {person.first_name} {person.last_name}

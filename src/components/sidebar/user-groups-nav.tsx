@@ -4,16 +4,9 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
-
-import { EmojiPicker } from '@/components/emoji-picker';
 import { CreateGroupSheet } from '@/components/groups/create-group-sheet';
 import { Plus, Users } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -39,18 +32,10 @@ export function UserGroupsNav() {
   const pathname = usePathname();
   const { data: groups = [], isLoading } = useGroups();
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
-  const [groupName, setGroupName] = React.useState('');
-  const [groupIcon, setGroupIcon] = React.useState('');
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = React.useState(false);
 
   const userGroups = groups.filter((group) => !RESERVED_SLUGS.includes(group.slug));
 
   if (isLoading || userGroups.length === 0) return null;
-
-  const handleEmojiSelect = (emoji: any) => {
-    setGroupIcon(emoji.native);
-    setIsEmojiPickerOpen(false);
-  };
 
   return (
     <>
@@ -84,7 +69,7 @@ export function UserGroupsNav() {
         </SidebarMenu>
       </SidebarGroup>
 
-      <CreateGroupSheet open={isSheetOpen} onOpenChange={setIsSheetOpen} />
+      {isSheetOpen && <CreateGroupSheet open={isSheetOpen} onOpenChange={setIsSheetOpen} />}
     </>
   );
 }

@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { AddPeopleSheet } from '@/components/groups/add-people-sheet';
 import { DeleteGroupDialog } from '@/components/groups/delete-group-dialog';
+import { EditGroupSheet } from '@/components/groups/edit-group-sheet';
 import { MoreHorizontal, Settings, Trash, UserPlus, Users } from '@/components/icons';
 import {
   Breadcrumb,
@@ -32,6 +33,7 @@ interface GroupHeaderProps {
 export function GroupHeader({ group, groupMemberCount }: GroupHeaderProps) {
   const [isAddPeopleOpen, setIsAddPeopleOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditGroupOpen, setIsEditGroupOpen] = useState(false);
 
   const isReservedGroup = Object.values(RESERVED_GROUP_SLUGS).includes(group.slug);
 
@@ -72,9 +74,9 @@ export function GroupHeader({ group, groupMemberCount }: GroupHeaderProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsEditGroupOpen(true)}>
                 <Settings className='mr-2 size-4' />
-                Group Settings
+                Edit Group
               </DropdownMenuItem>
               {!isReservedGroup && (
                 <>
@@ -98,6 +100,8 @@ export function GroupHeader({ group, groupMemberCount }: GroupHeaderProps) {
         open={isAddPeopleOpen}
         onOpenChange={setIsAddPeopleOpen}
       />
+
+      <EditGroupSheet group={group} open={isEditGroupOpen} onOpenChange={setIsEditGroupOpen} />
 
       <DeleteGroupDialog
         groupId={group.id}

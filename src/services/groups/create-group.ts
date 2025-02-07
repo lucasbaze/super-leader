@@ -4,6 +4,8 @@ import { DBClient, Group } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
+import { createUniqueSlug } from './create-unique-slug';
+
 export const ERRORS = {
   FETCH_FAILED: createError(
     'fetch_failed',
@@ -83,7 +85,16 @@ export async function createGroup({
       return { data: null, error: ERRORS.INVALID_NAME };
     }
 
-    const slug = await generateUniqueSlug({ db, name: data.name, userId: data.user_id });
+    const slugResult = await createUniqueSlug({
+      db,
+      name: data.name,
+      table: 'group',
+      userId: data.user_id
+    });
+
+    if (slugResult.error) {
+      return { data: null, error: slugResult.error };
+    }
 
     // Start a transaction
     const { data: group, error: groupError } = await db
@@ -91,7 +102,7 @@ export async function createGroup({
       .insert({
         name: data.name,
         icon: data.icon,
-        slug,
+        slug: slugResult.data,
         user_id: data.user_id
       })
       .select('*')

@@ -96,3 +96,42 @@ export function useDeleteGroup() {
     }
   });
 }
+
+export function useUpdateGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      groupId,
+      name,
+      icon
+    }: {
+      groupId: string;
+      name?: string;
+      icon?: string;
+    }) => {
+      const updates: { name?: string; icon?: string } = {};
+      if (name) updates.name = name;
+      if (icon) updates.icon = icon;
+
+      const response = await fetch(`/api/groups/${groupId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updates)
+      });
+
+      const json = await response.json();
+      console.log('Updated group response', json.data);
+      if (json.error) {
+        errorToast.show(json.error);
+        throw json.error;
+      }
+      return json.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+    }
+  });
+}

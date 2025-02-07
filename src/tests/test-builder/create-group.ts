@@ -15,7 +15,7 @@ export async function createTestGroup({ db, data }: CreateTestGroupParams): Prom
     .from('group')
     .insert({
       user_id: data.user_id,
-      name: `test_${data.name}`,
+      name: data.name,
       slug: data.slug,
       icon: data.icon || 'default-icon'
     })

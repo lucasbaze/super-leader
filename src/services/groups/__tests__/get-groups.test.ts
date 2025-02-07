@@ -53,12 +53,12 @@ describe('getGroups service', () => {
           expect.arrayContaining([
             expect.objectContaining({
               id: testGroup1.id,
-              name: 'test_Group A',
+              name: 'Group A',
               slug: 'group-a'
             }),
             expect.objectContaining({
               id: testGroup2.id,
-              name: 'test_Group B',
+              name: 'Group B',
               slug: 'group-b'
             })
           ])

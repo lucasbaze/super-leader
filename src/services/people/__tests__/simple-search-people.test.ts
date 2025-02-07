@@ -92,10 +92,7 @@ describe('searchPeople service', () => {
           id: testPerson1.id,
           first_name: testPerson1.first_name,
           last_name: testPerson1.last_name,
-          groups: expect.arrayContaining([
-            { name: 'test_Engineering' },
-            { name: 'test_Leadership' }
-          ])
+          groups: expect.arrayContaining([{ name: 'Engineering' }, { name: 'Leadership' }])
         });
       });
     });

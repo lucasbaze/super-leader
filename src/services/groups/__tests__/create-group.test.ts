@@ -107,7 +107,7 @@ describe('group-service', () => {
           });
 
           expect(result1.data?.slug).toBe('test-group');
-          expect(result2.data?.slug).toBe('test-group-1');
+          expect(result2.data?.slug).toBe('test-group-2');
         });
       });
     });

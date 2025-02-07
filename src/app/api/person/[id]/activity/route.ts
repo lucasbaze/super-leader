@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { createInteraction, getPersonActivity } from '@/services/people/person-activity';
+import { createInteraction, getPersonActivity } from '@/services/person/person-activity';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
+import type { TPersonGroup } from '@/types/custom';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 interface PersonAboutData {
@@ -8,6 +9,7 @@ interface PersonAboutData {
   contactMethods: ContactMethod[];
   addresses: Address[];
   websites: Website[];
+  groups: TPersonGroup[];
 }
 
 export function usePerson(id: string) {

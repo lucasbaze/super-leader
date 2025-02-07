@@ -1,5 +1,3 @@
-import { SupabaseClient } from '@supabase/supabase-js';
-
 import { createError, errorLogger } from '@/lib/errors';
 import { Database, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';

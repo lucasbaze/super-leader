@@ -1,6 +1,7 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { Address, ContactMethod, DBClient, Person, Website } from '@/types/database';
+import { TPersonGroup } from '@/types/custom';
+import { Address, ContactMethod, DBClient, Group, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
@@ -12,6 +13,7 @@ export interface GetPersonResult {
   addresses?: Address[];
   websites?: Website[];
   interactions?: TInteraction[];
+  groups?: TPersonGroup[];
 }
 
 export interface GetPersonParams {
@@ -21,6 +23,11 @@ export interface GetPersonParams {
   withAddresses?: boolean;
   withWebsites?: boolean;
   withInteractions?: boolean;
+  withGroups?: boolean;
+}
+
+interface GroupMemberWithGroup {
+  group: TPersonGroup;
 }
 
 export const ERRORS = {
@@ -60,6 +67,12 @@ export const ERRORS = {
       ErrorType.DATABASE_ERROR,
       'Failed to fetch interactions',
       'Unable to load interaction history'
+    ),
+    GROUPS_ERROR: createError(
+      'groups_error',
+      ErrorType.DATABASE_ERROR,
+      'Failed to fetch groups',
+      'Unable to load group information'
     )
   }
 };
@@ -70,7 +83,8 @@ export async function getPerson({
   withContactMethods = false,
   withAddresses = false,
   withWebsites = false,
-  withInteractions = false
+  withInteractions = false,
+  withGroups = false
 }: GetPersonParams): Promise<TServiceResponse<GetPersonResult>> {
   try {
     // Get person
@@ -156,6 +170,32 @@ export async function getPerson({
       }
 
       result.interactions = interactions;
+    }
+
+    if (withGroups) {
+      const { data: groupMembers, error: groupsError } = await db
+        .from('group_member')
+        .select<string, GroupMemberWithGroup>(
+          `
+          group:group (
+            id,
+            name,
+            slug,
+            icon
+          )
+        `
+        )
+        .eq('person_id', personId);
+
+      if (groupsError) {
+        const error = { ...ERRORS.PERSON.GROUPS_ERROR, details: groupsError };
+        errorLogger.log(error);
+
+        return { data: null, error };
+      }
+
+      // Transform the nested group data
+      result.groups = groupMembers?.map((gm) => gm.group) || [];
     }
 
     return { data: result, error: null };

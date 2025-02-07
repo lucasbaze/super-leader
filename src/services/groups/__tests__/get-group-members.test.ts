@@ -77,7 +77,8 @@ describe('getGroupMembers service', () => {
           db,
           data: {
             group_id: testGroup.id,
-            person_id: testPerson1.id
+            person_id: testPerson1.id,
+            user_id: testUser.id
           }
         });
 
@@ -85,7 +86,8 @@ describe('getGroupMembers service', () => {
           db,
           data: {
             group_id: testGroup.id,
-            person_id: testPerson2.id
+            person_id: testPerson2.id,
+            user_id: testUser.id
           }
         });
 
@@ -151,7 +153,8 @@ describe('getGroupMembers service', () => {
           db,
           data: {
             group_id: testGroup.id,
-            person_id: testPerson1.id
+            person_id: testPerson1.id,
+            user_id: testUser.id
           }
         });
 
@@ -169,7 +172,8 @@ describe('getGroupMembers service', () => {
           db,
           data: {
             group_id: testGroup2.id,
-            person_id: testPerson2.id
+            person_id: testPerson2.id,
+            user_id: testUser2.id
           }
         });
 

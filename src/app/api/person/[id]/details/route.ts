@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { personEditSchema } from '@/lib/schemas/person-edit';
-import { updatePersonDetails } from '@/services/people/update-person-details';
+import { updatePersonDetails } from '@/services/person/update-person-details';
 import { createClient } from '@/utils/supabase/server';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {

@@ -34,7 +34,7 @@ const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
 >(({ className, ...props }, ref) => {
-  const gradient = getRandomGradient();
+  const gradient = React.useMemo(() => getRandomGradient(), []);
   return (
     <AvatarPrimitive.Fallback
       ref={ref}

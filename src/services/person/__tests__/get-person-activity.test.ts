@@ -6,7 +6,7 @@ import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
-import { ERRORS, getPersonActivity } from '../person-activity';
+import { ERRORS, getPersonActivity } from '../../person/person-activity';
 
 describe('getPersonActivity service', () => {
   let supabase: SupabaseClient;

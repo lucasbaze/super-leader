@@ -5,6 +5,7 @@ interface CreateTestGroupMemberParams {
   data: {
     group_id: string;
     person_id: string;
+    user_id: string;
   };
 }
 
@@ -16,7 +17,8 @@ export async function createTestGroupMember({
     .from('group_member')
     .insert({
       group_id: data.group_id,
-      person_id: data.person_id
+      person_id: data.person_id,
+      user_id: data.user_id
     })
     .select('*')
     .single();

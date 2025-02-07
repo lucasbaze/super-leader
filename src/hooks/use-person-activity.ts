@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { TCreateInteractionRequest } from '@/app/api/person/[id]/activity/route';
-import { TInteraction } from '@/services/people/person-activity';
+import { TInteraction } from '@/services/person/person-activity';
 
 export function usePersonActivity(personId: string) {
   return useQuery<TInteraction[]>({

@@ -57,6 +57,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
             <PersonHeader
               person={data?.person}
               contactMethods={data?.contactMethods}
+              groups={data?.groups}
               segment={segment}
             />
             <ScrollArea className='col-span-2 h-[calc(100svh-theme(spacing.52))] px-5'>

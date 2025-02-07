@@ -6,3 +6,5 @@ export type SimpleSearchPeopleResult = Pick<
 > & {
   groups: Pick<Group, 'name'>[];
 };
+
+export type TPersonGroup = Pick<Group, 'id' | 'name' | 'slug' | 'icon'>;

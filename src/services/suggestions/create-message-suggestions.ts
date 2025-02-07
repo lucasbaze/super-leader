@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { getPerson, GetPersonResult } from '@/services/people/get-person';
+import { getPerson, GetPersonResult } from '@/services/person/get-person';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';

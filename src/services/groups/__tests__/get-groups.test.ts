@@ -94,7 +94,7 @@ describe('getGroups service', () => {
 
         expect(result.data).toHaveLength(1);
         expect(result.data![0]).toMatchObject({
-          name: 'test_User 1 Group',
+          name: 'User 1 Group',
           slug: 'user-1-group'
         });
       });

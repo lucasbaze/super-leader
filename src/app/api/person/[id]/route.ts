@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { getPerson } from '@/services/people/get-person';
+import { getPerson } from '@/services/person/get-person';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -21,7 +21,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       personId: id,
       withContactMethods: true,
       withAddresses: true,
-      withWebsites: true
+      withWebsites: true,
+      withGroups: true
     });
 
     if (result.error) {

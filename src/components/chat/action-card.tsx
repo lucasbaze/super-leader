@@ -16,9 +16,16 @@ interface ActionCardProps {
   };
   onConfirm: () => void;
   onCancel: () => void;
+  completed?: boolean;
 }
 
-export function ActionCard({ person, interaction, onConfirm, onCancel }: ActionCardProps) {
+export function ActionCard({
+  person,
+  interaction,
+  onConfirm,
+  onCancel,
+  completed = false
+}: ActionCardProps) {
   if (person) {
     return (
       <Card>
@@ -43,12 +50,14 @@ export function ActionCard({ person, interaction, onConfirm, onCancel }: ActionC
             </div>
           )}
         </CardContent>
-        <CardFooter className='flex justify-end gap-2'>
-          <Button variant='outline' onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button onClick={onConfirm}>Create Person</Button>
-        </CardFooter>
+        {!completed && (
+          <CardFooter className='flex justify-end gap-2'>
+            <Button variant='outline' onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button onClick={onConfirm}>Create Person</Button>
+          </CardFooter>
+        )}
       </Card>
     );
   }
@@ -77,12 +86,14 @@ export function ActionCard({ person, interaction, onConfirm, onCancel }: ActionC
             </div>
           )}
         </CardContent>
-        <CardFooter className='flex justify-end gap-2'>
-          <Button variant='outline' onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button onClick={onConfirm}>Create Interaction</Button>
-        </CardFooter>
+        {!completed && (
+          <CardFooter className='flex justify-end gap-2'>
+            <Button variant='outline' onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button onClick={onConfirm}>Create Interaction</Button>
+          </CardFooter>
+        )}
       </Card>
     );
   }

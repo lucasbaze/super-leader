@@ -1,6 +1,6 @@
 import { CreateMessage } from 'ai';
 
-import { ExternalLink, Newspaper, SendHorizontal } from '@/components/icons';
+import { ExternalLink, MessageCircle, Newspaper, SendHorizontal } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
@@ -57,7 +57,7 @@ export function SuggestionCard({ suggestion, append }: SuggestionCardProps) {
         </CardFooter>
       </Card>
       <Button variant='ghost' size='icon' onClick={handleAppend}>
-        <SendHorizontal className='size-4' />
+        <MessageCircle className='size-4' />
       </Button>
     </div>
   );

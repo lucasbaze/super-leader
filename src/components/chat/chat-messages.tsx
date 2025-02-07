@@ -100,6 +100,7 @@ export function ChatMessages({
                     person={toolInvocation.args}
                     onConfirm={handleConfirmAction}
                     onCancel={handleCancelAction}
+                    completed={toolInvocation.state === 'result'}
                   />
                 );
               }
@@ -110,6 +111,7 @@ export function ChatMessages({
                     interaction={toolInvocation.args}
                     onConfirm={handleConfirmAction}
                     onCancel={handleCancelAction}
+                    completed={toolInvocation.state === 'result'}
                   />
                 );
               }

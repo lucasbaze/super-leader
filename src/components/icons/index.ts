@@ -38,6 +38,7 @@ export {
   Loader,
   Users,
   UserPlus,
+  MessageCircle,
   MoreHorizontal,
   Settings,
   PlusCircle

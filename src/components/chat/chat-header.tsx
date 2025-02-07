@@ -2,20 +2,25 @@
 
 import { usePathname } from 'next/navigation';
 
+import { ChatRequestOptions, CreateMessage, Message } from 'ai';
+
 import { DefaultChatHeader } from './headers/default';
 import { PersonChatHeader } from './headers/person';
 
 interface ChatHeaderProps {
   onAction: (message: string) => void;
-  onSuggestions: () => Promise<any>;
+  append: (
+    message: Message | CreateMessage,
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
 }
 
-export function ChatHeader({ onAction, onSuggestions }: ChatHeaderProps) {
+export function ChatHeader({ onAction, append }: ChatHeaderProps) {
   const pathname = usePathname();
 
   const getHeader = () => {
     const isPersonPage = pathname.startsWith('/app/person/');
-    if (isPersonPage) return <PersonChatHeader onAction={onAction} onSuggestions={onSuggestions} />;
+    if (isPersonPage) return <PersonChatHeader onAction={onAction} append={append} />;
     return <DefaultChatHeader />;
   };
 

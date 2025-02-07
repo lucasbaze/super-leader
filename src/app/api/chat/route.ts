@@ -5,15 +5,23 @@ import { z } from 'zod';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-const getDataFromMessage = (message: Message): JSONValue => {
-  if (message.data) {
-    return message.data;
+// Define possible message data types
+type ChatMessageData = {
+  personId: string | null;
+  personName?: string;
+  contentUrl?: string;
+  contentTitle?: string;
+};
+
+const getDataFromMessage = (message: Message): ChatMessageData | null => {
+  if (message.data && typeof message.data === 'object') {
+    return message.data as ChatMessageData;
   }
   return null;
 };
 
 export async function POST(req: Request) {
-  const { messages, personId, personName } = await req.json();
+  const { messages } = await req.json();
   console.log('Chat Route: Messages: ', messages);
 
   const lastMessage = messages.slice(-1)[0];
@@ -21,7 +29,7 @@ export async function POST(req: Request) {
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
   
-  ${personId ? ` The user is currently viewing the profile of ${personName} (ID: ${personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise.` : ''}
+  ${messageData?.personId ? ` The user is currently viewing the profile of ${messageData.personName} (ID: ${messageData.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise.` : ''}
   
   `;
 
@@ -67,10 +75,10 @@ export async function POST(req: Request) {
           person_id: z.string().describe('The ID of the person the suggestions are for')
           // TODO: Add message body here & pass to the suggestions request, i.e. extend with gifts, etc..
         }),
-        execute: async ({ person_id }) => {
+        execute: async () => {
           // TODO: Move this back to the server
           try {
-            console.log('Fetching suggestions for person:', person_id);
+            console.log('Fetching suggestions for person:', messageData?.personId);
 
             // TODO: Move to use-suggestions hook
             const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -79,7 +87,7 @@ export async function POST(req: Request) {
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ personId: person_id })
+              body: JSON.stringify({ personId: messageData?.personId })
             });
 
             if (!response.ok) {

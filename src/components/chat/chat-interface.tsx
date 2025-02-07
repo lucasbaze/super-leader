@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { useCreatePerson } from '@/hooks/use-people';
-import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
 
 import { ChatHeader } from './chat-header';
@@ -26,7 +25,6 @@ export function ChatInterface() {
   } | null>(null);
   const params = useParams();
   const router = useRouter();
-  const { data: personData } = usePerson(params.id as string);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, addToolResult, append } =
     useChat({
@@ -38,12 +36,6 @@ export function ChatInterface() {
           id: '1'
         }
       ],
-      body: {
-        personId: params.id,
-        personName: personData?.person
-          ? `${personData.person.first_name} ${personData.person.last_name}`
-          : undefined
-      },
       onToolCall: async ({ toolCall }) => {
         if (toolCall.toolName === 'getPersonSuggestions') {
           console.log('getPersonSuggestions', toolCall);
@@ -112,15 +104,6 @@ export function ChatInterface() {
     } as unknown as React.ChangeEvent<HTMLTextAreaElement>);
   };
 
-  const handleSuggestions = async () => {
-    const message = `Get suggestions for ${personData?.person?.first_name}`;
-    append({
-      role: 'user',
-      content: message,
-      id: 'suggestion-header'
-    });
-  };
-
   const scrollToBottom = () => {
     if (messagesEndRef.current && autoScroll) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -140,7 +123,7 @@ export function ChatInterface() {
 
   return (
     <div className='absolute inset-0 flex flex-col'>
-      <ChatHeader onAction={handleHeaderAction} onSuggestions={handleSuggestions} />
+      <ChatHeader onAction={handleHeaderAction} append={append} />
       <div className='relative flex-1 overflow-hidden'>
         <ChatMessages
           messages={messages}

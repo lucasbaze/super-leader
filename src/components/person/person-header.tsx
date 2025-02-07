@@ -26,7 +26,6 @@ export function PersonHeader({
 }: PersonHeaderProps) {
   const router = useRouter();
   const initials = `${person?.first_name[0]}${person?.last_name?.[0] || ''}`;
-  console.log('GRoups:', groups);
 
   return (
     <div className='px-5'>

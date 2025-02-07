@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { redirect } from 'next/navigation';
 
-import { AppSidebar } from '@/components/app-sidebar';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
+import { NavUser } from '@/components/nav-user';
+import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function Page({ children }: { children: React.ReactNode }) {
@@ -23,7 +23,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
   return (
     <SidebarProvider>
       <AppSidebar user={data.user} />
-      <main className='flex flex-1 flex-col'>
+      <main className='flex flex-1 flex-col pr-2'>
         <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
           <SidebarTrigger className='-ml-1' />
           <div className='m-auto flex-1 basis-1/3'>
@@ -38,10 +38,13 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             <TwoRing />
             <ThreeRing />
             <ThemeToggle />
-            <Avatar className='size-8'>
-              <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <NavUser
+              user={{
+                name: 'John Doe',
+                email: 'john.doe@example.com',
+                avatar: 'https://github.com/shadcn.png'
+              }}
+            />
           </div>
         </div>
 

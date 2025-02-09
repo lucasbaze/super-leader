@@ -1,8 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
-// TODO: move this to the right type file
-import { TSuggestion } from '@/services/suggestions/get-suggestions-for-person';
+import { TSuggestion } from '@/services/suggestions/types';
 
 export async function fetchSuggestions(
   queryClient: QueryClient,

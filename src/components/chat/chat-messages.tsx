@@ -65,7 +65,7 @@ export function ChatMessages({
                       ) : (
                         <code
                           className={cn(
-                            'rounded bg-muted-foreground/20 px-1.5 py-0.5 font-mono text-sm',
+                            'bg-muted-foreground/20 rounded px-1.5 py-0.5 font-mono text-sm',
                             className
                           )}
                           {...props}>

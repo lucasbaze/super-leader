@@ -41,6 +41,7 @@ export {
   MessageCircle,
   MoreHorizontal,
   Settings,
+  Bookmark,
   PlusCircle
 } from 'lucide-react';
 export * as LogoIcons from './logos';

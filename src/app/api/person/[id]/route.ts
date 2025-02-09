@@ -7,6 +7,13 @@ import { getPerson } from '@/services/person/get-person';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const searchParams = request.nextUrl.searchParams;
+  const withContactMethods = searchParams.get('withContactMethods') === 'true';
+  const withAddresses = searchParams.get('withAddresses') === 'true';
+  const withWebsites = searchParams.get('withWebsites') === 'true';
+  const withGroups = searchParams.get('withGroups') === 'true';
+  const withInteractions = searchParams.get('withInteractions') === 'true';
+
   const supabase = await createClient();
   const { id } = await params;
 
@@ -19,10 +26,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const result = await getPerson({
       db: supabase,
       personId: id,
-      withContactMethods: true,
-      withAddresses: true,
-      withWebsites: true,
-      withGroups: true
+      withContactMethods: withContactMethods,
+      withAddresses: withAddresses,
+      withWebsites: withWebsites,
+      withGroups: withGroups,
+      withInteractions: withInteractions
     });
 
     if (result.error) {

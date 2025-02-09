@@ -1,5 +1,3 @@
-import { stripIndents } from 'common-tags';
-
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { getPerson, GetPersonResult } from '@/services/person/get-person';
@@ -9,7 +7,7 @@ import { TServiceResponse } from '@/types/service-response';
 
 import { createContentSuggestions } from './create-content-suggestions';
 import { createSuggestionPrompt } from './create-suggestion-prompt';
-import { TSuggestion, TSuggestionPromptResponse } from './types';
+import { TGetContentSuggestionsForPersonResponse } from './types';
 
 // Service params interface
 export interface TGetSuggestionsForPersonParams {
@@ -47,16 +45,22 @@ export const ERRORS = {
   }
 };
 
-// Update the return type to include the prompt response
-export type TContentSuggestionsResponse = {
-  suggestions: TSuggestion[];
-  topics: TSuggestionPromptResponse['topics'];
+const buildUserPrompt = (personResult: GetPersonResult) => {
+  console.log('Suggestions::GetContentSuggestionsForPerson::personResult', personResult);
+  const { person, interactions } = personResult;
+  const { first_name } = person;
+
+  return `This is what I know about ${first_name}. ${interactions?.map((interaction) => {
+    return `${interaction.type}: ${interaction.note}`;
+  })}`;
 };
 
 export async function getContentSuggestionsForPerson({
   db,
   personId
-}: TGetSuggestionsForPersonParams): Promise<TServiceResponse<TContentSuggestionsResponse>> {
+}: TGetSuggestionsForPersonParams): Promise<
+  TServiceResponse<TGetContentSuggestionsForPersonResponse>
+> {
   try {
     if (!personId) {
       return { data: null, error: ERRORS.SUGGESTIONS.PERSON_REQUIRED };
@@ -69,14 +73,15 @@ export async function getContentSuggestionsForPerson({
       withInteractions: true
     });
 
-    if (personResult.error) {
+    if (personResult.error || !personResult.data) {
       return { data: null, error: personResult.error };
     }
 
     // Create the augmented prompt
     const promptResult = await createSuggestionPrompt({
-      userContent: `Bob is 75 year old family friend. He's been with the family since I was a 14. He works in the oil & gas industry and with associations like IPAA as a drilling consultant. He's very well connected in the Houston area. He got into Bitcoin in 2014 and has been a fairly avid Bitcoiner. He's travelled all over the world and to the Middle East for work. He's a big church goer as well and always makes sure to help his church when needed.`
+      userContent: buildUserPrompt(personResult.data)
     });
+    console.log('Suggestions::GetContentSuggestionsForPerson::promptResult', promptResult);
 
     if (promptResult.error || !promptResult.data) {
       return { data: null, error: promptResult.error };

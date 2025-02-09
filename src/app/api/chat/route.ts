@@ -2,6 +2,8 @@ import { openai } from '@ai-sdk/openai';
 import { JSONValue, Message, streamText } from 'ai';
 import { z } from 'zod';
 
+import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
+
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
@@ -21,7 +23,7 @@ const getDataFromMessage = (message: Message): ChatMessageData | null => {
 };
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, personId, personName } = await req.json();
   console.log('Chat Route: Messages: ', messages);
 
   const lastMessage = messages.slice(-1)[0];
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
   
-  ${messageData?.personId ? ` The user is currently viewing the profile of ${messageData.personName} (ID: ${messageData.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise.` : ''}
+  ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise.` : ''}
   
   `;
 
@@ -45,7 +47,7 @@ export async function POST(req: Request) {
     model: openai('gpt-4-turbo'),
     messages: contextualMessages,
     tools: {
-      createPerson: {
+      [CHAT_TOOLS.CREATE_PERSON]: {
         description: 'Create a new person record with an associated interaction note',
         parameters: z.object({
           first_name: z.string().describe("The person's first name"),
@@ -57,7 +59,7 @@ export async function POST(req: Request) {
             .describe('Date when the person was met (ISO format) otherwise the current date today')
         })
       },
-      createInteraction: {
+      [CHAT_TOOLS.CREATE_INTERACTION]: {
         description: 'Create a new interaction record for a person',
         parameters: z.object({
           person_id: z.string().describe('The ID of the person the interaction is for'),
@@ -69,7 +71,7 @@ export async function POST(req: Request) {
         })
       },
       // TODO: Update to getPersonContentSuggestions
-      getPersonSuggestions: {
+      [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: {
         description: 'Get Suggestions for the person suggested by the user',
         parameters: z.object({
           person_id: z.string().describe('The ID of the person the suggestions are for')
@@ -105,7 +107,7 @@ export async function POST(req: Request) {
           }
         }
       },
-      createMessageSuggestionsFromArticleForUser: {
+      [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: {
         description:
           "Create suggested messages for the person selected based on the article and the user's relationship with the person",
         parameters: z.object({

@@ -19,7 +19,12 @@ import { usePerson } from '@/hooks/use-person';
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const segment = useSelectedLayoutSegment() || 'summary';
-  const { data, isLoading } = usePerson(params.id as string);
+  const { data, isLoading } = usePerson(params.id as string, {
+    withContactMethods: true,
+    withAddresses: true,
+    withWebsites: true,
+    withGroups: true
+  });
 
   if (isLoading) return <div>Loading...</div>;
 

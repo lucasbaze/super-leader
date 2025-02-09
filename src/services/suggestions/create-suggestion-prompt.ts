@@ -34,6 +34,7 @@ export async function createSuggestionPrompt({
   userContent
 }: TCreateSuggestionPromptParams): Promise<TServiceResponse<TSuggestionPromptResponse>> {
   try {
+    console.log('Suggestions::CreateSuggestionPrompt::userContent', userContent);
     const promptMessages: ChatCompletionOptions['messages'] = [
       {
         role: 'system',

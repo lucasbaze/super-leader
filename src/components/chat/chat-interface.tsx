@@ -8,7 +8,9 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { useCreatePerson } from '@/hooks/use-people';
+import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
+import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
@@ -25,6 +27,7 @@ export function ChatInterface() {
   } | null>(null);
   const params = useParams();
   const router = useRouter();
+  const { data: personData } = usePerson(params.id as string);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, addToolResult, append } =
     useChat({
@@ -36,8 +39,14 @@ export function ChatInterface() {
           id: '1'
         }
       ],
+      body: {
+        personId: params.id,
+        personName: personData?.person
+          ? `${personData.person.first_name} ${personData.person.last_name}`
+          : undefined
+      },
       onToolCall: async ({ toolCall }) => {
-        if (toolCall.toolName === 'getPersonSuggestions') {
+        if (toolCall.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
           console.log('getPersonSuggestions', toolCall);
           return;
         }
@@ -47,7 +56,8 @@ export function ChatInterface() {
           toolCallId: toolCall.toolCallId,
           arguments: toolCall.args
         });
-      }
+      },
+      onFinish: async ({ content, data, toolInvocations }) => {}
     });
 
   const createPerson = useCreatePerson();
@@ -57,7 +67,7 @@ export function ChatInterface() {
     if (!pendingAction) return;
 
     try {
-      if (pendingAction.name === 'createPerson') {
+      if (pendingAction.name === CHAT_TOOLS.CREATE_PERSON) {
         const result = await createPerson.mutateAsync(pendingAction.arguments);
         console.log('Create Person result:', result);
         addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
@@ -77,7 +87,7 @@ export function ChatInterface() {
             </Button>
           </div>
         );
-      } else if (pendingAction.name === 'createInteraction') {
+      } else if (pendingAction.name === CHAT_TOOLS.CREATE_INTERACTION) {
         const result = await createInteraction.mutateAsync({
           type: pendingAction.arguments.type,
           note: pendingAction.arguments.note

@@ -14,9 +14,9 @@ import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 export interface BioSidebarData {
   person: Person;
-  contactMethods: ContactMethod[];
-  addresses: Address[];
-  websites: Website[];
+  contactMethods?: ContactMethod[];
+  addresses?: Address[];
+  websites?: Website[];
 }
 
 export interface PersonBioSidebarProps {
@@ -79,7 +79,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         <section className='space-y-3'>
           <h3 className='text-sm font-semibold text-muted-foreground'>Contact Information</h3>
           <div className='space-y-3'>
-            {data.contactMethods.map((method) => (
+            {data.contactMethods?.map((method) => (
               <div key={method.id} className='flex items-start space-x-2'>
                 {method.type === 'email' && (
                   <Mail className='mt-1 size-3.5 text-muted-foreground' />
@@ -107,7 +107,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         <section className='space-y-3'>
           <h3 className='text-sm font-semibold text-muted-foreground'>Addresses</h3>
           <div className='space-y-3'>
-            {data.addresses.map((address) => (
+            {data.addresses?.map((address) => (
               <div key={address.id} className='flex items-start space-x-2'>
                 <MapPin className='mt-1 size-3.5 text-muted-foreground' />
                 <div>
@@ -129,11 +129,11 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         </section>
 
         {/* Websites */}
-        {data.websites.length > 0 && (
+        {data.websites && data.websites.length > 0 && (
           <section className='space-y-3'>
             <h3 className='text-sm font-semibold text-muted-foreground'>Websites & Social</h3>
             <div className='space-y-2'>
-              {data.websites.map((website) => (
+              {data.websites?.map((website) => (
                 <div key={website.id} className='flex items-center space-x-2'>
                   <Globe className='size-3.5 text-muted-foreground' />
                   <a

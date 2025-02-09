@@ -11,7 +11,6 @@ export interface TSuggestion {
   title: string;
   reason: string;
   category?: string;
-  append: (message: CreateMessage) => void;
 }
 
 interface SuggestionCardProps {

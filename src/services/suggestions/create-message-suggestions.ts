@@ -1,5 +1,4 @@
 import { stripIndents } from 'common-tags';
-import { z } from 'zod';
 
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
@@ -9,22 +8,10 @@ import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
 import { callStructuredOpenAI } from './openai-api';
-
-// Define the schema
-const MessageSuggestionSchema = z.object({
-  text: z.string(),
-  tone: z.enum(['casual', 'professional', 'friendly'])
-});
-
-const MessageSuggestionsResponseSchema = z.object({
-  suggestions: z.array(MessageSuggestionSchema)
-});
-
-// Export the type from the schema
-export type TMessageSuggestion = z.infer<typeof MessageSuggestionSchema>;
+import { MessageSuggestionsResponseSchema, TMessageSuggestion } from './types';
 
 // Service params interface
-export interface TCreateMessageSuggestionsParams {
+interface TCreateMessageSuggestionsParams {
   db: DBClient;
   personId: string;
   contentUrl: string;

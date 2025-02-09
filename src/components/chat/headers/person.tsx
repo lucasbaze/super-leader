@@ -6,6 +6,7 @@ import { ChatRequestOptions, CreateMessage, Message } from 'ai';
 
 import { NotebookPen, Sparkles } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePerson } from '@/hooks/use-person';
 
 import { DefaultChatHeader } from './default';
@@ -20,9 +21,14 @@ interface ChatHeaderProps {
 
 export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
   const params = useParams();
-  const { data, isLoading } = usePerson(params.id as string);
+  const { data, isLoading } = usePerson(params.id as string, {
+    withInteractions: true
+  });
+  console.log('Person Chat Header data', data);
 
   if (isLoading) return <DefaultChatHeader />;
+
+  const hasInteractions = data?.interactions && data.interactions.length > 0;
 
   const handleSuggestions = async () => {
     const message = `Get suggestions for ${data?.person?.first_name}`;
@@ -44,9 +50,24 @@ export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
       </div>
 
       <div className='flex items-center gap-1'>
-        <Button variant='ghost' size='icon' onClick={handleSuggestions} title='Create suggestions'>
-          <Sparkles className='size-4' />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className='hover:cursor-pointer'>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={handleSuggestions}
+                  disabled={!hasInteractions}>
+                  <Sparkles className='size-4' />
+                </Button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              {hasInteractions ? 'Get Content Suggestions' : 'Must have at least 1 interaction'}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <Button
           variant='ghost'
           size='icon'

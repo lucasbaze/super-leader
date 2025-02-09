@@ -3,11 +3,18 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
+import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 import { cn } from '@/lib/utils';
+import {
+  TGetContentSuggestionsForPersonResponse,
+  TMessageSuggestion,
+  TSuggestion
+} from '@/services/suggestions/types';
+import { Maybe } from '@/types/utils';
 
 import { ActionCard } from './cards/action-card';
 import { MessageCard } from './cards/message-card';
-import { SuggestionCard, TSuggestion } from './cards/suggestion-card';
+import { SuggestionCard } from './cards/suggestion-card';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -92,8 +99,7 @@ export function ChatMessages({
               </div>
             );
             const toolInvocations = message.toolInvocations?.map((toolInvocation) => {
-              // if (toolInvocation.state === 'result') return null;
-              if (toolInvocation.toolName === 'createPerson') {
+              if (toolInvocation.toolName === CHAT_TOOLS.CREATE_PERSON) {
                 return (
                   <ActionCard
                     key={toolInvocation.toolCallId}
@@ -104,7 +110,22 @@ export function ChatMessages({
                   />
                 );
               }
-              if (toolInvocation.toolName === 'createInteraction') {
+              if (toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
+                console.log('toolInvocation', toolInvocation);
+                const result =
+                  // @ts-ignore
+                  toolInvocation.result as Maybe<TGetContentSuggestionsForPersonResponse>;
+                const suggestions = result?.suggestions;
+                if (!suggestions) return null;
+                return (
+                  <>
+                    {suggestions.map((suggestion: TSuggestion, index: number) => (
+                      <SuggestionCard key={index} suggestion={suggestion} append={append} />
+                    ))}
+                  </>
+                );
+              }
+              if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
                 return (
                   <ActionCard
                     key={toolInvocation.toolCallId}
@@ -115,22 +136,7 @@ export function ChatMessages({
                   />
                 );
               }
-              // Note: May need to conditionally check state === 'result'
-              if (toolInvocation.toolName === 'getPersonSuggestions') {
-                // @ts-ignore
-                const topics = toolInvocation.result?.topics;
-                // @ts-ignore
-                const suggestions = toolInvocation.result?.suggestions;
-                return (
-                  <>
-                    {/* @ts-ignore */}
-                    {suggestions?.map((result: TSuggestion, index: number) => (
-                      <SuggestionCard key={index} suggestion={result} append={append} />
-                    ))}
-                  </>
-                );
-              }
-              if (toolInvocation.toolName === 'createMessageSuggestionsFromArticleForUser') {
+              if (toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS) {
                 return (
                   <>
                     {/* @ts-ignore */}

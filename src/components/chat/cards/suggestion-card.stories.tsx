@@ -19,8 +19,7 @@ export const Default: Story = {
       contentUrl: 'https://example.com/article',
       title: 'Interesting Article Title',
       reason: 'This article matches their interests in technology',
-      category: 'Technology',
-      append: () => console.log('Append clicked')
+      category: 'Technology'
     },
     append: () => console.log('Append clicked')
   }

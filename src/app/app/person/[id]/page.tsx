@@ -12,44 +12,6 @@ export default function PersonActivityPage() {
     <div className='flex flex-col space-y-4 overflow-y-auto'>
       <h2 className='text-xl font-semibold'>Summary</h2>
       {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
-      <div className='text-muted-foreground'>A generated summary will appear here</div>
-      <div> Pencil</div>
     </div>
   );
 }

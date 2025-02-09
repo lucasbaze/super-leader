@@ -70,3 +70,27 @@ You can add multiple migrations at a time if needed or delete the migration file
 > supabase db reset // will reapply the migrations
 > npx supabase migration up
 ```
+
+### Prod Migration Flow: 
+
+Local Database Changes: 
+
+1. Pull the schema from supabase local and add to a new migration file
+> npx supabase db diff --local --file my_migration.sql
+
+2. Apply the migration to the test environment
+> npx supabase db reset
+> yarn seed
+
+or if you just want to apply the last migration that was added
+> npx supabase db migrate up
+<!-- > npx supabase db push --db-url $SUPABASE_TEST_DB_URL --schema public --file my_migration.sql -->
+
+3. Save & commit the migration file to the repo
+> git add . 
+> git commit -m "new migration"
+
+4. Push schema changes to the database
+> npx supabase link 
+Link to the test database for testing purposes
+> npx supabase db push 

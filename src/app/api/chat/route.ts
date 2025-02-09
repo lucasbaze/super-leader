@@ -1,11 +1,21 @@
+import { NextRequest } from 'next/server';
+
 import { openai } from '@ai-sdk/openai';
 import { JSONValue, Message, streamText } from 'ai';
 import { z } from 'zod';
 
 import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
+import { TSuggestion } from '@/services/suggestions/types';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
+
+// Define the request body interface
+interface ChatRequestBody {
+  messages: Message[];
+  personId?: string;
+  personName?: string;
+}
 
 // Define possible message data types
 type ChatMessageData = {
@@ -22,8 +32,8 @@ const getDataFromMessage = (message: Message): ChatMessageData | null => {
   return null;
 };
 
-export async function POST(req: Request) {
-  const { messages, personId, personName } = await req.json();
+export async function POST(req: NextRequest) {
+  const { messages, personId, personName } = (await req.json()) as ChatRequestBody;
   console.log('Chat Route: Messages: ', messages);
 
   const lastMessage = messages.slice(-1)[0];
@@ -35,8 +45,9 @@ export async function POST(req: Request) {
   
   `;
 
-  const contextualMessages = [
+  const contextualMessages: Message[] = [
     {
+      id: 'system',
       role: 'system',
       content: systemPrompt
     },
@@ -72,7 +83,7 @@ export async function POST(req: Request) {
       },
       // TODO: Update to getPersonContentSuggestions
       [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: {
-        description: 'Get Suggestions for the person suggested by the user',
+        description: 'Get content suggestions for the person suggested by the user',
         parameters: z.object({
           person_id: z.string().describe('The ID of the person the suggestions are for')
           // TODO: Add message body here & pass to the suggestions request, i.e. extend with gifts, etc..
@@ -89,7 +100,9 @@ export async function POST(req: Request) {
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ personId: messageData?.personId })
+              body: JSON.stringify({
+                personId: messageData?.personId
+              })
             });
 
             if (!response.ok) {

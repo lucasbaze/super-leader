@@ -9,7 +9,7 @@ import { TServiceResponse } from '@/types/service-response';
 
 import { createContentSuggestions } from './create-content-suggestions';
 import { createSuggestionPrompt } from './create-suggestion-prompt';
-import { TSuggestion } from './types';
+import { TSuggestion, TSuggestionPromptResponse } from './types';
 
 // Service params interface
 export interface TGetSuggestionsForPersonParams {
@@ -47,10 +47,16 @@ export const ERRORS = {
   }
 };
 
+// Update the return type to include the prompt response
+export type TContentSuggestionsResponse = {
+  suggestions: TSuggestion[];
+  topics: TSuggestionPromptResponse['topics'];
+};
+
 export async function getContentSuggestionsForPerson({
   db,
   personId
-}: TGetSuggestionsForPersonParams): Promise<TServiceResponse<TSuggestion[]>> {
+}: TGetSuggestionsForPersonParams): Promise<TServiceResponse<TContentSuggestionsResponse>> {
   try {
     if (!personId) {
       return { data: null, error: ERRORS.SUGGESTIONS.PERSON_REQUIRED };
@@ -76,12 +82,23 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: promptResult.error };
     }
 
-    // Create content suggestions
+    // Create content suggestions using the prompt from the response
     const suggestionsResult = await createContentSuggestions({
-      userContent: promptResult.data
+      userContent: promptResult.data.prompt
     });
 
-    return suggestionsResult;
+    if (suggestionsResult.error || !suggestionsResult.data) {
+      return { data: null, error: suggestionsResult.error };
+    }
+
+    // Return both the suggestions and the prompt response
+    return {
+      data: {
+        suggestions: suggestionsResult.data,
+        topics: promptResult.data.topics
+      },
+      error: null
+    };
   } catch (error) {
     const serviceError = {
       ...ERRORS.SUGGESTIONS.FETCH_ERROR,

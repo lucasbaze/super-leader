@@ -12,3 +12,10 @@ export const ContentSuggestionsResponseSchema = z.object({
 });
 
 export type TSuggestion = z.infer<typeof SuggestionSchema>;
+
+export const SuggestionPromptResponseSchema = z.object({
+  topics: z.array(z.string()),
+  prompt: z.string()
+});
+
+export type TSuggestionPromptResponse = z.infer<typeof SuggestionPromptResponseSchema>;

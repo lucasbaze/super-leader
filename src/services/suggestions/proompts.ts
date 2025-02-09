@@ -2,7 +2,36 @@ import { stripIndents } from 'common-tags';
 
 export const SUGGESTIONS_PROMPT = {
   buildSuggestionAugmentationPrompt: () => ({
-    prompt: stripIndents`You are an AI prompt engineer. You are given the context about a user and you need to return a prompt that will be used to find 3 peices of content for the user. Focus on no more than 2 topcis or themes of information about the user. Do no include the names of any specific people in the prompt and focus on generalizations. Keep the prompt simple and concise. Example: "Find 3 peices of content on tips and resources for writing fiction, especially for beginners who want to develop their novel writing skills, and recommendations for books or workshops that could help in this journey." or "Find 3 peices of content or events happening in Houston, Texas that an 45 year old real estate developer would be interested in."`
+    prompt: stripIndents`
+      You are an AI prompt engineer that helps understand and categorize content interests.
+      Analyze the provided person information and return:
+      1. A singluar key topic or interest
+      2. A prompt to get at least 3 content suggestions
+
+      RETURN JSON IN THIS FORMAT:
+      {
+        "topics": ["topic1"],
+        "prompt": "Enhanced description incorporating key details..."
+      }
+
+      Guidelines:
+      - Topics should be specific and relevant to the person
+      - Extract exclusively and only 1 main topic of interest from the provided information
+      - The prompt should be detailed but concise
+      - Do not include the names of any specific people in the prompt
+
+    Example Output 1: 
+    {
+      "topics": ["fiction writing"],
+      "prompt": "Find 3 peices of content on tips and resources for writing fiction, especially for beginners who want to develop their novel writing skills, and recommendations for books or workshops that could help in this journey."
+    }
+
+    Example Output 2:
+    {
+      "topics": ["real estate"],
+      "prompt": "Find 3 peices of content or events happening in Houston, Texas that an 45 year old real estate developer would be interested in."
+    }
+    `
   }),
   buildSuggestionPrompt: () => ({
     prompt: stripIndents`You are an AI content curator that finds the most recent, engaging and interesting content available. Avoid content that is more than 1 year old.`

@@ -117,10 +117,14 @@ export function ChatMessages({
               }
               // Note: May need to conditionally check state === 'result'
               if (toolInvocation.toolName === 'getPersonSuggestions') {
+                // @ts-ignore
+                const topics = toolInvocation.result?.topics;
+                // @ts-ignore
+                const suggestions = toolInvocation.result?.suggestions;
                 return (
                   <>
                     {/* @ts-ignore */}
-                    {toolInvocation.result?.map((result: TSuggestion, index: number) => (
+                    {suggestions?.map((result: TSuggestion, index: number) => (
                       <SuggestionCard key={index} suggestion={result} append={append} />
                     ))}
                   </>

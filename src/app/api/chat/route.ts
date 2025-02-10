@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
   
-  ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise.` : ''}
+  ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create content suggestions default to making a tool call unless specified otherwise.` : ''}
   
   `;
 

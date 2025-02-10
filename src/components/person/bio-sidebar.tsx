@@ -81,7 +81,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
           <h3 className='text-sm font-semibold text-muted-foreground'>Contact Information</h3>
           <div className='space-y-3'>
             {data.contactMethods?.map((method) => (
-              <CopyWithTooltip key={method.id} content={method.value}>
+              <CopyWithTooltip key={method.id} content={method.value} side='left'>
                 <div className='flex items-start space-x-2'>
                   {method.type === 'email' && (
                     <Mail className='mt-1 size-3.5 text-muted-foreground' />
@@ -113,6 +113,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
             {data.addresses?.map((address) => (
               <CopyWithTooltip
                 key={address.id}
+                side='left'
                 content={`${address.street}, ${address.city}, ${address.state} ${address.postal_code} ${address.country}`}>
                 <div className='flex items-start space-x-2'>
                   <MapPin className='mt-1 size-3.5 text-muted-foreground' />

@@ -89,6 +89,10 @@ export async function getContentSuggestionsForPerson({
 
     // Create content suggestions using the prompt from the response
     const suggestionsResult = await createContentSuggestions({
+      db,
+      personId,
+      // TODO: This is a hack to get the user id... Should be passed in from the request
+      userId: personResult.data.person.user_id,
       userContent: promptResult.data.prompt
     });
 

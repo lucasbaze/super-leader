@@ -6,9 +6,19 @@ interface CopyWithTooltipProps {
   content: string;
   children: ReactNode;
   className?: string;
+  side?: 'top' | 'right' | 'bottom' | 'left';
+  align?: 'start' | 'center' | 'end';
+  sideOffset?: number;
 }
 
-export function CopyWithTooltip({ content, children, className }: CopyWithTooltipProps) {
+export function CopyWithTooltip({
+  content,
+  children,
+  className,
+  side = 'top',
+  align = 'center',
+  sideOffset = 4
+}: CopyWithTooltipProps) {
   const [tooltipContent, setTooltipContent] = useState('Click to copy');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,7 +45,7 @@ export function CopyWithTooltip({ content, children, className }: CopyWithToolti
             {children}
           </div>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side={side} align={align} sideOffset={sideOffset}>
           <p className='text-xs'>{tooltipContent}</p>
         </TooltipContent>
       </Tooltip>

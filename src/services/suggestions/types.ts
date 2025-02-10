@@ -45,3 +45,5 @@ export type TGetContentSuggestionsForPersonResponse = {
   suggestions: TSuggestion[];
   topics: TSuggestionPromptResponse['topics'];
 };
+
+export const SuggestionType = z.enum(['content', 'message', 'gift']);

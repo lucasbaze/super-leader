@@ -1,12 +1,13 @@
 import { zodResponseFormat } from 'openai/helpers/zod';
 
 import { createError } from '@/lib/errors';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 import { chatCompletion, type ChatCompletionOptions } from '@/vendors/open-router';
 
 import { SUGGESTIONS_PROMPT } from './proompts';
-import { ContentSuggestionsResponseSchema, TSuggestion } from './types';
+import { ContentSuggestionsResponseSchema, SuggestionType, TSuggestion } from './types';
 
 // Define errors
 export const ERRORS = {
@@ -27,10 +28,16 @@ export const ERRORS = {
 };
 
 export interface TCreateContentSuggestionsParams {
+  db: DBClient;
+  personId: string;
+  userId: string;
   userContent: string;
 }
 
 export async function createContentSuggestions({
+  db,
+  personId,
+  userId,
   userContent
 }: TCreateContentSuggestionsParams): Promise<TServiceResponse<TSuggestion[]>> {
   try {
@@ -64,19 +71,36 @@ export async function createContentSuggestions({
       return { data: null, error: ERRORS.CONTENT_CREATION.FAILED };
     }
 
-    try {
-      // TODO: Add schema validation & better error handling
-      const parsedContent = JSON.parse(response.content);
-      return { data: parsedContent.suggestions, error: null };
-    } catch (error) {
+    const parsedContent = ContentSuggestionsResponseSchema.safeParse(JSON.parse(response.content));
+
+    if (!parsedContent.success) {
       return {
         data: null,
-        error: {
-          ...ERRORS.CONTENT_CREATION.INVALID_RESPONSE,
-          details: error
-        }
+        error: { ...ERRORS.CONTENT_CREATION.INVALID_RESPONSE, details: parsedContent.error }
       };
     }
+
+    try {
+      const suggestions = parsedContent.data.suggestions.map((suggestion) => ({
+        person_id: personId,
+        user_id: userId,
+        suggestion,
+        type: SuggestionType.Enum.content,
+        viewed: false,
+        saved: false
+      }));
+      console.log('suggestions: ', suggestions);
+
+      const { data, error } = await db.from('suggestions').insert(suggestions);
+
+      if (error) {
+        console.error('Error creating suggestions in db: ', error);
+      }
+    } catch (error) {
+      console.error('Error creating suggestions in db: ', error);
+    }
+
+    return { data: parsedContent.data.suggestions, error: null };
   } catch (error) {
     return {
       data: null,

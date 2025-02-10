@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     const supabase = await createClient();
 
     // TODO: Temporarily disable authentication for api to api calls...
+    // TODO: THIS needs to be protected somehow... could use a JWT or something...
 
     // Validate authentication
     // const authResult = await validateAuthentication(supabase);

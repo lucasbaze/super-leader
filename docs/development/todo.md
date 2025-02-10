@@ -8,9 +8,18 @@
 ### Suggestions
 
 - [ ] Need to add suggestion saving mechanism, fetch, and prompt building depending on previous suggestions
+
+Note: Before savings generated suggestions, just go ahead and filter out any that are duplicates or invalid.
+
 - [ ] Need to add service tests to ensure responses are consistent and of high quality.
 - [ ] Need to handle better error handling around AI suggestions & structured output response creation.
 - [ ] Need to add a footnote that some links may be dead links, or repetitive.
+
+- [ ] Update response from the AI to show messages generating prompt & generating response... in the UI.
+
+#### Suggestions: Nice to have
+
+- [ ] Show link preview in the suggestion
 
 ### Metrics
 
@@ -29,6 +38,10 @@
 - [ ] ISSUE: Currently set the RLS policy to allow anyone to access people records so that the API can access people for createSuggestions & createMessageSuggestions. This is a security risk, but not sure if it's a big deal.
 - [ ] Update names of Activity & Interactions to be more consistent.
 - [ ] Remove database functions to handle update person details that are no longer being used.
+
+### UI Improvements
+
+- [ ] Display the "last activity" on the table view of people.
 
 ### Bugs
 
@@ -61,3 +74,5 @@ How is the app going to look on mobile?
 // https://github.com/chengsokdara/use-whisper
 
 - [ ] Save content suggestions for later for other people
+
+- [ ] Get the search bar to work and just be like a dropdown search action.

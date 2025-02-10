@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams, useSelectedLayoutSegment } from 'next/navigation';
 
+import { GroupBadge } from '@/components/groups/group-badge';
 import { Users } from '@/components/icons';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
@@ -32,7 +33,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     <>
       <div className='flex h-[calc(100svh-theme(spacing.16))] flex-col'>
         {/* Fixed Header Section */}
-        <div className='flex items-center border-b bg-background'>
+        <div className='flex items-center border-b bg-background md:rounded-t-md'>
           <div className='px-5 py-3'>
             <Breadcrumb>
               <BreadcrumbList>
@@ -59,12 +60,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
         <div className='grid h-full grid-cols-3 overflow-hidden'>
           {/* Main Content Area */}
           <div className='col-span-2 h-full overflow-hidden'>
-            <PersonHeader
-              person={data?.person}
-              contactMethods={data?.contactMethods}
-              groups={data?.groups}
-              segment={segment}
-            />
+            <PersonHeader person={data?.person} groups={data?.groups} segment={segment} />
             <ScrollArea className='col-span-2 h-[calc(100svh-theme(spacing.52))] px-5'>
               <div className='py-3'>{children}</div>
             </ScrollArea>

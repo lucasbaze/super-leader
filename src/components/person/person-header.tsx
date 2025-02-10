@@ -13,17 +13,11 @@ import type { ContactMethod, Person } from '@/types/database';
 interface PersonHeaderProps {
   person: Person | undefined;
   groups?: TPersonGroup[];
-  contactMethods?: ContactMethod[];
   segment: string | null;
 }
 
 // TODO: Do something with thhe "contact Methods"
-export function PersonHeader({
-  person,
-  groups = [],
-  contactMethods = [],
-  segment
-}: PersonHeaderProps) {
+export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps) {
   const router = useRouter();
   const initials = `${person?.first_name[0]}${person?.last_name?.[0] || ''}`;
 
@@ -37,14 +31,14 @@ export function PersonHeader({
           <h1 className='text-lg font-medium'>
             {person?.first_name} {person?.last_name}
           </h1>
+          {groups.length > 0 && (
+            <div className='flex flex-wrap gap-2'>
+              {groups.map((group) => (
+                <GroupBadge key={group.id} group={group} asLink />
+              ))}
+            </div>
+          )}
         </div>
-        {groups.length > 0 && (
-          <div className='flex flex-wrap gap-2'>
-            {groups.map((group) => (
-              <GroupBadge key={group.id} group={group} asLink />
-            ))}
-          </div>
-        )}
       </div>
 
       <div className='-mx-5'>

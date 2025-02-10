@@ -8,6 +8,7 @@ import { BioSidebarEdit } from '@/components/person/bio-sidebar-edit';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { CopyWithTooltip } from '@/components/ui/copy-with-tooltip';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { TPersonEditFormData } from '@/lib/schemas/person-edit';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
@@ -80,25 +81,27 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
           <h3 className='text-sm font-semibold text-muted-foreground'>Contact Information</h3>
           <div className='space-y-3'>
             {data.contactMethods?.map((method) => (
-              <div key={method.id} className='flex items-start space-x-2'>
-                {method.type === 'email' && (
-                  <Mail className='mt-1 size-3.5 text-muted-foreground' />
-                )}
-                {method.type === 'phone' && (
-                  <Phone className='mt-1 size-3.5 text-muted-foreground' />
-                )}
-                <div className='flex-1'>
-                  <p className='text-sm'>{method.value}</p>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-xs text-muted-foreground'>{method.label}</span>
-                    {method.is_primary && (
-                      <Badge variant='secondary' className='h-4 px-1 py-0 text-[10px]'>
-                        Primary
-                      </Badge>
-                    )}
+              <CopyWithTooltip key={method.id} content={method.value}>
+                <div className='flex items-start space-x-2'>
+                  {method.type === 'email' && (
+                    <Mail className='mt-1 size-3.5 text-muted-foreground' />
+                  )}
+                  {method.type === 'phone' && (
+                    <Phone className='mt-1 size-3.5 text-muted-foreground' />
+                  )}
+                  <div className='flex-1'>
+                    <p className='text-sm'>{method.value}</p>
+                    <div className='flex items-center gap-2'>
+                      <span className='text-xs text-muted-foreground'>{method.label}</span>
+                      {method.is_primary && (
+                        <Badge variant='secondary' className='h-4 px-1 py-0 text-[10px]'>
+                          Primary
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </CopyWithTooltip>
             ))}
           </div>
         </section>
@@ -108,22 +111,26 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
           <h3 className='text-sm font-semibold text-muted-foreground'>Addresses</h3>
           <div className='space-y-3'>
             {data.addresses?.map((address) => (
-              <div key={address.id} className='flex items-start space-x-2'>
-                <MapPin className='mt-1 size-3.5 text-muted-foreground' />
-                <div>
-                  <p className='text-sm'>{address.street}</p>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-xs text-muted-foreground'>
-                      {address.city}, {address.state} {address.postal_code} {address.country}
-                    </span>
-                    {address.is_primary && (
-                      <Badge variant='secondary' className='h-4 px-1 py-0 text-[10px]'>
-                        Primary
-                      </Badge>
-                    )}
+              <CopyWithTooltip
+                key={address.id}
+                content={`${address.street}, ${address.city}, ${address.state} ${address.postal_code} ${address.country}`}>
+                <div className='flex items-start space-x-2'>
+                  <MapPin className='mt-1 size-3.5 text-muted-foreground' />
+                  <div>
+                    <p className='text-sm'>{address.street}</p>
+                    <div className='flex items-center gap-2'>
+                      <span className='text-xs text-muted-foreground'>
+                        {address.city}, {address.state} {address.postal_code} {address.country}
+                      </span>
+                      {address.is_primary && (
+                        <Badge variant='secondary' className='h-4 px-1 py-0 text-[10px]'>
+                          Primary
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </CopyWithTooltip>
             ))}
           </div>
         </section>

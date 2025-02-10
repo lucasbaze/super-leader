@@ -36,7 +36,7 @@
 - [ ] Flash on changing theme from light to dark
 - [ ] Flash on layout from SSR if the resize panels have been moved.
 
-### New Features
+# New Features
 
 - [x] ~~_Create import service & tests_~~ [2025-02-10]
 - [x] ~~_Create import people & notes scripts_~~ [2025-02-10]

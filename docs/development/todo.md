@@ -3,7 +3,7 @@
 ## Phase 1
 
 - [x] ~~_Handle new user setup via the server and not via the database & undo the migration_~~ [2025-02-09]
-- [ ] Add postal_code to the address schema.
+- [x] ~~_Add postal_code to the address schema._~~ [2025-02-09]
 
 ### Suggestions
 
@@ -33,7 +33,9 @@
 
 ### New Features
 
+- [x] ~~_Create import service & tests_~~ [2025-02-10]
 - [ ] Create import people & notes scripts
+- [ ] Test import with my contacts from Attio
 
 This will be done as a script that I run locally. Just need to figure out the best way to do this.
 

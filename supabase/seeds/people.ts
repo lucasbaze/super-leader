@@ -4,6 +4,7 @@ import { SeedContext } from './types';
 import {
   generateAddresses,
   generateContactMethods,
+  generateInteractions,
   generateRandomNumber,
   generateWebsites
 } from './utils';
@@ -82,6 +83,13 @@ export async function seedPeople({ supabase, userId }: SeedContext) {
     if (websites.length > 0) {
       const { error: websiteError } = await supabase.from('websites').insert(websites);
       if (websiteError) throw websiteError;
+    }
+
+    // Generate and insert interactions
+    const interactions = generateInteractions(insertedPersonId, userId);
+    if (interactions.length > 0) {
+      const { error: interactionError } = await supabase.from('interactions').insert(interactions);
+      if (interactionError) throw interactionError;
     }
   }
 }

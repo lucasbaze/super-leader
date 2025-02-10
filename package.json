@@ -20,7 +20,8 @@
     "test": "NODE_ENV=test jest --silent",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:api": "NODE_ENV=test jest --testPathPattern=src/tests/api",
-    "setup-new-user": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/setup-new-user.ts"
+    "setup-new-user": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/setup-new-user.ts",
+    "bulk-import": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/bulk-import-from-json.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.5",

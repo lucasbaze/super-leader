@@ -16,6 +16,10 @@ export type ContactMethod = Omit<
 >;
 
 export type Website = Omit<Tables['websites']['Insert'], 'id' | 'created_at' | 'updated_at'>;
+export type Interaction = Omit<
+  Tables['interactions']['Insert'],
+  'id' | 'created_at' | 'updated_at'
+>;
 
 export interface SeedContext {
   supabase: SupabaseClient<Database>;

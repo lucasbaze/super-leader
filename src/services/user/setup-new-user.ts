@@ -48,7 +48,7 @@ export const DEFAULT_GROUPS = [
   {
     name: 'Work',
     slug: 'work',
-    icon: '��'
+    icon: '💼'
   }
 ] as const;
 

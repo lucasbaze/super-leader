@@ -3,7 +3,16 @@
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "node",
-    "noEmit": true
+    "esModuleInterop": true,
+    "allowJs": true,
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/scripts/**/*"]
+  "include": ["src/scripts/**/*"],
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  }
 }

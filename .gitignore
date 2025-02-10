@@ -30,8 +30,12 @@ yarn-error.log*
 .env.test
 .env.staging
 .env.production
+
 # vercel
 .vercel
+
+# local files
+/local-files
 
 # typescript
 *.tsbuildinfo

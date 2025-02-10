@@ -12,6 +12,11 @@
 - [ ] Need to handle better error handling around AI suggestions & structured output response creation.
 - [ ] Need to add a footnote that some links may be dead links, or repetitive.
 
+### Metrics
+
+- [ ] Summarization of each person
+- [ ] Summarization of the "network" for individual quality
+
 ### Clean up
 
 - [ ] Automatically update the test database on push with new migrations
@@ -34,8 +39,8 @@
 ### New Features
 
 - [x] ~~_Create import service & tests_~~ [2025-02-10]
-- [ ] Create import people & notes scripts
-- [ ] Test import with my contacts from Attio
+- [x] ~~_Create import people & notes scripts_~~ [2025-02-10]
+- [x] ~~_Test import with my contacts from Attio_~~ [2025-02-10]
 
 This will be done as a script that I run locally. Just need to figure out the best way to do this.
 

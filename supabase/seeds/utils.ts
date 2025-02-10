@@ -17,6 +17,7 @@ export function generateAddresses(personId: string, userId: string, count: numbe
       street: faker.location.streetAddress(),
       city: faker.location.city(),
       state: faker.location.state(),
+      postal_code: faker.location.zipCode(),
       country: countries[Math.floor(Math.random() * countries.length)],
       is_primary: i === 0,
       label: ['Home', 'Work', 'Vacation', 'Summer House', 'Winter Home'][

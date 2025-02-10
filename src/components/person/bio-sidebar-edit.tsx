@@ -54,6 +54,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
         street: address.street,
         city: address.city,
         state: address.state || undefined,
+        postal_code: address.postal_code || undefined,
         country: address.country,
         label: address.label || undefined,
         is_primary: address.is_primary || false
@@ -249,6 +250,18 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                 />
                 <FormField
                   control={form.control}
+                  name={`addresses.${index}.postal_code`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='text-sm font-medium'>Postal Code</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name={`addresses.${index}.country`}
                   render={({ field }) => (
                     <FormItem>
@@ -292,6 +305,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
               appendAddress({
                 street: '',
                 city: '',
+                postal_code: '',
                 country: '',
                 is_primary: false
               })

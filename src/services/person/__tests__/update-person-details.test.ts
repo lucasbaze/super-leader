@@ -114,6 +114,7 @@ describe('updatePersonDetails service', () => {
               {
                 street: '123 Test St',
                 city: 'Test City',
+                postal_code: '12345',
                 country: 'Test Country',
                 is_primary: true
               }
@@ -137,6 +138,7 @@ describe('updatePersonDetails service', () => {
           expect(result.data?.addresses?.[0]).toMatchObject({
             street: '123 Test St',
             city: 'Test City',
+            postal_code: '12345',
             country: 'Test Country',
             is_primary: true
           });
@@ -296,6 +298,7 @@ describe('updatePersonDetails service', () => {
                 {
                   street: '123 Test St',
                   city: 'Test City',
+                  postal_code: '12345',
                   country: 'Test Country',
                   is_primary: true
                 }
@@ -423,6 +426,7 @@ describe('updatePersonDetails service', () => {
               {
                 street: '123 Test St',
                 city: 'Test City',
+                postal_code: '12345',
                 country: 'Test Country',
                 is_primary: true
               }

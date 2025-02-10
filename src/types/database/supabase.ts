@@ -43,6 +43,7 @@ export type Database = {
           is_primary: boolean | null
           label: string | null
           person_id: string
+          postal_code: string | null
           state: string | null
           street: string
           updated_at: string
@@ -56,6 +57,7 @@ export type Database = {
           is_primary?: boolean | null
           label?: string | null
           person_id: string
+          postal_code?: string | null
           state?: string | null
           street: string
           updated_at?: string
@@ -69,6 +71,7 @@ export type Database = {
           is_primary?: boolean | null
           label?: string | null
           person_id?: string
+          postal_code?: string | null
           state?: string | null
           street?: string
           updated_at?: string
@@ -141,6 +144,7 @@ export type Database = {
           id: string
           name: string
           slug: string
+          updated_at: string
           user_id: string | null
         }
         Insert: {
@@ -149,6 +153,7 @@ export type Database = {
           id?: string
           name: string
           slug: string
+          updated_at?: string
           user_id?: string | null
         }
         Update: {
@@ -157,6 +162,7 @@ export type Database = {
           id?: string
           name?: string
           slug?: string
+          updated_at?: string
           user_id?: string | null
         }
         Relationships: []

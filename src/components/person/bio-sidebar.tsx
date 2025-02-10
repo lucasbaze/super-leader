@@ -114,7 +114,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
                   <p className='text-sm'>{address.street}</p>
                   <div className='flex items-center gap-2'>
                     <span className='text-xs text-muted-foreground'>
-                      {address.city}, {address.state} {address.country}
+                      {address.city}, {address.state} {address.postal_code} {address.country}
                     </span>
                     {address.is_primary && (
                       <Badge variant='secondary' className='h-4 px-1 py-0 text-[10px]'>

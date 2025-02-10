@@ -2,7 +2,7 @@
 
 ## Phase 1
 
-- [ ] Handle new user setup via the server and not via the database & undo the migration
+- [x] ~~_Handle new user setup via the server and not via the database & undo the migration_~~ [2025-02-09]
 - [ ] Add postal_code to the address schema.
 
 ### Suggestions

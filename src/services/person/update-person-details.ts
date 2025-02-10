@@ -177,6 +177,7 @@ export async function updatePersonDetails({
               street: address.street,
               city: address.city,
               state: address.state,
+              postal_code: address.postal_code,
               country: address.country,
               label: address.label,
               is_primary: address.is_primary
@@ -199,6 +200,7 @@ export async function updatePersonDetails({
             street: address.street,
             city: address.city,
             state: address.state,
+            postal_code: address.postal_code,
             country: address.country,
             label: address.label,
             is_primary: address.is_primary

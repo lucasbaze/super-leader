@@ -42,7 +42,9 @@ export {
   MoreHorizontal,
   Settings,
   Bookmark,
-  PlusCircle
+  PlusCircle,
+  ThumbsUp,
+  ThumbsDown
 } from 'lucide-react';
 export * as LogoIcons from './logos';
 export {

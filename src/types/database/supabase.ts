@@ -309,8 +309,9 @@ export type Database = {
       }
       suggestions: {
         Row: {
+          bad: boolean
           created_at: string
-          id: number
+          id: string
           person_id: string | null
           saved: boolean
           suggestion: Json
@@ -319,8 +320,9 @@ export type Database = {
           viewed: boolean | null
         }
         Insert: {
+          bad?: boolean
           created_at?: string
-          id?: number
+          id?: string
           person_id?: string | null
           saved?: boolean
           suggestion: Json
@@ -329,8 +331,9 @@ export type Database = {
           viewed?: boolean | null
         }
         Update: {
+          bad?: boolean
           created_at?: string
-          id?: number
+          id?: string
           person_id?: string | null
           saved?: boolean
           suggestion?: Json

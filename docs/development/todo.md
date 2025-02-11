@@ -16,6 +16,9 @@ Note: Before savings generated suggestions, just go ahead and filter out any tha
 - [ ] Need to add a footnote that some links may be dead links, or repetitive.
 
 - [ ] Update response from the AI to show messages generating prompt & generating response... in the UI.
+- [ ] Show saved material in the suggestions tab for the person.
+
+- [ ] Add a "save this content" for a particular person. This will be on the AI side of the chat.
 
 #### Suggestions: Nice to have
 
@@ -76,3 +79,7 @@ How is the app going to look on mobile?
 - [ ] Save content suggestions for later for other people
 
 - [ ] Get the search bar to work and just be like a dropdown search action.
+
+- [ ] Save Chat messages to the database.
+
+The reason would be for further AI intelligence in the future. Could also re-load conversations if needed for the user. Can refresh the page and have the same conversation visible. Will "fetch" the messages from the database from previous conversations. Can "start" a new conversation with the same person. Can view previous conversations and load them into the history.

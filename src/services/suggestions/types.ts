@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { Suggestion } from '@/types/database';
+
 /*
  * Message Suggestions
  */
@@ -36,13 +38,16 @@ export const SuggestionSchema = z.object({
 });
 export type TSuggestion = z.infer<typeof SuggestionSchema>;
 
+// Extend TSuggestion to include the database id
+export type TContentSuggestionWithId = TSuggestion & Pick<Suggestion, 'id'>;
+
 // Content Suggestions Response Schema
 export const ContentSuggestionsResponseSchema = z.object({
   suggestions: z.array(SuggestionSchema)
 });
 
 export type TGetContentSuggestionsForPersonResponse = {
-  suggestions: TSuggestion[];
+  suggestions: TContentSuggestionWithId[];
   topics: TSuggestionPromptResponse['topics'];
 };
 

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
+import { useUpdateSuggestion } from '@/hooks/use-suggestions';
 import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 
 import { ChatHeader } from './chat-header';
@@ -62,6 +63,7 @@ export function ChatInterface() {
 
   const createPerson = useCreatePerson();
   const createInteraction = useCreateInteraction(pendingAction?.arguments?.person_id || params.id);
+  const updateSuggestion = useUpdateSuggestion();
 
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
@@ -131,6 +133,27 @@ export function ChatInterface() {
     setAutoScroll(isAtBottom);
   };
 
+  const handleSuggestionViewed = (suggestionId: string) => {
+    updateSuggestion.mutate({
+      suggestionId,
+      viewed: true
+    });
+  };
+
+  const handleSuggestionBookmark = (suggestionId: string, saved: boolean) => {
+    updateSuggestion.mutate({
+      suggestionId,
+      saved
+    });
+  };
+
+  const handleSuggestionDislike = (suggestionId: string, bad: boolean) => {
+    updateSuggestion.mutate({
+      suggestionId,
+      bad
+    });
+  };
+
   return (
     <div className='absolute inset-0 flex flex-col'>
       <ChatHeader onAction={handleHeaderAction} append={append} />
@@ -143,6 +166,9 @@ export function ChatInterface() {
           append={append}
           onScroll={handleScroll}
           messagesEndRef={messagesEndRef}
+          onSuggestionViewed={handleSuggestionViewed}
+          onSuggestionBookmark={handleSuggestionBookmark}
+          onSuggestionDislike={handleSuggestionDislike}
         />
       </div>
       <ChatInput

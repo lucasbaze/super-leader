@@ -7,7 +7,12 @@ import { TServiceResponse } from '@/types/service-response';
 import { chatCompletion, type ChatCompletionOptions } from '@/vendors/open-router';
 
 import { SUGGESTIONS_PROMPT } from './proompts';
-import { ContentSuggestionsResponseSchema, SuggestionType, TSuggestion } from './types';
+import {
+  ContentSuggestionsResponseSchema,
+  SuggestionType,
+  TContentSuggestionWithId,
+  TSuggestion
+} from './types';
 
 // Define errors
 export const ERRORS = {
@@ -23,6 +28,12 @@ export const ERRORS = {
       ErrorType.API_ERROR,
       'Invalid response format from AI service',
       'Unable to process suggestions at this time'
+    ),
+    DB_ERROR: createError(
+      'db_error',
+      ErrorType.DATABASE_ERROR,
+      'Failed to save suggestions to database',
+      'Unable to save suggestions at this time'
     )
   }
 };
@@ -39,7 +50,7 @@ export async function createContentSuggestions({
   personId,
   userId,
   userContent
-}: TCreateContentSuggestionsParams): Promise<TServiceResponse<TSuggestion[]>> {
+}: TCreateContentSuggestionsParams): Promise<TServiceResponse<TContentSuggestionWithId[]>> {
   try {
     const messages: ChatCompletionOptions['messages'] = [
       {
@@ -85,23 +96,30 @@ export async function createContentSuggestions({
         person_id: personId,
         user_id: userId,
         suggestion,
-        type: SuggestionType.Enum.content,
-        viewed: false,
-        saved: false
+        type: SuggestionType.Enum.content
       }));
       console.log('suggestions: ', suggestions);
 
-      // TODO: Move to a service method
-      const { data, error } = await db.from('suggestions').insert(suggestions);
+      const { data: dbSuggestions, error } = await db
+        .from('suggestions')
+        .insert(suggestions)
+        .select('id, suggestion')
+        .throwOnError();
 
       if (error) {
-        console.error('Error creating suggestions in db: ', error);
+        return { data: null, error: ERRORS.CONTENT_CREATION.DB_ERROR };
       }
-    } catch (error) {
-      console.error('Error creating suggestions in db: ', error);
-    }
 
-    return { data: parsedContent.data.suggestions, error: null };
+      // Map the database suggestions to include both the suggestion content and id
+      const suggestionsWithIds = dbSuggestions.map((dbSuggestion) => ({
+        ...(dbSuggestion.suggestion as TSuggestion),
+        id: dbSuggestion.id
+      }));
+
+      return { data: suggestionsWithIds, error: null };
+    } catch (error) {
+      return { data: null, error: ERRORS.CONTENT_CREATION.DB_ERROR };
+    }
   } catch (error) {
     return {
       data: null,

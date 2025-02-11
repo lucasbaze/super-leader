@@ -117,6 +117,7 @@ Developer Experience (DX)
   - Test deletion cases by verifying empty arrays/null values
   - Match error objects exactly using toMatchObject
   - Verify both the initial state and final state in modification tests
+  - When creating tests & importing from test-builder, use the index.ts file to import & export
 
 **Service Method Patterns**
 

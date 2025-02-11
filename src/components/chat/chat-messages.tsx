@@ -6,9 +6,9 @@ import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 import { cn } from '@/lib/utils';
 import {
+  TContentSuggestionWithId,
   TGetContentSuggestionsForPersonResponse,
-  TMessageSuggestion,
-  TSuggestion
+  TMessageSuggestion
 } from '@/services/suggestions/types';
 import { Maybe } from '@/types/utils';
 
@@ -25,6 +25,9 @@ interface ChatMessagesProps {
   append: (message: CreateMessage) => void;
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  onSuggestionViewed: (suggestionId: string) => void;
+  onSuggestionBookmark: (suggestionId: string, saved: boolean) => void;
+  onSuggestionDislike: (suggestionId: string, bad: boolean) => void;
 }
 
 export function ChatMessages({
@@ -34,7 +37,10 @@ export function ChatMessages({
   handleCancelAction,
   append,
   onScroll,
-  messagesEndRef
+  messagesEndRef,
+  onSuggestionViewed,
+  onSuggestionBookmark,
+  onSuggestionDislike
 }: ChatMessagesProps) {
   return (
     <div className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
@@ -133,8 +139,15 @@ export function ChatMessages({
                 if (!suggestions) return null;
                 return (
                   <>
-                    {suggestions.map((suggestion: TSuggestion, index: number) => (
-                      <SuggestionCard key={index} suggestion={suggestion} append={append} />
+                    {suggestions.map((suggestion: TContentSuggestionWithId, index: number) => (
+                      <SuggestionCard
+                        key={suggestion.id}
+                        suggestion={suggestion}
+                        append={append}
+                        onViewed={onSuggestionViewed}
+                        onBookmark={onSuggestionBookmark}
+                        onDislike={onSuggestionDislike}
+                      />
                     ))}
                   </>
                 );

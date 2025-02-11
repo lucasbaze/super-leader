@@ -1,11 +1,10 @@
 import { NextRequest } from 'next/server';
 
 import { openai } from '@ai-sdk/openai';
-import { JSONValue, Message, streamText } from 'ai';
+import { Message, streamText } from 'ai';
 import { z } from 'zod';
 
 import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
-import { TSuggestion } from '@/services/suggestions/types';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;

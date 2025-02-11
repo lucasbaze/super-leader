@@ -1,24 +1,35 @@
+'use client';
+
+import { useState } from 'react';
+
 import { CreateMessage } from 'ai';
 
-import { ExternalLink, MessageCircle, Newspaper, SendHorizontal } from '@/components/icons';
+import { Bookmark, ExternalLink, MessageCircle, ThumbsDown } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-
-// TODO: Use the type from the server or types file
-export interface TSuggestion {
-  contentUrl: string;
-  title: string;
-  reason: string;
-  category?: string;
-}
+import { cn } from '@/lib/utils';
+import { TContentSuggestionWithId } from '@/services/suggestions/types';
 
 interface SuggestionCardProps {
-  suggestion: TSuggestion;
+  suggestion: TContentSuggestionWithId;
   append: (message: CreateMessage) => void;
+  onBookmark: (suggestionId: string, saved: boolean) => void;
+  onDislike: (suggestionId: string, bad: boolean) => void;
+  onViewed: (suggestionId: string) => void;
 }
 
-export function SuggestionCard({ suggestion, append }: SuggestionCardProps) {
+export function SuggestionCard({
+  suggestion,
+  append,
+  onBookmark,
+  onDislike,
+  onViewed
+}: SuggestionCardProps) {
+  const [viewed, setViewed] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [bad, setBad] = useState(false);
+
   const handleAppend = () => {
     const prompt = 'Please create message variants based on the following content:';
 
@@ -34,7 +45,50 @@ export function SuggestionCard({ suggestion, append }: SuggestionCardProps) {
 
   return (
     <div className='flex items-center gap-2'>
-      <Card className='w-full max-w-md'>
+      <Card className='group relative w-full max-w-md'>
+        {/* Action Buttons */}
+        <div className='opacity-200 absolute bottom-2 right-2 flex gap-2 opacity-20 transition-opacity duration-200 group-hover:opacity-100'>
+          <TooltipProvider>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  className={cn('size-8 hover:bg-accent', saved && 'text-primary')}
+                  onClick={() => {
+                    onBookmark(suggestion.id, !saved);
+                    setSaved(!saved);
+                  }}>
+                  <Bookmark className='size-4' fill={saved ? 'currentColor' : 'none'} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{saved ? 'Remove bookmark' : 'Bookmark for later'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  className={cn('size-8 hover:bg-accent', bad && 'text-destructive')}
+                  onClick={() => {
+                    onDislike(suggestion.id, !bad);
+                    setBad(!bad);
+                  }}>
+                  <ThumbsDown className='size-4' fill={bad ? 'currentColor' : 'none'} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{bad ? 'Remove dislike' : 'Bad suggestion'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
         <CardHeader className='text-sm text-muted-foreground'>
           <h4 className='font-medium'>{suggestion.title}</h4>
         </CardHeader>
@@ -45,14 +99,19 @@ export function SuggestionCard({ suggestion, append }: SuggestionCardProps) {
           <Button
             variant='ghost'
             size='sm'
-            onClick={() => window.open(suggestion.contentUrl, '_blank')}>
+            className={cn(viewed && 'bg-accent/50')}
+            onClick={() => {
+              onViewed(suggestion.id);
+              setViewed(true);
+              window.open(suggestion.contentUrl, '_blank');
+            }}>
             <ExternalLink className='mr-1 size-2' />
-            View Article
+            {viewed ? 'Viewed' : 'View Article'}
           </Button>
         </CardFooter>
       </Card>
       <TooltipProvider>
-        <Tooltip delayDuration={300}>
+        <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>
             <Button variant='ghost' size='icon' onClick={handleAppend}>
               <MessageCircle className='size-4' />

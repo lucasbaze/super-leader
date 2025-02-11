@@ -39,7 +39,7 @@ export function ChatMessages({
   return (
     <div className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
       <div className='flex flex-col gap-4'>
-        {messages.map((message) => {
+        {messages.map((message, index) => {
           if (message.role === 'user') {
             return (
               <div key={message.id} className='flex flex-col items-end gap-2'>

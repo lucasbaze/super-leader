@@ -32,6 +32,17 @@ const getDataFromMessage = (message: Message): ChatMessageData | null => {
   return null;
 };
 
+// Helper function to handle tool errors
+function handleToolError(error: unknown, context: string) {
+  // Return a user-friendly message that the AI can use
+  console.error('handleToolError:', error);
+  return {
+    error: true,
+    message: `Hmm... I encountered an issue while trying to ${context}. You can try again or contact support if the issue persists.`,
+    details: JSON.stringify(error)
+  };
+}
+
 export async function POST(req: NextRequest) {
   const { messages, personId, personName } = (await req.json()) as ChatRequestBody;
   console.log('Chat Route: Messages: ', messages);
@@ -43,6 +54,7 @@ export async function POST(req: NextRequest) {
   
   ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create content suggestions default to making a tool call unless specified otherwise.` : ''}
   
+  If an error occurs or a tool returns an error, acknowledge the error to the user and suggest alternative actions or ways to proceed.
   `;
 
   const contextualMessages: Message[] = [
@@ -97,9 +109,7 @@ export async function POST(req: NextRequest) {
             const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await fetch(`${baseUrl}/api/suggestions`, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 personId: messageData?.personId
               })
@@ -108,15 +118,15 @@ export async function POST(req: NextRequest) {
             if (!response.ok) {
               const errorData = await response.json();
               console.error('Suggestions API error:', errorData);
-              throw new Error(errorData.error || 'Failed to fetch suggestions');
+              return handleToolError(errorData, 'fetch content suggestions');
             }
 
             const json = await response.json();
             console.log('Suggestions API response:', json);
             return json.data;
           } catch (error) {
-            console.error('Error fetching suggestions:', error);
-            throw error;
+            console.error('Suggestions API error: Error catcher:', error);
+            return handleToolError(error, 'fetch content suggestions');
           }
         }
       },
@@ -137,31 +147,25 @@ export async function POST(req: NextRequest) {
             const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await fetch(`${baseUrl}/api/suggestions/messages`, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 personId: person_id,
                 // TODO: Type these properly
-                // @ts-ignore
                 contentUrl: messageData?.contentUrl,
-                // @ts-ignore
                 contentTitle: messageData?.contentTitle
               })
             });
 
             if (!response.ok) {
               const errorData = await response.json();
-              console.error('Suggestions API error:', errorData);
-              throw new Error(errorData.error || 'Failed to fetch suggestions');
+              throw new Error(errorData.error || 'Failed to fetch message suggestions');
             }
 
             const json = await response.json();
             console.log('Message Suggestions API response:', json);
             return json.data;
           } catch (error) {
-            console.error('Error fetching suggestions:', error);
-            throw error;
+            return handleToolError(error, 'create message suggestions');
           }
         }
       }

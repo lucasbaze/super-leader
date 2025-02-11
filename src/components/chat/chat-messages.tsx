@@ -15,6 +15,7 @@ import { Maybe } from '@/types/utils';
 import { ActionCard } from './cards/action-card';
 import { MessageCard } from './cards/message-card';
 import { SuggestionCard } from './cards/suggestion-card';
+import { ToolErrorCard } from './cards/tool-error-card';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -99,6 +100,19 @@ export function ChatMessages({
               </div>
             );
             const toolInvocations = message.toolInvocations?.map((toolInvocation) => {
+              // Handle tool errors first
+              if (toolInvocation.state === 'result' && toolInvocation.result.error) {
+                return (
+                  <ToolErrorCard
+                    key={toolInvocation.toolCallId}
+                    message={toolInvocation.result.message}
+                    errorDetails={toolInvocation.result.details}
+                    toolName={toolInvocation.toolName}
+                  />
+                );
+              }
+
+              // Handle successful tool invocations
               if (toolInvocation.toolName === CHAT_TOOLS.CREATE_PERSON) {
                 return (
                   <ActionCard
@@ -154,7 +168,7 @@ export function ChatMessages({
               }
             });
             return (
-              <div key={message.id} className='flex flex-col items-start gap-2'>
+              <div key={index} className='flex flex-col items-start gap-2'>
                 {content}
                 {toolInvocations}
               </div>

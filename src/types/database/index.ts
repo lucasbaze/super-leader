@@ -14,3 +14,4 @@ export type Website = Database['public']['Tables']['websites']['Row'];
 export type Group = Database['public']['Tables']['group']['Row'];
 export type GroupMember = Database['public']['Tables']['group_member']['Row'];
 export type Interaction = Database['public']['Tables']['interactions']['Row'];
+export type Suggestion = Database['public']['Tables']['suggestions']['Row'];

@@ -91,6 +91,7 @@ export async function createContentSuggestions({
       }));
       console.log('suggestions: ', suggestions);
 
+      // TODO: Move to a service method
       const { data, error } = await db.from('suggestions').insert(suggestions);
 
       if (error) {

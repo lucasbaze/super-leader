@@ -1,18 +1,14 @@
+import { stripIndents } from 'common-tags';
 import { zodResponseFormat } from 'openai/helpers/zod';
 
 import { createError } from '@/lib/errors';
-import { DBClient } from '@/types/database';
+import { $system, $user } from '@/lib/llm/messages';
+import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 import { chatCompletion, type ChatCompletionOptions } from '@/vendors/open-router';
 
-import { SUGGESTIONS_PROMPT } from './proompts';
-import {
-  ContentSuggestionsResponseSchema,
-  SuggestionType,
-  TContentSuggestionWithId,
-  TSuggestion
-} from './types';
+import { ContentSuggestionsResponseSchema, SuggestionSchema, TSuggestion } from './types';
 
 // Define errors
 export const ERRORS = {
@@ -28,39 +24,23 @@ export const ERRORS = {
       ErrorType.API_ERROR,
       'Invalid response format from AI service',
       'Unable to process suggestions at this time'
-    ),
-    DB_ERROR: createError(
-      'db_error',
-      ErrorType.DATABASE_ERROR,
-      'Failed to save suggestions to database',
-      'Unable to save suggestions at this time'
     )
   }
 };
 
 export interface TCreateContentSuggestionsParams {
-  db: DBClient;
-  personId: string;
-  userId: string;
   userContent: string;
+  suggestions: Suggestion[];
 }
 
 export async function createContentSuggestions({
-  db,
-  personId,
-  userId,
-  userContent
-}: TCreateContentSuggestionsParams): Promise<TServiceResponse<TContentSuggestionWithId[]>> {
+  userContent,
+  suggestions
+}: TCreateContentSuggestionsParams): Promise<TServiceResponse<TSuggestion[]>> {
   try {
     const messages: ChatCompletionOptions['messages'] = [
-      {
-        role: 'system',
-        content: SUGGESTIONS_PROMPT.buildSuggestionPrompt().prompt
-      },
-      {
-        role: 'user',
-        content: userContent
-      }
+      $system(buildContentSuggestionPrompt().prompt),
+      $user(buildContentSuggestionUserPrompt(userContent, suggestions).prompt)
     ];
 
     const plugins = [
@@ -91,35 +71,7 @@ export async function createContentSuggestions({
       };
     }
 
-    try {
-      const suggestions = parsedContent.data.suggestions.map((suggestion) => ({
-        person_id: personId,
-        user_id: userId,
-        suggestion,
-        type: SuggestionType.Enum.content
-      }));
-      console.log('suggestions: ', suggestions);
-
-      const { data: dbSuggestions, error } = await db
-        .from('suggestions')
-        .insert(suggestions)
-        .select('id, suggestion')
-        .throwOnError();
-
-      if (error) {
-        return { data: null, error: ERRORS.CONTENT_CREATION.DB_ERROR };
-      }
-
-      // Map the database suggestions to include both the suggestion content and id
-      const suggestionsWithIds = dbSuggestions.map((dbSuggestion) => ({
-        ...(dbSuggestion.suggestion as TSuggestion),
-        id: dbSuggestion.id
-      }));
-
-      return { data: suggestionsWithIds, error: null };
-    } catch (error) {
-      return { data: null, error: ERRORS.CONTENT_CREATION.DB_ERROR };
-    }
+    return { data: parsedContent.data.suggestions, error: null };
   } catch (error) {
     return {
       data: null,
@@ -130,3 +82,49 @@ export async function createContentSuggestions({
     };
   }
 }
+
+const buildContentSuggestionPrompt = () => ({
+  prompt: stripIndents`You are an AI content curator that finds the most recent, engaging and interesting content available. We're looking for content that would be worth sharing and creating a conversation with the other person.
+   
+  Instructions:
+  - Search the web for content that is less than 1 year old, relevant to the user's interests, engaging or interesting, recent. The content doesn't have to be popular, but it should be interesting.
+  
+  RETURN JSON IN THIS FORMAT:
+    {
+      "suggestions": [
+        {
+          "title": "Title of the content",
+          "contentUrl": "URL of the content",
+          "reason": "Reason for the suggestion based on the user's interests"
+        }
+      ]
+    }
+
+  `
+});
+const buildContentSuggestionUserPrompt = (userPrompt: string, suggestions: Suggestion[]) => {
+  // If no suggestions, return prompt
+  if (!suggestions || suggestions.length === 0) {
+    return { prompt: userPrompt };
+  }
+
+  // Get content urls from suggestions
+  const suggestionsContent = suggestions
+    .map((suggestion) => SuggestionSchema.safeParse(suggestion.suggestion).data?.contentUrl)
+    .filter((contentUrl) => contentUrl !== null);
+
+  // Add suggestions to prompt
+  const prompt = `${userPrompt}
+
+  These are suggestions that you have generated the past 30 days:
+  ${suggestionsContent.join('\n')}
+  
+  Do not generate any suggestions that are similar to these.
+  `;
+
+  console.log('Suggestions::CreateContentSuggestionAugmentationUserPrompt::prompt', prompt);
+
+  return {
+    prompt
+  };
+};

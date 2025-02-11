@@ -8,6 +8,7 @@ import { NotebookPen, Sparkles } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePerson } from '@/hooks/use-person';
+import { randomString } from '@/lib/utils';
 
 import { DefaultChatHeader } from './default';
 
@@ -35,7 +36,7 @@ export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
     append({
       role: 'user',
       content: message,
-      id: 'suggestion-header',
+      id: randomString(12),
       data: {
         personId: data?.person?.id ?? null,
         personName: `${data?.person?.first_name} ${data?.person?.last_name}`

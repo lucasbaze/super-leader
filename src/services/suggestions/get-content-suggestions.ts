@@ -1,13 +1,17 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { getPerson, GetPersonResult } from '@/services/person/get-person';
-import { DBClient } from '@/types/database';
+import { DBClient, Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
+import { createContentSuggestionPrompt } from './create-content-suggestion-prompt';
 import { createContentSuggestions } from './create-content-suggestions';
-import { createSuggestionPrompt } from './create-suggestion-prompt';
-import { TGetContentSuggestionsForPersonResponse } from './types';
+import {
+  SuggestionType,
+  TContentSuggestionWithId,
+  TGetContentSuggestionsForPersonResponse
+} from './types';
 
 // Service params interface
 export interface TGetSuggestionsForPersonParams {
@@ -21,14 +25,14 @@ export const ERRORS = {
     PROMPT_CREATION_ERROR: createError(
       'suggestions_prompt_creation_error',
       ErrorType.API_ERROR,
-      'Failed to create suggestions prompt',
-      'Unable to create suggestions prompt at this time'
+      'Failed to create content suggestions prompt',
+      'Unable to create content suggestions prompt at this time'
     ),
     FETCH_ERROR: createError(
       'suggestions_fetch_error',
       ErrorType.API_ERROR,
-      'Failed to fetch suggestions',
-      'Unable to generate suggestions at this time'
+      'Failed to fetch content suggestions',
+      'Unable to generate content suggestions at this time'
     ),
     PERSON_REQUIRED: createError(
       'person_required',
@@ -36,23 +40,25 @@ export const ERRORS = {
       'Person ID is required',
       'Please provide a person to get suggestions for'
     ),
+    PREVIOUS_SUGGESTIONS_FETCH_ERROR: createError(
+      'previous_suggestions_fetch_error',
+      ErrorType.API_ERROR,
+      'Failed to fetch previous content suggestions',
+      'Unable to generate content suggestions at this time'
+    ),
+    SUGGESTIONS_SAVE_ERROR: createError(
+      'suggestions_save_error',
+      ErrorType.API_ERROR,
+      'Failed to save content suggestions',
+      'Unable to save content suggestions at this time'
+    ),
     AI_SERVICE_ERROR: createError(
       'ai_service_error',
       ErrorType.API_ERROR,
-      'AI service failed to generate suggestions',
-      'Unable to generate suggestions at this time'
+      'AI service failed to generate content suggestions',
+      'Unable to generate content suggestions at this time'
     )
   }
-};
-
-const buildUserPrompt = (personResult: GetPersonResult) => {
-  console.log('Suggestions::GetContentSuggestionsForPerson::personResult', personResult);
-  const { person, interactions } = personResult;
-  const { first_name } = person;
-
-  return `This is what I know about ${first_name}. ${interactions?.map((interaction) => {
-    return `${interaction.type}: ${interaction.note}`;
-  })}`;
 };
 
 export async function getContentSuggestionsForPerson({
@@ -77,13 +83,30 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: personResult.error };
     }
 
-    // Create the augmented prompt
-    const promptResult = await createSuggestionPrompt({
-      db,
-      personId: personResult.data.person.id,
+    // Calculate 30 days ago in UTC
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    // Get previously generated suggestions within the past 30 days
+    const { data, error } = await db
+      .from('suggestions')
+      .select('*')
+      .eq('person_id', personId)
       // TODO: This is a hack to get the user id... Should be passed in from the request
-      userId: personResult.data.person.user_id,
-      userContent: buildUserPrompt(personResult.data)
+      .eq('user_id', personResult.data.person.user_id)
+      .gte('created_at', thirtyDaysAgo);
+    console.log('Suggestions::GetContentSuggestionsForPerson::suggestions', data);
+
+    if (error) {
+      errorLogger.log({
+        ...ERRORS.SUGGESTIONS.PREVIOUS_SUGGESTIONS_FETCH_ERROR,
+        details: error
+      });
+    }
+
+    // Create the augmented prompt
+    const promptResult = await createContentSuggestionPrompt({
+      personResult: personResult.data,
+      suggestions: data || []
     });
     console.log('Suggestions::GetContentSuggestionsForPerson::promptResult', promptResult);
 
@@ -93,21 +116,57 @@ export async function getContentSuggestionsForPerson({
 
     // Create content suggestions using the prompt from the response
     const suggestionsResult = await createContentSuggestions({
-      db,
-      personId,
-      // TODO: This is a hack to get the user id... Should be passed in from the request
-      userId: personResult.data.person.user_id,
-      userContent: promptResult.data.prompt
+      userContent: promptResult.data.prompt,
+      suggestions: data || []
     });
 
     if (suggestionsResult.error || !suggestionsResult.data) {
       return { data: null, error: suggestionsResult.error };
     }
 
+    // Save the suggestions to the database
+    // TODO: Move this to a separate service
+
+    let savedSuggestions: TContentSuggestionWithId[] = [];
+    try {
+      const suggestions = suggestionsResult.data.map((suggestion) => ({
+        person_id: personId,
+        user_id: personResult.data?.person.user_id,
+        suggestion,
+        type: SuggestionType.Enum.content
+      }));
+
+      const { data: dbSuggestions, error } = await db
+        .from('suggestions')
+        .insert(suggestions)
+        .select('*')
+        .throwOnError();
+
+      if (error) {
+        return {
+          data: null,
+          error: { ...ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR, details: error }
+        };
+      }
+
+      // Map the database suggestions to include both the suggestion content and id
+      const suggestionsWithIds = dbSuggestions.map((dbSuggestion) => ({
+        ...(dbSuggestion.suggestion as Suggestion),
+        contentUrl: dbSuggestion.suggestion.contentUrl,
+        title: dbSuggestion.suggestion.title,
+        reason: dbSuggestion.suggestion.reason,
+        id: dbSuggestion.id
+      }));
+
+      savedSuggestions = suggestionsWithIds;
+    } catch (error) {
+      return { data: null, error: ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR };
+    }
+
     // Return both the suggestions and the prompt response
     return {
       data: {
-        suggestions: suggestionsResult.data,
+        suggestions: savedSuggestions,
         topics: promptResult.data.topics
       },
       error: null

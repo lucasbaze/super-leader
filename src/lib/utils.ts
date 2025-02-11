@@ -30,8 +30,10 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
-export function randomString() {
-  return Math.random().toString(36).substring(2, 4);
+export function randomString(length: number = 10) {
+  return Math.random()
+    .toString(36)
+    .substring(2, 2 + length);
 }
 
 export function getRandomGradient() {

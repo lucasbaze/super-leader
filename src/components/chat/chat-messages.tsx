@@ -49,7 +49,7 @@ export function ChatMessages({
           if (message.role === 'user') {
             return (
               <div key={message.id} className='flex flex-col items-end gap-2'>
-                <div className='max-w-[90%] break-words rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground'>
+                <div className='max-w-[90%] break-words rounded-sm bg-primary px-3 py-2 text-sm text-primary-foreground'>
                   {message.content}
                 </div>
               </div>
@@ -58,7 +58,7 @@ export function ChatMessages({
 
           if (message.role === 'assistant') {
             const content = message.content !== '' && (
-              <div className={'max-w-[90%] break-words rounded-lg bg-muted px-3 py-2 text-sm'}>
+              <div className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
                 <ReactMarkdown
                   components={{
                     // Style different markdown elements

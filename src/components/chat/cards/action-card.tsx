@@ -64,7 +64,7 @@ export function ActionCard({
 
   if (interaction) {
     return (
-      <Card className='w-[100px]'>
+      <Card>
         <CardHeader>
           <CardTitle>Create New Interaction</CardTitle>
         </CardHeader>

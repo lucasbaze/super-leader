@@ -102,7 +102,8 @@ describe('createContentSuggestionPrompt', () => {
 
         const result = await createContentSuggestionPrompt({
           personResult: personResult.data!,
-          suggestions: []
+          suggestions: [],
+          type: 'content'
         });
 
         // Add debug logging
@@ -152,7 +153,8 @@ describe('createContentSuggestionPrompt', () => {
 
         const result = await createContentSuggestionPrompt({
           personResult: personResult.data!,
-          suggestions: [testSuggestion]
+          suggestions: [testSuggestion],
+          type: 'content'
         });
 
         expect(result.error).toBeNull();

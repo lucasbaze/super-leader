@@ -7,3 +7,7 @@
 - [ ] Filter out previous suggestions
 - [ ] Create a "limit" and "fallback" for suggestions
 - [ ] Create a mechanism to possibly get multiple / different prompts i.e. one for gifts, one for activities, etc.
+
+### Questions:
+
+- How could I get suggestions like these to be surfaced: chttps://www.postable.com/gifts

@@ -17,14 +17,15 @@ export async function POST(req: Request) {
     //   return apiResponse.unauthorized(authResult.error);
     // }
 
-    // Get personId from request body
+    // Get personId and type from request body
     const body = await req.json();
-    const { personId } = body;
+    const { personId, type = 'content' } = body; // Default to content type
 
     // Call the service method
     const result = await getContentSuggestionsForPerson({
       db: supabase,
-      personId
+      personId,
+      type
     });
 
     if (result.error) {

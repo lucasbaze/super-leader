@@ -121,13 +121,16 @@ export function ChatMessages({
               // Handle successful tool invocations
               if (toolInvocation.toolName === CHAT_TOOLS.CREATE_PERSON) {
                 return (
-                  <ActionCard
+                  <div
                     key={toolInvocation.toolCallId}
-                    person={toolInvocation.args}
-                    onConfirm={handleConfirmAction}
-                    onCancel={handleCancelAction}
-                    completed={toolInvocation.state === 'result'}
-                  />
+                    className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
+                    <ActionCard
+                      person={toolInvocation.args}
+                      onConfirm={handleConfirmAction}
+                      onCancel={handleCancelAction}
+                      completed={toolInvocation.state === 'result'}
+                    />
+                  </div>
                 );
               }
               if (toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
@@ -154,13 +157,16 @@ export function ChatMessages({
               }
               if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
                 return (
-                  <ActionCard
+                  <div
                     key={toolInvocation.toolCallId}
-                    interaction={toolInvocation.args}
-                    onConfirm={handleConfirmAction}
-                    onCancel={handleCancelAction}
-                    completed={toolInvocation.state === 'result'}
-                  />
+                    className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
+                    <ActionCard
+                      interaction={toolInvocation.args}
+                      onConfirm={handleConfirmAction}
+                      onCancel={handleCancelAction}
+                      completed={toolInvocation.state === 'result'}
+                    />
+                  </div>
                 );
               }
               if (toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS) {

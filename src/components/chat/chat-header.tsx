@@ -8,19 +8,18 @@ import { DefaultChatHeader } from './headers/default';
 import { PersonChatHeader } from './headers/person';
 
 interface ChatHeaderProps {
-  onAction: (message: string) => void;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
 }
 
-export function ChatHeader({ onAction, append }: ChatHeaderProps) {
+export function ChatHeader({ append }: ChatHeaderProps) {
   const pathname = usePathname();
 
   const getHeader = () => {
     const isPersonPage = pathname.startsWith('/app/person/');
-    if (isPersonPage) return <PersonChatHeader onAction={onAction} append={append} />;
+    if (isPersonPage) return <PersonChatHeader append={append} />;
     return <DefaultChatHeader />;
   };
 

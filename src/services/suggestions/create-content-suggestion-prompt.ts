@@ -37,15 +37,21 @@ export const ERRORS = {
 export interface TCreateSuggestionPromptParams {
   personResult: GetPersonResult;
   suggestions: Suggestion[];
+  type: 'content' | 'gift';
 }
 
 export async function createContentSuggestionPrompt({
   personResult,
-  suggestions
+  suggestions,
+  type
 }: TCreateSuggestionPromptParams): Promise<TServiceResponse<TSuggestionPromptResponse>> {
   try {
     const promptMessages: ChatCompletionOptions['messages'] = [
-      $system(buildContentSuggestionAugmentationSystemPrompt().prompt),
+      $system(
+        type === 'gift'
+          ? buildGiftSuggestionPrompt().prompt
+          : buildContentSuggestionAugmentationSystemPrompt().prompt
+      ),
       $user(
         buildContentSuggestionAugmentationUserPrompt({
           personResult,
@@ -127,6 +133,38 @@ const buildContentSuggestionAugmentationSystemPrompt = () => ({
     `
 });
 
+const buildGiftSuggestionPrompt = () => ({
+  prompt: stripIndents`You are an AI gift advisor that suggests thoughtful and personalized gifts. 
+  Analyze the provided person information and return:
+      1. A singluar key topic or interest
+      2. A prompt to get at most 3 gift suggestions
+  
+  Guidelines:
+  - Suggest a singular type of gift that match the person's interests and activities
+  - The gift can be of any price range, but should err on being more premium
+  - Consider both practical, meaningful, and experiential gifts
+  - Avoid generic suggestions unless they specifically match the person's interests
+  
+  RETURN JSON IN THIS FORMAT:
+    {
+      "topics": ["gift category"],
+      "prompt": "Detailed prompt for finding gift suggestions"
+    }
+
+  Example Output 1: 
+    {
+      "topics": ["coffee"],
+      "prompt": "Find 3 possible coffee subscriptions that would be interesting to a coffee lover."
+    }
+
+  Example Output 1: 
+    {
+      "topics": ["cars"],
+      "prompt": "Find 3 possible tickets to car events or car shows that would be interesting to a car enthusiast."
+    }
+  `
+});
+
 export interface TBuildContentSuggestionAugmentationUserPromptParams {
   personResult: GetPersonResult;
   suggestions: Suggestion[];
@@ -162,7 +200,7 @@ export const buildContentSuggestionAugmentationUserPrompt = ({
   ${
     suggestionsTitles.length !== 0
       ? `
-    These are the titles of article suggestions that you have generated the past 30 days:
+    These are the titles of suggestions that you have generated the past:
     ${wrapTicks(suggestionsTitles.join('\n'), 'Previous Suggestions')}
     
     Try to generate a prompt that does not overlap with the previous suggestions. However, if there is not have enough infomration about the person to suggest topics outside of the scope of the previous suggestions, then it is okay to suggest similar content. If the previous suggestions focus too much on one topic, suggest topics that could be applicable to interesting to many audiences.

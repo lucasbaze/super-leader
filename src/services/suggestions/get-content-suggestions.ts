@@ -17,6 +17,7 @@ import {
 export interface TGetSuggestionsForPersonParams {
   db: DBClient;
   personId: string;
+  type?: 'content' | 'gift';
 }
 
 // Define errors
@@ -63,7 +64,8 @@ export const ERRORS = {
 
 export async function getContentSuggestionsForPerson({
   db,
-  personId
+  personId,
+  type = 'content'
 }: TGetSuggestionsForPersonParams): Promise<
   TServiceResponse<TGetContentSuggestionsForPersonResponse>
 > {
@@ -83,18 +85,19 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: personResult.error };
     }
 
-    // Calculate 30 days ago in UTC
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    // Adjust the time window based on type
+    const daysAgo = type === 'gift' ? 60 : 30;
+    const timeAgo = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString();
 
-    // Get previously generated suggestions within the past 30 days
-    const { data, error } = await db
+    // Get previously generated suggestions filtered by type
+    const { data: previousSuggestions, error } = await db
       .from('suggestions')
       .select('*')
       .eq('person_id', personId)
-      // TODO: This is a hack to get the user id... Should be passed in from the request
       .eq('user_id', personResult.data.person.user_id)
-      .gte('created_at', thirtyDaysAgo);
-    console.log('Suggestions::GetContentSuggestionsForPerson::suggestions', data);
+      .eq('type', type)
+      .gte('created_at', timeAgo);
+    console.log('Suggestions::GetContentSuggestionsForPerson::suggestions', previousSuggestions);
 
     if (error) {
       errorLogger.log({
@@ -103,10 +106,11 @@ export async function getContentSuggestionsForPerson({
       });
     }
 
-    // Create the augmented prompt
+    // Create the augmented prompt with type
     const promptResult = await createContentSuggestionPrompt({
       personResult: personResult.data,
-      suggestions: data || []
+      suggestions: previousSuggestions || [],
+      type
     });
     console.log('Suggestions::GetContentSuggestionsForPerson::promptResult', promptResult);
 
@@ -114,28 +118,30 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: promptResult.error };
     }
 
-    // Create content suggestions using the prompt from the response
+    // Create content suggestions
     const suggestionsResult = await createContentSuggestions({
       userContent: promptResult.data.prompt,
-      suggestions: data || []
+      suggestions: previousSuggestions || [],
+      type
     });
 
     if (suggestionsResult.error || !suggestionsResult.data) {
       return { data: null, error: suggestionsResult.error };
     }
 
+    // Save suggestions with correct type
+    const suggestions = suggestionsResult.data.map((suggestion) => ({
+      person_id: personId,
+      user_id: personResult.data?.person.user_id,
+      suggestion,
+      type
+    }));
+
     // Save the suggestions to the database
     // TODO: Move this to a separate service
 
     let savedSuggestions: TContentSuggestionWithId[] = [];
     try {
-      const suggestions = suggestionsResult.data.map((suggestion) => ({
-        person_id: personId,
-        user_id: personResult.data?.person.user_id,
-        suggestion,
-        type: SuggestionType.Enum.content
-      }));
-
       const { data: dbSuggestions, error } = await db
         .from('suggestions')
         .insert(suggestions)

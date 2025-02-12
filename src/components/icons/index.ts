@@ -10,6 +10,7 @@ export {
   MapPin,
   Home,
   Frame,
+  Gift,
   LifeBuoy,
   Map,
   PieChart,

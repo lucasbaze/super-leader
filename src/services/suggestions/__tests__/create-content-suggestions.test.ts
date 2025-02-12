@@ -77,7 +77,8 @@ describe('createContentSuggestions', () => {
 
       const result = await createContentSuggestions({
         userContent: 'Find content about AI and technology',
-        suggestions: []
+        suggestions: [],
+        type: 'content'
       });
 
       expect(result.error).toBeNull();
@@ -122,7 +123,8 @@ describe('createContentSuggestions', () => {
 
         const result = await createContentSuggestions({
           userContent: 'Find new content avoiding previous suggestions',
-          suggestions: [testSuggestion]
+          suggestions: [testSuggestion],
+          type: 'content'
         });
 
         expect(result.error).toBeNull();
@@ -145,7 +147,8 @@ describe('createContentSuggestions', () => {
 
       const result = await createContentSuggestions({
         userContent: 'Find content',
-        suggestions: []
+        suggestions: [],
+        type: 'content'
       });
 
       expect(result.error).toBeDefined();
@@ -159,12 +162,43 @@ describe('createContentSuggestions', () => {
 
       const result = await createContentSuggestions({
         userContent: 'Find content',
-        suggestions: []
+        suggestions: [],
+        type: 'content'
       });
 
       expect(result.error).toBeDefined();
       expect(result.error?.name).toBe('content_creation_failed');
       expect(result.data).toBeNull();
     });
+  });
+
+  describe('gift suggestions', () => {
+    it('should create gift suggestions with no previous suggestions', async () => {
+      jest.mocked(chatCompletion).mockResolvedValueOnce({
+        role: 'assistant',
+        refusal: null,
+        content: JSON.stringify({
+          suggestions: [
+            {
+              title: 'Premium Coffee Subscription',
+              contentUrl: 'https://example.com/coffee-sub',
+              reason: 'Perfect for their interest in specialty coffee'
+            }
+          ]
+        })
+      });
+
+      const result = await createContentSuggestions({
+        userContent: 'Find thoughtful gifts',
+        suggestions: [],
+        type: 'gift'
+      });
+
+      expect(result.error).toBeNull();
+      expect(result.data).toHaveLength(1);
+      expect(result.data![0].title).toContain('Coffee Subscription');
+    });
+
+    // Add more gift-specific tests...
   });
 });

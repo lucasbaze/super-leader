@@ -31,15 +31,19 @@ export const ERRORS = {
 export interface TCreateContentSuggestionsParams {
   userContent: string;
   suggestions: Suggestion[];
+  type: 'content' | 'gift';
 }
 
 export async function createContentSuggestions({
   userContent,
-  suggestions
+  suggestions,
+  type
 }: TCreateContentSuggestionsParams): Promise<TServiceResponse<TSuggestion[]>> {
   try {
     const messages: ChatCompletionOptions['messages'] = [
-      $system(buildContentSuggestionPrompt().prompt),
+      $system(
+        type === 'gift' ? buildGiftSuggestionPrompt().prompt : buildContentSuggestionPrompt().prompt
+      ),
       $user(buildContentSuggestionUserPrompt(userContent, suggestions).prompt)
     ];
 
@@ -102,6 +106,29 @@ const buildContentSuggestionPrompt = () => ({
 
   `
 });
+
+const buildGiftSuggestionPrompt = () => ({
+  prompt: stripIndents`You are an AI gift advisor that suggests thoughtful and personalized gifts.
+  
+  Instructions:
+  - Search for available gifts that match the person's interests
+  - Include a mix of price ranges
+  - Provide specific product suggestions with links
+  - Explain why each gift would be meaningful
+  
+  RETURN JSON IN THIS FORMAT:
+    {
+      "suggestions": [
+        {
+          "title": "Gift name and brief description",
+          "contentUrl": "URL to purchase the gift",
+          "reason": "Why this gift would be meaningful"
+        }
+      ]
+    }
+  `
+});
+
 const buildContentSuggestionUserPrompt = (userPrompt: string, suggestions: Suggestion[]) => {
   // If no suggestions, return prompt
   if (!suggestions || suggestions.length === 0) {
@@ -116,7 +143,7 @@ const buildContentSuggestionUserPrompt = (userPrompt: string, suggestions: Sugge
   // Add suggestions to prompt
   const prompt = `${userPrompt}
 
-  These are suggestions that you have generated the past 30 days:
+  These are suggestions that you have generated the past:
   ${suggestionsContent.join('\n')}
   
   Do not generate any suggestions that are similar to these.

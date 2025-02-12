@@ -45,13 +45,14 @@ function handleToolError(error: unknown, context: string) {
 export async function POST(req: NextRequest) {
   const { messages, personId, personName } = (await req.json()) as ChatRequestBody;
   console.log('Chat Route: Messages: ', messages);
+  console.log('Chat Route: Person ID & Name: ', personId, personName);
 
   const lastMessage = messages.slice(-1)[0];
   const messageData = getDataFromMessage(lastMessage);
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. 
   
-  ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create content suggestions default to making a tool call unless specified otherwise.` : ''}
+  ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create suggestions default to making a tool call unless specified otherwise.` : ''}
   
   If an error occurs or a tool returns an error, acknowledge the error to the user and suggest alternative actions or ways to proceed.
   `;
@@ -96,13 +97,14 @@ export async function POST(req: NextRequest) {
       [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: {
         description: 'Get content suggestions for the person suggested by the user',
         parameters: z.object({
-          person_id: z.string().describe('The ID of the person the suggestions are for')
-          // TODO: Add message body here & pass to the suggestions request, i.e. extend with gifts, etc..
+          person_id: z.string().describe('The ID of the person the suggestions are for'),
+          type: z.string().describe('Either "content" or "gift"')
         }),
-        execute: async () => {
+        execute: async ({ type }) => {
           // TODO: Move this back to the server
           try {
             console.log('Fetching suggestions for person:', messageData?.personId);
+            console.log('Generated Suggestion Type:', type);
 
             // TODO: Move to use-suggestions hook
             const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -110,7 +112,8 @@ export async function POST(req: NextRequest) {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                personId: messageData?.personId
+                personId: personId || messageData?.personId,
+                type: type || 'content'
               })
             });
 

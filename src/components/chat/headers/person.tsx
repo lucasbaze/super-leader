@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 
 import { ChatRequestOptions, CreateMessage, Message } from 'ai';
 
-import { NotebookPen, Sparkles } from '@/components/icons';
+import { Gift, NotebookPen, Sparkles } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePerson } from '@/hooks/use-person';
@@ -13,14 +13,13 @@ import { randomString } from '@/lib/utils';
 import { DefaultChatHeader } from './default';
 
 interface ChatHeaderProps {
-  onAction: (message: string) => void;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
 }
 
-export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
+export function PersonChatHeader({ append }: ChatHeaderProps) {
   const params = useParams();
   const { data, isLoading } = usePerson(params.id as string, {
     withInteractions: true
@@ -31,8 +30,21 @@ export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
 
   const hasInteractions = data?.interactions && data.interactions.length > 0;
 
+  const handleGiftSuggestions = async () => {
+    const message = `Get gift suggestions for ${data?.person?.first_name}`;
+    append({
+      role: 'user',
+      content: message,
+      id: randomString(12),
+      data: {
+        personId: data?.person?.id ?? null,
+        personName: `${data?.person?.first_name} ${data?.person?.last_name}`
+      } as const
+    });
+  };
+
   const handleSuggestions = async () => {
-    const message = `Get suggestions for ${data?.person?.first_name}`;
+    const message = `Get content suggestions for ${data?.person?.first_name}`;
     append({
       role: 'user',
       content: message,
@@ -52,7 +64,25 @@ export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
 
       <div className='flex items-center gap-1'>
         <TooltipProvider>
-          <Tooltip>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <div className='hover:cursor-pointer'>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={handleGiftSuggestions}
+                  disabled={!hasInteractions}>
+                  <Gift className='size-4' />
+                </Button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              {hasInteractions ? 'Get Gift Suggestions' : 'Must have at least 1 interaction'}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
               <div className='hover:cursor-pointer'>
                 <Button
@@ -69,17 +99,6 @@ export function PersonChatHeader({ onAction, append }: ChatHeaderProps) {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <Button
-          variant='ghost'
-          size='icon'
-          onClick={() =>
-            onAction(`Create a new note for this person (ID: ${params.id}): 
-          
-          `)
-          }
-          title='Create new note'>
-          <NotebookPen className='size-4' />
-        </Button>
       </div>
     </>
   );

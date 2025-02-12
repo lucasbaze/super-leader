@@ -110,12 +110,6 @@ export function ChatInterface() {
     setPendingAction(null);
   };
 
-  const handleHeaderAction = (message: string) => {
-    handleInputChange({
-      target: { value: message }
-    } as unknown as React.ChangeEvent<HTMLTextAreaElement>);
-  };
-
   const scrollToBottom = () => {
     if (messagesEndRef.current && autoScroll) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -156,7 +150,7 @@ export function ChatInterface() {
 
   return (
     <div className='absolute inset-0 flex flex-col'>
-      <ChatHeader onAction={handleHeaderAction} append={append} />
+      <ChatHeader append={append} />
       <div className='relative flex-1 overflow-hidden'>
         <ChatMessages
           messages={messages}

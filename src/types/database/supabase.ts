@@ -276,6 +276,7 @@ export type Database = {
           created_at: string
           date_met: string | null
           first_name: string
+          follow_up_score: number
           id: string
           last_name: string | null
           updated_at: string
@@ -288,6 +289,7 @@ export type Database = {
           created_at?: string
           date_met?: string | null
           first_name: string
+          follow_up_score?: number
           id?: string
           last_name?: string | null
           updated_at?: string
@@ -300,6 +302,7 @@ export type Database = {
           created_at?: string
           date_met?: string | null
           first_name?: string
+          follow_up_score?: number
           id?: string
           last_name?: string | null
           updated_at?: string

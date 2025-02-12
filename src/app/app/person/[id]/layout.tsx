@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useParams, useSelectedLayoutSegment } from 'next/navigation';
 
-import { GroupBadge } from '@/components/groups/group-badge';
 import { Users } from '@/components/icons';
+import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
 import {
@@ -34,7 +34,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
       <div className='flex h-[calc(100svh-theme(spacing.16))] flex-col'>
         {/* Fixed Header Section */}
         <div className='flex items-center border-b bg-background md:rounded-t-md'>
-          <div className='px-5 py-3'>
+          <div className='py-3 pl-5 pr-3'>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -54,6 +54,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
               </BreadcrumbList>
             </Breadcrumb>
           </div>
+          <FollowUpIndicator value={data?.person.follow_up_score ?? 0} size='sm' />
         </div>
 
         {/* Main Content with Sidebar */}

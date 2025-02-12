@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns';
 
+import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Table,
@@ -33,6 +34,7 @@ export function PeopleTable({
             <TableHeader>
               <TableRow className='text-left'>
                 <TableHead>Name</TableHead>
+                <TableHead>Follow Up</TableHead>
                 <TableHead>Birthday</TableHead>
                 <TableHead>Date Met</TableHead>
                 <TableHead>Bio</TableHead>
@@ -51,7 +53,7 @@ export function PeopleTable({
               {people.map((person: Person) => (
                 <TableRow
                   key={person.id}
-                  className={`${onRowClick ? 'cursor-pointer hover:bg-muted/50' : ''}`}
+                  className={`${onRowClick ? 'hover:bg-muted/50 cursor-pointer' : ''}`}
                   onClick={() => onRowClick?.(person.id)}>
                   <TableCell>
                     <div className='flex items-center gap-2'>
@@ -61,6 +63,11 @@ export function PeopleTable({
                         </AvatarFallback>
                       </Avatar>
                       {person.first_name} {person.last_name}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className='flex justify-center'>
+                      <FollowUpIndicator value={person.follow_up_score ?? 0} size='sm' />
                     </div>
                   </TableCell>
                   <TableCell>

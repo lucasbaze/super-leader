@@ -29,7 +29,9 @@ This will handle updating async activities such as the AI summary. It will tie i
 
 The home page will be the "actions" oriented page of things to do based on knowledge of the system internally. Events, previous notes, set reminders & follow-ups, email messages follow-up actions, etc...
 
-- Special people that aren't in the 5,50,100: Recently met folks, folks that you have outstanding messages with, could be an introduction or have influence toward your goals (the system may be able to suggest this if we have their linkedin profile or enough information on their position / title).
+Special people that aren't in the 5,50,100: Recently met folks, folks that you have outstanding messages with, could be an introduction or have influence toward your goals (the system may be able to suggest this if we have their linkedin profile or enough information on their position / title).
+
+- [ ] Need to utlize a new table component for all the tables that are being used in the app.
 
 ### Suggestions
 

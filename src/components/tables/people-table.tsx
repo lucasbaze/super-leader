@@ -67,7 +67,11 @@ export function PeopleTable({
                   </TableCell>
                   <TableCell>
                     <div className='flex justify-center'>
-                      <FollowUpIndicator value={person.follow_up_score ?? 0} size='sm' />
+                      <FollowUpIndicator
+                        value={person.follow_up_score ?? 0}
+                        size='sm'
+                        personId={person.id}
+                      />
                     </div>
                   </TableCell>
                   <TableCell>

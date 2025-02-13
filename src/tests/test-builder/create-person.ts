@@ -6,6 +6,7 @@ export interface TestPerson {
   last_name: string;
   id?: string;
   bio?: string;
+  birthday?: string;
   contactMethods?: Array<{
     type: string;
     value: string;
@@ -38,7 +39,8 @@ export async function createTestPerson({ db, data }: CreateTestPersonParams) {
       first_name: `${testPrefix}${data.first_name}`,
       last_name: `${testPrefix}${data.last_name}`,
       bio: data.bio ? `${testPrefix}${data.bio}` : null,
-      user_id: data.user_id
+      user_id: data.user_id,
+      birthday: data.birthday || null
     })
     .select()
     .single();

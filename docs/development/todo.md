@@ -51,6 +51,8 @@ We'll add a header
 - [ ] Remove database functions to handle update person details that are no longer being used.
 - [ ] Move supabase from utils/supabase to lib/supabase
 
+- [ ] Need to figure out a way to consistently handle the timezone of the user. For example displaying the date in the correct timezone coming from the server on the client side.
+
 ### UI Improvements
 
 - [ ] Display the "last activity" on the table view of people.

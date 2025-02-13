@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { GroupBadge } from '@/components/groups/group-badge';
+import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-score-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { TPersonGroup } from '@/types/custom';
-import type { ContactMethod, Person } from '@/types/database';
+import type { Person } from '@/types/database';
 
 interface PersonHeaderProps {
   person: Person | undefined;
@@ -39,6 +40,7 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
             </div>
           )}
         </div>
+        <UpdateFollowUpScoreButton personId={person?.id || ''} />
       </div>
 
       <div className='-mx-5'>

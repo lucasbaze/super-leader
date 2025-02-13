@@ -54,7 +54,12 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <FollowUpIndicator value={data?.person.follow_up_score ?? 0} size='sm' />
+          <FollowUpIndicator
+            value={data?.person.follow_up_score ?? 0}
+            personId={data?.person.id}
+            size='sm'
+            editable
+          />
         </div>
 
         {/* Main Content with Sidebar */}

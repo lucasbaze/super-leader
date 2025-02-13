@@ -8,7 +8,10 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { useCreatePerson } from '@/hooks/use-people';
+import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
+import { useUpdateSuggestion } from '@/hooks/use-suggestions';
+import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
@@ -25,6 +28,7 @@ export function ChatInterface() {
   } | null>(null);
   const params = useParams();
   const router = useRouter();
+  const { data: personData } = usePerson(params.id as string);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, addToolResult, append } =
     useChat({
@@ -36,8 +40,14 @@ export function ChatInterface() {
           id: '1'
         }
       ],
+      body: {
+        personId: params.id,
+        personName: personData?.person
+          ? `${personData.person.first_name} ${personData.person.last_name}`
+          : undefined
+      },
       onToolCall: async ({ toolCall }) => {
-        if (toolCall.toolName === 'getPersonSuggestions') {
+        if (toolCall.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
           console.log('getPersonSuggestions', toolCall);
           return;
         }
@@ -47,17 +57,19 @@ export function ChatInterface() {
           toolCallId: toolCall.toolCallId,
           arguments: toolCall.args
         });
-      }
+      },
+      onFinish: async ({ content, data, toolInvocations }) => {}
     });
 
   const createPerson = useCreatePerson();
   const createInteraction = useCreateInteraction(pendingAction?.arguments?.person_id || params.id);
+  const updateSuggestion = useUpdateSuggestion();
 
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
 
     try {
-      if (pendingAction.name === 'createPerson') {
+      if (pendingAction.name === CHAT_TOOLS.CREATE_PERSON) {
         const result = await createPerson.mutateAsync(pendingAction.arguments);
         console.log('Create Person result:', result);
         addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
@@ -77,7 +89,7 @@ export function ChatInterface() {
             </Button>
           </div>
         );
-      } else if (pendingAction.name === 'createInteraction') {
+      } else if (pendingAction.name === CHAT_TOOLS.CREATE_INTERACTION) {
         const result = await createInteraction.mutateAsync({
           type: pendingAction.arguments.type,
           note: pendingAction.arguments.note
@@ -98,12 +110,6 @@ export function ChatInterface() {
     setPendingAction(null);
   };
 
-  const handleHeaderAction = (message: string) => {
-    handleInputChange({
-      target: { value: message }
-    } as unknown as React.ChangeEvent<HTMLTextAreaElement>);
-  };
-
   const scrollToBottom = () => {
     if (messagesEndRef.current && autoScroll) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -121,9 +127,30 @@ export function ChatInterface() {
     setAutoScroll(isAtBottom);
   };
 
+  const handleSuggestionViewed = (suggestionId: string) => {
+    updateSuggestion.mutate({
+      suggestionId,
+      viewed: true
+    });
+  };
+
+  const handleSuggestionBookmark = (suggestionId: string, saved: boolean) => {
+    updateSuggestion.mutate({
+      suggestionId,
+      saved
+    });
+  };
+
+  const handleSuggestionDislike = (suggestionId: string, bad: boolean) => {
+    updateSuggestion.mutate({
+      suggestionId,
+      bad
+    });
+  };
+
   return (
     <div className='absolute inset-0 flex flex-col'>
-      <ChatHeader onAction={handleHeaderAction} append={append} />
+      <ChatHeader append={append} />
       <div className='relative flex-1 overflow-hidden'>
         <ChatMessages
           messages={messages}
@@ -133,6 +160,9 @@ export function ChatInterface() {
           append={append}
           onScroll={handleScroll}
           messagesEndRef={messagesEndRef}
+          onSuggestionViewed={handleSuggestionViewed}
+          onSuggestionBookmark={handleSuggestionBookmark}
+          onSuggestionDislike={handleSuggestionDislike}
         />
       </div>
       <ChatInput

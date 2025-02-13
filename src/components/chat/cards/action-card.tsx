@@ -80,7 +80,7 @@ export function ActionCard({
           {interaction.note && (
             <div>
               <span className='font-medium'>Note: </span>
-              <p className='mt-1 whitespace-pre-wrap rounded-md bg-muted/30 p-2 text-muted-foreground'>
+              <p className='bg-muted/30 mt-1 whitespace-pre-wrap rounded-md p-2 text-muted-foreground'>
                 {interaction.note}
               </p>
             </div>

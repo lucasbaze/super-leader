@@ -2,6 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
+import { randomString } from '@/lib/utils';
+
 import { seedGroups } from './groups';
 import { seedPeople } from './people';
 
@@ -21,8 +23,6 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
     persistSession: false
   }
 });
-
-const randomString = () => Math.random().toString(36).substring(2, 4);
 
 async function main() {
   try {

@@ -3,11 +3,19 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
+import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 import { cn } from '@/lib/utils';
+import {
+  TContentSuggestionWithId,
+  TGetContentSuggestionsForPersonResponse,
+  TMessageSuggestion
+} from '@/services/suggestions/types';
+import { Maybe } from '@/types/utils';
 
 import { ActionCard } from './cards/action-card';
 import { MessageCard } from './cards/message-card';
-import { SuggestionCard, TSuggestion } from './cards/suggestion-card';
+import { SuggestionCard } from './cards/suggestion-card';
+import { ToolErrorCard } from './cards/tool-error-card';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -17,6 +25,9 @@ interface ChatMessagesProps {
   append: (message: CreateMessage) => void;
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  onSuggestionViewed: (suggestionId: string) => void;
+  onSuggestionBookmark: (suggestionId: string, saved: boolean) => void;
+  onSuggestionDislike: (suggestionId: string, bad: boolean) => void;
 }
 
 export function ChatMessages({
@@ -26,16 +37,19 @@ export function ChatMessages({
   handleCancelAction,
   append,
   onScroll,
-  messagesEndRef
+  messagesEndRef,
+  onSuggestionViewed,
+  onSuggestionBookmark,
+  onSuggestionDislike
 }: ChatMessagesProps) {
   return (
     <div className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
       <div className='flex flex-col gap-4'>
-        {messages.map((message) => {
+        {messages.map((message, index) => {
           if (message.role === 'user') {
             return (
-              <div key={message.id} className='ml-auto flex flex-col items-end gap-2'>
-                <div className='max-w-[90%] break-words rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground'>
+              <div key={message.id} className='flex flex-col items-end gap-2'>
+                <div className='max-w-[90%] break-words rounded-sm bg-primary px-3 py-2 text-sm text-primary-foreground'>
                   {message.content}
                 </div>
               </div>
@@ -44,7 +58,7 @@ export function ChatMessages({
 
           if (message.role === 'assistant') {
             const content = message.content !== '' && (
-              <div className={'max-w-[90%] break-words rounded-lg bg-muted px-3 py-2 text-sm'}>
+              <div className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
                 <ReactMarkdown
                   components={{
                     // Style different markdown elements
@@ -65,7 +79,7 @@ export function ChatMessages({
                       ) : (
                         <code
                           className={cn(
-                            'rounded bg-muted-foreground/20 px-1.5 py-0.5 font-mono text-sm',
+                            'bg-muted-foreground/20 rounded px-1.5 py-0.5 font-mono text-sm',
                             className
                           )}
                           {...props}>
@@ -92,41 +106,70 @@ export function ChatMessages({
               </div>
             );
             const toolInvocations = message.toolInvocations?.map((toolInvocation) => {
-              // if (toolInvocation.state === 'result') return null;
-              if (toolInvocation.toolName === 'createPerson') {
+              // Handle tool errors first
+              if (toolInvocation.state === 'result' && toolInvocation.result.error) {
                 return (
-                  <ActionCard
+                  <ToolErrorCard
                     key={toolInvocation.toolCallId}
-                    person={toolInvocation.args}
-                    onConfirm={handleConfirmAction}
-                    onCancel={handleCancelAction}
-                    completed={toolInvocation.state === 'result'}
+                    message={toolInvocation.result.message}
+                    errorDetails={toolInvocation.result.details}
+                    toolName={toolInvocation.toolName}
                   />
                 );
               }
-              if (toolInvocation.toolName === 'createInteraction') {
+
+              // Handle successful tool invocations
+              if (toolInvocation.toolName === CHAT_TOOLS.CREATE_PERSON) {
                 return (
-                  <ActionCard
+                  <div
                     key={toolInvocation.toolCallId}
-                    interaction={toolInvocation.args}
-                    onConfirm={handleConfirmAction}
-                    onCancel={handleCancelAction}
-                    completed={toolInvocation.state === 'result'}
-                  />
+                    className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
+                    <ActionCard
+                      person={toolInvocation.args}
+                      onConfirm={handleConfirmAction}
+                      onCancel={handleCancelAction}
+                      completed={toolInvocation.state === 'result'}
+                    />
+                  </div>
                 );
               }
-              // Note: May need to conditionally check state === 'result'
-              if (toolInvocation.toolName === 'getPersonSuggestions') {
+              if (toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
+                console.log('toolInvocation', toolInvocation);
+                const result =
+                  // @ts-ignore
+                  toolInvocation.result as Maybe<TGetContentSuggestionsForPersonResponse>;
+                const suggestions = result?.suggestions;
+                if (!suggestions) return null;
                 return (
                   <>
-                    {/* @ts-ignore */}
-                    {toolInvocation.result?.map((result: TSuggestion, index: number) => (
-                      <SuggestionCard key={index} suggestion={result} append={append} />
+                    {suggestions.map((suggestion: TContentSuggestionWithId, index: number) => (
+                      <SuggestionCard
+                        key={suggestion.id}
+                        suggestion={suggestion}
+                        append={append}
+                        onViewed={onSuggestionViewed}
+                        onBookmark={onSuggestionBookmark}
+                        onDislike={onSuggestionDislike}
+                      />
                     ))}
                   </>
                 );
               }
-              if (toolInvocation.toolName === 'createMessageSuggestionsFromArticleForUser') {
+              if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
+                return (
+                  <div
+                    key={toolInvocation.toolCallId}
+                    className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
+                    <ActionCard
+                      interaction={toolInvocation.args}
+                      onConfirm={handleConfirmAction}
+                      onCancel={handleCancelAction}
+                      completed={toolInvocation.state === 'result'}
+                    />
+                  </div>
+                );
+              }
+              if (toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS) {
                 return (
                   <>
                     {/* @ts-ignore */}
@@ -144,7 +187,7 @@ export function ChatMessages({
               }
             });
             return (
-              <div key={message.id} className='flex flex-col items-start gap-2'>
+              <div key={index} className='flex flex-col items-start gap-2'>
                 {content}
                 {toolInvocations}
               </div>

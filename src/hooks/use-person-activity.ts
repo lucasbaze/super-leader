@@ -36,6 +36,7 @@ export function useCreateInteraction(personId: string) {
     onSuccess: () => {
       // Invalidate and refetch the activity list
       queryClient.invalidateQueries({ queryKey: ['person-activity', personId] });
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
     }
   });
 }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useSelectedLayoutSegment } from 'next/navigation';
 
 import { Users } from '@/components/icons';
+import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
 import {
@@ -19,7 +20,12 @@ import { usePerson } from '@/hooks/use-person';
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const segment = useSelectedLayoutSegment() || 'summary';
-  const { data, isLoading } = usePerson(params.id as string);
+  const { data, isLoading } = usePerson(params.id as string, {
+    withContactMethods: true,
+    withAddresses: true,
+    withWebsites: true,
+    withGroups: true
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -27,8 +33,8 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     <>
       <div className='flex h-[calc(100svh-theme(spacing.16))] flex-col'>
         {/* Fixed Header Section */}
-        <div className='flex items-center border-b bg-background'>
-          <div className='px-5 py-3'>
+        <div className='flex items-center border-b bg-background md:rounded-t-md'>
+          <div className='py-3 pl-5 pr-3'>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -48,18 +54,19 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
               </BreadcrumbList>
             </Breadcrumb>
           </div>
+          <FollowUpIndicator
+            value={data?.person.follow_up_score ?? 0}
+            personId={data?.person.id}
+            size='sm'
+            editable
+          />
         </div>
 
         {/* Main Content with Sidebar */}
         <div className='grid h-full grid-cols-3 overflow-hidden'>
           {/* Main Content Area */}
           <div className='col-span-2 h-full overflow-hidden'>
-            <PersonHeader
-              person={data?.person}
-              contactMethods={data?.contactMethods}
-              groups={data?.groups}
-              segment={segment}
-            />
+            <PersonHeader person={data?.person} groups={data?.groups} segment={segment} />
             <ScrollArea className='col-span-2 h-[calc(100svh-theme(spacing.52))] px-5'>
               <div className='py-3'>{children}</div>
             </ScrollArea>

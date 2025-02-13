@@ -4,7 +4,7 @@ import { createTestUser } from '@/tests/test-builder/create-user';
 import { DBClient } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 
-import { ERRORS, getSuggestionsForPerson } from '../get-suggestions-for-person';
+import { ERRORS, getContentSuggestionsForPerson } from '../get-content-suggestions';
 import { callPerplexityAPI } from '../perplexity-api';
 
 jest.mock('../perplexity-api');
@@ -89,7 +89,7 @@ describe('getSuggestionsForPerson', () => {
         })
       );
 
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: testPerson.id
       });
@@ -111,7 +111,7 @@ describe('getSuggestionsForPerson', () => {
         })
       );
 
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: testPerson.id
       });
@@ -123,7 +123,7 @@ describe('getSuggestionsForPerson', () => {
 
   describe('error cases', () => {
     it('should return error when personId is not provided', async () => {
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: ''
       });
@@ -133,7 +133,7 @@ describe('getSuggestionsForPerson', () => {
     });
 
     it('should return error when person does not exist', async () => {
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: 'non-existent-id'
       });
@@ -147,7 +147,7 @@ describe('getSuggestionsForPerson', () => {
         createMockResponse({ error: 'AI service error' }, false)
       );
 
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: testPerson.id
       });
@@ -164,7 +164,7 @@ describe('getSuggestionsForPerson', () => {
     it('should handle network errors from AI service', async () => {
       mockPerplexityAPI.mockRejectedValueOnce(new Error('Network error'));
 
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: testPerson.id
       });
@@ -191,7 +191,7 @@ describe('getSuggestionsForPerson', () => {
         })
       );
 
-      const result = await getSuggestionsForPerson({
+      const result = await getContentSuggestionsForPerson({
         db,
         personId: testPerson.id
       });
@@ -220,7 +220,7 @@ describe('getSuggestionsForPerson', () => {
         })
       );
 
-      await getSuggestionsForPerson({
+      await getContentSuggestionsForPerson({
         db,
         personId: testPerson.id
       });

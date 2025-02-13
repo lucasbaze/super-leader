@@ -30,6 +30,12 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
+export function randomString(length: number = 10) {
+  return Math.random()
+    .toString(36)
+    .substring(2, 2 + length);
+}
+
 export function getRandomGradient() {
   const colors = [
     '#E94E77', // Darker pink

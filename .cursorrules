@@ -24,6 +24,8 @@ Developer Experience (DX)
 - Link from next/link should be used instead of a href for all internal links. Otherwise the full external URL should be used in an anchor tag.
 - All icons should come from the `@/components/icons` directory.
 
+- Use @/lib/dates for dealing with dates and timezones
+
 **API Routes**
 
 - None of the Next.jspages should ever call supabase directly and should all be done via the API routes.
@@ -117,6 +119,7 @@ Developer Experience (DX)
   - Test deletion cases by verifying empty arrays/null values
   - Match error objects exactly using toMatchObject
   - Verify both the initial state and final state in modification tests
+  - When creating tests & importing from test-builder, use the index.ts file to import & export
 
 **Service Method Patterns**
 
@@ -138,6 +141,36 @@ Developer Experience (DX)
   - Map service errors to HTTP status codes
   - Handle authentication in the route before calling service
   - Validate input using zod schemas before calling service
+
+- **Import Structure**
+
+  - External packages first
+  - Internal imports grouped and ordered:
+    1. @/lib/\*
+    2. @/services/\*
+    3. @/types/\*
+    4. @/vendors/\*
+  - Imports alphabetically ordered within groups
+
+- **Type Definitions**
+
+  - Interfaces/types prefixed with T
+  - Export schema and types separately from implementation
+  - Use zod for validation schemas where applicable
+
+- **Error Handling**
+
+  - Use nested error objects (e.g., ERRORS.CATEGORY.ERROR_NAME)
+  - Include code, type, message, and displayMessage
+  - Use ErrorType enum from @/types/errors
+  - Add error details when throwing
+
+- **Service Structure**
+  - Define and export params interface first
+  - Define and export error constants second
+  - Main service function last
+  - Helper/utility functions at bottom
+  - Use TServiceResponse<T> for return types
 
 **Schema Patterns**
 

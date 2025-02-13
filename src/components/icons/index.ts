@@ -10,6 +10,7 @@ export {
   MapPin,
   Home,
   Frame,
+  Gift,
   LifeBuoy,
   Map,
   PieChart,
@@ -41,7 +42,10 @@ export {
   MessageCircle,
   MoreHorizontal,
   Settings,
-  PlusCircle
+  Bookmark,
+  PlusCircle,
+  ThumbsUp,
+  ThumbsDown
 } from 'lucide-react';
 export * as LogoIcons from './logos';
 export {

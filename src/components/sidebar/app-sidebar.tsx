@@ -6,17 +6,12 @@ import { User } from '@supabase/supabase-js';
 
 import {
   Bell,
-  BookOpen,
-  Bot,
+  Bookmark,
   CircleUser,
   Command,
   Home,
-  LifeBuoy,
   OneRing,
   Orbit,
-  Send,
-  Settings2,
-  SquareTerminal,
   ThreeRing,
   TwoRing
 } from '@/components/icons';
@@ -55,6 +50,12 @@ const mainNavItems = [
     title: 'Notifications',
     url: '/app/notifications',
     icon: Bell,
+    isActive: false
+  },
+  {
+    title: 'Saved',
+    url: '/app/bookmarks',
+    icon: Bookmark,
     isActive: false
   }
 ];

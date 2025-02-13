@@ -5,6 +5,32 @@
 - [x] ~~_Handle new user setup via the server and not via the database & undo the migration_~~ [2025-02-09]
 - [x] ~~_Add postal_code to the address schema._~~ [2025-02-09]
 
+- [ ] Save chat messages in the database
+
+We'll need to save the chats for each person. We could also save chats for "routes" or "flows" of the application such as group-chat, home-chat, etc... That could be overkill...? We should add infinite scroll and load after hitting a certain point.
+
+If there is no history of messages, then we'll load a list of "suggested" actions to take, which will basically be "fill out the person's profile". The AI should "prompt" to fill out the profile and fill out as much as possible.
+Question: "How can I "see" the progress of information that I'm filling out about the person... akin to the "profile completeness" score. Could be "overrriden" as well if the person doesn't like the score that's been set.
+
+- [ ] Build the AI summary view of an individual person.
+
+This will be based on the interactions that have been loaded up, messages, events, & notes. We'll show the "summary" of the person across many domains. The question is how much detail to show. And do we segment based on the type of person? Does the AI "suggest" the summary or the components of the summary?
+
+- [ ] Need a CRON job handler for updating the "follow-up" indicator for folks
+
+This will also be used to populate the home page with suggested actions that need to take place.
+Hard part will be getting visibility into the queue and the jobs that are being processed.
+
+- [ ] Need a background jobs / queue handler
+
+This will handle updating async activities such as the AI summary. It will tie into the follow-up indicator and process jobs in a queue to determine the follow-up status of each person. Hard part will be getting visibility into the queue and the jobs that are being processed.
+
+- [ ] Build the v1 of the "Home Page"
+
+The home page will be the "actions" oriented page of things to do based on knowledge of the system internally. Events, previous notes, set reminders & follow-ups, email messages follow-up actions, etc...
+
+- Special people that aren't in the 5,50,100: Recently met folks, folks that you have outstanding messages with, could be an introduction or have influence toward your goals (the system may be able to suggest this if we have their linkedin profile or enough information on their position / title).
+
 ### Suggestions
 
 - [x] ~~_Need to add suggestion saving mechanism, fetch, and prompt building depending on previous suggestions_~~ [2025-02-11]

@@ -54,7 +54,7 @@ export async function getMessages({
       .from('messages')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: true })
       .limit(limit + 1); // Get one extra to determine if there are more
 
     // Add filters if provided
@@ -106,3 +106,23 @@ export async function getMessagesForPerson({ db, userId, personId, limit, cursor
 export async function getMessagesForGroup({ db, userId, groupId, limit, cursor }: Omit<TGetMessagesParams, 'type' | 'personId'> & { groupId: string }) {
   return getMessages({ db, userId, groupId, type: MESSAGE_TYPE.GROUP, limit, cursor });
 }
+
+// {
+//   "id": "msg-IIVnwEucVWpvyoiRNkQkNBrQ",
+//   "role": "assistant",
+//   "content": "",
+//   "createdAt": "2025-02-14T18:32:48.727Z",
+//   "toolInvocations": [
+//     {
+//       "state": "call",
+//       "toolCallId": "call_da3NmGsAASM1BBIIQyvvhVqR",
+//       "toolName": "createInteraction",
+//       "args": {
+//         "person_id": "839d3a83-73af-445b-b056-25ffafff755f",
+//         "type": "note",
+//         "note": "We went to the same high school together.",
+//         "person_name": "Alex Barbieri"
+//       }
+//     }
+//   ]
+// }

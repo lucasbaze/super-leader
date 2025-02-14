@@ -37,6 +37,18 @@ interface ChatMessagesProps {
   hasMore: boolean;
 }
 
+// Open-router may return an array of objects for the content when invoking tools
+// This allows us to save the raw content directly and then
+const getMessageContent = (message: Message) => {
+  const content = message.content;
+  if (typeof message.content === 'string') {
+    return message.content;
+  } else if (Array.isArray(content)) {
+    return content[0].text;
+  } else {
+    console.log('Unexpected value type');
+  }
+};
 export function ChatMessages({
   messages,
   isLoading,
@@ -53,27 +65,26 @@ export function ChatMessages({
   hasMore
 }: ChatMessagesProps) {
   // Set up intersection observer for infinite scroll
-  const { ref: loadMoreRef, inView } = useInView();
+  // const { ref: loadMoreRef, inView } = useInView();
 
   // Trigger next page fetch when load more element comes into view
-  useEffect(() => {
-    if (inView && hasMore) {
-      fetchNextPage();
-    }
-  }, [inView, hasMore, fetchNextPage]);
+  // useEffect(() => {
+  //   if (inView && hasMore) {
+  //     fetchNextPage();
+  //   }
+  // }, [inView, hasMore, fetchNextPage]);
 
-  console.log('messages', messages);
   return (
     <div className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
       <div className='flex flex-col gap-4'>
         {/* Loading more indicator */}
-        {hasMore && (
+        {/* {hasMore && (
           <div ref={loadMoreRef} className='flex justify-center py-2'>
             {isFetchingNextPage && (
               <Loader2 className='size-6 animate-spin text-muted-foreground' />
             )}
           </div>
-        )}
+        )} */}
 
         {messages.map((message, index) => {
           if (message.role === 'user') {
@@ -87,7 +98,8 @@ export function ChatMessages({
           }
 
           if (message.role === 'assistant') {
-            const content = message.content !== '' && (
+            const messageContent = getMessageContent(message);
+            const content = messageContent !== '' && (
               <div className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
                 <ReactMarkdown
                   components={{
@@ -164,7 +176,7 @@ export function ChatMessages({
                 );
               }
               if (toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
-                console.log('toolInvocation', toolInvocation);
+                // console.log('toolInvocation', toolInvocation);
                 const result =
                   // @ts-ignore
                   toolInvocation.result as Maybe<TGetContentSuggestionsForPersonResponse>;
@@ -189,12 +201,15 @@ export function ChatMessages({
                 return (
                   <div
                     key={toolInvocation.toolCallId}
-                    className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
+                    className={'max-w-[90%] break-words text-sm'}>
                     <ActionCard
                       interaction={toolInvocation.args}
                       onConfirm={handleConfirmAction}
                       onCancel={handleCancelAction}
-                      completed={toolInvocation.state === 'result'}
+                      completed={
+                        // @ts-ignore TODO: Update types for toolInvocations
+                        toolInvocation.state === 'result' || toolInvocation.result === 'unknown'
+                      }
                     />
                   </div>
                 );
@@ -217,7 +232,7 @@ export function ChatMessages({
               }
             });
             return (
-              <div key={index} className='flex flex-col items-start gap-2'>
+              <div key={message.id || index} className='flex flex-col items-start gap-2'>
                 {content}
                 {toolInvocations}
               </div>

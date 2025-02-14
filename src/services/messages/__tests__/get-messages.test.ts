@@ -34,7 +34,7 @@ describe('get-messages-service', () => {
                   content: `Test message ${i}`
                 },
                 type: MESSAGE_TYPE.HOME,
-                user_id: testUser.id
+                userId: testUser.id
               }
             });
           }
@@ -81,8 +81,8 @@ describe('get-messages-service', () => {
             data: {
               message: { id: 'test-1', role: 'user', content: 'Person message' },
               type: MESSAGE_TYPE.PERSON,
-              user_id: testUser.id,
-              person_id: testPerson.id
+              userId: testUser.id,
+              personId: testPerson.id
             }
           });
 
@@ -92,7 +92,7 @@ describe('get-messages-service', () => {
             data: {
               message: { id: 'test-1', role: 'user', content: 'Home message' },
               type: MESSAGE_TYPE.HOME,
-              user_id: testUser.id
+              userId: testUser.id
             }
           });
 

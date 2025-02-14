@@ -1,6 +1,11 @@
-function createMessageFn(role: 'system' | 'user' | 'assistant' | 'developer') {
+import { Message } from 'ai';
+
+import { randomString } from '../utils';
+
+function createMessageFn(role: Message['role']) {
   return (content: string) => {
     return {
+      id: randomString(12),
       role,
       content
     };
@@ -10,4 +15,3 @@ function createMessageFn(role: 'system' | 'user' | 'assistant' | 'developer') {
 export const $system = createMessageFn('system');
 export const $user = createMessageFn('user');
 export const $assistant = createMessageFn('assistant');
-export const $developer = createMessageFn('developer');

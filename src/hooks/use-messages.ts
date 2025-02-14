@@ -1,6 +1,9 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { TCreateMessageRequest } from '@/app/api/messages/route';
+import { errorToast } from '@/components/errors/error-toast';
 import { MESSAGE_TYPE } from '@/lib/messages/constants';
+import { TChatMessage } from '@/services/messages/create-message';
 import { TGetMessagesResponse } from '@/services/messages/get-messages';
 
 type UseMessagesParams = {
@@ -43,8 +46,59 @@ export function useMessages({ type, personId, groupId, limit }: UseMessagesParam
     // @ts-ignore TODO: Investigate why this is throwing an overload error on the types?
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     select: (data) => ({
-      messages: data.pages.flatMap((page) => page.messages),
+      messages: data.pages.flatMap((page) => page.messages.map((message) => message.message)),
       hasMore: data.pages[data.pages.length - 1].hasMore
     })
+  });
+}
+
+export function useCreateMessage() {
+  // const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: TCreateMessageRequest) => {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const json = await response.json();
+      if (json.error) {
+        errorToast.show(json.error);
+        throw json.error;
+      }
+      return json.data as TChatMessage;
+    },
+    onSuccess: (newMessage) => {
+      // TODO: Determine if this is needed. Update the query cache
+      // Get the queryKey based on the message type and IDs
+      // const queryKey = [
+      //   'messages',
+      //   {
+      //     type: newMessage.type,
+      //     ...(newMessage.person_id && { personId: newMessage.person_id }),
+      //     ...(newMessage.group_id && { groupId: newMessage.group_id })
+      //   }
+      // ];
+      // queryClient.setQueryData<{ pages: { messages: TChatMessage[] }[] }>(
+      //   queryKey,
+      //   (oldData) => {
+      //     if (!oldData) return { pages: [{ messages: [newMessage] }] };
+      //     // Add the new message to the first page
+      //     const newPages = [...oldData.pages];
+      //     newPages[0] = {
+      //       ...newPages[0],
+      //       messages: [newMessage, ...newPages[0].messages]
+      //     };
+      //     return {
+      //       ...oldData,
+      //       pages: newPages
+      //     };
+      //   }
+      // );
+    }
   });
 }

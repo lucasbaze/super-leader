@@ -15,3 +15,4 @@ export type Group = Database['public']['Tables']['group']['Row'];
 export type GroupMember = Database['public']['Tables']['group_member']['Row'];
 export type Interaction = Database['public']['Tables']['interactions']['Row'];
 export type Suggestion = Database['public']['Tables']['suggestions']['Row'];
+export type Message = Database['public']['Tables']['messages']['Row'];

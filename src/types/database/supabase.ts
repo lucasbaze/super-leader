@@ -243,30 +243,51 @@ export type Database = {
       }
       messages: {
         Row: {
-          author_name: string
-          content: string
           created_at: string
+          group_id: string | null
           id: string
+          message: Json
+          person_id: string | null
+          type: string | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
-          author_name: string
-          content: string
           created_at?: string
+          group_id?: string | null
           id?: string
+          message: Json
+          person_id?: string | null
+          type?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
-          author_name?: string
-          content?: string
           created_at?: string
+          group_id?: string | null
           id?: string
+          message?: Json
+          person_id?: string | null
+          type?: string | null
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "messages_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "group"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "person"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       person: {
         Row: {

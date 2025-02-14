@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
+
 import { CreateMessage, Message } from 'ai';
+import { Loader2 } from 'lucide-react';
+import { useInView } from 'react-intersection-observer';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -28,6 +32,9 @@ interface ChatMessagesProps {
   onSuggestionViewed: (suggestionId: string) => void;
   onSuggestionBookmark: (suggestionId: string, saved: boolean) => void;
   onSuggestionDislike: (suggestionId: string, bad: boolean) => void;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+  hasMore: boolean;
 }
 
 export function ChatMessages({
@@ -40,11 +47,34 @@ export function ChatMessages({
   messagesEndRef,
   onSuggestionViewed,
   onSuggestionBookmark,
-  onSuggestionDislike
+  onSuggestionDislike,
+  fetchNextPage,
+  isFetchingNextPage,
+  hasMore
 }: ChatMessagesProps) {
+  // Set up intersection observer for infinite scroll
+  const { ref: loadMoreRef, inView } = useInView();
+
+  // Trigger next page fetch when load more element comes into view
+  useEffect(() => {
+    if (inView && hasMore) {
+      fetchNextPage();
+    }
+  }, [inView, hasMore, fetchNextPage]);
+
+  console.log('messages', messages);
   return (
     <div className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
       <div className='flex flex-col gap-4'>
+        {/* Loading more indicator */}
+        {hasMore && (
+          <div ref={loadMoreRef} className='flex justify-center py-2'>
+            {isFetchingNextPage && (
+              <Loader2 className='size-6 animate-spin text-muted-foreground' />
+            )}
+          </div>
+        )}
+
         {messages.map((message, index) => {
           if (message.role === 'user') {
             return (

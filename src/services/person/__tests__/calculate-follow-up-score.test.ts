@@ -38,7 +38,7 @@ describe('calculateFollowUpScore', () => {
   });
 
   describe('success cases', () => {
-    it.only('should return immediate score of 1 when today is birthday', async () => {
+    it('should return immediate score of 1 when today is birthday', async () => {
       await withTestTransaction(supabase, async (db) => {
         // Create test person with today's date as birthday
         const today = dateHandler().utc();

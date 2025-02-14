@@ -12,6 +12,8 @@ We'll need to save the chats for each person. We could also save chats for "rout
 If there is no history of messages, then we'll load a list of "suggested" actions to take, which will basically be "fill out the person's profile". The AI should "prompt" to fill out the profile and fill out as much as possible.
 Question: "How can I "see" the progress of information that I'm filling out about the person... akin to the "profile completeness" score. Could be "overrriden" as well if the person doesn't like the score that's been set.
 
+-- Should we save error messages as well?
+
 - [ ] Build the AI summary view of an individual person.
 
 This will be based on the interactions that have been loaded up, messages, events, & notes. We'll show the "summary" of the person across many domains. The question is how much detail to show. And do we segment based on the type of person? Does the AI "suggest" the summary or the components of the summary?

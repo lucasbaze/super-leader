@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { CreateMessage, Message } from 'ai';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -19,6 +21,9 @@ import { ToolErrorCard } from '../cards/tool-error-card';
 
 interface ChatMessageProps {
   message: Message;
+  isLoading: boolean;
+  isLastMessage: boolean;
+  containerRef: React.ForwardedRef<HTMLDivElement>;
   handleConfirmAction: () => void;
   handleCancelAction: () => void;
   append: (message: CreateMessage) => void;
@@ -39,8 +44,19 @@ const getMessageContent = (message: Message) => {
   }
 };
 
+// TODO: Update loading message to show the type of activity taking place.
+// TODO: Add some type of animation to the loading message...
+const LoadingMessage = () => (
+  <div className='flex max-w-[90%] flex-col gap-2 rounded-lg bg-muted px-3 py-2 text-sm'>
+    Thinking...
+  </div>
+);
+
 export function ChatMessage({
   message,
+  isLoading,
+  isLastMessage,
+  containerRef,
   handleConfirmAction,
   handleCancelAction,
   append,
@@ -48,9 +64,19 @@ export function ChatMessage({
   onSuggestionBookmark,
   onSuggestionDislike
 }: ChatMessageProps) {
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  // Scroll user's message to top when it's the last message
+  useEffect(() => {
+    // @ts-ignore
+    if (isLoading && messageRef.current && containerRef?.current) {
+      messageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isLoading]);
+
   if (message.role === 'user') {
     return (
-      <div className='flex flex-col items-end gap-2'>
+      <div ref={messageRef} className='flex flex-col items-end gap-2'>
         <div className='max-w-[90%] break-words rounded-sm bg-gradient-to-r from-primary to-blue-500 px-3 py-2 text-sm text-primary-foreground'>
           {message.content}
         </div>
@@ -175,10 +201,18 @@ export function ChatMessage({
       }
     });
 
+    // const minHeight =
+    //   isLastMessage && message.role === 'assistant' ? `calc(-184px + 100dvh)` : undefined;
+
     return (
-      <div className='flex flex-col items-start gap-2'>
+      <div
+        ref={messageRef}
+        className='flex scroll-my-14 flex-col items-start gap-2'
+        // style={{ minHeight }}
+      >
         {content}
         {toolInvocations}
+        {isLastMessage && message.role === 'assistant' && isLoading && <LoadingMessage />}
       </div>
     );
   }

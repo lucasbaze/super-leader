@@ -1,7 +1,8 @@
 import { forwardRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
-import { Loader2 } from 'lucide-react';
+
+import { Loader } from '@/components/icons';
 
 import { ChatMessage } from './messages/chat-message';
 
@@ -22,31 +23,15 @@ interface ChatMessagesProps {
 }
 
 export const ChatMessages = forwardRef<HTMLDivElement, ChatMessagesProps>(
-  (
-    {
-      messages,
-      isLoading,
-      handleConfirmAction,
-      handleCancelAction,
-      append,
-      onScroll,
-      messagesEndRef,
-      onSuggestionViewed,
-      onSuggestionBookmark,
-      onSuggestionDislike,
-      isFetchingNextPage,
-      hasMore
-    },
-    ref
-  ) => {
+  ({ messages, ...props }, ref) => {
     return (
-      <div ref={ref} className='absolute inset-0 overflow-y-auto p-4' onScroll={onScroll}>
+      <div ref={ref} className='absolute inset-0 overflow-y-auto p-4' onScroll={props.onScroll}>
         <div className='flex flex-col gap-4'>
-          {/* Loading more indicator */}
-          {hasMore && (
+          {/* Loading indicator */}
+          {props.hasMore && (
             <div className='flex justify-center py-2'>
-              {isFetchingNextPage && (
-                <Loader2 className='size-6 animate-spin text-muted-foreground' />
+              {props.isFetchingNextPage && (
+                <Loader className='size-6 animate-spin text-muted-foreground' />
               )}
             </div>
           )}
@@ -55,20 +40,12 @@ export const ChatMessages = forwardRef<HTMLDivElement, ChatMessagesProps>(
             <ChatMessage
               key={message.id || index}
               message={message}
-              handleConfirmAction={handleConfirmAction}
-              handleCancelAction={handleCancelAction}
-              append={append}
-              onSuggestionViewed={onSuggestionViewed}
-              onSuggestionBookmark={onSuggestionBookmark}
-              onSuggestionDislike={onSuggestionDislike}
+              isLastMessage={index === messages.length - 1}
+              containerRef={ref}
+              {...props}
             />
           ))}
-          {isLoading && (
-            <div className='min flex max-w-[90%] flex-col gap-2 rounded-lg bg-muted px-3 py-2 text-sm'>
-              Thinking...
-            </div>
-          )}
-          <div ref={messagesEndRef} />
+          <div ref={props.messagesEndRef} />
         </div>
       </div>
     );

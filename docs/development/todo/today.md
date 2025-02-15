@@ -1,6 +1,13 @@
+### Feb 15th
+
+- [ ] Create local types for the chat messages
+- [ ] Fix any issues with tests, i.e. groups that I've changed.
+- [ ] Get production up with my current people
+      This will require a re-look at the import structure.
+
 ### Feb 14th
 
-- [ ] Fix the issue with chat messages loading & saving
-- [ ] Fix the issue with chat messages "scrolling"
-- [ ] Fix issue with infinite scroll fetching too many times in the beginning
-- [ ] Fix issue with navigating to a new chat from 1 to another and loading messages
+- [x] ~~_Fix the issue with chat messages loading & saving_~~ [2025-02-15]
+- [x] ~~_Fix the issue with chat messages "scrolling"_~~ [2025-02-15] This is fixed, but still lacking in the full expression of the experience.
+- [x] ~~_Fix issue with infinite scroll fetching too many times in the beginning_~~ [2025-02-15]
+- [x] ~~_Fix issue with navigating to a new chat from 1 to another and loading messages_~~ [2025-02-15]

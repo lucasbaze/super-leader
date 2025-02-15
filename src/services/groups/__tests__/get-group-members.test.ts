@@ -35,7 +35,7 @@ describe('getGroupMembers service', () => {
         const result = await getGroupMembers({
           db,
           userId: testUser.id,
-          slug: testGroup.slug
+          id: testGroup.id
         });
 
         expect(result.data).toEqual([]);

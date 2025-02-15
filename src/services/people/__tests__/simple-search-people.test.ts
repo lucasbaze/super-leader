@@ -92,7 +92,16 @@ describe('searchPeople service', () => {
           id: testPerson1.id,
           first_name: testPerson1.first_name,
           last_name: testPerson1.last_name,
-          groups: expect.arrayContaining([{ name: 'Engineering' }, { name: 'Leadership' }])
+          groups: expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Engineering',
+              slug: 'engineering'
+            }),
+            expect.objectContaining({
+              name: 'Leadership',
+              slug: 'leadership'
+            })
+          ])
         });
       });
     });

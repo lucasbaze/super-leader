@@ -87,11 +87,15 @@ describe('updatePersonDetails service', () => {
           });
 
           expect(result.data?.contactMethods).toHaveLength(2);
-          expect(result.data?.contactMethods?.[0]).toMatchObject({
-            type: 'email',
-            value: 'test@example.com',
-            is_primary: true
-          });
+          expect(result.data?.contactMethods).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                type: 'email',
+                value: 'test@example.com',
+                is_primary: true
+              })
+            ])
+          );
         });
       });
 

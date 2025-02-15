@@ -66,7 +66,7 @@ describe('deleteGroup service', () => {
         // Verify members were deleted
         const { data: members } = await getGroupMembers({
           db,
-          slug: testGroup.slug,
+          id: testGroup.id,
           userId: testUser.id
         });
         expect(members).toHaveLength(0);

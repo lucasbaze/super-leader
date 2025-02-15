@@ -12,6 +12,7 @@ import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
 import { useUpdateSuggestion } from '@/hooks/use-suggestions';
+import { dateHandler } from '@/lib/dates/helpers';
 import { $user } from '@/lib/llm/messages';
 import { MESSAGE_ROLE, MESSAGE_TYPE, TMessageType } from '@/lib/messages/constants';
 import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
@@ -62,7 +63,9 @@ const getMessageParams = (type: TMessageType, id: string) => {
 
 export function ChatInterface() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const [autoScroll, setAutoScroll] = useState(true);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+  const initialScrollRef = useRef(false);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const [pendingAction, setPendingAction] = useState<{
     type: string;
     name: string;
@@ -136,26 +139,30 @@ export function ChatInterface() {
   });
   console.log('messagesData', messagesData);
 
-  // Fetch saved messages
+  // Set saved messages
   useEffect(() => {
+    // messagesData.messages comes from the useMessages hook which returns a messages array
     // @ts-ignore
-    if (messagesData && messagesData.messages.length) {
-      // @ts-ignore
-      setMessages(messagesData.messages);
+    const newMessages = messagesData?.messages;
+    if (!newMessages?.length) return;
 
+    setMessages((prevMessages) => {
+      // Create a Map for O(1) lookups, using most recent version of each message
+      const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
+
+      // Update map with any new messages, automatically handling duplicates
       // @ts-ignore
-      // const messageContent = messagesData.messages
-      //   .map((message: TChatMessage) => message.message)
-      //   .filter((message: TChatMessage['message']) => typeof message.content === 'string');
-      // console.log('messageContent', messageContent);
-      // const newMessages = [...localMessages, ...messageContent];
-      // console.log('newMessages', newMessages);
-      // setLocalMessages(newMessages);
-      // if (messagesEndRef.current && autoScroll) {
-      //   messagesEndRef.current.scrollIntoView();
-      // }
-    }
-  }, [messagesData]);
+      newMessages.forEach((msg) => {
+        messageMap.set(msg.id, msg);
+      });
+
+      // Convert map values back to array and sort once
+      return Array.from(messageMap.values()).sort((a, b) =>
+        dateHandler(a.createdAt).isBefore(dateHandler(b.createdAt)) ? -1 : 1
+      );
+    });
+    // @ts-ignore
+  }, [messagesData?.messages]);
 
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
@@ -203,22 +210,34 @@ export function ChatInterface() {
     setPendingAction(null);
   };
 
-  const scrollToBottom = () => {
-    if (messagesEndRef.current && autoScroll) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  // Set initial scroll position to bottom when messages first load
+  useEffect(() => {
+    // @ts-ignore
+    if (messagesData?.messages && !initialScrollRef.current) {
+      requestAnimationFrame(() => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+          initialScrollRef.current = true;
+        }
+      });
     }
-  };
+  }, [messagesData]);
 
-  // Scroll when new messages arrive
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [messages]);
+  // Track scroll position to determine if we should auto-scroll new messages
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const container = e.currentTarget;
+      const isAtBottom =
+        Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) < 10;
+      setShouldAutoScroll(isAtBottom);
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 50;
-    setAutoScroll(isAtBottom);
-  };
+      // Load more messages when scrolling near top
+      if (container.scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
 
   const handleSuggestionViewed = (suggestionId: string) => {
     updateSuggestion.mutate({
@@ -270,6 +289,7 @@ export function ChatInterface() {
       <ChatHeader append={append} />
       <div className='relative flex-1 overflow-hidden'>
         <ChatMessages
+          ref={messagesContainerRef}
           messages={messages}
           isLoading={isLoading}
           handleConfirmAction={handleConfirmAction}

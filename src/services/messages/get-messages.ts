@@ -54,7 +54,7 @@ export async function getMessages({
       .from('messages')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
       .limit(limit + 1); // Get one extra to determine if there are more
 
     // Add filters if provided

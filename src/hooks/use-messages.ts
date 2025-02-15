@@ -48,7 +48,9 @@ export function useMessages({ type, personId, groupId, limit }: UseMessagesParam
     select: (data) => ({
       messages: data.pages.flatMap((page) => page.messages.map((message) => message.message)),
       hasMore: data.pages[data.pages.length - 1].hasMore
-    })
+    }),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 }
 

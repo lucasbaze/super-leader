@@ -4,17 +4,7 @@ import * as React from 'react';
 
 import { User } from '@supabase/supabase-js';
 
-import {
-  Bell,
-  Bookmark,
-  CircleUser,
-  Command,
-  Home,
-  OneRing,
-  Orbit,
-  ThreeRing,
-  TwoRing
-} from '@/components/icons';
+import { Bell, Bookmark, CircleUser, Command, Home, Orbit } from '@/components/icons';
 import { CoreGroupsNav } from '@/components/sidebar/core-groups-nav';
 import { MainNav } from '@/components/sidebar/main-nav';
 import { UserGroupsNav } from '@/components/sidebar/user-groups-nav';
@@ -65,24 +55,7 @@ const data = {
     name: 'shadcn',
     email: 'm@example.com',
     avatar: '/avatars/shadcn.jpg'
-  },
-  core: [
-    {
-      title: 'Inner 5',
-      url: '/app/groups/inner-5',
-      icon: OneRing
-    },
-    {
-      title: 'Central 50',
-      url: '/app/groups/central-50',
-      icon: TwoRing
-    },
-    {
-      title: 'Strategic 100',
-      url: '/app/groups/strategic-100',
-      icon: ThreeRing
-    }
-  ]
+  }
 };
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -90,15 +63,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
-  // Transform Supabase user data to match the expected format for NavUser
-  const userData = user
-    ? {
-        name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'User',
-        email: user.email || '',
-        avatar: user.user_metadata?.avatar_url || ''
-      }
-    : data.user;
-
   return (
     <Sidebar collapsible='icon' variant='inset' {...props}>
       <SidebarHeader>
@@ -120,7 +84,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <MainNav items={mainNavItems} />
-        <CoreGroupsNav items={data.core} />
+        <CoreGroupsNav />
         <UserGroupsNav />
       </SidebarContent>
     </Sidebar>

@@ -30,7 +30,7 @@ const getChatParams = (params: any, pathname: string) => {
     chatId = params.id as string;
   } else if (pathname.includes('/app/groups/')) {
     chatType = MESSAGE_TYPE.GROUP;
-    chatId = params.slug as string;
+    chatId = params.id as string;
   } else if (pathname.includes('/app/network/')) {
     chatType = MESSAGE_TYPE.NETWORK;
     chatId = 'network';
@@ -74,7 +74,11 @@ export function ChatInterface() {
   const router = useRouter();
   const { chatType, chatId } = getChatParams(params, pathname);
 
-  const { data: personData } = usePerson(params.id as string);
+  // TODO: This will have to get extended to support other chat types such a group info... possibly?
+  // yeah, like know the number of people in the group or something.
+  const { data: personData } = usePerson(
+    chatType === MESSAGE_TYPE.PERSON ? (params.id as string) : null
+  );
 
   const createPerson = useCreatePerson();
   const createInteraction = useCreateInteraction(pendingAction?.arguments?.person_id || params.id);
@@ -115,8 +119,7 @@ export function ChatInterface() {
     onFinish: async (result) => {
       // Save the return messsages to the database
       await createMessage.mutateAsync({
-        type: chatType,
-        personId: params.id as string,
+        ...getMessageParams(chatType, chatId),
         message: result
       });
     }
@@ -238,27 +241,29 @@ export function ChatInterface() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!input.trim()) return;
 
-    // Clear input and append message to UI
-    const messageContent = input;
-    setInput('');
+      // Clear input and append message to UI
+      const messageContent = input;
+      setInput('');
 
-    // TODO: Make sure that we handle the other types of messages
-    await createMessage.mutateAsync({
-      type: chatType,
-      personId: params.id as string,
-      message: $user(messageContent)
-    });
+      // TODO: Make sure that we handle the other types of messages
+      await createMessage.mutateAsync({
+        ...getMessageParams(chatType, chatId),
+        message: $user(messageContent)
+      });
 
-    // Send message to AI
-    await append({
-      content: messageContent,
-      role: 'user'
-    });
-  };
+      // Send message to AI
+      await append({
+        content: messageContent,
+        role: 'user'
+      });
+    },
+    [append, chatType, chatId, createMessage, input, setInput]
+  );
 
   return (
     <div className='absolute inset-0 flex flex-col'>

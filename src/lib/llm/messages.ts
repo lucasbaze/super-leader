@@ -1,5 +1,6 @@
 import { Message } from 'ai';
 
+import { dateHandler } from '../dates/helpers';
 import { randomString } from '../utils';
 
 function createMessageFn(role: Message['role']) {
@@ -7,7 +8,8 @@ function createMessageFn(role: Message['role']) {
     return {
       id: randomString(12),
       role,
-      content
+      content,
+      createdAt: dateHandler().toISOString()
     };
   };
 }

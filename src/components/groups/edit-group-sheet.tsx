@@ -41,7 +41,7 @@ export function EditGroupSheet({ group, open, onOpenChange }: EditGroupSheetProp
       });
       console.log('Updated group', result);
       onOpenChange(false);
-      router.push(`/app/groups/${result.slug}`);
+      router.refresh();
     } finally {
       setIsSubmitting(false);
     }

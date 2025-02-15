@@ -17,10 +17,10 @@ export const ERRORS = {
       'User ID is required',
       'User identifier is missing'
     ),
-    MISSING_SLUG: createError(
-      'missing_slug',
+    MISSING_ID: createError(
+      'missing_id',
       ErrorType.VALIDATION_ERROR,
-      'Group slug is required',
+      'Group identifier is required',
       'Group identifier is missing'
     )
   }
@@ -29,21 +29,21 @@ export const ERRORS = {
 export interface GetGroupMembersParams {
   db: DBClient;
   userId: string;
-  slug: string;
+  id: string;
 }
 
 export async function getGroupMembers({
   db,
   userId,
-  slug
+  id
 }: GetGroupMembersParams): Promise<TServiceResponse<Person[]>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.GROUP_MEMBERS.MISSING_USER_ID };
     }
 
-    if (!slug) {
-      return { data: null, error: ERRORS.GROUP_MEMBERS.MISSING_SLUG };
+    if (!id) {
+      return { data: null, error: ERRORS.GROUP_MEMBERS.MISSING_ID };
     }
 
     const { data: people, error } = await db
@@ -55,7 +55,7 @@ export async function getGroupMembers({
       `
       )
       .eq('group.user_id', userId)
-      .eq('group.slug', slug);
+      .eq('group.id', id);
 
     if (error) {
       const serviceError = ERRORS.GROUP_MEMBERS.FETCH_ERROR;

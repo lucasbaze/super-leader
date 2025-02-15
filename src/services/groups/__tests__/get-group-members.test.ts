@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import { randomUUID } from 'crypto';
 
 import {
   createTestGroup,
@@ -94,7 +95,7 @@ describe('getGroupMembers service', () => {
         const result = await getGroupMembers({
           db,
           userId: testUser.id,
-          slug: testGroup.slug
+          id: testGroup.id
         });
 
         expect(result.data).toHaveLength(2);
@@ -180,7 +181,7 @@ describe('getGroupMembers service', () => {
         const result = await getGroupMembers({
           db,
           userId: testUser.id,
-          slug: testGroup.slug
+          id: testGroup.id
         });
 
         expect(result.data).toHaveLength(1);
@@ -198,7 +199,7 @@ describe('getGroupMembers service', () => {
         const result = await getGroupMembers({
           db,
           userId: '',
-          slug: 'some-slug'
+          id: randomUUID()
         });
 
         expect(result.error).toBeDefined();
@@ -207,17 +208,17 @@ describe('getGroupMembers service', () => {
       });
     });
 
-    it('should return error when slug is missing', async () => {
+    it('should return error when id is missing', async () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
         const result = await getGroupMembers({
           db,
           userId: testUser.id,
-          slug: ''
+          id: randomUUID()
         });
 
         expect(result.error).toBeDefined();
-        expect(result.error).toEqual(ERRORS.GROUP_MEMBERS.MISSING_SLUG);
+        expect(result.error).toEqual(ERRORS.GROUP_MEMBERS.MISSING_ID);
         expect(result.data).toBeNull();
       });
     });
@@ -236,7 +237,7 @@ describe('getGroupMembers service', () => {
         const result = await getGroupMembers({
           db,
           userId: testUser.id,
-          slug: 'inner-5'
+          id: randomUUID()
         });
 
         expect(result.error).toBeDefined();

@@ -74,7 +74,7 @@ describe('group-service', () => {
           // Verify group members were created
           const { data: members } = await getGroupMembers({
             db,
-            slug: result.data!.slug,
+            id: result.data!.id,
             userId: testUser.id
           });
 

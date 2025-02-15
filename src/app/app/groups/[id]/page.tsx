@@ -8,7 +8,7 @@ import { useGroupMembers } from '@/hooks/use-group-members';
 export default function GroupPage() {
   const router = useRouter();
   const params = useParams();
-  const { data: people = [], isLoading, error } = useGroupMembers(params.slug as string);
+  const { data: people = [], isLoading, error } = useGroupMembers(params.id as string);
 
   const handleRowClick = (personId: string) => {
     router.push(`/app/person/${personId}`);

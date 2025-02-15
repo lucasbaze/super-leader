@@ -8,22 +8,24 @@ import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
 const ERRORS = {
-  MISSING_SLUG: createError(
-    'missing_slug',
+  MISSING_ID: createError(
+    'missing_id',
     ErrorType.VALIDATION_ERROR,
-    'Group slug is required',
+    'Group identifier is required',
     'Group identifier is missing'
   )
 };
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ groupId: string }> }
+) {
   try {
     const supabase = await createClient();
-    const { searchParams } = new URL(request.url);
-    const slug = searchParams.get('slug');
+    const { groupId } = await Promise.resolve(params);
 
-    if (!slug) {
-      return apiResponse.error(ERRORS.MISSING_SLUG);
+    if (!groupId) {
+      return apiResponse.error(ERRORS.MISSING_ID);
     }
 
     const authResult = await validateAuthentication(supabase);
@@ -34,7 +36,7 @@ export async function GET(request: NextRequest) {
     const result = await getGroupMembers({
       db: supabase,
       userId: authResult.data.id,
-      slug
+      id: groupId
     });
 
     if (result.error) {

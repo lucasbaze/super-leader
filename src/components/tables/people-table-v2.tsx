@@ -1,6 +1,14 @@
 'use client';
 
-import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { CSSProperties } from 'react';
+
+import {
+  type Column,
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table';
 import { format } from 'date-fns';
 
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
@@ -21,6 +29,17 @@ interface TanStackPeopleTableProps {
   emptyMessage?: string;
 }
 
+const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
+  const isPinned = column.getIsPinned();
+  return {
+    position: isPinned ? 'sticky' : 'relative',
+    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
+    background: isPinned ? 'var(--background)' : undefined,
+    boxShadow: isPinned === 'left' ? '4px 0 4px -4px rgba(0, 0, 0, 0.1)' : undefined,
+    zIndex: isPinned ? 1 : 0
+  };
+};
+
 export function PeopleTableV2({
   people,
   onRowClick,
@@ -30,9 +49,11 @@ export function PeopleTableV2({
     {
       accessorKey: 'name',
       header: 'Name',
+      size: 250,
+      enablePinning: true,
       cell: ({ row }) => (
         <div
-          className='flex max-w-[200px] cursor-pointer items-center gap-2'
+          className='flex cursor-pointer items-center gap-2'
           onClick={() => onRowClick?.(row.original.id)}>
           <Avatar className='size-6 shrink-0'>
             <AvatarFallback className='text-xs'>{row.original.first_name?.[0]}</AvatarFallback>
@@ -46,6 +67,7 @@ export function PeopleTableV2({
     {
       accessorKey: 'follow_up_score',
       header: 'Follow Up',
+      size: 120,
       cell: ({ row }) => (
         <div className='flex items-center'>
           <FollowUpIndicator
@@ -60,6 +82,7 @@ export function PeopleTableV2({
     {
       accessorKey: 'birthday',
       header: 'Birthday',
+      size: 150,
       cell: ({ row }) => (
         <div className='flex items-center'>
           {row.original.birthday ? format(new Date(row.original.birthday), 'PP') : 'Not set'}
@@ -69,6 +92,7 @@ export function PeopleTableV2({
     {
       accessorKey: 'date_met',
       header: 'Date Met',
+      size: 150,
       cell: ({ row }) => (
         <div className='flex items-center'>
           {row.original.date_met ? format(new Date(row.original.date_met), 'PP') : 'Not set'}
@@ -78,19 +102,17 @@ export function PeopleTableV2({
     {
       accessorKey: 'bio',
       header: 'Bio',
+      size: 300,
       cell: ({ row }) => (
-        <div className='flex max-w-[200px] items-center truncate'>
-          {row.original.bio || 'No bio'}
-        </div>
+        <div className='max-w-[250px] truncate'>{row.original.bio || 'No bio'}</div>
       )
     },
     {
       accessorKey: 'ai_summary',
       header: 'AI Summary',
+      size: 300,
       cell: ({ row }) => (
-        <div className='flex max-w-[200px] items-center truncate'>
-          {row.original.ai_summary || 'No summary'}
-        </div>
+        <div className='max-w-[250px] truncate'>{row.original.ai_summary || 'No summary'}</div>
       )
     }
   ];
@@ -98,39 +120,52 @@ export function PeopleTableV2({
   const table = useReactTable({
     data: people,
     columns,
-    getCoreRowModel: getCoreRowModel()
+    getCoreRowModel: getCoreRowModel(),
+    defaultColumn: {
+      minSize: 100,
+      size: 150
+    },
+    state: {
+      columnPinning: {
+        left: ['name']
+      }
+    }
   });
 
   return (
-    <div className='absolute inset-0'>
-      {/* Fixed Headers */}
-      <div className='absolute inset-x-0 top-0 z-20 bg-background'>
-        <div className='bg-background px-4'>
-          <Table>
+    <div className='h-full'>
+      <div className='h-full overflow-y-auto'>
+        <div className='overflow-x-auto' style={{ position: 'relative' }}>
+          <Table
+            className='border-separate border-spacing-0'
+            style={{ width: table.getTotalSize() }}>
             <TableHeader>
               <TableRow>
                 {table.getHeaderGroups().map((headerGroup) =>
                   headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className='text-left'>
+                    <TableHead
+                      key={header.id}
+                      className='sticky top-0 bg-background'
+                      style={{
+                        width: header.getSize(),
+                        ...getCommonPinningStyles(header.column)
+                      }}>
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))
                 )}
               </TableRow>
             </TableHeader>
-          </Table>
-        </div>
-      </div>
-
-      {/* Scrollable Content */}
-      <div className='absolute inset-0 top-[40px] overflow-y-auto'>
-        <div className='px-4'>
-          <Table>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      style={{
+                        width: cell.column.getSize(),
+                        ...getCommonPinningStyles(cell.column)
+                      }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

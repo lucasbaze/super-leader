@@ -1,3 +1,5 @@
+import OpenAI from 'openai';
+
 // https://openrouter.ai/docs/api-reference/overview
 
 // Definitions of subtypes are below
@@ -57,16 +59,6 @@ export type Request = {
 
 // Subtypes:
 
-export type ProviderPreferences = {
-  order?: string[]; // List of provider names to try in order
-  allow_fallbacks?: boolean; // Whether to allow backup providers when the primary is unavailable
-  require_parameters?: boolean; // Only use providers that support all parameters in your request
-  data_collection?: 'allow' | 'deny'; // Control whether to use providers that may store data
-  ignore?: string[]; // List of provider names to skip for this request
-  quantizations?: string[]; // List of quantization levels to filter by
-  sort?: 'price' | 'throughput'; // Sort providers by price or throughput
-};
-
 export type TextContent = {
   type: 'text';
   text: string;
@@ -118,3 +110,25 @@ export type ToolChoice =
         name: string;
       };
     };
+
+export type CreateMessageInput = OpenAI.Chat.ChatCompletionMessageParam;
+export type CreateMessagesInput = CreateMessageInput[];
+
+export interface ChatCompletionOptions {
+  messages: CreateMessagesInput;
+  model?: OpenAI.Chat.ChatCompletionCreateParams['model'];
+  response_format?: OpenAI.Chat.ChatCompletionCreateParams['response_format'];
+  // OpenRouter specific options
+  plugins?: Record<string, any>[];
+  provider?: ProviderPreferences;
+}
+
+export type ProviderPreferences = {
+  order?: string[]; // List of provider names to try in order
+  allow_fallbacks?: boolean; // Whether to allow backup providers when the primary is unavailable
+  require_parameters?: boolean; // Only use providers that support all parameters in your request
+  data_collection?: 'allow' | 'deny'; // Control whether to use providers that may store data
+  ignore?: string[]; // List of provider names to skip for this request
+  quantizations?: string[]; // List of quantization levels to filter by
+  sort?: 'price' | 'throughput'; // Sort providers by price or throughput
+};

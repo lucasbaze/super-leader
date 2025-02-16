@@ -3,12 +3,12 @@ import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { DBClient } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
+import { generateObject } from '@/vendors/ai';
 
 import { createMessageSuggestions, ERRORS } from '../create-message-suggestions';
-import { callStructuredOpenAI } from '../openai-api';
 
-jest.mock('../openai-api');
-const mockOpenAI = callStructuredOpenAI as jest.MockedFunction<typeof callStructuredOpenAI>;
+jest.mock('@/vendors/ai');
+const mockOpenAI = generateObject as jest.MockedFunction<typeof generateObject>;
 
 describe('createMessageSuggestions', () => {
   let db: DBClient;

@@ -57,7 +57,7 @@ describe('addGroupMembers service', () => {
         // Verify members were added
         const { data: members } = await getGroupMembers({
           db,
-          slug: testGroup.slug,
+          id: testGroup.id,
           userId: testUser.id
         });
 
@@ -108,7 +108,7 @@ describe('addGroupMembers service', () => {
         // Verify only one membership exists
         const { data: members } = await getGroupMembers({
           db,
-          slug: testGroup.slug,
+          id: testGroup.id,
           userId: testUser.id
         });
 
@@ -160,7 +160,7 @@ describe('addGroupMembers service', () => {
         // Verify person is in Inner Five
         const innerFiveMembers = await getGroupMembers({
           db,
-          slug: RESERVED_GROUP_SLUGS.INNER_5,
+          id: innerFiveGroup.id,
           userId: testUser.id
         });
         expect(innerFiveMembers.data).toHaveLength(1);
@@ -177,7 +177,7 @@ describe('addGroupMembers service', () => {
         // Verify person was removed from Inner Five
         const updatedInnerFiveMembers = await getGroupMembers({
           db,
-          slug: RESERVED_GROUP_SLUGS.INNER_5,
+          id: innerFiveGroup.id,
           userId: testUser.id
         });
         expect(updatedInnerFiveMembers.data).toHaveLength(0);
@@ -185,7 +185,7 @@ describe('addGroupMembers service', () => {
         // Verify person is now in Central Fifty
         const centralFiftyMembers = await getGroupMembers({
           db,
-          slug: RESERVED_GROUP_SLUGS.CENTRAL_50,
+          id: centralFiftyGroup.id,
           userId: testUser.id
         });
         expect(centralFiftyMembers.data).toHaveLength(1);
@@ -244,7 +244,7 @@ describe('addGroupMembers service', () => {
         // Verify person is still in Inner Five
         const innerFiveMembers = await getGroupMembers({
           db,
-          slug: RESERVED_GROUP_SLUGS.INNER_5,
+          id: innerFiveGroup.id,
           userId: testUser.id
         });
         expect(innerFiveMembers.data).toHaveLength(1);
@@ -252,7 +252,7 @@ describe('addGroupMembers service', () => {
         // Verify person is also in regular group
         const regularGroupMembers = await getGroupMembers({
           db,
-          slug: 'regular-group',
+          id: regularGroup.id,
           userId: testUser.id
         });
         expect(regularGroupMembers.data).toHaveLength(1);

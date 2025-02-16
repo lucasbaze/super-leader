@@ -10,12 +10,30 @@ export const contactMethodSchema = z.object({
 
 export const addressSchema = z.object({
   id: z.string().optional(),
-  street: z.string(),
-  city: z.string(),
-  state: z.string().optional(),
-  postal_code: z.string().optional(),
-  country: z.string(),
-  label: z.string().optional(),
+  street: z
+    .string()
+    .nullish()
+    .transform((val) => val || ''),
+  city: z
+    .string()
+    .nullish()
+    .transform((val) => val || ''),
+  state: z
+    .string()
+    .nullish()
+    .transform((val) => val || ''),
+  postal_code: z
+    .string()
+    .nullish()
+    .transform((val) => val || ''),
+  country: z
+    .string()
+    .nullish()
+    .transform((val) => val || ''),
+  label: z
+    .string()
+    .nullish()
+    .transform((val) => val || ''),
   is_primary: z.boolean().default(false)
 });
 

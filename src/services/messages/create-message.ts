@@ -37,11 +37,38 @@ export type TCreateMessageParams = {
   data: {
     message: ResponseMessage; // Now properly typed as AI Message
     type: (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE];
-    user_id: string;
-    person_id?: string;
-    group_id?: string;
+    userId: string;
+    personId?: string;
+    groupId?: string;
   };
 };
+
+function transformToolInvocations(message: ResponseMessage) {
+  // If no message or not an object, return as is
+  if (!message || typeof message !== 'object') {
+    return message;
+  }
+
+  // Deep clone the message to avoid mutations
+  const transformedMessage = { ...message } as ResponseMessage & { toolInvocations?: any[] };
+
+  // Set any tool calls that come from onFinish to be the result state even if they are not...
+  // This is to ensure that when fetched on the client, the action buttons aren't displayed
+  if (Array.isArray(transformedMessage.toolInvocations)) {
+    transformedMessage.toolInvocations = transformedMessage.toolInvocations.map((invocation) => {
+      if (invocation && typeof invocation === 'object' && invocation.state === 'call') {
+        return {
+          ...invocation,
+          state: 'result',
+          result: 'unknown' // result is required for tool invocations in state of result when sent to the server. These could probably be filtered out in the future?
+        };
+      }
+      return invocation;
+    });
+  }
+
+  return transformedMessage;
+}
 
 export async function createMessage({
   db,
@@ -52,14 +79,17 @@ export async function createMessage({
       return { data: null, error: ERRORS.INVALID_MESSAGE };
     }
 
+    // Transform the message before saving
+    const transformedMessage = transformToolInvocations(data.message);
+
     const { data: message, error: insertError } = await db
       .from('messages')
       .insert({
-        message: data.message,
+        message: transformedMessage,
         type: data.type,
-        user_id: data.user_id,
-        person_id: data.person_id || null,
-        group_id: data.group_id || null
+        user_id: data.userId,
+        person_id: data.personId || null,
+        group_id: data.groupId || null
       })
       .select('*')
       .single();

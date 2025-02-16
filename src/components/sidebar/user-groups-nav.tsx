@@ -53,12 +53,12 @@ export function UserGroupsNav() {
         </div>
         <SidebarMenu>
           {userGroups.map((group) => {
-            const isActive = pathname === `/app/groups/${group.slug}`;
+            const isActive = pathname === `/app/groups/${group.id}`;
 
             return (
               <SidebarMenuItem key={group.id}>
                 <SidebarMenuButton asChild tooltip={group.name} isActive={isActive}>
-                  <Link href={`/app/groups/${group.slug}`}>
+                  <Link href={`/app/groups/${group.id}`}>
                     <GroupIcon icon={group.icon} />
                     <span>{group.name}</span>
                   </Link>

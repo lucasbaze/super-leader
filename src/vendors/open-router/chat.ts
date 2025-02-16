@@ -1,18 +1,10 @@
-import OpenAI from 'openai';
+import { toError } from '@/lib/errors';
+import { errorLogger } from '@/lib/errors/error-logger';
 
 import { createOpenRouterClient } from './client';
-import { ProviderPreferences } from './types';
+import { ChatCompletionOptions } from './types';
 
 const openRouterClient = createOpenRouterClient();
-
-export interface ChatCompletionOptions {
-  messages: OpenAI.Chat.ChatCompletionMessageParam[];
-  model?: OpenAI.Chat.ChatCompletionCreateParams['model'];
-  response_format?: OpenAI.Chat.ChatCompletionCreateParams['response_format'];
-  // OpenRouter specific options
-  plugins?: Record<string, any>[];
-  provider?: ProviderPreferences;
-}
 
 const DEFAULT_MODEL = 'openai/gpt-4o';
 const DEFAULT_PROVIDER = {
@@ -40,7 +32,7 @@ export async function chatCompletion({
 
     return completion.choices[0].message;
   } catch (err) {
-    console.log('Error: ', err);
+    errorLogger.log(toError(err));
     throw err;
   }
 }

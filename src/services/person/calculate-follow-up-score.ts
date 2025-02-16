@@ -27,6 +27,12 @@ export const ERRORS = {
       ErrorType.NOT_FOUND,
       'Person not found',
       'Unable to find the specified person'
+    ),
+    GENERATION_FAILED: createError(
+      'generation_failed',
+      ErrorType.API_ERROR,
+      'Failed to generate follow-up score',
+      'Unable to generate follow-up score at this time'
     )
   }
 };
@@ -85,11 +91,25 @@ export async function calculateFollowUpScore({
     // }
 
     // If no immediate triggers, generate AI score
-    return generateFollowUpScore({
+    const { data: result, error: resultError } = await generateFollowUpScore({
       person: data.person,
       interactions: data.interactions || [],
       groups: data.groups || []
     });
+
+    if (resultError || !result) {
+      return {
+        data: null,
+        error: { ...ERRORS.CALCULATION.GENERATION_FAILED, details: resultError }
+      };
+    }
+
+    console.log('Person::CalculateFollowUpScore::Result', result);
+
+    return {
+      data: result,
+      error: null
+    };
   } catch (error) {
     return {
       data: null,

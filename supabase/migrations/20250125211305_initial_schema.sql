@@ -25,8 +25,3 @@ create policy "Anyone can update messages"
 create policy "Anyone can delete messages"
     on messages for delete
     using ( true );
-
--- Add some sample messages
-insert into public.messages (content, author_name) values
-    ('Hello world! First message on this board.', 'System'),
-    ('Testing the message board. Feel free to add your own messages!', 'Tester');

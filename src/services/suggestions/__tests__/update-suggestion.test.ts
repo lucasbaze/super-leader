@@ -176,7 +176,8 @@ describe('updateSuggestion service', () => {
       await withTestTransaction(supabase, async (db) => {
         const result = await updateSuggestion({
           db,
-          suggestionId: 'random-id',
+          // @ts-expect-error
+          suggestionId: null,
           viewed: true,
           userId: testUser.id
         });

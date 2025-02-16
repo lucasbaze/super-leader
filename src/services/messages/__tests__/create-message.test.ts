@@ -1,5 +1,4 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Message } from 'ai';
 
 import {
   MESSAGE_ROLE,
@@ -42,8 +41,8 @@ describe('message-service', () => {
             data: {
               message: messageData,
               type: MESSAGE_TYPE.PERSON,
-              user_id: testUser.id,
-              person_id: testPerson.id
+              userId: testUser.id,
+              personId: testPerson.id
             }
           });
 
@@ -75,8 +74,8 @@ describe('message-service', () => {
             data: {
               message: messageData,
               type: MESSAGE_TYPE.GROUP,
-              user_id: testUser.id,
-              group_id: testGroup.id
+              userId: testUser.id,
+              groupId: testGroup.id
             }
           });
 
@@ -123,8 +122,8 @@ describe('message-service', () => {
             data: {
               message: messageData,
               type: MESSAGE_TYPE.PERSON,
-              user_id: testUser.id,
-              person_id: testPerson.id
+              userId: testUser.id,
+              personId: testPerson.id
             }
           });
 
@@ -175,8 +174,8 @@ describe('message-service', () => {
             data: {
               message: messageData,
               type: MESSAGE_TYPE.PERSON,
-              user_id: testUser.id,
-              person_id: testPerson.id
+              userId: testUser.id,
+              personId: testPerson.id
             }
           });
 
@@ -211,8 +210,8 @@ describe('message-service', () => {
             data: {
               message: messageData,
               type: MESSAGE_TYPE.PERSON,
-              user_id: testUser.id,
-              person_id: testPerson.id
+              userId: testUser.id,
+              personId: testPerson.id
             }
           });
 
@@ -235,7 +234,7 @@ describe('message-service', () => {
               // @ts-expect-error - This is a test
               message: null,
               type: MESSAGE_TYPE.HOME,
-              user_id: 'some-id'
+              userId: 'some-id'
             }
           });
 

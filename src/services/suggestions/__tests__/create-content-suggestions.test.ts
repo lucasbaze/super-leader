@@ -4,33 +4,29 @@ import { createTestPerson, createTestSuggestion, createTestUser } from '@/tests/
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { AuthUser, Person } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
-import { chatCompletion } from '@/vendors/open-router';
+import { generateObject } from '@/vendors/ai';
 
-import { createContentSuggestions } from '../create-content-suggestions';
+import { createContentSuggestions, ERRORS } from '../create-content-suggestions';
 
 // Mock the chatCompletion function
-jest.mock('@/vendors/open-router', () => {
-  const mockChatCompletion = jest.fn().mockResolvedValue({
-    role: 'assistant',
-    refusal: null,
-    content: JSON.stringify({
-      suggestions: [
-        {
-          title: 'Latest AI Developments',
-          contentUrl: 'https://example.com/ai-2024',
-          reason: 'Based on interest in AI and technology'
-        },
-        {
-          title: 'Startup Funding Trends',
-          contentUrl: 'https://example.com/startup-trends',
-          reason: 'Relevant to startup interests'
-        }
-      ]
-    })
+jest.mock('@/vendors/ai', () => {
+  const mockGenerateObject = jest.fn().mockResolvedValue({
+    suggestions: [
+      {
+        title: 'Latest AI Developments',
+        contentUrl: 'https://example.com/ai-2024',
+        reason: 'Based on interest in AI and technology'
+      },
+      {
+        title: 'Startup Funding Trends',
+        contentUrl: 'https://example.com/startup-trends',
+        reason: 'Relevant to startup interests'
+      }
+    ]
   });
 
   return {
-    chatCompletion: mockChatCompletion
+    generateObject: mockGenerateObject
   };
 });
 
@@ -41,7 +37,7 @@ describe('createContentSuggestions', () => {
 
   beforeEach(() => {
     // Clear mock between tests
-    jest.mocked(chatCompletion).mockClear();
+    jest.mocked(generateObject).mockClear();
   });
 
   beforeAll(async () => {
@@ -61,18 +57,14 @@ describe('createContentSuggestions', () => {
   describe('success cases', () => {
     it('should create content suggestions with no previous suggestions', async () => {
       // Setup mock response
-      jest.mocked(chatCompletion).mockResolvedValueOnce({
-        role: 'assistant',
-        refusal: null,
-        content: JSON.stringify({
-          suggestions: [
-            {
-              title: 'Latest AI Developments',
-              contentUrl: 'https://example.com/ai-2024',
-              reason: 'Based on interest in AI and technology'
-            }
-          ]
-        })
+      jest.mocked(generateObject).mockResolvedValueOnce({
+        suggestions: [
+          {
+            title: 'Latest AI Developments',
+            contentUrl: 'https://example.com/ai-2024',
+            reason: 'Based on interest in AI and technology'
+          }
+        ]
       });
 
       const result = await createContentSuggestions({
@@ -107,18 +99,14 @@ describe('createContentSuggestions', () => {
         });
 
         // Setup mock response
-        jest.mocked(chatCompletion).mockResolvedValueOnce({
-          role: 'assistant',
-          refusal: null,
-          content: JSON.stringify({
-            suggestions: [
-              {
-                title: 'Startup Funding Trends',
-                contentUrl: 'https://example.com/startup-trends',
-                reason: 'New direction based on previous content'
-              }
-            ]
-          })
+        jest.mocked(generateObject).mockResolvedValueOnce({
+          suggestions: [
+            {
+              title: 'Startup Funding Trends',
+              contentUrl: 'https://example.com/startup-trends',
+              reason: 'New direction based on previous content'
+            }
+          ]
         });
 
         const result = await createContentSuggestions({
@@ -137,12 +125,8 @@ describe('createContentSuggestions', () => {
   describe('error cases', () => {
     it('should handle invalid AI response format', async () => {
       // Mock invalid response format
-      jest.mocked(chatCompletion).mockResolvedValueOnce({
-        role: 'assistant',
-        refusal: null,
-        content: JSON.stringify({
-          invalid: 'response'
-        })
+      jest.mocked(generateObject).mockResolvedValueOnce({
+        wrong: 'response'
       });
 
       const result = await createContentSuggestions({
@@ -152,13 +136,13 @@ describe('createContentSuggestions', () => {
       });
 
       expect(result.error).toBeDefined();
-      expect(result.error?.name).toBe('invalid_response');
+      expect(result.error?.name).toBe(ERRORS.CONTENT_CREATION.PARSE_ERROR.name);
       expect(result.data).toBeNull();
     });
 
     it('should handle AI service errors', async () => {
       // Mock API error
-      jest.mocked(chatCompletion).mockRejectedValueOnce(new Error('API Error'));
+      jest.mocked(generateObject).mockRejectedValueOnce(new Error('API Error'));
 
       const result = await createContentSuggestions({
         userContent: 'Find content',
@@ -167,25 +151,21 @@ describe('createContentSuggestions', () => {
       });
 
       expect(result.error).toBeDefined();
-      expect(result.error?.name).toBe('content_creation_failed');
+      expect(result.error?.name).toBe(ERRORS.CONTENT_CREATION.FAILED.name);
       expect(result.data).toBeNull();
     });
   });
 
   describe('gift suggestions', () => {
     it('should create gift suggestions with no previous suggestions', async () => {
-      jest.mocked(chatCompletion).mockResolvedValueOnce({
-        role: 'assistant',
-        refusal: null,
-        content: JSON.stringify({
-          suggestions: [
-            {
-              title: 'Premium Coffee Subscription',
-              contentUrl: 'https://example.com/coffee-sub',
-              reason: 'Perfect for their interest in specialty coffee'
-            }
-          ]
-        })
+      jest.mocked(generateObject).mockResolvedValueOnce({
+        suggestions: [
+          {
+            title: 'Premium Coffee Subscription',
+            contentUrl: 'https://example.com/coffee-sub',
+            reason: 'Perfect for their interest in specialty coffee'
+          }
+        ]
       });
 
       const result = await createContentSuggestions({

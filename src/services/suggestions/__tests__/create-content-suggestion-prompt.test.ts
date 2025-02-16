@@ -10,7 +10,7 @@ import {
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { AuthUser, Person } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
-import { chatCompletion } from '@/vendors/open-router';
+import { generateObject } from '@/vendors/ai';
 
 import {
   buildContentSuggestionAugmentationUserPrompt,
@@ -18,17 +18,14 @@ import {
 } from '../create-content-suggestion-prompt';
 
 // Mock the chatCompletion function
-jest.mock('@/vendors/open-router', () => {
-  const mockChatCompletion = jest.fn().mockResolvedValue({
-    role: 'assistant',
-    content: JSON.stringify({
-      topics: ['technology'],
-      prompt: 'Find 3 pieces of content about software development and AI technology'
-    })
+jest.mock('@/vendors/ai', () => {
+  const mockGenerateObject = jest.fn().mockResolvedValue({
+    topics: ['technology'],
+    prompt: 'Find 3 pieces of content about software development and AI technology'
   });
 
   return {
-    chatCompletion: mockChatCompletion
+    generateObject: mockGenerateObject
   };
 });
 
@@ -39,7 +36,7 @@ describe('createContentSuggestionPrompt', () => {
 
   beforeEach(() => {
     // Clear mock between tests
-    jest.mocked(chatCompletion).mockClear();
+    jest.mocked(generateObject).mockClear();
   });
 
   beforeAll(async () => {
@@ -59,13 +56,9 @@ describe('createContentSuggestionPrompt', () => {
   describe('success cases', () => {
     it('should create a prompt with person info and previous interactions', async () => {
       // Setup mock response
-      jest.mocked(chatCompletion).mockResolvedValueOnce({
-        role: 'assistant',
-        refusal: null,
-        content: JSON.stringify({
-          topics: ['technology'],
-          prompt: 'Find 3 pieces of content about software development and AI technology'
-        })
+      jest.mocked(generateObject).mockResolvedValueOnce({
+        topics: ['technology'],
+        prompt: 'Find 3 pieces of content about software development and AI technology'
       });
 
       await withTestTransaction(supabase, async (db) => {
@@ -107,8 +100,8 @@ describe('createContentSuggestionPrompt', () => {
         });
 
         // Add debug logging
-        console.log('Chat Completion Mock Calls:', jest.mocked(chatCompletion).mock.calls);
-        console.log('Chat Completion Mock Results:', jest.mocked(chatCompletion).mock.results);
+        console.log('Chat Completion Mock Calls:', jest.mocked(generateObject).mock.calls);
+        console.log('Chat Completion Mock Results:', jest.mocked(generateObject).mock.results);
         console.log('Result:', result);
 
         expect(result.error).toBeNull();
@@ -121,14 +114,11 @@ describe('createContentSuggestionPrompt', () => {
 
     it('should include previous suggestions in the prompt', async () => {
       // Setup mock response
-      jest.mocked(chatCompletion).mockResolvedValueOnce({
-        role: 'assistant',
-        refusal: null,
-        content: JSON.stringify({
-          topics: ['technology'],
-          prompt: 'Find 3 pieces of content about software development and AI technology'
-        })
+      jest.mocked(generateObject).mockResolvedValueOnce({
+        topics: ['technology'],
+        prompt: 'Find 3 pieces of content about software development and AI technology'
       });
+
       await withTestTransaction(supabase, async (db) => {
         // Create test suggestions
         const testSuggestion = await createTestSuggestion({

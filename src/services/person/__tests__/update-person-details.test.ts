@@ -87,11 +87,15 @@ describe('updatePersonDetails service', () => {
           });
 
           expect(result.data?.contactMethods).toHaveLength(2);
-          expect(result.data?.contactMethods?.[0]).toMatchObject({
-            type: 'email',
-            value: 'test@example.com',
-            is_primary: true
-          });
+          expect(result.data?.contactMethods).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                type: 'email',
+                value: 'test@example.com',
+                is_primary: true
+              })
+            ])
+          );
         });
       });
 
@@ -114,8 +118,10 @@ describe('updatePersonDetails service', () => {
               {
                 street: '123 Test St',
                 city: 'Test City',
+                state: '',
                 postal_code: '12345',
                 country: 'Test Country',
+                label: '',
                 is_primary: true
               }
             ],
@@ -138,8 +144,10 @@ describe('updatePersonDetails service', () => {
           expect(result.data?.addresses?.[0]).toMatchObject({
             street: '123 Test St',
             city: 'Test City',
+            state: '',
             postal_code: '12345',
             country: 'Test Country',
+            label: '',
             is_primary: true
           });
         });
@@ -298,8 +306,10 @@ describe('updatePersonDetails service', () => {
                 {
                   street: '123 Test St',
                   city: 'Test City',
+                  state: '',
                   postal_code: '12345',
                   country: 'Test Country',
+                  label: '',
                   is_primary: true
                 }
               ],
@@ -426,8 +436,10 @@ describe('updatePersonDetails service', () => {
               {
                 street: '123 Test St',
                 city: 'Test City',
+                state: '',
                 postal_code: '12345',
                 country: 'Test Country',
+                label: '',
                 is_primary: true
               }
             ],

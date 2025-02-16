@@ -7,7 +7,10 @@ import { ChatRequestOptions, CreateMessage, Message } from 'ai';
 import { Gift, NotebookPen, Sparkles } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useCreateMessage } from '@/hooks/use-messages';
 import { usePerson } from '@/hooks/use-person';
+import { $user } from '@/lib/llm/messages';
+import { MESSAGE_TYPE } from '@/lib/messages/constants';
 import { randomString } from '@/lib/utils';
 
 import { DefaultChatHeader } from './default';
@@ -21,10 +24,11 @@ interface ChatHeaderProps {
 
 export function PersonChatHeader({ append }: ChatHeaderProps) {
   const params = useParams();
+  const createMessage = useCreateMessage();
   const { data, isLoading } = usePerson(params.id as string, {
     withInteractions: true
   });
-  console.log('Person Chat Header data', data);
+  // console.log('Person Chat Header data', data);
 
   if (isLoading) return <DefaultChatHeader />;
 
@@ -41,6 +45,12 @@ export function PersonChatHeader({ append }: ChatHeaderProps) {
         personName: `${data?.person?.first_name} ${data?.person?.last_name}`
       } as const
     });
+
+    await createMessage.mutateAsync({
+      type: MESSAGE_TYPE.PERSON,
+      personId: params.id as string,
+      message: $user(message)
+    });
   };
 
   const handleSuggestions = async () => {
@@ -53,6 +63,12 @@ export function PersonChatHeader({ append }: ChatHeaderProps) {
         personId: data?.person?.id ?? null,
         personName: `${data?.person?.first_name} ${data?.person?.last_name}`
       } as const
+    });
+
+    await createMessage.mutateAsync({
+      type: MESSAGE_TYPE.PERSON,
+      personId: params.id as string,
+      message: $user(message)
     });
   };
 

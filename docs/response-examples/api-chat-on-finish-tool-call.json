@@ -1,0 +1,306 @@
+{
+  "result": {
+    "finishReason": "tool-calls",
+    "usage": {
+      "promptTokens": 442,
+      "completionTokens": 45,
+      "totalTokens": 487
+    },
+    "text": "",
+    "toolCalls": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+        "toolName": "getPersonSuggestions",
+        "args": {
+          "person_id": "fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4",
+          "type": "content"
+        }
+      }
+    ],
+    "toolResults": [
+      {
+        "type": "tool-result",
+        "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+        "toolName": "getPersonSuggestions",
+        "args": {
+          "person_id": "fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4",
+          "type": "content"
+        },
+        "result": {
+          "suggestions": [
+            {
+              "contentUrl": "https://www.fa-mag.com/news/private-equity-in-the-aviation-sector-is-taking-flight-36136.html?section=66",
+              "title": "Private Equity In The Aviation Sector Is Taking Flight",
+              "reason": "This article provides a comprehensive overview of the increasing involvement of private equity in aviation, with a focus on innovative financing strategies indicative of successful ventures.",
+              "id": "859af58a-8af9-4121-821c-daa9e04ab00c"
+            },
+            {
+              "contentUrl": "https://www.pillsburylaw.com/images/content/1/1/v2/119573/Corporate-Jet-Investor-MK-PC-081018.pdf",
+              "title": "Recent Tax Law Changes Affecting Private Aircraft Ownership",
+              "reason": "This PDF document discusses strategies for optimizing tax efficiencies for private aircraft ownership, offering insights particularly relevant to holding companies in the aviation sector.",
+              "id": "415ae8df-1c81-4718-bd89-3acf0f9d20c1"
+            },
+            {
+              "contentUrl": "https://www.bain.com/insights/industry-insights/private-equity-insights",
+              "title": "Private Equity Insights",
+              "reason": "Though not exclusively about aviation, this insight page from Bain & Company offers valuable information on private equity strategies, including risk management and industry-specific trends that might inform aviation sector investments.",
+              "id": "b850d786-f740-462b-8301-5358c87a74be"
+            }
+          ],
+          "topics": ["private equity in aviation"]
+        }
+      }
+    ],
+    "request": {
+      "body": "{\"model\":\"gpt-4-turbo\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are an expert in relationship management and helping people connect and build deeper relationships. \\n  \\n   The user is currently viewing the profile of Adam Valenta (ID: fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create suggestions default to making a tool call unless specified otherwise.\\n  \\n  If an error occurs or a tool returns an error, acknowledge the error to the user and suggest alternative actions or ways to proceed.\\n  \"},{\"role\":\"assistant\",\"content\":\"Fetching previous messages...\"},{\"role\":\"user\",\"content\":\"What is Adam interested in? \"}],\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"createPerson\",\"description\":\"Create a new person record with an associated interaction note\",\"parameters\":{\"type\":\"object\",\"properties\":{\"first_name\":{\"type\":\"string\",\"description\":\"The person's first name\"},\"last_name\":{\"type\":\"string\",\"description\":\"The person's last name\"},\"note\":{\"type\":\"string\",\"description\":\"Details about the person, the interaction or meeting\"},\"date_met\":{\"type\":\"string\",\"description\":\"Date when the person was met (ISO format) otherwise the current date today\"}},\"required\":[\"first_name\",\"note\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},{\"type\":\"function\",\"function\":{\"name\":\"createInteraction\",\"description\":\"Create a new interaction record for a person\",\"parameters\":{\"type\":\"object\",\"properties\":{\"person_id\":{\"type\":\"string\",\"description\":\"The ID of the person the interaction is for\"},\"type\":{\"type\":\"string\",\"description\":\"The type of interaction such as phone call, email, meeting, etc.\"},\"note\":{\"type\":\"string\",\"description\":\"Details about the interaction\"},\"person_name\":{\"type\":\"string\",\"description\":\"The name of the person for display purposes\"}},\"required\":[\"person_id\",\"type\",\"note\",\"person_name\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},{\"type\":\"function\",\"function\":{\"name\":\"getPersonSuggestions\",\"description\":\"Get content suggestions for the person suggested by the user\",\"parameters\":{\"type\":\"object\",\"properties\":{\"person_id\":{\"type\":\"string\",\"description\":\"The ID of the person the suggestions are for\"},\"type\":{\"type\":\"string\",\"description\":\"Either \\\"content\\\" or \\\"gift\\\"\"}},\"required\":[\"person_id\",\"type\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},{\"type\":\"function\",\"function\":{\"name\":\"createMessageSuggestionsFromArticleForUser\",\"description\":\"Create suggested messages for the person selected based on the article and the user's relationship with the person\",\"parameters\":{\"type\":\"object\",\"properties\":{\"content\":{\"type\":\"string\",\"description\":\"The article to get suggestions for\"},\"person_id\":{\"type\":\"string\",\"description\":\"The ID of the person the suggestions are for\"}},\"required\":[\"content\",\"person_id\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}}],\"tool_choice\":\"auto\",\"stream\":true,\"stream_options\":{\"include_usage\":true}}"
+    },
+    "response": {
+      "id": "chatcmpl-B0sV07nKZQmgRPL0lF1r92amxCGOp",
+      "timestamp": "2025-02-14T16:06:34.000Z",
+      "modelId": "gpt-4-turbo-2024-04-09",
+      "headers": {
+        "access-control-expose-headers": "X-Request-ID",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "cf-cache-status": "DYNAMIC",
+        "cf-ray": "911e4e59aa21f086-DFW",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream; charset=utf-8",
+        "date": "Fri, 14 Feb 2025 16:06:34 GMT",
+        "openai-organization": "personal-testing-r3mlnr",
+        "openai-processing-ms": "903",
+        "openai-version": "2020-10-01",
+        "server": "cloudflare",
+        "set-cookie": "_cfuvid=qg0z3fhtmTO6IezGBZm4uSCGyCAxmvlJMwo1tMdCSPk-1739549194797-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+        "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+        "transfer-encoding": "chunked",
+        "x-content-type-options": "nosniff",
+        "x-ratelimit-limit-requests": "500",
+        "x-ratelimit-limit-tokens": "30000",
+        "x-ratelimit-remaining-requests": "499",
+        "x-ratelimit-remaining-tokens": "29828",
+        "x-ratelimit-reset-requests": "120ms",
+        "x-ratelimit-reset-tokens": "344ms",
+        "x-request-id": "req_96605bbb3d90fe8ac6ef30dd795a5006"
+      },
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            },
+            {
+              "type": "tool-call",
+              "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+              "toolName": "getPersonSuggestions",
+              "args": {
+                "person_id": "fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4",
+                "type": "content"
+              }
+            }
+          ],
+          "id": "msg-qWMc2wVhnYGCNhDRNDcnhC0F"
+        },
+        {
+          "role": "tool",
+          "id": "msg-jrIbt0vApofVUKOtbuc9PwOL",
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+              "toolName": "getPersonSuggestions",
+              "result": {
+                "suggestions": [
+                  {
+                    "contentUrl": "https://www.fa-mag.com/news/private-equity-in-the-aviation-sector-is-taking-flight-36136.html?section=66",
+                    "title": "Private Equity In The Aviation Sector Is Taking Flight",
+                    "reason": "This article provides a comprehensive overview of the increasing involvement of private equity in aviation, with a focus on innovative financing strategies indicative of successful ventures.",
+                    "id": "859af58a-8af9-4121-821c-daa9e04ab00c"
+                  },
+                  {
+                    "contentUrl": "https://www.pillsburylaw.com/images/content/1/1/v2/119573/Corporate-Jet-Investor-MK-PC-081018.pdf",
+                    "title": "Recent Tax Law Changes Affecting Private Aircraft Ownership",
+                    "reason": "This PDF document discusses strategies for optimizing tax efficiencies for private aircraft ownership, offering insights particularly relevant to holding companies in the aviation sector.",
+                    "id": "415ae8df-1c81-4718-bd89-3acf0f9d20c1"
+                  },
+                  {
+                    "contentUrl": "https://www.bain.com/insights/industry-insights/private-equity-insights",
+                    "title": "Private Equity Insights",
+                    "reason": "Though not exclusively about aviation, this insight page from Bain & Company offers valuable information on private equity strategies, including risk management and industry-specific trends that might inform aviation sector investments.",
+                    "id": "b850d786-f740-462b-8301-5358c87a74be"
+                  }
+                ],
+                "topics": ["private equity in aviation"]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "warnings": [],
+    "experimental_providerMetadata": {
+      "openai": {
+        "reasoningTokens": 0,
+        "acceptedPredictionTokens": 0,
+        "rejectedPredictionTokens": 0,
+        "cachedPromptTokens": 0
+      }
+    },
+    "steps": [
+      {
+        "stepType": "initial",
+        "text": "",
+        "toolCalls": [
+          {
+            "type": "tool-call",
+            "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+            "toolName": "getPersonSuggestions",
+            "args": {
+              "person_id": "fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4",
+              "type": "content"
+            }
+          }
+        ],
+        "toolResults": [
+          {
+            "type": "tool-result",
+            "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+            "toolName": "getPersonSuggestions",
+            "args": {
+              "person_id": "fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4",
+              "type": "content"
+            },
+            "result": {
+              "suggestions": [
+                {
+                  "contentUrl": "https://www.fa-mag.com/news/private-equity-in-the-aviation-sector-is-taking-flight-36136.html?section=66",
+                  "title": "Private Equity In The Aviation Sector Is Taking Flight",
+                  "reason": "This article provides a comprehensive overview of the increasing involvement of private equity in aviation, with a focus on innovative financing strategies indicative of successful ventures.",
+                  "id": "859af58a-8af9-4121-821c-daa9e04ab00c"
+                },
+                {
+                  "contentUrl": "https://www.pillsburylaw.com/images/content/1/1/v2/119573/Corporate-Jet-Investor-MK-PC-081018.pdf",
+                  "title": "Recent Tax Law Changes Affecting Private Aircraft Ownership",
+                  "reason": "This PDF document discusses strategies for optimizing tax efficiencies for private aircraft ownership, offering insights particularly relevant to holding companies in the aviation sector.",
+                  "id": "415ae8df-1c81-4718-bd89-3acf0f9d20c1"
+                },
+                {
+                  "contentUrl": "https://www.bain.com/insights/industry-insights/private-equity-insights",
+                  "title": "Private Equity Insights",
+                  "reason": "Though not exclusively about aviation, this insight page from Bain & Company offers valuable information on private equity strategies, including risk management and industry-specific trends that might inform aviation sector investments.",
+                  "id": "b850d786-f740-462b-8301-5358c87a74be"
+                }
+              ],
+              "topics": ["private equity in aviation"]
+            }
+          }
+        ],
+        "finishReason": "tool-calls",
+        "usage": {
+          "promptTokens": 442,
+          "completionTokens": 45,
+          "totalTokens": 487
+        },
+        "warnings": [],
+        "request": {
+          "body": "{\"model\":\"gpt-4-turbo\",\"temperature\":0,\"messages\":[{\"role\":\"system\",\"content\":\"You are an expert in relationship management and helping people connect and build deeper relationships. \\n  \\n   The user is currently viewing the profile of Adam Valenta (ID: fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create suggestions default to making a tool call unless specified otherwise.\\n  \\n  If an error occurs or a tool returns an error, acknowledge the error to the user and suggest alternative actions or ways to proceed.\\n  \"},{\"role\":\"assistant\",\"content\":\"Fetching previous messages...\"},{\"role\":\"user\",\"content\":\"What is Adam interested in? \"}],\"tools\":[{\"type\":\"function\",\"function\":{\"name\":\"createPerson\",\"description\":\"Create a new person record with an associated interaction note\",\"parameters\":{\"type\":\"object\",\"properties\":{\"first_name\":{\"type\":\"string\",\"description\":\"The person's first name\"},\"last_name\":{\"type\":\"string\",\"description\":\"The person's last name\"},\"note\":{\"type\":\"string\",\"description\":\"Details about the person, the interaction or meeting\"},\"date_met\":{\"type\":\"string\",\"description\":\"Date when the person was met (ISO format) otherwise the current date today\"}},\"required\":[\"first_name\",\"note\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},{\"type\":\"function\",\"function\":{\"name\":\"createInteraction\",\"description\":\"Create a new interaction record for a person\",\"parameters\":{\"type\":\"object\",\"properties\":{\"person_id\":{\"type\":\"string\",\"description\":\"The ID of the person the interaction is for\"},\"type\":{\"type\":\"string\",\"description\":\"The type of interaction such as phone call, email, meeting, etc.\"},\"note\":{\"type\":\"string\",\"description\":\"Details about the interaction\"},\"person_name\":{\"type\":\"string\",\"description\":\"The name of the person for display purposes\"}},\"required\":[\"person_id\",\"type\",\"note\",\"person_name\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},{\"type\":\"function\",\"function\":{\"name\":\"getPersonSuggestions\",\"description\":\"Get content suggestions for the person suggested by the user\",\"parameters\":{\"type\":\"object\",\"properties\":{\"person_id\":{\"type\":\"string\",\"description\":\"The ID of the person the suggestions are for\"},\"type\":{\"type\":\"string\",\"description\":\"Either \\\"content\\\" or \\\"gift\\\"\"}},\"required\":[\"person_id\",\"type\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}},{\"type\":\"function\",\"function\":{\"name\":\"createMessageSuggestionsFromArticleForUser\",\"description\":\"Create suggested messages for the person selected based on the article and the user's relationship with the person\",\"parameters\":{\"type\":\"object\",\"properties\":{\"content\":{\"type\":\"string\",\"description\":\"The article to get suggestions for\"},\"person_id\":{\"type\":\"string\",\"description\":\"The ID of the person the suggestions are for\"}},\"required\":[\"content\",\"person_id\"],\"additionalProperties\":false,\"$schema\":\"http://json-schema.org/draft-07/schema#\"}}}],\"tool_choice\":\"auto\",\"stream\":true,\"stream_options\":{\"include_usage\":true}}"
+        },
+        "response": {
+          "id": "chatcmpl-B0sV07nKZQmgRPL0lF1r92amxCGOp",
+          "timestamp": "2025-02-14T16:06:34.000Z",
+          "modelId": "gpt-4-turbo-2024-04-09",
+          "headers": {
+            "access-control-expose-headers": "X-Request-ID",
+            "alt-svc": "h3=\":443\"; ma=86400",
+            "cf-cache-status": "DYNAMIC",
+            "cf-ray": "911e4e59aa21f086-DFW",
+            "connection": "keep-alive",
+            "content-type": "text/event-stream; charset=utf-8",
+            "date": "Fri, 14 Feb 2025 16:06:34 GMT",
+            "openai-organization": "personal-testing-r3mlnr",
+            "openai-processing-ms": "903",
+            "openai-version": "2020-10-01",
+            "server": "cloudflare",
+            "set-cookie": "_cfuvid=qg0z3fhtmTO6IezGBZm4uSCGyCAxmvlJMwo1tMdCSPk-1739549194797-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+            "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+            "transfer-encoding": "chunked",
+            "x-content-type-options": "nosniff",
+            "x-ratelimit-limit-requests": "500",
+            "x-ratelimit-limit-tokens": "30000",
+            "x-ratelimit-remaining-requests": "499",
+            "x-ratelimit-remaining-tokens": "29828",
+            "x-ratelimit-reset-requests": "120ms",
+            "x-ratelimit-reset-tokens": "344ms",
+            "x-request-id": "req_96605bbb3d90fe8ac6ef30dd795a5006"
+          },
+          "messages": [
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "text",
+                  "text": ""
+                },
+                {
+                  "type": "tool-call",
+                  "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+                  "toolName": "getPersonSuggestions",
+                  "args": {
+                    "person_id": "fe861cd5-a16e-4770-9fd5-2eafc6c0f8d4",
+                    "type": "content"
+                  }
+                }
+              ],
+              "id": "msg-qWMc2wVhnYGCNhDRNDcnhC0F"
+            },
+            {
+              "role": "tool",
+              "id": "msg-jrIbt0vApofVUKOtbuc9PwOL",
+              "content": [
+                {
+                  "type": "tool-result",
+                  "toolCallId": "call_zlFjmteL2UsJE4voRBHY5171",
+                  "toolName": "getPersonSuggestions",
+                  "result": {
+                    "suggestions": [
+                      {
+                        "contentUrl": "https://www.fa-mag.com/news/private-equity-in-the-aviation-sector-is-taking-flight-36136.html?section=66",
+                        "title": "Private Equity In The Aviation Sector Is Taking Flight",
+                        "reason": "This article provides a comprehensive overview of the increasing involvement of private equity in aviation, with a focus on innovative financing strategies indicative of successful ventures.",
+                        "id": "859af58a-8af9-4121-821c-daa9e04ab00c"
+                      },
+                      {
+                        "contentUrl": "https://www.pillsburylaw.com/images/content/1/1/v2/119573/Corporate-Jet-Investor-MK-PC-081018.pdf",
+                        "title": "Recent Tax Law Changes Affecting Private Aircraft Ownership",
+                        "reason": "This PDF document discusses strategies for optimizing tax efficiencies for private aircraft ownership, offering insights particularly relevant to holding companies in the aviation sector.",
+                        "id": "415ae8df-1c81-4718-bd89-3acf0f9d20c1"
+                      },
+                      {
+                        "contentUrl": "https://www.bain.com/insights/industry-insights/private-equity-insights",
+                        "title": "Private Equity Insights",
+                        "reason": "Though not exclusively about aviation, this insight page from Bain & Company offers valuable information on private equity strategies, including risk management and industry-specific trends that might inform aviation sector investments.",
+                        "id": "b850d786-f740-462b-8301-5358c87a74be"
+                      }
+                    ],
+                    "topics": ["private equity in aviation"]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "experimental_providerMetadata": {
+          "openai": {
+            "reasoningTokens": 0,
+            "acceptedPredictionTokens": 0,
+            "rejectedPredictionTokens": 0,
+            "cachedPromptTokens": 0
+          }
+        },
+        "isContinued": false
+      }
+    ]
+  }
+}

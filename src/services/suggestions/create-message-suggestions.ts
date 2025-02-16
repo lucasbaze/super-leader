@@ -2,12 +2,13 @@ import { stripIndents } from 'common-tags';
 
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
+import { $system, $user } from '@/lib/llm/messages';
 import { getPerson, GetPersonResult } from '@/services/person/get-person';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
+import { generateObject } from '@/vendors/ai';
 
-import { callStructuredOpenAI } from './openai-api';
 import { MessageSuggestionsResponseSchema, TMessageSuggestion } from './types';
 
 // Service params interface
@@ -81,19 +82,9 @@ export async function createMessageSuggestions({
     });
 
     try {
-      const response = await callStructuredOpenAI({
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: userPrompt
-          }
-        ],
-        schema: MessageSuggestionsResponseSchema,
-        options: { temperature: 0.7 }
+      const response = await generateObject({
+        messages: [$system(systemPrompt), $user(userPrompt)],
+        schema: MessageSuggestionsResponseSchema
       });
 
       return { data: response.suggestions, error: null };

@@ -82,6 +82,7 @@ We'll add a header
 - [ ] Move supabase from utils/supabase to lib/supabase
 
 - [ ] Need to figure out a way to consistently handle the timezone of the user. For example displaying the date in the correct timezone coming from the server on the client side.
+- [ ] Remove open-ai structuredObject call vendor from create-message-suggestions.ts
 
 ### UI Improvements
 
@@ -89,7 +90,7 @@ We'll add a header
 
 ### Bugs
 
-- [ ] The Bio doesn't update properly in the bio sidebar section
+- [x] ~~_The Bio doesn't update properly in the bio sidebar section_~~ [2025-02-15]
 - [ ] Flash on changing theme from light to dark
 - [ ] Flash on layout from SSR if the resize panels have been moved.
 

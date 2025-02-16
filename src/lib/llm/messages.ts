@@ -1,13 +1,22 @@
-function createMessageFn(role: 'system' | 'user' | 'assistant' | 'developer') {
+import type { CoreMessage, CreateMessage } from 'ai';
+
+import { MESSAGE_ROLE } from '@/lib/messages/constants';
+
+import { dateHandler } from '../dates/helpers';
+import { randomString } from '../utils';
+
+function createMessageFn(role: 'system' | 'user' | 'assistant'): (content: string) => CoreMessage {
   return (content: string) => {
     return {
+      id: randomString(12),
       role,
-      content
+      content,
+      name: role,
+      createdAt: dateHandler().toISOString()
     };
   };
 }
 
-export const $system = createMessageFn('system');
-export const $user = createMessageFn('user');
-export const $assistant = createMessageFn('assistant');
-export const $developer = createMessageFn('developer');
+export const $system = createMessageFn(MESSAGE_ROLE.SYSTEM);
+export const $user = createMessageFn(MESSAGE_ROLE.USER);
+export const $assistant = createMessageFn(MESSAGE_ROLE.ASSISTANT);

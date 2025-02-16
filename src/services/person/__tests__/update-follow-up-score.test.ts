@@ -7,11 +7,6 @@ import { createClient } from '@/utils/supabase/server';
 import { calculateFollowUpScore } from '../calculate-follow-up-score';
 import { ERRORS, updateFollowUpScore } from '../update-follow-up-score';
 
-// Mock the entire OpenAI module
-jest.mock('@/vendors/open-router', () => ({
-  chatCompletion: jest.fn()
-}));
-
 // Mock calculateFollowUpScore
 jest.mock('../calculate-follow-up-score');
 

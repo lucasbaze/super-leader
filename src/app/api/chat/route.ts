@@ -6,10 +6,9 @@ import { z } from 'zod';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
+import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
 import { toError } from '@/lib/errors';
 import { MESSAGE_TYPE } from '@/lib/messages/constants';
-import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
-import { createMessage } from '@/services/messages/create-message';
 import { createClient } from '@/utils/supabase/server';
 
 // Allow streaming responses up to 30 seconds
@@ -58,7 +57,7 @@ export async function POST(req: NextRequest) {
     return apiResponse.unauthorized(toError(authResult.error));
   }
 
-  const { messages, personId, personName, groupId, type } = (await req.json()) as ChatRequestBody;
+  const { messages, personId, personName } = (await req.json()) as ChatRequestBody;
 
   const lastMessage = messages.slice(-1)[0];
   const messageData = getDataFromMessage(lastMessage);
@@ -69,17 +68,6 @@ export async function POST(req: NextRequest) {
   
   If an error occurs or a tool returns an error, acknowledge the error to the user and suggest alternative actions or ways to proceed.
   `;
-
-  await createMessage({
-    db: supabase,
-    data: {
-      message: lastMessage,
-      type: type || MESSAGE_TYPE.PERSON,
-      user_id: authResult.data.id,
-      person_id: personId,
-      group_id: groupId
-    }
-  });
 
   const contextualMessages: Message[] = [
     {
@@ -92,33 +80,6 @@ export async function POST(req: NextRequest) {
   const result = streamText({
     model: openai('gpt-4-turbo'),
     messages: contextualMessages,
-    onFinish: async (result) => {
-      console.log('Chat Route: onFinish Messages:', result.response.messages);
-
-      const lastMessage = result.response.messages[result.response.messages.length - 1];
-      if (!lastMessage || lastMessage.role !== 'assistant') {
-        return;
-      }
-
-      try {
-        if (!authResult.data) {
-          throw new Error('Failed to save message: User not found');
-        }
-        // Save the assistant's response
-        await createMessage({
-          db: supabase,
-          data: {
-            message: result.response.messages[result.response.messages.length - 1],
-            type: type || MESSAGE_TYPE.PERSON, // TODO: Update to use the correct type
-            user_id: authResult.data.id,
-            person_id: personId,
-            group_id: groupId
-          }
-        });
-      } catch (error) {
-        console.error('Chat Route: onFinish Error:', error);
-      }
-    },
     tools: {
       [CHAT_TOOLS.CREATE_PERSON]: {
         description: 'Create a new person record with an associated interaction note',

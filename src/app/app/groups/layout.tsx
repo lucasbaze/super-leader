@@ -9,8 +9,8 @@ import { useGroups } from '@/hooks/use-groups';
 export default function GroupLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const { data: groups = [] } = useGroups();
-  const { data: people = [] } = useGroupMembers(params.slug as string);
-  const group = groups.find((g) => g.slug === params.slug);
+  const { data: people = [] } = useGroupMembers(params.id as string);
+  const group = groups.find((g) => g.id === params.id);
 
   if (!group) {
     return <div>Group not found</div>;

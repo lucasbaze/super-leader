@@ -28,7 +28,9 @@ export interface GetGroupsParams {
 export async function getGroups({
   db,
   userId
-}: GetGroupsParams): Promise<TServiceResponse<Omit<Group, 'created_at' | 'user_id'>[]>> {
+}: GetGroupsParams): Promise<
+  TServiceResponse<Omit<Group, 'created_at' | 'user_id' | 'updated_at'>[]>
+> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.GROUPS.MISSING_USER_ID };

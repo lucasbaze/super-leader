@@ -49,7 +49,7 @@ export function PeopleTableV2({
     {
       accessorKey: 'name',
       header: 'Name',
-      size: 250,
+      size: 100,
       enablePinning: true,
       cell: ({ row }) => (
         <div
@@ -162,6 +162,7 @@ export function PeopleTableV2({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
+                      className='border-b'
                       style={{
                         width: cell.column.getSize(),
                         ...getCommonPinningStyles(cell.column)

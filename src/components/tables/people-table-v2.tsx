@@ -1,3 +1,5 @@
+// Working example of column & row pinning. https://github.com/GlebKodrik/table
+
 'use client';
 
 import { CSSProperties } from 'react';
@@ -22,6 +24,8 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Person } from '@/types/database';
+
+// Working example of column & row pinning. https://github.com/GlebKodrik/table
 
 interface TanStackPeopleTableProps {
   people: Person[];

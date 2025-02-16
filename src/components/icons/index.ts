@@ -9,6 +9,7 @@ export {
   Command,
   MapPin,
   Home,
+  ListFilter,
   Frame,
   Gift,
   LifeBuoy,

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { PeopleTable } from '@/components/tables/people-table';
+import { PeopleHeader } from '@/components/people/people-header';
 import { PeopleTableV2 } from '@/components/tables/people-table-v2';
 import { usePeople } from '@/hooks/use-people';
 
@@ -19,12 +19,10 @@ export default function PeoplePage() {
 
   return (
     <div className='absolute inset-0'>
-      <div className='border-b'>
-        <div className='flex h-12 items-center justify-between px-4'>
-          <i>People filtering and viewing actions will go here</i>
-        </div>
+      <div className='mb-4 flex flex-col rounded-t-md border-b bg-background'>
+        <PeopleHeader peopleCount={people.length} />
       </div>
-      <div className='absolute inset-0 top-[48px]'>
+      <div className='absolute inset-0 top-[48px] mt-[1px]'>
         <PeopleTableV2 people={people} onRowClick={handleRowClick} />
       </div>
     </div>

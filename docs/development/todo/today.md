@@ -1,6 +1,10 @@
 ### Feb 16th
 
 - [x] ~~_Fix re-load of the group when people are added to it._~~ [2025-02-16]
+- [ ] Add default chat messages to each of the chats if there aren't any historical messages.
+- [ ] Add a header to the Home, People, and Groups pages.
+- [ ] Remove the notifications view
+- [ ] Attempt the first stab at the home page for suggested "actions" for the day.
 
 ### Feb 15th
 

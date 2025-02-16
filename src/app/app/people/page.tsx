@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { PeopleTable } from '@/components/tables/people-table';
+import { PeopleTableV2 } from '@/components/tables/people-table-v2';
 import { usePeople } from '@/hooks/use-people';
 
 export default function PeoplePage() {
@@ -24,7 +25,7 @@ export default function PeoplePage() {
         </div>
       </div>
       <div className='absolute inset-0 top-[48px]'>
-        <PeopleTable people={people} onRowClick={handleRowClick} />
+        <PeopleTableV2 people={people} onRowClick={handleRowClick} />
       </div>
     </div>
   );

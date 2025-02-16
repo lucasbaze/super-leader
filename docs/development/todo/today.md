@@ -1,7 +1,7 @@
 ### Feb 15th
 
-- [ ] Create local types for the chat messages
-- [ ] Fix any issues with tests, i.e. groups that I've changed.
+- [x] ~~_Create local types for the chat messages_~~ [2025-02-15]
+- [x] ~~_Fix any issues with tests, i.e. groups that I've changed._~~ [2025-02-15]
 - [ ] Get production up with my current people
       This will require a re-look at the import structure.
 

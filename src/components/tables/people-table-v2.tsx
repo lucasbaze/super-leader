@@ -49,12 +49,12 @@ export function PeopleTableV2({
   const columns: ColumnDef<Person>[] = [
     {
       accessorKey: 'name',
-      header: 'Name',
+      header: () => <div className='pl-3'>Name</div>,
       size: 100,
       enablePinning: true,
       cell: ({ row }) => (
         <div
-          className='flex cursor-pointer items-center gap-2'
+          className='flex cursor-pointer items-center gap-2 pl-3'
           onClick={() => onRowClick?.(row.original.id)}>
           <Avatar className='size-6 shrink-0'>
             <AvatarFallback className='text-xs'>{row.original.first_name?.[0]}</AvatarFallback>
@@ -134,11 +134,11 @@ export function PeopleTableV2({
   });
 
   return (
-    <div className='no-scrollbar h-full'>
-      <div className='no-scrollbar h-full overflow-y-auto'>
-        <div className='no-scrollbar overflow-x-auto' style={{ position: 'relative' }}>
+    <div className='h-full'>
+      <div className='h-full overflow-y-auto'>
+        <div className='overflow-x-auto' style={{ position: 'relative' }}>
           <Table
-            className='no-scrollbar border-separate border-spacing-0'
+            className='border-separate border-spacing-0'
             style={{ width: table.getTotalSize() }}>
             <TableHeader>
               <TableRow>

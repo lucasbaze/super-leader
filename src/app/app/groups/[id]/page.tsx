@@ -2,7 +2,8 @@
 
 import { useParams, useRouter } from 'next/navigation';
 
-import { PeopleTable } from '@/components/tables/people-table';
+import { PeopleTableSkeleton } from '@/components/tables/people-table-skeleton';
+import { PeopleTableV2 } from '@/components/tables/people-table-v2';
 import { useGroupMembers } from '@/hooks/use-group-members';
 
 export default function GroupPage() {
@@ -18,12 +19,12 @@ export default function GroupPage() {
   if (error) return <div>Error loading group members</div>;
 
   return (
-    <div className='relative h-full'>
-      <PeopleTable
-        people={people}
-        onRowClick={handleRowClick}
-        emptyMessage='No members found in this group'
-      />
+    <div className='absolute inset-0 top-[48px] mt-[1px]'>
+      {isLoading ? (
+        <PeopleTableSkeleton />
+      ) : (
+        <PeopleTableV2 people={people} onRowClick={handleRowClick} />
+      )}
     </div>
   );
 }

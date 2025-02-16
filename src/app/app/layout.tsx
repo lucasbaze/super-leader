@@ -34,9 +34,11 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             />
           </div>
           <div className='ml-auto flex items-center gap-2'>
-            <OneRing />
-            <TwoRing />
-            <ThreeRing />
+            <div className='mr-6 flex items-center gap-2'>
+              <OneRing />
+              <TwoRing />
+              <ThreeRing />
+            </div>
             <ThemeToggle />
             <NavUser
               user={{

@@ -1,7 +1,6 @@
-// Working example of column & row pinning. https://github.com/GlebKodrik/table
-
 'use client';
 
+// Working example of column & row pinning. https://github.com/GlebKodrik/table
 import { CSSProperties } from 'react';
 
 import {
@@ -24,8 +23,6 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Person } from '@/types/database';
-
-// Working example of column & row pinning. https://github.com/GlebKodrik/table
 
 interface TanStackPeopleTableProps {
   people: Person[];
@@ -137,11 +134,11 @@ export function PeopleTableV2({
   });
 
   return (
-    <div className='h-full'>
-      <div className='h-full overflow-y-auto'>
-        <div className='overflow-x-auto' style={{ position: 'relative' }}>
+    <div className='no-scrollbar h-full'>
+      <div className='no-scrollbar h-full overflow-y-auto'>
+        <div className='no-scrollbar overflow-x-auto' style={{ position: 'relative' }}>
           <Table
-            className='border-separate border-spacing-0'
+            className='no-scrollbar border-separate border-spacing-0'
             style={{ width: table.getTotalSize() }}>
             <TableHeader>
               <TableRow>
@@ -160,7 +157,7 @@ export function PeopleTableV2({
                 )}
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className='no-scrollbar'>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (

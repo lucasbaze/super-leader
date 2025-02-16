@@ -37,12 +37,6 @@ const mainNavItems = [
     isActive: false
   },
   {
-    title: 'Notifications',
-    url: '/app/notifications',
-    icon: Bell,
-    isActive: false
-  },
-  {
     title: 'Saved',
     url: '/app/bookmarks',
     icon: Bookmark,

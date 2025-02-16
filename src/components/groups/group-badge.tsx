@@ -35,7 +35,7 @@ export function GroupBadge({
   );
 
   if (asLink) {
-    return <Link href={`/app/groups/${group.slug}`}>{badge}</Link>;
+    return <Link href={`/app/groups/${group.id}`}>{badge}</Link>;
   }
 
   return badge;

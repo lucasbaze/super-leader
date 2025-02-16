@@ -70,7 +70,7 @@ export function useAddGroupMembers() {
       return json.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['group-members', variables.groupSlug] });
+      queryClient.invalidateQueries({ queryKey: ['group-members', variables.groupId] });
     }
   });
 }

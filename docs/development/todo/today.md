@@ -1,6 +1,6 @@
 ### Feb 16th
 
-- [ ] Fix re-load of the group when people are added to it.
+- [x] ~~_Fix re-load of the group when people are added to it._~~ [2025-02-16]
 
 ### Feb 15th
 

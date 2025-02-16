@@ -86,7 +86,7 @@ We'll add a header
 
 ### UI Improvements
 
-- [ ] Display the "last activity" on the table view of people.
+- [ ] Display the "last activity date" on the table view of people.
 
 ### Bugs
 

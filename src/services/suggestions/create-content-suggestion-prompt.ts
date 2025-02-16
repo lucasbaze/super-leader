@@ -8,7 +8,7 @@ import { GetPersonResult } from '@/services/person/get-person';
 import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
-import { chatCompletion, type ChatCompletionOptions } from '@/vendors/open-router';
+import { generateObject } from '@/vendors/ai';
 
 import {
   SuggestionPromptResponseSchema,
@@ -24,6 +24,12 @@ export const ERRORS = {
       ErrorType.API_ERROR,
       'Failed to create suggestion prompt',
       'Unable to create suggestions at this time'
+    ),
+    PARSE_ERROR: createError(
+      'parse_error',
+      ErrorType.API_ERROR,
+      'Failed to parse response from AI service',
+      'Unable to process suggestions at this time'
     ),
     INVALID_RESPONSE: createError(
       'invalid_response',
@@ -46,7 +52,7 @@ export async function createContentSuggestionPrompt({
   type
 }: TCreateSuggestionPromptParams): Promise<TServiceResponse<TSuggestionPromptResponse>> {
   try {
-    const promptMessages: ChatCompletionOptions['messages'] = [
+    const promptMessages = [
       $system(
         type === 'gift'
           ? buildGiftSuggestionPrompt().prompt
@@ -60,35 +66,31 @@ export async function createContentSuggestionPrompt({
       )
     ];
 
-    const response_format = zodResponseFormat(SuggestionPromptResponseSchema, 'suggestion_prompt');
-
-    const response = await chatCompletion({
+    const response = await generateObject({
       messages: promptMessages,
-      response_format
+      schema: SuggestionPromptResponseSchema
     });
 
     // Add debug logging
     console.log('Suggestions::CreateContentSuggestionAugmentationSystemPrompt::response', response);
 
-    if (!response?.content) {
+    if (!response) {
       return {
         data: null,
         error: { ...ERRORS.PROMPT_CREATION.FAILED, details: response }
       };
     }
 
-    try {
-      const parsedContent = JSON.parse(response.content);
-      return { data: parsedContent, error: null };
-    } catch (error) {
+    const parsedContent = SuggestionPromptResponseSchema.safeParse(response);
+
+    if (!parsedContent.success) {
       return {
         data: null,
-        error: {
-          ...ERRORS.PROMPT_CREATION.INVALID_RESPONSE,
-          details: error
-        }
+        error: { ...ERRORS.PROMPT_CREATION.PARSE_ERROR, details: parsedContent.error }
       };
     }
+
+    return { data: parsedContent.data, error: null };
   } catch (error) {
     return {
       data: null,

@@ -59,7 +59,8 @@ function transformToolInvocations(message: ResponseMessage) {
       if (invocation && typeof invocation === 'object' && invocation.state === 'call') {
         return {
           ...invocation,
-          result: 'unknown'
+          state: 'result',
+          result: 'unknown' // result is required for tool invocations in state of result when sent to the server. These could probably be filtered out in the future?
         };
       }
       return invocation;

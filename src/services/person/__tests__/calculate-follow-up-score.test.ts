@@ -16,11 +16,6 @@ import { createClient } from '@/utils/supabase/server';
 import { calculateFollowUpScore, ERRORS } from '../calculate-follow-up-score';
 import { generateFollowUpScore } from '../generate-follow-up-score';
 
-// Mock the entire OpenAI module
-jest.mock('@/vendors/open-router', () => ({
-  chatCompletion: jest.fn()
-}));
-
 // Mock the generate-follow-up-score module
 jest.mock('../generate-follow-up-score');
 
@@ -81,8 +76,9 @@ describe('calculateFollowUpScore', () => {
     it('should proceed with normal calculation when not birthday', async () => {
       await withTestTransaction(supabase, async (db) => {
         // Create test person with tomorrow's date as birthday
-        const tomorrow = dateHandler().add(1, 'day');
+        const tomorrow = dateHandler().utc().add(1, 'day');
         const birthday = dateHandler()
+          .utc()
           .year(1990)
           .month(tomorrow.month())
           .date(tomorrow.date())
@@ -271,7 +267,7 @@ describe('calculateFollowUpScore', () => {
         });
 
         expect(result.data).toBeNull();
-        expect(result.error).toMatchObject(generateError);
+        expect(result.error?.name).toEqual(ERRORS.CALCULATION.GENERATION_FAILED.name);
       });
     });
   });

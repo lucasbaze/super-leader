@@ -58,9 +58,11 @@ export async function updateFollowUpScore({
     const result = await calculateFollowUpScore({ db, personId });
     if (result.error) return result;
 
+    console.log('Person::UpdateFollowUpScore::Result', result);
+
     const { error } = await db
       .from('person')
-      .update({ follow_up_score: result.data?.score || 0.5 })
+      .update({ follow_up_score: result.data?.score ?? 0.5 })
       .eq('id', personId);
 
     if (error) throw error;

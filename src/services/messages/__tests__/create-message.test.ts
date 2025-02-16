@@ -1,5 +1,4 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Message } from 'ai';
 
 import {
   MESSAGE_ROLE,

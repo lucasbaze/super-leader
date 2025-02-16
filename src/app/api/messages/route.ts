@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import { CoreAssistantMessage, CoreToolMessage, Message } from 'ai';
 import { z } from 'zod';
 
 import { apiResponse } from '@/lib/api-response';

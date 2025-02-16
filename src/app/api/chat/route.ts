@@ -6,9 +6,9 @@ import { z } from 'zod';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
+import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
 import { toError } from '@/lib/errors';
 import { MESSAGE_TYPE } from '@/lib/messages/constants';
-import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
 import { createClient } from '@/utils/supabase/server';
 
 // Allow streaming responses up to 30 seconds

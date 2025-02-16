@@ -1,12 +1,11 @@
 import { stripIndents } from 'common-tags';
-import { zodResponseFormat } from 'openai/helpers/zod';
 
 import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/messages';
 import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
-import { chatCompletion, type ChatCompletionOptions } from '@/vendors/open-router';
+import { generateObject } from '@/vendors/ai';
 
 import { ContentSuggestionsResponseSchema, SuggestionSchema, TSuggestion } from './types';
 
@@ -24,6 +23,12 @@ export const ERRORS = {
       ErrorType.API_ERROR,
       'Invalid response format from AI service',
       'Unable to process suggestions at this time'
+    ),
+    PARSE_ERROR: createError(
+      'parse_error',
+      ErrorType.API_ERROR,
+      'Failed to parse response from AI service',
+      'Unable to process suggestions at this time'
     )
   }
 };
@@ -40,38 +45,32 @@ export async function createContentSuggestions({
   type
 }: TCreateContentSuggestionsParams): Promise<TServiceResponse<TSuggestion[]>> {
   try {
-    const messages: ChatCompletionOptions['messages'] = [
+    const messages = [
       $system(
         type === 'gift' ? buildGiftSuggestionPrompt().prompt : buildContentSuggestionPrompt().prompt
       ),
       $user(buildContentSuggestionUserPrompt(userContent, suggestions).prompt)
     ];
 
-    const plugins = [
-      {
-        id: 'web',
-        max_results: 3
-      }
-    ];
-
-    const response_format = zodResponseFormat(ContentSuggestionsResponseSchema, 'suggestions');
-
-    const response = await chatCompletion({
+    const response = await generateObject({
       messages,
-      response_format,
-      plugins
+      schema: ContentSuggestionsResponseSchema,
+      webResults: 3
     });
 
-    if (!response?.content) {
-      return { data: null, error: ERRORS.CONTENT_CREATION.FAILED };
+    if (!response) {
+      return {
+        data: null,
+        error: { ...ERRORS.CONTENT_CREATION.INVALID_RESPONSE, details: response }
+      };
     }
 
-    const parsedContent = ContentSuggestionsResponseSchema.safeParse(JSON.parse(response.content));
+    const parsedContent = ContentSuggestionsResponseSchema.safeParse(response);
 
     if (!parsedContent.success) {
       return {
         data: null,
-        error: { ...ERRORS.CONTENT_CREATION.INVALID_RESPONSE, details: parsedContent.error }
+        error: { ...ERRORS.CONTENT_CREATION.PARSE_ERROR, details: parsedContent.error }
       };
     }
 
@@ -115,6 +114,7 @@ const buildGiftSuggestionPrompt = () => ({
   - Include a mix of price ranges
   - Provide specific product suggestions with links
   - Explain why each gift would be meaningful
+  - Be very specific about the specific gift to assist with web search and finding the gift 
   
   RETURN JSON IN THIS FORMAT:
     {

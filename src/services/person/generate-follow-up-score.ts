@@ -1,5 +1,4 @@
 import { stripIndents } from 'common-tags';
-import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 
 import { createError } from '@/lib/errors';
@@ -8,7 +7,7 @@ import { TPersonGroup } from '@/types/custom';
 import { Interaction, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
-import { chatCompletion, type ChatCompletionOptions } from '@/vendors/open-router';
+import { generateObject } from '@/vendors/ai';
 
 // Response schema
 export const FollowUpScoreSchema = z.object({
@@ -48,23 +47,21 @@ export async function generateFollowUpScore({
   groups
 }: TGenerateFollowUpScoreParams): Promise<TServiceResponse<TFollowUpScore>> {
   try {
-    const messages: ChatCompletionOptions['messages'] = [
+    const messages = [
       $system(buildSystemPrompt().prompt),
       $user(buildUserPrompt({ person, interactions, groups }).prompt)
     ];
 
-    const response_format = zodResponseFormat(FollowUpScoreSchema, 'follow_up_score');
-
-    const response = await chatCompletion({
+    const response = await generateObject({
       messages,
-      response_format
+      schema: FollowUpScoreSchema
     });
 
-    if (!response?.content) {
+    if (!response) {
       return { data: null, error: ERRORS.GENERATION.FAILED };
     }
 
-    const parsedContent = FollowUpScoreSchema.safeParse(JSON.parse(response.content));
+    const parsedContent = FollowUpScoreSchema.safeParse(response);
 
     if (!parsedContent.success) {
       return {
@@ -110,6 +107,12 @@ const buildSystemPrompt = () => ({
 
     Event based guidelines:
     - If there is an event that is suggested to be happening soon, then follow up should be higher weighted to today to build relationsihp momentum. This could include things such as children's birthdays, anniversaries, concerts, etc... anything that is temporal or time sensitive.
+
+    Interactions:
+    - Make sure to read the contents of the recent interactions and look for notes that suggest communication took place and the interaction isn't just a note.
+    - If the interaction is just a note, even if it was a recent note, then that specific interaction does not affect the score.
+    - If the interactions suggest a recent follow up took place, then the score can lower. 
+    - If the interaction was very recent, such as today, then the score can basically be 0.
 
     Return your response as a JSON object with:
     - score: number between 0-1

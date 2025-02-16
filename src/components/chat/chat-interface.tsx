@@ -3,7 +3,8 @@
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { CreateMessage, useChat } from 'ai/react';
+import { Message } from 'ai';
+import { useChat } from 'ai/react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -12,11 +13,10 @@ import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
 import { useUpdateSuggestion } from '@/hooks/use-suggestions';
+import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
 import { dateHandler } from '@/lib/dates/helpers';
 import { $user } from '@/lib/llm/messages';
-import { MESSAGE_ROLE, MESSAGE_TYPE, TMessageType } from '@/lib/messages/constants';
-import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
-import { TChatMessage } from '@/services/messages/create-message';
+import { MESSAGE_TYPE, TMessageType } from '@/lib/messages/constants';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
@@ -64,7 +64,6 @@ const getMessageParams = (type: TMessageType, id: string) => {
 export function ChatInterface() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-  const initialScrollRef = useRef(false);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const [pendingAction, setPendingAction] = useState<{
     type: string;
@@ -151,8 +150,7 @@ export function ChatInterface() {
       const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
 
       // Update map with any new messages, automatically handling duplicates
-      // @ts-ignore
-      newMessages.forEach((msg) => {
+      newMessages.forEach((msg: Message) => {
         messageMap.set(msg.id, msg);
       });
 
@@ -213,11 +211,10 @@ export function ChatInterface() {
   // Set initial scroll position to bottom when messages first load
   useEffect(() => {
     // @ts-ignore
-    if (messagesData?.messages && !initialScrollRef.current) {
+    if (messagesData?.messages) {
       requestAnimationFrame(() => {
         if (messagesContainerRef.current) {
           messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-          initialScrollRef.current = true;
         }
       });
     }
@@ -269,13 +266,13 @@ export function ChatInterface() {
       const messageContent = input;
       setInput('');
 
-      // TODO: Make sure that we handle the other types of messages
       await createMessage.mutateAsync({
         ...getMessageParams(chatType, chatId),
         message: $user(messageContent)
       });
 
       // Send message to AI
+      // TODO: Why does $user(messageContent) throw a type error?
       await append({
         content: messageContent,
         role: 'user'

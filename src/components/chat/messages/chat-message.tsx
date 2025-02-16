@@ -1,23 +1,15 @@
 import { useEffect, useRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
-import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
-import { CHAT_TOOLS } from '@/lib/tools/chat-tools';
-import { cn } from '@/lib/utils';
-import {
-  TContentSuggestionWithId,
-  TGetContentSuggestionsForPersonResponse,
-  TMessageSuggestion
-} from '@/services/suggestions/types';
-import { Maybe } from '@/types/utils';
+import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
+import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
 
 import { ActionCard } from '../cards/action-card';
 import { MessageCard } from '../cards/message-card';
 import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
+import { MarkdownMessage } from './markdown-message';
 
 interface ChatMessageProps {
   message: Message;
@@ -72,6 +64,7 @@ export function ChatMessage({
     if (isLoading && messageRef.current && containerRef?.current) {
       messageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+    // TODO: add isLastMessage?
   }, [isLoading]);
 
   if (message.role === 'user') {
@@ -88,43 +81,7 @@ export function ChatMessage({
     const messageContent = getMessageContent(message);
     const content = messageContent !== '' && (
       <div className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
-        <ReactMarkdown
-          components={{
-            p: ({ children }) => <p className='mb-2 last:mb-0'>{children}</p>,
-            code: ({ node, className, children, ...props }) => {
-              const match = /language-(\w+)/.exec(className || '');
-
-              return match ? (
-                <SyntaxHighlighter
-                  // @ts-ignore
-                  style={dark}
-                  language={match[1]}
-                  PreTag='div'
-                  className='rounded-md'
-                  {...props}>
-                  {String(children).replace(/\n$/, '')}
-                </SyntaxHighlighter>
-              ) : (
-                <code
-                  className={cn(
-                    'bg-muted-foreground/20 rounded px-1.5 py-0.5 font-mono text-sm',
-                    className
-                  )}
-                  {...props}>
-                  {children}
-                </code>
-              );
-            },
-            ul: ({ children }) => <ul className='mb-2 list-disc pl-4 last:mb-0'>{children}</ul>,
-            ol: ({ children }) => <ol className='mb-2 list-decimal pl-4 last:mb-0'>{children}</ol>,
-            li: ({ children }) => <li className='mb-1 last:mb-0'>{children}</li>,
-            h3: ({ children }) => (
-              <h3 className='mb-2 text-base font-medium last:mb-0'>{children}</h3>
-            ),
-            h4: ({ children }) => <h4 className='mb-2 text-sm font-medium last:mb-0'>{children}</h4>
-          }}>
-          {message.content}
-        </ReactMarkdown>
+        <MarkdownMessage content={messageContent} />
       </div>
     );
 
@@ -141,7 +98,7 @@ export function ChatMessage({
         );
       }
 
-      // Handle successful tool invocations
+      // Handle successful user dependent tool invocations
       if (toolInvocation.toolName === CHAT_TOOLS.CREATE_PERSON) {
         return (
           <div
@@ -156,10 +113,25 @@ export function ChatMessage({
           </div>
         );
       }
-      if (toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
-        // @ts-expect-error
-        const result = toolInvocation.result as Maybe<TGetContentSuggestionsForPersonResponse>;
-        const suggestions = result?.suggestions;
+
+      if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
+        return (
+          <div key={toolInvocation.toolCallId} className={'max-w-[90%] break-words text-sm'}>
+            <ActionCard
+              interaction={toolInvocation.args}
+              onConfirm={handleConfirmAction}
+              onCancel={handleCancelAction}
+              completed={toolInvocation.state === 'result'}
+            />
+          </div>
+        );
+      }
+      // Handle auto execute tool invocations (state === 'result' is required for type inference)
+      if (
+        toolInvocation.state === 'result' &&
+        toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS
+      ) {
+        const suggestions = toolInvocation.result?.suggestions;
         if (!suggestions) return null;
         return (
           <>
@@ -176,23 +148,13 @@ export function ChatMessage({
           </>
         );
       }
-      if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
-        return (
-          <div key={toolInvocation.toolCallId} className={'max-w-[90%] break-words text-sm'}>
-            <ActionCard
-              interaction={toolInvocation.args}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
-              // @ts-expect-error
-              completed={toolInvocation.state === 'result' || toolInvocation.result === 'unknown'}
-            />
-          </div>
-        );
-      }
-      if (toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS) {
+
+      if (
+        toolInvocation.state === 'result' &&
+        toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS
+      ) {
         return (
           <>
-            {/* @ts-ignore */}
             {toolInvocation.result?.map((result: TMessageSuggestion, index: number) => (
               <MessageCard key={index} message={result.text} tone={result.tone} />
             ))}

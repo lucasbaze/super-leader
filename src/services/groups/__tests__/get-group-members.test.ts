@@ -214,7 +214,8 @@ describe('getGroupMembers service', () => {
         const result = await getGroupMembers({
           db,
           userId: testUser.id,
-          id: randomUUID()
+          // @ts-expect-error - This is a test
+          id: null
         });
 
         expect(result.error).toBeDefined();

@@ -37,6 +37,10 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
   return <h3 className='mb-4 border-b pb-2 text-lg font-medium'>{children}</h3>;
 }
 
+function nullToEmpty(value: string | null | undefined): string {
+  return value ?? '';
+}
+
 export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps) {
   const form = useForm<TPersonEditFormData>({
     resolver: zodResolver(personEditSchema),
@@ -46,23 +50,23 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
         id: method.id,
         type: method.type as 'email' | 'phone',
         value: method.value,
-        label: method.label || undefined,
+        label: method.label || '',
         is_primary: method.is_primary || false
       })),
       addresses: (data.addresses || []).map((address) => ({
         id: address.id,
-        street: address.street,
-        city: address.city,
-        state: address.state || undefined,
-        postal_code: address.postal_code || undefined,
-        country: address.country,
-        label: address.label || undefined,
+        street: nullToEmpty(address.street),
+        city: nullToEmpty(address.city),
+        state: nullToEmpty(address.state),
+        postal_code: nullToEmpty(address.postal_code),
+        country: nullToEmpty(address.country),
+        label: nullToEmpty(address.label),
         is_primary: address.is_primary || false
       })),
       websites: (data.websites || []).map((website) => ({
         id: website.id,
         url: website.url,
-        label: website.label || undefined
+        label: website.label || ''
       }))
     },
     mode: 'onChange'
@@ -109,6 +113,17 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
     } catch (error) {
       console.error('Submit failed:', error);
     }
+  };
+
+  // Update the address append function
+  const emptyAddress = {
+    street: '',
+    city: '',
+    postal_code: '',
+    country: '',
+    state: '',
+    label: '',
+    is_primary: false
   };
 
   return (
@@ -301,15 +316,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
             variant='outline'
             size='sm'
             className='mt-4'
-            onClick={() =>
-              appendAddress({
-                street: '',
-                city: '',
-                postal_code: '',
-                country: '',
-                is_primary: false
-              })
-            }>
+            onClick={() => appendAddress(emptyAddress)}>
             <Plus className='mr-2 size-4' />
             Add Address
           </Button>

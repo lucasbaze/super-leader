@@ -1,3 +1,7 @@
+### Feb 16th
+
+- [ ] Fix re-load of the group when people are added to it.
+
 ### Feb 15th
 
 - [x] ~~_Create local types for the chat messages_~~ [2025-02-15]

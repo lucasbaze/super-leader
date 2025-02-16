@@ -137,3 +137,12 @@ The reason would be for further AI intelligence in the future. Could also re-loa
 - [ ] Add a "search" method that the AI can call automatically if needed to perform a particular action.
 
 Question: Does the returned ID need to be passed to the next request directly?
+
+- [ ] Add "companies" tables that can be stored alongside the people.
+
+This is helpful to see company history and company changes over time.
+
+- [ ] AI business card import
+
+Take a picture of a business card and upload it. The AI will be able to extract the information from the business card and add it to the person's profile.
+We could also suggest possible connections or intro's, groups to add them to, or even immediate content / connection suggestions, if there are any accompanying notes.

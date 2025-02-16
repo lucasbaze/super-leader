@@ -1,11 +1,6 @@
 # Superleader
 
-## Development
-
-1. Clone the repo
-2. Run `yarn install`
-3. Start Supabase with Docker running locally
-4. Run `yarn dev`
+Superleader is a platform to help you get, keep, and grow your network. This is the next.js implementation of the platform.
 
 ### What's inside?
 
@@ -94,3 +89,11 @@ or if you just want to apply the last migration that was added
 > npx supabase link 
 Link to the test database for testing purposes
 > npx supabase db push 
+
+
+## Development
+
+1. Clone the repo
+2. Run `yarn install`
+3. Start Supabase with Docker running locally
+4. Run `yarn dev`

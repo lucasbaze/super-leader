@@ -25,6 +25,7 @@ Developer Experience (DX)
 - All icons should come from the `@/components/icons` directory.
 
 - Use @/lib/dates for dealing with dates and timezones
+- Use dateHandler method instead of new Date(). Want to use a standard interface for date management
 
 **API Routes**
 

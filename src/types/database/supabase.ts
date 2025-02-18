@@ -375,6 +375,56 @@ export type Database = {
           },
         ]
       }
+      task_suggestion: {
+        Row: {
+          completed_at: string | null
+          content: Json
+          created_at: string
+          end_at: string | null
+          id: string
+          person_id: string
+          skipped_at: string | null
+          snoozed_at: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          content: Json
+          created_at?: string
+          end_at?: string | null
+          id?: string
+          person_id: string
+          skipped_at?: string | null
+          snoozed_at?: string | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          content?: Json
+          created_at?: string
+          end_at?: string | null
+          id?: string
+          person_id?: string
+          skipped_at?: string | null
+          snoozed_at?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_suggestion_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "person"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       websites: {
         Row: {
           created_at: string

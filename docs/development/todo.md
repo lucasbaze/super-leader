@@ -146,3 +146,7 @@ This is helpful to see company history and company changes over time.
 
 Take a picture of a business card and upload it. The AI will be able to extract the information from the business card and add it to the person's profile.
 We could also suggest possible connections or intro's, groups to add them to, or even immediate content / connection suggestions, if there are any accompanying notes.
+
+## From Production Usage
+
+- [ ] A way to "see" all of the recently added people. This does 2 things: Let's me know if I did indeed at a person I'm thinking about, and 2 let's me see if there are people that I should prioritize today... (though this should be suggested by the AI)

@@ -6,6 +6,7 @@ import { randomString } from '@/lib/utils';
 
 import { seedGroups } from './groups';
 import { seedPeople } from './people';
+import { seedTaskSuggestions } from './task-suggestions';
 
 // Load environment variables
 config({ path: resolve(__dirname, '../../.env.local') });
@@ -27,13 +28,14 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 async function main() {
   try {
     // Clean existing data
-    await supabase.from('messages').delete().neq('id', '');
-    await supabase.from('group_member').delete().neq('id', '');
-    await supabase.from('group').delete().neq('id', '');
-    await supabase.from('person').delete().neq('id', '');
-    await supabase.from('addresses').delete().neq('id', '');
-    await supabase.from('contact_methods').delete().neq('id', '');
-    await supabase.from('websites').delete().neq('id', '');
+    // await supabase.from('messages').delete().neq('id', '');
+    // await supabase.from('group_member').delete().neq('id', '');
+    // await supabase.from('group').delete().neq('id', '');
+    // await supabase.from('task_suggestion').delete().neq('id', '');
+    // await supabase.from('person').delete().neq('id', '');
+    // await supabase.from('addresses').delete().neq('id', '');
+    // await supabase.from('contact_methods').delete().neq('id', '');
+    // await supabase.from('websites').delete().neq('id', '');
 
     // Create a test user
     const { data: user, error: userError } = await supabase.auth.admin.createUser({
@@ -53,6 +55,9 @@ async function main() {
 
     // Seed groups and group memberships
     await seedGroups({ supabase, userId });
+
+    // Seed task suggestions
+    await seedTaskSuggestions({ supabase, userId });
 
     console.log('Seeding completed successfully');
   } catch (error) {

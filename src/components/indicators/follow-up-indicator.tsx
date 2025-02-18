@@ -91,10 +91,10 @@ export function FollowUpIndicator({
       <PopoverTrigger asChild disabled={isPending} className='cursor-pointer'>
         {indicator}
       </PopoverTrigger>
-      <PopoverContent className='w-80'>
+      <PopoverContent className='w-80 bg-background' sideOffset={5} style={{ zIndex: 1000 }}>
         <div className='space-y-4'>
           <div className='flex items-center justify-between'>
-            <h4 className='font-medium'>Override Follow-up</h4>
+            <h4 className='font-medium'>Follow-up</h4>
           </div>
           <div className='flex items-center gap-4'>
             <div className='flex-1'>
@@ -123,7 +123,7 @@ export function FollowUpIndicator({
             />
           </div>
           <p className='text-sm text-muted-foreground'>
-            Manually set the follow up indicator for now. The AI will automatically update this over
+            Manually set the follow up indicator for now. Superleader will auto update this over
             time.
           </p>
         </div>

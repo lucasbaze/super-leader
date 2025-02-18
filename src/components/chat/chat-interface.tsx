@@ -136,7 +136,6 @@ export function ChatInterface() {
     ...getMessageParams(chatType, chatId),
     limit: 10
   });
-  console.log('messagesData', messagesData);
 
   // Set saved messages
   useEffect(() => {

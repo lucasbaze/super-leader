@@ -1,3 +1,4 @@
+// TODO: Move to service types
 import { Group, Person } from '../database';
 
 export type SimpleSearchPeopleResult = Pick<

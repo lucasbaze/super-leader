@@ -2,6 +2,7 @@
 
 import { HomeHeader } from '@/components/home/home-header';
 import { TaskSuggestionCard } from '@/components/home/task-suggestion-card';
+import { TaskSuggestionListItem } from '@/components/home/task-suggestion-list-item';
 import { useTasks } from '@/hooks/use-tasks';
 
 export default function HomePage() {
@@ -26,7 +27,7 @@ export default function HomePage() {
           ) : (
             <div className='space-y-4'>
               {tasks.map((task) => (
-                <TaskSuggestionCard key={task.id} task={task} />
+                <TaskSuggestionListItem key={task.id} task={task} />
               ))}
             </div>
           )}

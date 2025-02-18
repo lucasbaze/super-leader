@@ -31,7 +31,7 @@ export const TaskSuggestionCard = ({ task }: { task: GetTaskSuggestionResult }) 
             </Avatar>
             <div>
               <Link
-                href={`/network/${task.person.id}`}
+                href={`/app/person/${task.person.id}`}
                 className='group/link inline-flex items-center gap-2'>
                 <CardTitle className='text-lg transition-colors group-hover/link:text-purple-600'>
                   {`${task.person.first_name} ${task.person.last_name}`}

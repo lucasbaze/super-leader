@@ -14,6 +14,7 @@ import {
   UserCog,
   Users
 } from '@/components/icons';
+import { TASK_TYPES } from '@/lib/tasks/task-types';
 
 import { TaskSuggestionCard } from './task-suggestion-card';
 
@@ -200,92 +201,138 @@ const mockData = [
   }
 ];
 
-export const Introduction: Story = {
-  args: {
-    action: mockData[3]
-  }
-};
+// export const Introduction: Story = {
+//   args: {
+//     action: mockData[3]
+//   }
+// };
 
 export const Birthday: Story = {
   args: {
-    action: mockData[4]
+    // @ts-expect-error - This is a mock
+    task: {
+      id: '1',
+      type: TASK_TYPES.BIRTHDAY_REMINDER,
+      content: {
+        action: 'Send birthday wishes',
+        context: "John's birthday is coming up!",
+        suggestion:
+          "Don't forget to wish John a happy birthday! Consider sending a thoughtful message or gift."
+      },
+      end_at: new Date().toISOString(),
+      person: {
+        id: '1',
+        first_name: 'John',
+        last_name: 'Doe'
+      }
+    }
   }
 };
 
-export const Call: Story = {
-  args: {
-    action: mockData[0]
-  }
-};
+// export const Call: Story = {
+//   args: {
+//     action: mockData[0]
+//   }
+// };
 
-export const ZoomMeeting: Story = {
-  args: {
-    action: mockData[1]
-  }
-};
+// export const ZoomMeeting: Story = {
+//   args: {
+//     action: mockData[1]
+//   }
+// };
 
-export const EmailReply: Story = {
-  args: {
-    action: mockData[2]
-  }
-};
+// export const EmailReply: Story = {
+//   args: {
+//     action: mockData[2]
+//   }
+// };
 
 export const ProfileUpdate: Story = {
   args: {
-    action: mockData[5]
+    // @ts-expect-error - This is a mock
+    task: {
+      id: '2',
+      type: TASK_TYPES.PROFILE_UPDATE,
+      content: {
+        action: 'Update profile information',
+        context: 'Missing key information',
+        suggestion: 'Add current role and company information to better maintain the relationship.'
+      },
+      end_at: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+      person: {
+        id: '2',
+        first_name: 'Jane',
+        last_name: 'Smith'
+      }
+    }
   }
 };
 
-export const ContentShare: Story = {
-  args: {
-    action: mockData[6]
-  }
-};
+// export const ContentShare: Story = {
+//   args: {
+//     action: mockData[6]
+//   }
+// };
 
-export const NetworkingEvent: Story = {
-  args: {
-    action: mockData[7]
-  }
-};
+// export const NetworkingEvent: Story = {
+//   args: {
+//     action: mockData[7]
+//   }
+// };
 
-export const SocialEngagement: Story = {
-  args: {
-    action: mockData[8]
-  }
-};
+// export const SocialEngagement: Story = {
+//   args: {
+//     action: mockData[8]
+//   }
+// };
 
-export const Reconnect: Story = {
-  args: {
-    action: mockData[9]
-  }
-};
+// export const Reconnect: Story = {
+//   args: {
+//     action: mockData[9]
+//   }
+// };
 
-export const NetworkInsight: Story = {
-  args: {
-    action: mockData[10]
-  }
-};
+// export const NetworkInsight: Story = {
+//   args: {
+//     action: mockData[10]
+//   }
+// };
 
-export const FollowUpReminder: Story = {
-  args: {
-    action: mockData[11]
-  }
-};
+// export const FollowUpReminder: Story = {
+//   args: {
+//     action: mockData[11]
+//   }
+// };
 
-export const HardReminder: Story = {
-  args: {
-    action: mockData[12]
-  }
-};
+// export const HardReminder: Story = {
+//   args: {
+//     action: mockData[12]
+//   }
+// };
 
 export const SuggestedReminder: Story = {
   args: {
-    action: mockData[13]
+    // @ts-expect-error - This is a mock
+    task: {
+      id: '3',
+      type: TASK_TYPES.SUGGESTED_REMINDER,
+      content: {
+        action: 'Follow up on meeting',
+        context: 'Recent discussion follow-up',
+        suggestion: 'Schedule a follow-up meeting to discuss project progress.'
+      },
+      end_at: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
+      person: {
+        id: '3',
+        first_name: 'Alice',
+        last_name: 'Johnson'
+      }
+    }
   }
 };
 
-export const SuggestedReminder2: Story = {
-  args: {
-    action: mockData[14]
-  }
-};
+// export const SuggestedReminder2: Story = {
+//   args: {
+//     action: mockData[14]
+//   }
+// };

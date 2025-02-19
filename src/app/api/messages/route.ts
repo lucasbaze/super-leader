@@ -11,11 +11,18 @@ import { getMessages } from '@/services/messages/get-messages';
 import { createClient } from '@/utils/supabase/server';
 
 const getMessagesSchema = z.object({
-  type: z.enum([MESSAGE_TYPE.PERSON, MESSAGE_TYPE.GROUP, MESSAGE_TYPE.HOME, MESSAGE_TYPE.NETWORK]),
+  type: z.enum([
+    MESSAGE_TYPE.PERSON,
+    MESSAGE_TYPE.GROUP,
+    MESSAGE_TYPE.HOME,
+    MESSAGE_TYPE.NETWORK,
+    MESSAGE_TYPE.PEOPLE
+  ]),
   limit: z.coerce.number().optional(),
   cursor: z.string().optional(),
   personId: z.string().optional(),
-  groupId: z.string().optional()
+  groupId: z.string().optional(),
+  path: z.string()
 });
 
 export async function GET(request: NextRequest) {
@@ -34,7 +41,7 @@ export async function GET(request: NextRequest) {
       return apiResponse.validationError(toError(validationResult.error));
     }
 
-    const { type, limit, cursor, personId, groupId } = validationResult.data;
+    const { type, limit, cursor, personId, groupId, path } = validationResult.data;
 
     const result = await getMessages({
       db: supabase,
@@ -43,8 +50,10 @@ export async function GET(request: NextRequest) {
       limit,
       cursor,
       personId,
-      groupId
+      groupId,
+      path
     });
+    console.log('get messages result', result.data?.messages);
 
     if (result.error) {
       return apiResponse.error(result.error);

@@ -120,7 +120,8 @@ export function ChatInterface() {
     hasNextPage
   } = useMessages({
     ...getMessageParams(chatType, chatId),
-    limit: 10
+    limit: 10,
+    path: pathname
   });
 
   // Set saved messages
@@ -129,27 +130,20 @@ export function ChatInterface() {
     // @ts-ignore
     const newMessages = messagesData?.messages;
     if (!newMessages?.length) {
-      // Set the default message that should be displayed to the user.
-      setMessages(() => {
-        return [
-          {
-            id: 'default',
-            content: 'You are looking at your group. Let me know how I can help.',
-            role: 'assistant' as const
-          }
-        ];
-      });
       return;
     }
 
     setMessages((prevMessages) => {
       // Create a Map for O(1) lookups, using most recent version of each message
       const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
+      console.log('messageMap', messageMap);
 
       // Update map with any new messages, automatically handling duplicates
       newMessages.forEach((msg: Message) => {
         messageMap.set(msg.id, msg);
       });
+
+      console.log('newMessages', newMessages);
 
       // Convert map values back to array and sort once
       return Array.from(messageMap.values()).sort((a, b) =>

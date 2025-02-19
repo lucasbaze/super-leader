@@ -11,6 +11,7 @@ type UseMessagesParams = {
   personId?: string;
   groupId?: string;
   limit?: number;
+  path: string;
 };
 
 async function fetchMessages({
@@ -18,10 +19,12 @@ async function fetchMessages({
   personId,
   groupId,
   cursor,
-  limit = 10
+  limit = 10,
+  path
 }: UseMessagesParams & { cursor?: string }): Promise<TGetMessagesResponse> {
   const params = new URLSearchParams({
     type,
+    path,
     ...(limit && { limit: limit.toString() }),
     ...(cursor && { cursor }),
     ...(personId && { personId }),
@@ -37,11 +40,11 @@ async function fetchMessages({
   return json.data;
 }
 
-export function useMessages({ type, personId, groupId, limit }: UseMessagesParams) {
+export function useMessages({ type, personId, groupId, limit, path }: UseMessagesParams) {
   return useInfiniteQuery({
-    queryKey: ['messages', { type, personId, groupId }],
+    queryKey: ['messages', { type, personId, groupId, path }],
     queryFn: ({ pageParam }) =>
-      fetchMessages({ type, personId, groupId, limit, cursor: pageParam }),
+      fetchMessages({ type, personId, groupId, limit, path, cursor: pageParam }),
     initialPageParam: undefined,
     // @ts-ignore TODO: Investigate why this is throwing an overload error on the types?
     getNextPageParam: (lastPage) => lastPage.nextCursor,

@@ -1,5 +1,3 @@
-import { MESSAGE_TYPE } from '../messages/constants';
-
 // Define route parameter types
 type PersonIdParam = { id: string };
 type GroupIdParam = { id: string };
@@ -64,10 +62,12 @@ export const routes = {
 
 // Path matching helpers
 export const isPath = {
+  home: (pathname: string) => pathname === routes.home(),
   person: (pathname: string) => pathname.startsWith(routes.person.root()),
   group: (pathname: string) => pathname.startsWith(routes.groups.root()),
   network: (pathname: string) => pathname.startsWith(routes.network.root()),
-  people: (pathname: string) => pathname.startsWith(routes.people.root())
+  people: (pathname: string) => pathname.startsWith(routes.people.root()),
+  bookmarks: (pathname: string) => pathname.startsWith(routes.bookmarks.root())
 };
 
 // Static routes for direct use

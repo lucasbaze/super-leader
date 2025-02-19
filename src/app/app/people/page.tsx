@@ -6,13 +6,14 @@ import { PeopleHeader } from '@/components/people/people-header';
 import { PeopleTableSkeleton } from '@/components/tables/people-table-skeleton';
 import { PeopleTableV2 } from '@/components/tables/people-table-v2';
 import { usePeople } from '@/hooks/use-people';
+import { routes } from '@/lib/routes';
 
 export default function PeoplePage() {
   const router = useRouter();
   const { data: people = [], isLoading, error } = usePeople();
 
   const handleRowClick = (personId: string) => {
-    router.push(`/app/person/${personId}`);
+    router.push(routes.person.byId({ id: personId }));
   };
 
   if (error) return <div>Error loading people</div>;

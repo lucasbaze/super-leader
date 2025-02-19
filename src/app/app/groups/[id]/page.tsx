@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { PeopleTableSkeleton } from '@/components/tables/people-table-skeleton';
 import { PeopleTableV2 } from '@/components/tables/people-table-v2';
 import { useGroupMembers } from '@/hooks/use-group-members';
+import { routes } from '@/lib/routes';
 
 export default function GroupPage() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function GroupPage() {
   const { data: people = [], isLoading, error } = useGroupMembers(params.id as string);
 
   const handleRowClick = (personId: string) => {
-    router.push(`/app/person/${personId}`);
+    router.push(routes.person.byId({ id: personId }));
   };
 
   if (isLoading) return <div>Loading...</div>;

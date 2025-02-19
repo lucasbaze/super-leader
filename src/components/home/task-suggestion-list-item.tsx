@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTaskDateDisplay } from '@/lib/dates/task-dates';
+import { routes } from '@/lib/routes';
 import { TASK_METADATA } from '@/lib/tasks/task-meta';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
@@ -14,7 +15,7 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
 
   return (
     <Link
-      href={`/app/person/${task.person.id}`}
+      href={routes.person.byId({ id: task.person.id })}
       className='group flex items-center justify-between border-b px-4 py-3 hover:bg-purple-50/50'>
       {/* Left section with avatar and details */}
       <div className='flex items-center gap-3'>

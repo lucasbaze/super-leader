@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { useCreateGroup } from '@/hooks/use-groups';
 import { useSimpleSearchPeople } from '@/hooks/use-simple-search-people';
+import { routes } from '@/lib/routes';
 
 interface CreateGroupSheetProps {
   open: boolean;
@@ -58,7 +59,7 @@ export function CreateGroupSheet({ open, onOpenChange }: CreateGroupSheetProps) 
       setSelectedPersonIds([]);
 
       // Navigate to the new group
-      router.push(`/app/groups/${group.slug}`);
+      router.push(routes.groups.byId({ id: group.id }));
     } catch (error) {
       toast.error('Failed to create group');
     }

@@ -14,23 +14,24 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { useGroups } from '@/hooks/use-groups';
+import { routes } from '@/lib/routes';
 
 const CORE_GROUPS = [
   {
     title: 'Inner 5',
-    url: '/app/groups/inner-5',
+    url: routes.groups.byId({ id: 'inner-5' }),
     slug: 'inner-5',
     icon: OneRing
   },
   {
     title: 'Central 50',
-    url: '/app/groups/central-50',
+    url: routes.groups.byId({ id: 'central-50' }),
     slug: 'central-50',
     icon: TwoRing
   },
   {
     title: 'Strategic 100',
-    url: '/app/groups/strategic-100',
+    url: routes.groups.byId({ id: 'strategic-100' }),
     slug: 'strategic-100',
     icon: ThreeRing
   }
@@ -49,7 +50,7 @@ export function CoreGroupsNav() {
         const matchingCoreGroup = fetchedGroups.find((g) => g.slug === group.slug);
         return {
           ...group,
-          url: `/app/groups/${matchingCoreGroup?.id}`
+          url: routes.groups.byId({ id: matchingCoreGroup?.id || '' })
         };
       })
     );

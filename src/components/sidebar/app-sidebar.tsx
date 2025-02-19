@@ -16,29 +16,30 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar';
+import { ROUTES } from '@/lib/routes';
 
 const mainNavItems = [
   {
     title: 'Home',
-    url: '/app',
+    url: ROUTES.HOME,
     icon: Home,
     isActive: true
   },
   {
     title: 'People',
-    url: '/app/people',
+    url: ROUTES.PEOPLE,
     icon: CircleUser,
     isActive: false
   },
   {
     title: 'Network',
-    url: '/app/network',
+    url: ROUTES.NETWORK,
     icon: Orbit,
     isActive: false
   },
   {
     title: 'Saved',
-    url: '/app/bookmarks',
+    url: ROUTES.BOOKMARKS,
     icon: Bookmark,
     isActive: false
   }

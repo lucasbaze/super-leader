@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
+import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import type { TPersonGroup } from '@/types/custom';
 
@@ -35,7 +36,7 @@ export function GroupBadge({
   );
 
   if (asLink) {
-    return <Link href={`/app/groups/${group.id}`}>{badge}</Link>;
+    return <Link href={routes.groups.byId({ id: group.id })}>{badge}</Link>;
   }
 
   return badge;

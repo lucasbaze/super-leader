@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
+import { ROUTES } from '@/lib/routes';
 import { Group } from '@/types/database';
 
 interface GroupHeaderProps {
@@ -46,7 +47,7 @@ export function GroupHeader({ group, groupMemberCount }: GroupHeaderProps) {
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
                   <Link
-                    href='/app/groups'
+                    href={ROUTES.GROUPS}
                     className='flex items-center gap-2 text-muted-foreground'>
                     <Users className='size-4' />
                     <span>Groups</span>

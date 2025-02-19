@@ -8,6 +8,7 @@ import { GroupBadge } from '@/components/groups/group-badge';
 import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-score-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { routes } from '@/lib/routes';
 import type { TPersonGroup } from '@/types/custom';
 import type { Person } from '@/types/database';
 
@@ -49,13 +50,13 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
             <TabsTrigger
               value='summary'
               variant='underline'
-              onClick={() => router.push(`/app/person/${person?.id}`)}>
+              onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
               Summary
             </TabsTrigger>
             <TabsTrigger
               value='activity'
               variant='underline'
-              onClick={() => router.push(`/app/person/${person?.id}/activity`)}>
+              onClick={() => router.push(routes.person.activity({ id: person?.id || '' }))}>
               Activity
             </TabsTrigger>
             <TabsTrigger

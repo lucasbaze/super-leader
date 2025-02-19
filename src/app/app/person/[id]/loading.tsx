@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ROUTES } from '@/lib/routes';
 
 export default function PersonLoading() {
   return (
@@ -16,7 +17,7 @@ export default function PersonLoading() {
         <Breadcrumb className='mb-4'>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href='/app/people'>People</BreadcrumbLink>
+              <BreadcrumbLink href={ROUTES.PEOPLE}>People</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

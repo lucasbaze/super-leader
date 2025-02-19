@@ -17,30 +17,16 @@ import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
 import { dateHandler } from '@/lib/dates/helpers';
 import { $user } from '@/lib/llm/messages';
 import { MESSAGE_TYPE, TMessageType } from '@/lib/messages/constants';
+import { routes } from '@/lib/routes';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
+import { getChatType } from './utils';
 
 const getChatParams = (params: any, pathname: string) => {
-  let chatType: TMessageType = MESSAGE_TYPE.HOME;
-  let chatId = 'home';
-
-  if (pathname.includes('/app/person/')) {
-    chatType = MESSAGE_TYPE.PERSON;
-    chatId = params.id as string;
-  } else if (pathname.includes('/app/groups/')) {
-    chatType = MESSAGE_TYPE.GROUP;
-    chatId = params.id as string;
-  } else if (pathname.includes('/app/network/')) {
-    chatType = MESSAGE_TYPE.NETWORK;
-    chatId = 'network';
-  } else if (pathname.includes('/app/people/')) {
-    chatType = MESSAGE_TYPE.PEOPLE;
-    chatId = 'people';
-  }
-
-  return { chatType, chatId };
+  const { type, id } = getChatType(pathname, params.id);
+  return { chatType: type, chatId: id };
 };
 
 const getMessageParams = (type: TMessageType, id: string) => {
@@ -89,13 +75,13 @@ export function ChatInterface() {
 
   const {
     messages,
+    setMessages,
     input,
     setInput,
     handleInputChange,
     isLoading,
     addToolResult,
-    append,
-    setMessages
+    append
   } = useChat({
     api: '/api/chat',
     initialMessages: [],
@@ -142,7 +128,19 @@ export function ChatInterface() {
     // messagesData.messages comes from the useMessages hook which returns a messages array
     // @ts-ignore
     const newMessages = messagesData?.messages;
-    if (!newMessages?.length) return;
+    if (!newMessages?.length) {
+      // Set the default message that should be displayed to the user.
+      setMessages(() => {
+        return [
+          {
+            id: 'default',
+            content: 'You are looking at your group. Let me know how I can help.',
+            role: 'assistant' as const
+          }
+        ];
+      });
+      return;
+    }
 
     setMessages((prevMessages) => {
       // Create a Map for O(1) lookups, using most recent version of each message
@@ -181,7 +179,7 @@ export function ChatInterface() {
             <Button
               variant='outline'
               size='sm'
-              onClick={() => router.push(`/app/person/${result.data?.id}/activity`)}>
+              onClick={() => router.push(routes.person.activity({ id: result.data?.id || '' }))}>
               View Profile
             </Button>
           </div>

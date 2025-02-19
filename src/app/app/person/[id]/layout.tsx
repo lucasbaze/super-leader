@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePerson } from '@/hooks/use-person';
+import { ROUTES } from '@/lib/routes';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
@@ -54,7 +55,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
-                      href='/app/people'
+                      href={ROUTES.PEOPLE}
                       className='flex items-center gap-2 text-muted-foreground'>
                       <Users className='size-4' />
                       <span>People</span>

@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 export function NavUser({
   user
@@ -32,9 +33,11 @@ export function NavUser({
   };
 }) {
   const [isPending, startTransition] = useTransition();
+  const clearAll = useRecentlyViewedStore((state) => state.clearAll);
 
   const handleLogout = () => {
     startTransition(async () => {
+      clearAll();
       await logout();
     });
   };

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTaskDateDisplay } from '@/lib/dates/task-dates';
+import { routes } from '@/lib/routes';
 import { TASK_METADATA } from '@/lib/tasks/task-meta';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
@@ -31,7 +32,7 @@ export const TaskSuggestionCard = ({ task }: { task: GetTaskSuggestionResult }) 
             </Avatar>
             <div>
               <Link
-                href={`/app/person/${task.person.id}`}
+                href={routes.person.byId({ id: task.person.id })}
                 className='group/link inline-flex items-center gap-2'>
                 <CardTitle className='text-lg transition-colors group-hover/link:text-purple-600'>
                   {`${task.person.first_name} ${task.person.last_name}`}

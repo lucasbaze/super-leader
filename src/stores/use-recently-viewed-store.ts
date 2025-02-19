@@ -11,6 +11,7 @@ type RecentlyViewedStore = {
   recentlyViewed: TRecentlyViewedPerson[];
   addPerson: (person: TRecentlyViewedPerson) => void;
   clearRecentlyViewed: () => void;
+  clearAll: () => void;
 };
 
 export const useRecentlyViewedStore = create<RecentlyViewedStore>()(
@@ -22,10 +23,12 @@ export const useRecentlyViewedStore = create<RecentlyViewedStore>()(
           // Remove if person already exists
           const filtered = state.recentlyViewed.filter((p) => p.id !== person.id);
           // Add new person to start of array, limit to 5 items
-          const updated = [person, ...filtered].slice(0, 5);
-          return { recentlyViewed: updated };
+          return {
+            recentlyViewed: [person, ...filtered].slice(0, 5)
+          };
         }),
-      clearRecentlyViewed: () => set({ recentlyViewed: [] })
+      clearRecentlyViewed: () => set({ recentlyViewed: [] }),
+      clearAll: () => set({ recentlyViewed: [] })
     }),
     {
       name: 'recently-viewed-storage'

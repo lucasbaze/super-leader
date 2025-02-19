@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { useDeleteGroup } from '@/hooks/use-groups';
+import { routes } from '@/lib/routes';
 
 interface DeleteGroupDialogProps {
   groupId: string;
@@ -37,7 +38,7 @@ export function DeleteGroupDialog({
   const handleDelete = async () => {
     await deleteGroup.mutateAsync(groupId);
     onOpenChange(false);
-    router.push('/app/groups/inner-5');
+    router.push(routes.people.root());
   };
 
   return (

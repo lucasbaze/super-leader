@@ -1,10 +1,10 @@
 'use client';
 
-
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { ROUTES } from '@/lib/routes';
 import { createClient } from '@/utils/supabase/client';
 
 export default function Header() {
@@ -51,7 +51,7 @@ export default function Header() {
             <>
               <span className='text-sm text-gray-600'>{email}</span>
               <Link
-                href='/app'
+                href={ROUTES.HOME}
                 className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500'>
                 Go to Dashboard
               </Link>
@@ -63,7 +63,7 @@ export default function Header() {
             </>
           ) : (
             <Link
-              href='/login'
+              href={ROUTES.LOGIN}
               className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500'>
               Sign in
             </Link>

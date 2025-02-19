@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { ROUTES } from '@/lib/routes';
 import { createClient } from '@/utils/supabase/server';
 
 export async function login(formData: FormData) {
@@ -21,8 +22,8 @@ export async function login(formData: FormData) {
     redirect('/error');
   }
 
-  revalidatePath('/app', 'layout');
-  redirect('/app');
+  revalidatePath(ROUTES.HOME, 'layout');
+  redirect(ROUTES.HOME);
 }
 
 export async function logout() {
@@ -32,8 +33,8 @@ export async function logout() {
   await supabase.auth.signOut();
 
   // Revalidate all protected routes
-  revalidatePath('/app', 'layout');
+  revalidatePath(ROUTES.HOME, 'layout');
 
   // Redirect to login page
-  redirect('/login');
+  redirect(ROUTES.LOGIN);
 }

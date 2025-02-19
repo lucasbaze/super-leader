@@ -4,6 +4,8 @@ import { usePathname } from 'next/navigation';
 
 import { ChatRequestOptions, CreateMessage, Message } from 'ai';
 
+import { isPath } from '@/lib/routes';
+
 import { DefaultChatHeader } from './headers/default';
 import { PersonChatHeader } from './headers/person';
 
@@ -18,7 +20,7 @@ export function ChatHeader({ append }: ChatHeaderProps) {
   const pathname = usePathname();
 
   const getHeader = () => {
-    const isPersonPage = pathname.startsWith('/app/person/');
+    const isPersonPage = isPath.person(pathname);
     if (isPersonPage) return <PersonChatHeader append={append} />;
     return <DefaultChatHeader />;
   };

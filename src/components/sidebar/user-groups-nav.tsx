@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useGroups } from '@/hooks/use-groups';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
+import { routes } from '@/lib/routes';
 
 const RESERVED_SLUGS = Object.values(RESERVED_GROUP_SLUGS);
 
@@ -53,12 +54,12 @@ export function UserGroupsNav() {
         </div>
         <SidebarMenu>
           {userGroups.map((group) => {
-            const isActive = pathname === `/app/groups/${group.id}`;
+            const isActive = pathname === routes.groups.byId({ id: group.id });
 
             return (
               <SidebarMenuItem key={group.id}>
                 <SidebarMenuButton asChild tooltip={group.name} isActive={isActive}>
-                  <Link href={`/app/groups/${group.id}`}>
+                  <Link href={routes.groups.byId({ id: group.id })}>
                     <GroupIcon icon={group.icon} />
                     <span>{group.name}</span>
                   </Link>

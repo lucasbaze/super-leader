@@ -7,6 +7,7 @@ import { Loader, Search, X } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSimpleSearchPeople } from '@/hooks/use-simple-search-people';
+import { routes } from '@/lib/routes';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 import { SearchSectionHeader } from './search-section-header';
@@ -69,7 +70,7 @@ export function GlobalSearch() {
           e.preventDefault();
           const selectedPerson = people[activeIndex];
           handleOpenChange(false);
-          router.push(`/app/person/${selectedPerson.id}`);
+          router.push(routes.person.byId({ id: selectedPerson.id }));
         }
         break;
       case 'Escape':
@@ -91,7 +92,7 @@ export function GlobalSearch() {
 
   const handleSelectPerson = (personId: string) => {
     handleOpenChange(false);
-    router.push(`/app/person/${personId}`);
+    router.push(routes.person.byId({ id: personId }));
   };
 
   return (

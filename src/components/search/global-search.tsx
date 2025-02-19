@@ -4,13 +4,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import { Loader, Search, X } from '@/components/icons';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSimpleSearchPeople } from '@/hooks/use-simple-search-people';
-import { cn } from '@/lib/utils';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
+
+import { SearchSectionHeader } from './search-section-header';
+import { SimpleSearchListItem } from './simple-search-list-item';
 
 export function GlobalSearch() {
   const [open, setOpen] = useState(false);
@@ -20,7 +20,7 @@ export function GlobalSearch() {
   const resultsRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const { searchTerm, setSearchTerm, people, isLoading } = useSimpleSearchPeople();
+  const { searchTerm, setSearchTerm, people, isFetching } = useSimpleSearchPeople();
   const { recentlyViewed, clearRecentlyViewed } = useRecentlyViewedStore();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,21 +89,26 @@ export function GlobalSearch() {
     }
   }, [activeIndex]);
 
+  const handleSelectPerson = (personId: string) => {
+    handleOpenChange(false);
+    router.push(`/app/person/${personId}`);
+  };
+
   return (
-    <div className='relative w-full md:max-w-sm'>
+    <div className='relative w-full rounded-md border bg-background md:max-w-sm'>
       <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <div className='relative'>
-            {isLoading ? (
+            {isFetching ? (
               <Loader className='absolute left-2 top-2.5 size-4 animate-spin text-muted-foreground' />
             ) : (
               <Search className='absolute left-2 top-2.5 size-4 text-muted-foreground' />
             )}
             <Input
               ref={inputRef}
-              className='rounded-full border bg-background pl-8'
+              className='rounded-md border-none bg-background pl-8 shadow-none'
               type='text'
-              placeholder='Search people...'
+              placeholder='Quick search...'
               value={inputValue}
               onChange={handleSearch}
               onKeyDown={handleKeyDown}
@@ -123,7 +128,7 @@ export function GlobalSearch() {
           }}>
           <div
             ref={resultsRef}
-            className='max-h-[280px] overflow-auto'
+            className='max-h-[360px] overflow-auto'
             role='listbox'
             tabIndex={-1}>
             {people.length === 0 ? (
@@ -132,84 +137,31 @@ export function GlobalSearch() {
               </div>
             ) : (
               <div className='py-2'>
-                {!searchTerm && recentlyViewed.length > 0 && (
+                {recentlyViewed.length > 0 && (
                   <>
-                    <div className='flex items-center justify-between px-4 py-1'>
-                      <span className='text-xs text-muted-foreground'>Recently Viewed</span>
-                      <Button
-                        variant='ghost'
-                        size='sm'
-                        className='h-6 px-2'
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          clearRecentlyViewed();
-                        }}>
-                        <X className='size-3' />
-                      </Button>
-                    </div>
+                    <SearchSectionHeader label='Recently Viewed' onClear={clearRecentlyViewed} />
                     {recentlyViewed.map((person, index) => (
-                      <button
+                      <SimpleSearchListItem
                         key={person.id}
-                        role='option'
-                        aria-selected={activeIndex === index}
-                        className={cn(
-                          'flex w-full items-center gap-2 px-4 py-2 text-left text-sm',
-                          'hover:bg-muted',
-                          activeIndex === index && 'bg-muted'
-                        )}
-                        onClick={() => {
-                          handleOpenChange(false);
-                          router.push(`/app/person/${person.id}`);
-                        }}>
-                        <Avatar className='size-8 shrink-0'>
-                          <AvatarImage
-                            src={undefined}
-                            alt={`${person.first_name} ${person.last_name}`}
-                          />
-                          <AvatarFallback>{person.first_name[0]}</AvatarFallback>
-                        </Avatar>
-                        <div className='flex flex-col'>
-                          <span className='font-medium'>
-                            {person.first_name} {person.last_name}
-                          </span>
-                        </div>
-                      </button>
+                        person={person}
+                        index={index}
+                        activeIndex={activeIndex}
+                        onSelect={handleSelectPerson}
+                      />
                     ))}
                   </>
                 )}
-                <div className='flex items-center justify-between px-4 py-1'>
-                  <span className='text-xs text-muted-foreground'>
-                    {searchTerm ? 'Results' : 'Recently Added'}
-                  </span>
-                </div>
+                <SearchSectionHeader
+                  label={!isFetching && searchTerm ? 'Results' : 'Recently Added'}
+                />
                 {people.map((person, index) => (
-                  <button
+                  <SimpleSearchListItem
                     key={person.id}
-                    role='option'
-                    aria-selected={activeIndex === index}
-                    className={cn(
-                      'flex w-full items-center gap-2 px-4 py-2 text-left text-sm',
-                      'hover:bg-muted',
-                      activeIndex === index && 'bg-muted'
-                    )}
-                    onClick={() => {
-                      handleOpenChange(false);
-                      router.push(`/app/person/${person.id}`);
-                    }}>
-                    <Avatar className='size-8 shrink-0'>
-                      <AvatarImage
-                        src={undefined}
-                        alt={`${person.first_name} ${person.last_name}`}
-                      />
-                      <AvatarFallback>{person.first_name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className='flex flex-col'>
-                      <span className='font-medium'>
-                        {person.first_name} {person.last_name}
-                      </span>
-                    </div>
-                  </button>
+                    person={person}
+                    index={index}
+                    activeIndex={activeIndex}
+                    onSelect={handleSelectPerson}
+                  />
                 ))}
               </div>
             )}

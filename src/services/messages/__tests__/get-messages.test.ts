@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { MESSAGE_TYPE } from '@/lib/messages/constants';
+import { routes } from '@/lib/routes';
 import { createTestGroup } from '@/tests/test-builder/create-group';
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
@@ -8,7 +9,9 @@ import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
 import { createMessage } from '../create-message';
-import { ERRORS, getMessages, getMessagesForGroup, getMessagesForPerson } from '../get-messages';
+import { INITIAL_MESSAGES } from '../get-initial-message';
+import { ERRORS, getMessages } from '../get-messages';
+import type { TMessageWithContent } from '../types';
 
 describe('get-messages-service', () => {
   let supabase: SupabaseClient;
@@ -44,7 +47,8 @@ describe('get-messages-service', () => {
             db,
             userId: testUser.id,
             type: MESSAGE_TYPE.HOME,
-            limit: 20
+            limit: 20,
+            path: '/'
           });
 
           expect(result1.error).toBeNull();
@@ -57,7 +61,8 @@ describe('get-messages-service', () => {
             userId: testUser.id,
             type: MESSAGE_TYPE.HOME,
             limit: 20,
-            cursor: result1.data?.nextCursor
+            cursor: result1.data?.nextCursor,
+            path: '/'
           });
 
           expect(result2.error).toBeNull();
@@ -96,10 +101,12 @@ describe('get-messages-service', () => {
             }
           });
 
-          const result = await getMessagesForPerson({
+          const result = await getMessages({
             db,
             userId: testUser.id,
-            personId: testPerson.id
+            type: MESSAGE_TYPE.PERSON,
+            personId: testPerson.id,
+            path: '/person/[id]'
           });
 
           expect(result.error).toBeNull();
@@ -108,56 +115,80 @@ describe('get-messages-service', () => {
         });
       });
 
-      it('should handle empty messages without error', async () => {
+      it('should return initial messages when no messages exist', async () => {
         await withTestTransaction(supabase, async (db) => {
           const testUser = await createTestUser({ db });
           const testPerson = await createTestPerson({
             db,
             data: { user_id: testUser.id, first_name: 'John', last_name: 'Doe' }
           });
+
+          const result = await getMessages({
+            db,
+            userId: testUser.id,
+            type: MESSAGE_TYPE.PERSON,
+            personId: testPerson.id,
+            path: routes.person.byId({ id: testPerson.id })
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data?.messages).toHaveLength(2); // Initial messages for person
+          expect(result.data?.hasMore).toBe(false);
+          expect(
+            result.data?.messages.some((msg) =>
+              (msg.message as TMessageWithContent)?.content?.includes('John')
+            )
+          ).toBeTruthy();
+        });
+      });
+
+      it('should fetch messages for a specific group', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
           const testGroup = await createTestGroup({
             db,
-            data: { user_id: testUser.id, name: 'Test Group', slug: 'test-group' }
+            data: {
+              user_id: testUser.id,
+              name: 'Test Group',
+              slug: 'test-group'
+            }
           });
 
-          const homeResult = await getMessages({
+          // Create test group message
+          await createMessage({
+            db,
+            data: {
+              message: { id: 'test-1', role: 'user', content: 'Group message' },
+              type: MESSAGE_TYPE.GROUP,
+              userId: testUser.id,
+              groupId: testGroup.id
+            }
+          });
+
+          // Create test home message (to ensure filtering works)
+          await createMessage({
+            db,
+            data: {
+              message: { id: 'test-2', role: 'user', content: 'Home message' },
+              type: MESSAGE_TYPE.HOME,
+              userId: testUser.id
+            }
+          });
+
+          const result = await getMessages({
             db,
             userId: testUser.id,
-            type: MESSAGE_TYPE.HOME
+            type: MESSAGE_TYPE.GROUP,
+            groupId: testGroup.id,
+            path: routes.groups.byId({ id: testGroup.id })
           });
 
-          expect(homeResult.error).toBeNull();
-          expect(homeResult.data).toMatchObject({
-            messages: [],
-            hasMore: false,
-            nextCursor: undefined
-          });
-
-          const personResult = await getMessagesForPerson({
-            db,
-            userId: testUser.id,
-            personId: testPerson.id
-          });
-
-          expect(personResult.error).toBeNull();
-          expect(personResult.data).toMatchObject({
-            messages: [],
-            hasMore: false,
-            nextCursor: undefined
-          });
-
-          const groupResult = await getMessagesForGroup({
-            db,
-            userId: testUser.id,
-            groupId: testGroup.id
-          });
-
-          expect(groupResult.error).toBeNull();
-          expect(groupResult.data).toMatchObject({
-            messages: [],
-            hasMore: false,
-            nextCursor: undefined
-          });
+          expect(result.error).toBeNull();
+          expect(result.data?.messages).toHaveLength(1);
+          expect(result.data?.messages[0].group_id).toBe(testGroup.id);
+          expect((result.data?.messages[0].message as TMessageWithContent)?.content).toBe(
+            'Group message'
+          );
         });
       });
     });
@@ -168,7 +199,8 @@ describe('get-messages-service', () => {
           const result = await getMessages({
             db,
             userId: '',
-            type: MESSAGE_TYPE.HOME
+            type: MESSAGE_TYPE.HOME,
+            path: routes.home()
           });
 
           expect(result.data).toBeNull();

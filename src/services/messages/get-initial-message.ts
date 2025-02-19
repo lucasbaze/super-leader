@@ -36,7 +36,7 @@ const createMessage = (id: string, content: string): Message => ({
 });
 
 // Define initial messages for different paths
-const INITIAL_MESSAGES = {
+export const INITIAL_MESSAGES = {
   default: [createMessage('default', 'How can I help you?')],
   home: [
     createMessage('home-1', 'Welcome to Superleader!'),

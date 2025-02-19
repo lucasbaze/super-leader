@@ -6,6 +6,7 @@ import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
 import { NavUser } from '@/components/nav-user';
+import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Input } from '@/components/ui/input';
@@ -27,11 +28,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
         <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
           <SidebarTrigger className='-ml-1' />
           <div className='m-auto flex-1 basis-1/3'>
-            <Input
-              className='rounded-full border bg-background md:max-w-sm'
-              type='text'
-              placeholder='Search'
-            />
+            <GlobalSearch />
           </div>
           <div className='ml-auto flex items-center gap-2'>
             <div className='mr-6 flex items-center gap-2'>

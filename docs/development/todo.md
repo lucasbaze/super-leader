@@ -150,3 +150,22 @@ We could also suggest possible connections or intro's, groups to add them to, or
 ## From Production Usage
 
 - [ ] A way to "see" all of the recently added people. This does 2 things: Let's me know if I did indeed at a person I'm thinking about, and 2 let's me see if there are people that I should prioritize today... (though this should be suggested by the AI)
+- [ ] Breadcrumbs need to properly navigate back to the previous page.
+- [ ] Get the simple search to work to quickly navigate to a person. (maybe make this a command palette instead of a search bar?)
+- [ ] Show loading indicators on save of the address information about a person.
+- [ ] There's a "comma" issue in the copy / pasting of the phones numbers.
+- [ ] Successfully adding a person to the system doesn't link to the right profile.
+- [ ] Really want this message to coordinate and "work" ("Add Anthony D as a new person the the Strategic 100 group. Make a note that we met through Johnny Ives. We texted a few weeks ago, and he's a huge NBA fan and actually runs the nba.com home page)
+- Need to be able to update the name of people / profile's
+
+This single action needs to do several things:
+
+- Check to see if Anthony D already exists
+- Create the person with a note
+- Create an association between the two folks so we know how they're related (colleagues)
+- Display to the user "What's happening" in the thread of actions, because sometimes it may take a few moments to process the request.
+- Find the strategic 100 group and add the person to it.
+
+This also needs to
+
+- Allow the user to edit the contents from the auto-generated messages / actions

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, useSelectedLayoutSegment } from 'next/navigation';
+import React from 'react';
 
 import { Users } from '@/components/icons';
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
@@ -16,16 +17,29 @@ import {
 } from '@/components/ui/breadcrumb';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePerson } from '@/hooks/use-person';
+import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const segment = useSelectedLayoutSegment() || 'summary';
+  const addRecentlyViewed = useRecentlyViewedStore((state) => state.addPerson);
   const { data, isLoading } = usePerson(params.id as string, {
     withContactMethods: true,
     withAddresses: true,
     withWebsites: true,
     withGroups: true
   });
+
+  // Add to recently viewed when data loads
+  React.useEffect(() => {
+    if (data?.person) {
+      addRecentlyViewed({
+        id: data.person.id,
+        first_name: data.person.first_name,
+        last_name: data.person.last_name ?? ''
+      });
+    }
+  }, [data?.person, addRecentlyViewed]);
 
   if (isLoading) return <div>Loading...</div>;
 

@@ -1,33 +1,41 @@
 'use client';
 
-import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
-import { Loader, Search } from '@/components/icons';
+import { Loader, Search, X } from '@/components/icons';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSimpleSearchPeople } from '@/hooks/use-simple-search-people';
 import { cn } from '@/lib/utils';
+import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 export function GlobalSearch() {
-  const [open, setOpen] = React.useState(false);
-  const [activeIndex, setActiveIndex] = React.useState<number>(-1);
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const resultsRef = React.useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { setSearchTerm, people, isLoading } = useSimpleSearchPeople();
+
+  const { searchTerm, setSearchTerm, people, isLoading } = useSimpleSearchPeople();
+  const { recentlyViewed, clearRecentlyViewed } = useRecentlyViewedStore();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    setInputValue(value);
     setSearchTerm(value);
     setOpen(true);
-    setActiveIndex(-1); // Reset active index when search changes
+    setActiveIndex(-1);
   };
 
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
       setSearchTerm('');
+      setInputValue('');
       setActiveIndex(-1);
       if (inputRef.current) {
         inputRef.current.value = '';
@@ -72,7 +80,7 @@ export function GlobalSearch() {
   };
 
   // Scroll active item into view
-  React.useEffect(() => {
+  useEffect(() => {
     if (activeIndex >= 0 && resultsRef.current) {
       const activeElement = resultsRef.current.children[activeIndex] as HTMLElement;
       if (activeElement) {
@@ -96,6 +104,7 @@ export function GlobalSearch() {
               className='rounded-full border bg-background pl-8'
               type='text'
               placeholder='Search people...'
+              value={inputValue}
               onChange={handleSearch}
               onKeyDown={handleKeyDown}
               onClick={(e) => {
@@ -123,6 +132,57 @@ export function GlobalSearch() {
               </div>
             ) : (
               <div className='py-2'>
+                {!searchTerm && recentlyViewed.length > 0 && (
+                  <>
+                    <div className='flex items-center justify-between px-4 py-1'>
+                      <span className='text-xs text-muted-foreground'>Recently Viewed</span>
+                      <Button
+                        variant='ghost'
+                        size='sm'
+                        className='h-6 px-2'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          clearRecentlyViewed();
+                        }}>
+                        <X className='size-3' />
+                      </Button>
+                    </div>
+                    {recentlyViewed.map((person, index) => (
+                      <button
+                        key={person.id}
+                        role='option'
+                        aria-selected={activeIndex === index}
+                        className={cn(
+                          'flex w-full items-center gap-2 px-4 py-2 text-left text-sm',
+                          'hover:bg-muted',
+                          activeIndex === index && 'bg-muted'
+                        )}
+                        onClick={() => {
+                          handleOpenChange(false);
+                          router.push(`/app/person/${person.id}`);
+                        }}>
+                        <Avatar className='size-8 shrink-0'>
+                          <AvatarImage
+                            src={undefined}
+                            alt={`${person.first_name} ${person.last_name}`}
+                          />
+                          <AvatarFallback>{person.first_name[0]}</AvatarFallback>
+                        </Avatar>
+                        <div className='flex flex-col'>
+                          <span className='font-medium'>
+                            {person.first_name} {person.last_name}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </>
+                )}
+                <div className='flex items-center justify-between px-4 py-1'>
+                  <span className='text-xs text-muted-foreground'>
+                    {searchTerm ? 'Results' : 'Recently Added'}
+                  </span>
+                </div>
                 {people.map((person, index) => (
                   <button
                     key={person.id}
@@ -135,15 +195,15 @@ export function GlobalSearch() {
                     )}
                     onClick={() => {
                       handleOpenChange(false);
-                      router.push(`app/person/${person.id}`);
+                      router.push(`/app/person/${person.id}`);
                     }}>
-                    <div className='size-8 shrink-0 overflow-hidden rounded-full'>
-                      <img
-                        src={'https://github.com/shadcn.png'}
-                        alt={person.first_name + ' ' + person.last_name}
-                        className='size-full object-cover'
+                    <Avatar className='size-8 shrink-0'>
+                      <AvatarImage
+                        src={undefined}
+                        alt={`${person.first_name} ${person.last_name}`}
                       />
-                    </div>
+                      <AvatarFallback>{person.first_name[0]}</AvatarFallback>
+                    </Avatar>
                     <div className='flex flex-col'>
                       <span className='font-medium'>
                         {person.first_name} {person.last_name}

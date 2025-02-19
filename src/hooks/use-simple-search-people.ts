@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { debounce } from '@/lib/utils';
-import { SimpleSearchPeopleResult } from '@/types/custom';
+import { SimpleSearchPeopleResult } from '@/services/people';
 
 export function useSimpleSearchPeople(debounceMs = 500) {
   const [searchTerm, setSearchTerm] = useState('');

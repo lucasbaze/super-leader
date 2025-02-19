@@ -58,7 +58,8 @@ export {
   Bookmark,
   PlusCircle,
   ThumbsUp,
-  ThumbsDown
+  ThumbsDown,
+  X
 } from 'lucide-react';
 export * as LogoIcons from './logos';
 export {

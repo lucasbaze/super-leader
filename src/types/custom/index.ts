@@ -1,11 +1,4 @@
 // TODO: Move to service types
-import { Group, Person } from '../database';
-
-export type SimpleSearchPeopleResult = Pick<
-  Person,
-  'id' | 'first_name' | 'last_name' | 'bio' | 'ai_summary'
-> & {
-  groups: Pick<Group, 'id' | 'name' | 'icon' | 'slug'>[];
-};
+import { Group } from '../database';
 
 export type TPersonGroup = Pick<Group, 'id' | 'name' | 'slug' | 'icon'>;

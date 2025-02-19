@@ -1,7 +1,7 @@
 import { GroupBadge } from '@/components/groups/group-badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { SimpleSearchPeopleResult } from '@/types/custom';
+import { SimpleSearchPeopleResult } from '@/services/people';
 
 interface SearchPersonItemProps {
   person: SimpleSearchPeopleResult;
@@ -19,7 +19,7 @@ export function SearchPersonItem({ person, isSelected, onClick }: SearchPersonIt
       className={cn(
         'flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors',
         'hover:bg-accent hover:text-accent-foreground',
-        isSelected && 'border-primary bg-primary/5'
+        isSelected && 'bg-primary/5 border-primary'
       )}>
       <Avatar className='size-10 shrink-0'>
         <AvatarFallback>{initials}</AvatarFallback>

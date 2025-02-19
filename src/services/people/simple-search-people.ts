@@ -1,8 +1,9 @@
 import { createError, errorLogger } from '@/lib/errors';
-import { SimpleSearchPeopleResult } from '@/types/custom';
 import { DBClient, Group, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
+
+import { SimpleSearchPeopleResult } from './types';
 
 export const ERRORS = {
   SEARCH_PEOPLE: {

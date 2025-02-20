@@ -1,6 +1,12 @@
+### Feb 20th
+
+- [ ] Attempt to create "agentic" behavior for the AI to respond to the user. Adding more functionality to the AI. Let's expect this to take a week to really get the ball rolling and feel good with it.
+
+Plan: Review multiple tool calls, add "search" functionality, so if I can get it to display pending results in the chat...
+
 ### Feb 19th
 
-- [ ] Add default chat messages to each of the chats if there aren't any historical messages.
+- [x] ~~_Add default chat messages to each of the chats if there aren't any historical messages._~~ [2025-02-19]
 - [x] ~~_Get the simple search to work to quickly navigate to a person. (maybe make this a command palette instead of a search bar?)_~~ [2025-02-19]
 
 ### Feb 18th
@@ -20,7 +26,7 @@ There are MANY thing to consider on the home page that I need to consider / thin
 
 - [x] ~~_Create local types for the chat messages_~~ [2025-02-15]
 - [x] ~~_Fix any issues with tests, i.e. groups that I've changed._~~ [2025-02-15]
-- [ ] Get production up with my current people
+- [x] ~~_Get production up with my current people_~~ [2025-02-20]
       This will require a re-look at the import structure.
 
 ### Feb 14th
@@ -51,3 +57,7 @@ This single action needs to do several things:
 This also needs to
 
 - Allow the user to edit the contents from the auto-generated messages / actions
+
+Another situation
+
+- Create a new group for BCS and one for Realtors, then add Wendy Flynn to both of them.

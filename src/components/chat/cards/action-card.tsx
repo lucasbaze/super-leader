@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface ActionCardProps {
+export interface ActionCardProps {
   person?: {
     first_name: string;
     last_name: string;

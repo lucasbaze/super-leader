@@ -1,6 +1,4 @@
-import { ReactNode } from 'react';
-
-import { ActionCard, ActionCardProps } from '@/components/chat-next/cards/action-card';
+import { ActionCard, ActionCardProps } from '@/components/chat/cards/action-card';
 
 // Define a strict mapping of tool names to components
 export const toolComponents = {

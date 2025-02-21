@@ -6,6 +6,7 @@ export interface ChatTool<TParams, TResult = void> {
   name: string;
   displayName: string;
   description: string;
+  rulesForAI: string;
   parameters: z.ZodType<TParams>;
   execute?: (db: DBClient, params: TParams, auth: { userId: string }) => Promise<TResult>;
   onSuccess?: (result: TResult) => void;

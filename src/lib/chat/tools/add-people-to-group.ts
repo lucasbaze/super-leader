@@ -1,0 +1,64 @@
+import { stripIndents } from 'common-tags';
+import { z } from 'zod';
+
+import { addGroupMembers, AddGroupMembersServiceResult } from '@/services/groups/add-group-members';
+
+import { ChatTool } from '../chat-tool-registry';
+import { handleToolError, TToolError } from '../utils';
+
+export const addPeopleToGroupTool: ChatTool<
+  {
+    groupId: string;
+    groupSlug: string;
+    personIds: string[];
+  },
+  AddGroupMembersServiceResult['data'] | TToolError
+> = {
+  name: 'addPeopleToGroup',
+  displayName: 'Add People to Group',
+  description: 'Add people to a group',
+  rulesForAI: stripIndents`\
+    ## getGroups Guidelines
+    - Use addPeopleToGroup to add people to a group by the group's ID and slug. Make sure to search for the people first. Anybody that you can't find, suggest creating a new person.
+  `,
+  parameters: z.object({
+    groupId: z.string().describe('The ID of the group to add people to'),
+    groupSlug: z.string().describe('The slug of the group to add people to'),
+    personIds: z.array(z.string()).describe('The IDs of the people to add to the group')
+  }),
+  execute: async (db, { groupId, groupSlug, personIds }, { userId }) => {
+    console.log('Adding people to group:', groupId, groupSlug, personIds);
+
+    try {
+      // Redundant, but necessary to satisfy the type checker
+
+      // const validationResult = createInteractionSchema.safeParse({
+      //   type,
+      //   note
+      // });
+
+      // How do I get the system to "try a couple of times" if it generated the wrong data / values?
+      // if (validationResult.error) {
+      //   throw validationResult.error;
+      // }
+
+      // Create the interaction
+      const result = await addGroupMembers({
+        db,
+        groupId,
+        groupSlug,
+        personIds,
+        userId
+      });
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      return result.data;
+    } catch (error) {
+      console.error('Adding people to group API error: Error catcher:', error);
+      return handleToolError(error, 'add people to group');
+    }
+  }
+};

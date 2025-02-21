@@ -83,7 +83,7 @@ Developer Experience (DX)
 
 **Typescript Typing**
 
-- Prefix all types with `T` such as `TBaseError`
+- Types should be capitalized such as ServiceResponse, GetPersonServiceParams, CreateGroupServiceResult
 - When creating derived types that reference tables from the database, use the `Pick` & `Omit` utility types to create a new type with the desired fields.
 
 **Error Handling and Service Response Pattern**

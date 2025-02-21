@@ -21,6 +21,8 @@ export {
   MessageSquare,
   Share2,
   TrendingUp,
+  ChevronDown,
+  ChevronUp,
   UserCog,
   XCircle,
   Gift,

@@ -39,6 +39,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             <ThemeToggle />
             <NavUser
               user={{
+                id: data.user.id,
                 name: 'John Doe',
                 email: 'john.doe@example.com',
                 avatar: 'https://github.com/shadcn.png'

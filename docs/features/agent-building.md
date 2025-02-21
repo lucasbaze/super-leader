@@ -38,3 +38,47 @@ Approach #1:
 
 - I need to be able to pass the userID around, but need to also make sure that my API calls aren't being exposed in a way that is vulnerable to attacks. I'm thinking I'll need to check for the authResult OR a valid JWT token coming from the server to server communication.
 - Could just simple re-call the service method in the tool handler? Or should I handle these differently?
+
+## Displaying tool calls
+
+- If a tool is called and it's in a pending state, I want to display these "background" tool calls in the UI.
+- They need to be displayed in line of the messages...
+
+- Could I splice them in?
+- I could take the message with the tool call and display "above it" the tool pending / loading...
+- Once the message "completes" then the
+
+- Displaying all the tool calls back to back could be done between the user messages...
+
+- I need a way to handle failures & retries...
+
+- I need to add a "stop" function...
+
+### Tool Calling Structure
+
+/\*
+
+- Things the a single tool needs to handle / know / do:
+  Possible "class" to handle these things:
+
+* Have a name & a display name
+* Handle errors
+* Handle confirmation ( such as API / method calls )
+* Handle cancellation
+* Handle retries
+* Handle stop
+* Know what parameters are included
+* Know what methods to call ( i.e. the schema of the inputs ) ( Maybe this comes from the service? Probably needs to come from the service... )
+* Define the types of the arguments and return values
+
+* Needs to define the message structure to display: i.e. suggestions vs. messages vs. action
+
+- \*/
+
+- I think when the tool is called, we register the onSuccess callback and then onFinish, we trigger the end result, if it was successful, otherwise we trigger the failures.
+
+- Idea: I could probably do the onSuccess call to the client, buy having references to the messsages, and the tool calls, and then fiure out if the tool call was successful or not from the messages, and then trigger the onSuccess or onFailure.
+
+## Research
+
+- Agentic AI: https://github.com/transitive-bullshit/agentic Lots of cool possible features in here.

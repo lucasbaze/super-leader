@@ -24,7 +24,7 @@ import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
 import { getChatType } from './utils';
 
-const getChatParams = (params: any, pathname: string) => {
+const useChatParams = (params: any, pathname: string) => {
   const { type, id } = getChatType(pathname, params.id);
   return { chatType: type, chatId: id };
 };
@@ -60,7 +60,7 @@ export function ChatInterface() {
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { chatType, chatId } = getChatParams(params, pathname);
+  const { chatType, chatId } = useChatParams(params, pathname);
 
   // TODO: This will have to get extended to support other chat types such a group info... possibly?
   // yeah, like know the number of people in the group or something.
@@ -87,12 +87,25 @@ export function ChatInterface() {
     initialMessages: [],
     id: chatId,
     body: {
-      personId: params.id,
-      personName: personData?.person
-        ? `${personData.person.first_name} ${personData.person.last_name}`
-        : undefined
+      ...(chatType == MESSAGE_TYPE.PERSON && { personId: params.id }),
+      ...(chatType == MESSAGE_TYPE.GROUP && { groupId: params.id }),
+      ...(personData?.person && {
+        personName: `${personData.person.first_name} ${personData.person.last_name}`
+      })
+    },
+    onError: (error) => {
+      setMessages((messages) => [
+        ...messages,
+        {
+          id: 'error',
+          role: 'assistant',
+          content: 'Hmm... An error occurred. Please try again.',
+          error: error
+        }
+      ]);
     },
     onToolCall: async ({ toolCall }) => {
+      // Need to handle the tool call for creating messages as well
       if (toolCall.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
         console.log('getPersonSuggestions', toolCall);
         return;
@@ -199,7 +212,7 @@ export function ChatInterface() {
     setPendingAction(null);
   };
 
-  // Set initial scroll position to bottom when messages first load
+  // Set initial scroll position to bottom when first loading messages
   useEffect(() => {
     // @ts-ignore
     if (messagesData?.messages) {
@@ -220,7 +233,7 @@ export function ChatInterface() {
       setShouldAutoScroll(isAtBottom);
 
       // Load more messages when scrolling near top
-      if (container.scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
+      if (container.scrollTop < 400 && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     },

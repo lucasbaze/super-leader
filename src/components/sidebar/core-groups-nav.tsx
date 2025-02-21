@@ -56,8 +56,6 @@ export function CoreGroupsNav() {
     );
   }, [fetchedGroups]);
 
-  console.log(localGroups);
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Core</SidebarGroupLabel>

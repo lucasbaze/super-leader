@@ -97,7 +97,7 @@ export function ChatMessage({
 
     const toolInvocations = message.toolInvocations?.map((toolInvocation) => {
       // Handle tool errors first
-      if (toolInvocation.state === 'result' && toolInvocation.result.error) {
+      if (toolInvocation.state === 'result' && toolInvocation.result?.error) {
         return (
           <ToolErrorCard
             key={toolInvocation.toolCallId}

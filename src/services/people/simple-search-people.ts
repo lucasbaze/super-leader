@@ -65,9 +65,22 @@ export async function simpleSearchPeople({
 
     // Apply search filters only if searchTerm is provided
     if (searchTerm) {
-      query.or(
-        `first_name.ilike.%${searchTerm}%,last_name.ilike.%${searchTerm}%,bio.ilike.%${searchTerm}%`
-      );
+      const terms = searchTerm.trim().split(/\s+/);
+
+      if (terms.length === 1) {
+        // Single term - search in first_name OR last_name OR bio
+        query.or(
+          `first_name.ilike.%${terms[0]}%,last_name.ilike.%${terms[0]}%,bio.ilike.%${terms[0]}%`
+        );
+      } else {
+        const firstTerm = terms[0];
+        const secondTerm = terms[1];
+
+        // Search for first AND last name match, or bio match
+        query.or(
+          `first_name.ilike.%${firstTerm}%,and(first_name.ilike.%${firstTerm}%,last_name.ilike.%${secondTerm}%),bio.ilike.%${searchTerm}%`
+        );
+      }
     }
 
     // Order by creation date if no search term, otherwise by name

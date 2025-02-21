@@ -60,5 +60,19 @@ export const addPeopleToGroupTool: ChatTool<
       console.error('Adding people to group API error: Error catcher:', error);
       return handleToolError(error, 'add people to group');
     }
+  },
+  onSuccessEach: true,
+  onSuccess: ({ queryClient, args }) => {
+    if (args?.groupId) {
+      queryClient.invalidateQueries({ queryKey: ['group-members', args.groupId] });
+      queryClient.invalidateQueries({ queryKey: ['group', args.groupId] });
+    }
+    if (args?.personIds?.length > 0) {
+      args.personIds.forEach((personId) => {
+        queryClient.invalidateQueries({
+          queryKey: ['person', personId, 'about', { withGroups: true }]
+        });
+      });
+    }
   }
 };

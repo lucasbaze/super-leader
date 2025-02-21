@@ -60,7 +60,17 @@ export const createGroupTool: ChatTool<
       return handleToolError(error, 'create group with person');
     }
   },
-  onSuccess: () => {
+  onSuccessEach: false,
+  onSuccess: ({ queryClient, args }) => {
     // i.e. we need to invalidate the groups query cache and refetch the groups or update them... not sure what the best SSR way to do this is at the moment.
+    queryClient.invalidateQueries({ queryKey: ['groups'] });
+
+    if (args?.personIds && args.personIds.length > 0) {
+      args.personIds.forEach((personId) => {
+        queryClient.invalidateQueries({
+          queryKey: ['person', personId, 'about', { withGroups: true }]
+        });
+      });
+    }
   }
 };

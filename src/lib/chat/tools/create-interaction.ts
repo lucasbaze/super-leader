@@ -71,5 +71,11 @@ export const createInteractionTool: ChatTool<
       console.error('Creating interaction API error: Error catcher:', error);
       return handleToolError(error, 'create interaction');
     }
+  },
+  onSuccessEach: true,
+  onSuccess: ({ queryClient, args }) => {
+    console.log('Invalidating queries for:', args);
+    queryClient.invalidateQueries({ queryKey: ['person-activity', args.person_id] });
+    queryClient.invalidateQueries({ queryKey: ['person', args.person_id] });
   }
 };

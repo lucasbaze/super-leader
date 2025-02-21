@@ -1,5 +1,8 @@
 ### Feb 21st
 
+- [ ] Clear chat messages for mental "clarity"
+- [ ] Add "stop" method to the input to stop chat messages
+
 ### Feb 20th
 
 - [ ] Attempt to create "agentic" behavior for the AI to respond to the user. Adding more functionality to the AI. Let's expect this to take a week to really get the ball rolling and feel good with it.

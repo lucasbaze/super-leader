@@ -35,11 +35,13 @@ type DatabasePerson = Pick<Person, 'id' | 'first_name' | 'last_name' | 'bio' | '
   }[];
 };
 
+export type SimpleSearchPeopleServiceResult = TServiceResponse<SimpleSearchPeopleResult[]>;
+
 export async function simpleSearchPeople({
   db,
   userId,
   searchTerm = ''
-}: SearchPeopleParams): Promise<TServiceResponse<SimpleSearchPeopleResult[]>> {
+}: SearchPeopleParams): Promise<SimpleSearchPeopleServiceResult> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.SEARCH_PEOPLE.MISSING_USER_ID };

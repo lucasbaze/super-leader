@@ -43,43 +43,12 @@ export type TCreateGroupParams = {
   };
 };
 
-export type TGenerateUniqueSlugParams = {
-  db: DBClient;
-  name: string;
-  userId: string;
-};
-
-async function generateUniqueSlug({
-  db,
-  name,
-  userId
-}: TGenerateUniqueSlugParams): Promise<string> {
-  let slug = generateSlug(name);
-  let counter = 1;
-  let isUnique = false;
-
-  while (!isUnique) {
-    const { data } = await db
-      .from('group')
-      .select('id')
-      .eq('slug', slug)
-      .eq('user_id', userId)
-      .single();
-    if (!data) {
-      isUnique = true;
-    } else {
-      slug = `${generateSlug(name)}-${counter}`;
-      counter++;
-    }
-  }
-
-  return slug;
-}
+export type CreateGroupServiceResult = TServiceResponse<Group>;
 
 export async function createGroup({
   db,
   data
-}: TCreateGroupParams): Promise<TServiceResponse<Group>> {
+}: TCreateGroupParams): Promise<CreateGroupServiceResult> {
   try {
     if (!data.name) {
       return { data: null, error: ERRORS.INVALID_NAME };

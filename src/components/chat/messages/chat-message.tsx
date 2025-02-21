@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
 
-import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
+import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
 
 import { ActionCard } from '../cards/action-card';
@@ -10,6 +10,7 @@ import { MessageCard } from '../cards/message-card';
 import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
 import { MarkdownMessage } from './markdown-message';
+import { ToolCallIndicator } from './tool-call-indicator';
 
 interface ChatMessageProps {
   message: Message;
@@ -85,9 +86,18 @@ export function ChatMessage({
       </div>
     );
 
+    const toolCallIndicators = message.toolInvocations?.map((toolInvocation) => (
+      <ToolCallIndicator
+        key={toolInvocation.toolCallId}
+        toolName={toolInvocation.toolName}
+        state={toolInvocation.state}
+        args={toolInvocation.args}
+      />
+    ));
+
     const toolInvocations = message.toolInvocations?.map((toolInvocation) => {
       // Handle tool errors first
-      if (toolInvocation.state === 'result' && toolInvocation.result.error) {
+      if (toolInvocation.state === 'result' && toolInvocation.result?.error) {
         return (
           <ToolErrorCard
             key={toolInvocation.toolCallId}
@@ -172,6 +182,7 @@ export function ChatMessage({
         className='flex scroll-my-14 flex-col items-start gap-2'
         // style={{ minHeight }}
       >
+        {toolCallIndicators}
         {content}
         {toolInvocations}
         {isLastMessage && message.role === 'assistant' && isLoading && <LoadingMessage />}

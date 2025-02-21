@@ -23,10 +23,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
+import { CopyWithTooltip } from './ui/copy-with-tooltip';
+
 export function NavUser({
   user
 }: {
   user: {
+    id: string;
     name: string;
     email: string;
     avatar: string;
@@ -69,6 +72,12 @@ export function NavUser({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <CopyWithTooltip content={user.id}>
+            <DropdownMenuItem>
+              <Sparkles />
+              {user.id}
+            </DropdownMenuItem>
+          </CopyWithTooltip>
           <DropdownMenuItem>
             <Sparkles />
             Upgrade to Pro

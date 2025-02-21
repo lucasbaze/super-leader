@@ -35,13 +35,15 @@ export interface AddGroupMembersParams {
   userId: string;
 }
 
+export type AddGroupMembersServiceResult = TServiceResponse<null>;
+
 export async function addGroupMembers({
   db,
   groupId,
   groupSlug,
   personIds,
   userId
-}: AddGroupMembersParams): Promise<TServiceResponse<null>> {
+}: AddGroupMembersParams): Promise<AddGroupMembersServiceResult> {
   try {
     if (!groupId) {
       return { data: null, error: ERRORS.ADD_MEMBERS.MISSING_GROUP_ID };

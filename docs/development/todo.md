@@ -146,3 +146,7 @@ This is helpful to see company history and company changes over time.
 
 Take a picture of a business card and upload it. The AI will be able to extract the information from the business card and add it to the person's profile.
 We could also suggest possible connections or intro's, groups to add them to, or even immediate content / connection suggestions, if there are any accompanying notes.
+
+- [ ] Add user Context
+
+An option is to just have a running log that the agent determines when to update. When updating, the system can then create the summaries and update them. Basically using the same concept as the activity log on individual people.

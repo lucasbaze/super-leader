@@ -70,10 +70,12 @@ export async function getPersonActivity({
   }
 }
 
+export type CreateInteractionServiceResult = TServiceResponse<TInteraction>;
+
 export async function createInteraction({
   db,
   data
-}: TCreateInteractionParams): Promise<TServiceResponse<TInteraction>> {
+}: TCreateInteractionParams): Promise<CreateInteractionServiceResult> {
   try {
     if (!data.user_id) {
       return { data: null, error: ERRORS.INVALID_USER };

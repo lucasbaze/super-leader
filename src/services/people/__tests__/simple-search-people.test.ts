@@ -134,6 +134,96 @@ describe('searchPeople service', () => {
         });
       });
     });
+
+    it('should find people matching full name search', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        const testUser = await createTestUser({ db });
+
+        const testPerson1 = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Anthony',
+            last_name: 'Davis',
+            bio: 'Basketball player'
+          }
+        });
+
+        const testPerson2 = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Anthony',
+            last_name: 'Edwards',
+            bio: 'Another player'
+          }
+        });
+
+        // Should find specific Anthony
+        const result = await simpleSearchPeople({
+          db,
+          userId: testUser.id,
+          searchTerm: 'Anthony D'
+        });
+
+        expect(result.data).toHaveLength(2);
+        expect(result.data).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              first_name: 'test_Anthony',
+              last_name: 'test_Davis'
+            }),
+            expect.objectContaining({
+              first_name: 'test_Anthony',
+              last_name: 'test_Edwards'
+            })
+          ])
+        );
+      });
+    });
+
+    it('should handle partial name matches in either order', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        const testUser = await createTestUser({ db });
+
+        await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Michael',
+            last_name: 'Jordan',
+            bio: 'Basketball legend'
+          }
+        });
+
+        // Should find with "First Last" format
+        const result1 = await simpleSearchPeople({
+          db,
+          userId: testUser.id,
+          searchTerm: 'Michael J'
+        });
+
+        expect(result1.data).toHaveLength(1);
+        expect(result1.data![0]).toMatchObject({
+          first_name: 'test_Michael',
+          last_name: 'test_Jordan'
+        });
+
+        // Should also find with full search term in bio
+        const result2 = await simpleSearchPeople({
+          db,
+          userId: testUser.id,
+          searchTerm: 'Basketball legend'
+        });
+
+        expect(result2.data).toHaveLength(1);
+        expect(result2.data![0]).toMatchObject({
+          first_name: 'test_Michael',
+          last_name: 'test_Jordan',
+          bio: 'test_Basketball legend'
+        });
+      });
+    });
   });
 
   describe('validation cases', () => {

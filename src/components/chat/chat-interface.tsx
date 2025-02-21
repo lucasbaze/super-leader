@@ -3,7 +3,8 @@
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Message } from 'ai';
+import { useQueryClient } from '@tanstack/react-query';
+import { Message, ToolCall } from 'ai';
 import { useChat } from 'ai/react';
 import { toast } from 'sonner';
 
@@ -13,7 +14,7 @@ import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
 import { useUpdateSuggestion } from '@/hooks/use-suggestions';
-import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
+import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { dateHandler } from '@/lib/dates/helpers';
 import { $user } from '@/lib/llm/messages';
 import { MESSAGE_TYPE, TMessageType } from '@/lib/messages/constants';
@@ -24,7 +25,7 @@ import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
 import { getChatType } from './utils';
 
-const getChatParams = (params: any, pathname: string) => {
+const useChatParams = (params: any, pathname: string) => {
   const { type, id } = getChatType(pathname, params.id);
   return { chatType: type, chatId: id };
 };
@@ -50,6 +51,8 @@ const getMessageParams = (type: TMessageType, id: string) => {
 export function ChatInterface() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const queryClient = useQueryClient();
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const [pendingAction, setPendingAction] = useState<{
     type: string;
@@ -57,10 +60,12 @@ export function ChatInterface() {
     arguments: any;
     toolCallId: string;
   } | null>(null);
+  const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
+  const [chatFinished, setChatFinished] = useState(false);
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { chatType, chatId } = getChatParams(params, pathname);
+  const { chatType, chatId } = useChatParams(params, pathname);
 
   // TODO: This will have to get extended to support other chat types such a group info... possibly?
   // yeah, like know the number of people in the group or something.
@@ -87,12 +92,48 @@ export function ChatInterface() {
     initialMessages: [],
     id: chatId,
     body: {
-      personId: params.id,
-      personName: personData?.person
-        ? `${personData.person.first_name} ${personData.person.last_name}`
-        : undefined
+      ...(chatType == MESSAGE_TYPE.PERSON && { personId: params.id }),
+      ...(chatType == MESSAGE_TYPE.GROUP && { groupId: params.id }),
+      ...(personData?.person && {
+        personName: `${personData.person.first_name} ${personData.person.last_name}`
+      })
+    },
+    onError: (error) => {
+      setMessages((messages) => [
+        ...messages,
+        {
+          id: 'error',
+          role: 'assistant',
+          content: 'Hmm... An error occurred. Please try again.',
+          error: error
+        }
+      ]);
     },
     onToolCall: async ({ toolCall }) => {
+      console.log('Tool Called:', toolCall);
+      setToolsCalled((prevActions) => {
+        const tool = ChatTools.get(toolCall.toolName);
+        console.log('Tool:', tool);
+        const shouldCallEachTime = tool?.onSuccessEach ?? false;
+        console.log('Should Call Each Time:', shouldCallEachTime);
+        console.log('Prev Actions:', prevActions);
+        console.log(
+          'Array checks: ',
+          Array.isArray(prevActions),
+          prevActions.some((call) => call.toolName === toolCall.toolName)
+        );
+        // If we should call for each instance, or if the tool hasn't been called yet
+        if (
+          shouldCallEachTime ||
+          !prevActions.some((call) => call.toolName === toolCall.toolName)
+        ) {
+          console.log('Adding tool call:', toolCall);
+          return [...prevActions, toolCall];
+        }
+
+        return prevActions;
+      });
+      // Need to handle the tool call for creating messages as well
       if (toolCall.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
         console.log('getPersonSuggestions', toolCall);
         return;
@@ -105,13 +146,28 @@ export function ChatInterface() {
       });
     },
     onFinish: async (result) => {
-      // Save the return messsages to the database
+      setChatFinished(true);
       await createMessage.mutateAsync({
         ...getMessageParams(chatType, chatId),
         message: result
       });
     }
   });
+
+  useEffect(() => {
+    if (chatFinished && toolsCalled.length > 0) {
+      toolsCalled.forEach((toolCall) => {
+        const tool = ChatTools.get(toolCall.toolName);
+        if (tool?.onSuccess) {
+          tool.onSuccess({ queryClient, args: toolCall.args });
+        }
+      });
+
+      // Reset states
+      setToolsCalled([]);
+      setChatFinished(false);
+    }
+  }, [chatFinished, toolsCalled, queryClient]);
 
   const {
     data: messagesData,
@@ -199,7 +255,7 @@ export function ChatInterface() {
     setPendingAction(null);
   };
 
-  // Set initial scroll position to bottom when messages first load
+  // Set initial scroll position to bottom when first loading messages
   useEffect(() => {
     // @ts-ignore
     if (messagesData?.messages) {
@@ -220,7 +276,7 @@ export function ChatInterface() {
       setShouldAutoScroll(isAtBottom);
 
       // Load more messages when scrolling near top
-      if (container.scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
+      if (container.scrollTop < 400 && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     },

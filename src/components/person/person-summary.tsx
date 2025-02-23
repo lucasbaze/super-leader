@@ -24,14 +24,14 @@ type TPersonSummary = {
 
 export function PersonSummary({ data }: { data: TPersonSummary }) {
   return (
-    <div className='flex flex-col space-y-6 p-4'>
+    <div className='flex flex-col space-y-8 p-0'>
       <div className='flex flex-col space-y-4'>
-        <Completeness value={data.completeness} />
+        {/* <Completeness value={data.completeness} /> */}
         <Highlights text={data.highlights} />
       </div>
 
       {data.groupedSections.map((group, index) => (
-        <div key={index} className='flex flex-col space-y-4'>
+        <div key={index} className='flex flex-col'>
           <SectionGroup sections={group.sections} />
           <Suggestion {...group.suggestion} />
         </div>

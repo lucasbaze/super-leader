@@ -83,7 +83,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
           <div className='col-span-2 h-full overflow-hidden'>
             <PersonHeader person={data?.person} groups={data?.groups} segment={segment} />
             <ScrollArea className='col-span-2 h-[calc(100svh-theme(spacing.52))] px-5'>
-              <div className='py-3'>{children}</div>
+              <div className='pb-24 pt-2'>{children}</div>
             </ScrollArea>
           </div>
 

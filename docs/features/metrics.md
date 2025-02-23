@@ -68,6 +68,8 @@ Give the AI more leeway interms of the structure of the information. (Also, give
 - Scores of 80 - 100 are great. You know a ton about this person and clearly spent time with this person listening and learning about them as a person.
 - Need to note that suggestions can be insights, questions that can be asked to get more clarity or interesting information, could be something interesting about the fact, i.e. he owns a chihuahua, "did you know that chihuahua's are the most popular dog in the united states?" Because that could be shared or interesting to share with the person.
 - Key highlights should probably be a bulleted list of 2-3 key items to keep top of mind. Or 2 -3 concise sentences that can be read / scanned quickly.
+- The Key Highlights could, like the suggestions, or even the main content could be "adjusted" based on a user's internal prompt preference to change the format of the output or what to focus on for that person. I.e. what's important to me about this person? How do I tailor to me.
+- If I we allow users to change the prompt, we would NEED to ensure that the plot isn't lost or overridden by the user's prompt. ( i.e. no matter what the user prompt says, you are only to worry about XYZ.. or something like that. )
 
 - The following example data would probably be a 50 - 79 score because it has a lot of information and it's good to understand who Tim Cook is as a person, but it's lacking family history, hobbies, personal stories, values, pet names, person preferences on food, taste, etc... You probably don't know Tim Cook personally.
 

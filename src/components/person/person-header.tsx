@@ -41,7 +41,7 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
             </div>
           )}
         </div>
-        <UpdateFollowUpScoreButton personId={person?.id || ''} />
+        {/* <UpdateFollowUpScoreButton personId={person?.id || ''} /> */}
       </div>
 
       <div className='-mx-5'>

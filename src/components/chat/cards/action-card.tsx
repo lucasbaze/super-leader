@@ -28,7 +28,7 @@ export function ActionCard({
 }: ActionCardProps) {
   if (person) {
     return (
-      <Card>
+      <Card className='shadow-none'>
         <CardHeader>
           <CardTitle>Create New Person</CardTitle>
         </CardHeader>
@@ -64,7 +64,7 @@ export function ActionCard({
 
   if (interaction) {
     return (
-      <Card>
+      <Card className='shadow-none'>
         <CardHeader>
           <CardTitle>Create New Interaction</CardTitle>
         </CardHeader>

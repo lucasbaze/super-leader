@@ -291,9 +291,10 @@ export type Database = {
       }
       person: {
         Row: {
-          ai_summary: string | null
+          ai_summary: Json | null
           bio: string | null
           birthday: string | null
+          completeness_score: number | null
           created_at: string
           date_met: string | null
           first_name: string
@@ -304,9 +305,10 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          ai_summary?: string | null
+          ai_summary?: Json | null
           bio?: string | null
           birthday?: string | null
+          completeness_score?: number | null
           created_at?: string
           date_met?: string | null
           first_name: string
@@ -317,9 +319,10 @@ export type Database = {
           user_id: string
         }
         Update: {
-          ai_summary?: string | null
+          ai_summary?: Json | null
           bio?: string | null
           birthday?: string | null
+          completeness_score?: number | null
           created_at?: string
           date_met?: string | null
           first_name?: string

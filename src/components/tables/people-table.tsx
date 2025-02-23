@@ -82,7 +82,8 @@ export function PeopleTable({
                   </TableCell>
                   <TableCell className='max-w-[200px] truncate'>{person.bio || 'No bio'}</TableCell>
                   <TableCell className='max-w-[200px] truncate'>
-                    {person.ai_summary || 'No summary'}
+                    {'No summary'}
+                    {/* {person.ai_summary || 'No summary'} */}
                   </TableCell>
                 </TableRow>
               ))}

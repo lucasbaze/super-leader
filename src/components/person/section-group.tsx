@@ -4,7 +4,6 @@ type TSection = {
   title: string;
   icon: string;
   content: string;
-  forYou: string;
 };
 
 export function SectionGroup({ sections }: { sections: TSection[] }) {
@@ -24,15 +23,7 @@ export function SectionGroup({ sections }: { sections: TSection[] }) {
             <span className='text-sm'>{section.icon}</span>
             <h3 className='text-xs uppercase tracking-wide text-gray-500'>{section.title}</h3>
           </div>
-          <p className='pl-6 text-gray-700'>{section.content}</p>
-          {/* Commenting out forYou content for now
-          <div className='mt-3 rounded bg-blue-50 p-3'>
-            <p className='text-sm text-blue-800'>
-              <span className='font-semibold'>For you: </span>
-              {section.forYou}
-            </p>
-          </div>
-          */}
+          <p className='pl-7 text-gray-700'>{section.content}</p>
           {index !== sections.length - 1 && (
             <div className='absolute bottom-0 left-1/2 h-px w-24 -translate-x-1/2 transform bg-gray-200' />
           )}

@@ -113,7 +113,8 @@ export function PeopleTableV2({
       header: 'AI Summary',
       size: 300,
       cell: ({ row }) => (
-        <div className='max-w-[250px] truncate'>{row.original.ai_summary || 'No summary'}</div>
+        <div className='max-w-[250px] truncate'>{'No summary'}</div>
+        // <div className='max-w-[250px] truncate'>{row.original.ai_summary || 'No summary'}</div>
       )
     }
   ];

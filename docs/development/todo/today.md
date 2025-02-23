@@ -1,3 +1,18 @@
+### Feb 22nd
+
+- [x] ~~_Built out summary mechanism for an individual person._~~ [2025-02-22]
+- [ ] Add a mechanism to allow the user to navigate away and get "notified" that it completed. Internally poll the status of the summary.
+      null = never started, in-progress, completed, error ( i.e. timeout? )
+      Should fall back to completed if it's not in progress. Client should "timeout" after ~ 10 minutes of polling every 5 seconds... probably?
+- [ ] Try to use the "o1-mini" model to see if it's any better at summarizing.
+- [ ] Update the prompt to get "good enough" for now.
+- [ ] Somehow display the "completeness" metric to the user.
+- [ ] Summarize in the "network" view.
+- [ ] Add tests to the summary service.
+- [ ] Can I build a CRON job that runs every 24 hours and updates all the summaries (or just the ones that haven't been updated in a while)?
+- [ ] Should start by testing if there are any timeout issues on production as is... Should make sure the current model and implementation will work in prod.
+      (Need to make new migration)
+
 ### Feb 21st
 
 - [ ] Clear chat messages for mental "clarity"

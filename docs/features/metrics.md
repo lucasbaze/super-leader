@@ -19,7 +19,6 @@
 - Looking at the image, the data structure probably looks something like:
 
 ```
-isProcessing
 data: {
 "completeness": number,
 "highlights": markdown string

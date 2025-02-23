@@ -20,6 +20,7 @@ export const addPeopleToGroupTool: ChatTool<
   rulesForAI: stripIndents`\
     ## getGroups Guidelines
     - Use addPeopleToGroup to add people to a group by the group's ID and slug. Make sure to search for the people first. Anybody that you can't find, suggest creating a new person.
+    - addPeopleToGroup will automatically handle moving people between between the 5, 50, and 100 groups, as the rule is that a person can be in only 1 of those groups at a time, while a person can be in as many other groups as desired. 
   `,
   parameters: z.object({
     groupId: z.string().describe('The ID of the group to add people to'),

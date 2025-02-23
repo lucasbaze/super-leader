@@ -1,0 +1,3 @@
+- Security and Privacy need to REALLY be highlighted here.
+- No training done on the data. No ads, No tracking, no sales of the data. Everything is open source so you can see the source code and evaluate yourself, or even run your own instance.
+-

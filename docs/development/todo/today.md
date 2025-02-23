@@ -2,6 +2,7 @@
 
 - [ ] Clear chat messages for mental "clarity"
 - [ ] Add "stop" method to the input to stop chat messages
+- [ ] Add an 'update' person option. Particularly for adding Birthdays.
 
 ### Feb 20th
 

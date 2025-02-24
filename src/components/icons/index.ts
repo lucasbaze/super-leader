@@ -37,6 +37,7 @@ export {
   Globe,
   Mail,
   Phone,
+  Layers,
   Trash2,
   Newspaper,
   CheckIcon,

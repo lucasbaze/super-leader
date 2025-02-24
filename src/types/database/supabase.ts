@@ -428,6 +428,69 @@ export type Database = {
           },
         ]
       }
+      user_context: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          processed: boolean
+          processed_at: string | null
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          processed?: boolean
+          processed_at?: string | null
+          reason: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          processed?: boolean
+          processed_at?: string | null
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_profile: {
+        Row: {
+          context_summary: Json | null
+          context_summary_completeness: number
+          created_at: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          context_summary?: Json | null
+          context_summary_completeness?: number
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          context_summary?: Json | null
+          context_summary_completeness?: number
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       websites: {
         Row: {
           created_at: string

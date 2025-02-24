@@ -66,19 +66,29 @@ export async function setupNewUser({
       return { data: null, error: ERRORS.INVALID_USER };
     }
 
-    const results = await Promise.all(
-      DEFAULT_GROUPS.map((group) =>
-        db
-          .from('group')
-          .insert({
-            user_id: userId,
-            name: group.name,
-            slug: group.slug,
-            icon: group.icon
-          })
-          .select()
-      )
-    );
+    // Create default groups and user profile in parallel
+    const [groupResults, profileResult] = await Promise.all([
+      // Create default groups
+      Promise.all(
+        DEFAULT_GROUPS.map((group) =>
+          db
+            .from('group')
+            .insert({
+              user_id: userId,
+              name: group.name,
+              slug: group.slug,
+              icon: group.icon
+            })
+            .select()
+        )
+      ),
+      // Create user profile
+      db.from('user_profile').insert({
+        user_id: userId,
+        first_name: 'New',
+        last_name: 'User'
+      })
+    ]);
 
     return { data: true, error: null };
   } catch (error) {

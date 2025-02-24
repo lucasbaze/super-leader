@@ -10,7 +10,8 @@ const APP_SEGMENTS = {
   NETWORK: 'network',
   PEOPLE: 'people',
   BOOKMARKS: 'bookmarks',
-  LOGIN: 'login'
+  LOGIN: 'login',
+  CONTEXT: 'context'
 } as const;
 
 // Define sub-segments
@@ -57,6 +58,11 @@ export const routes = {
   // Bookmarks routes
   bookmarks: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.BOOKMARKS}`
+  },
+
+  // Context routes
+  context: {
+    root: () => `${BASE_PATH}/${APP_SEGMENTS.CONTEXT}`
   }
 } as const;
 
@@ -78,5 +84,6 @@ export const ROUTES = {
   GROUPS: routes.groups.root(),
   NETWORK: routes.network.root(),
   PEOPLE: routes.people.root(),
-  BOOKMARKS: routes.bookmarks.root()
+  BOOKMARKS: routes.bookmarks.root(),
+  CONTEXT: routes.context.root()
 } as const;

@@ -5,7 +5,7 @@ export const errorLogger = {
     // TODO: Replace with actual logging service
     console.error('Error:', {
       error,
-      context,
+      ...context,
       timestamp: new Date().toISOString()
     });
   }

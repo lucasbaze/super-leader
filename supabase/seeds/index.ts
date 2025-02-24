@@ -50,6 +50,16 @@ async function main() {
     const userId = user.user.id;
     console.log('Created test user with ID:', userId);
 
+    // Create user profile
+    const { error: profileError } = await supabase.from('user_profile').insert({
+      user_id: userId,
+      first_name: 'Test',
+      last_name: 'User'
+    });
+
+    if (profileError) throw profileError;
+    console.log('Created user profile');
+
     // Seed people and their related data
     await seedPeople({ supabase, userId });
 

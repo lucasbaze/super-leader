@@ -99,7 +99,15 @@ export async function POST(req: NextRequest) {
         };
       }
       return acc;
-    }, {})
+    }, {}),
+    onStepFinish: (step) => {
+      console.log('Step:', JSON.stringify(step, null, 2));
+    },
+    onFinish: (result) => {
+      console.log('Result:', JSON.stringify(result, null, 2));
+    },
+    // TODO: test this out... can I "stream" the tool call results?
+    toolCallStreaming: true
   });
 
   return result.toDataStreamResponse();

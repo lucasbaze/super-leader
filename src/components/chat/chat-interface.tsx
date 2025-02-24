@@ -147,6 +147,8 @@ export function ChatInterface() {
     },
     onFinish: async (result) => {
       setChatFinished(true);
+
+      // Save the final result message
       await createMessage.mutateAsync({
         ...getMessageParams(chatType, chatId),
         message: result
@@ -163,11 +165,35 @@ export function ChatInterface() {
         }
       });
 
+      const saveAllMessages = async (messagesToSave: (Message | undefined)[]) => {
+        if (!messagesToSave) return;
+        await Promise.all(
+          messagesToSave.map((msg) => {
+            if (!msg) return;
+            return createMessage.mutateAsync({
+              ...getMessageParams(chatType, chatId),
+              message: msg
+            });
+          })
+        );
+      };
+      // Save all unsaved messages
+      // Get all unsaved messages that need to be persisted
+      const messagesToSave = toolsCalled.map((tool) =>
+        messages.find((msg) =>
+          msg.toolInvocations?.some((invocation) => invocation.toolCallId === tool.toolCallId)
+        )
+      );
+      console.log('messagesToSave', messagesToSave);
+
+      // Save all unsaved messages
+      saveAllMessages(messagesToSave);
+
       // Reset states
       setToolsCalled([]);
       setChatFinished(false);
     }
-  }, [chatFinished, toolsCalled, queryClient]);
+  }, [chatFinished, toolsCalled, queryClient, messages]);
 
   const {
     data: messagesData,
@@ -249,11 +275,11 @@ export function ChatInterface() {
     }
   };
 
-  const handleCancelAction = () => {
+  const handleCancelAction = useCallback(() => {
     if (!pendingAction) return;
     addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Cancelled action' });
     setPendingAction(null);
-  };
+  }, [pendingAction, addToolResult]);
 
   // Set initial scroll position to bottom when first loading messages
   useEffect(() => {
@@ -283,26 +309,35 @@ export function ChatInterface() {
     [fetchNextPage, hasNextPage, isFetchingNextPage]
   );
 
-  const handleSuggestionViewed = (suggestionId: string) => {
-    updateSuggestion.mutate({
-      suggestionId,
-      viewed: true
-    });
-  };
+  const handleSuggestionViewed = useCallback(
+    (suggestionId: string) => {
+      updateSuggestion.mutate({
+        suggestionId,
+        viewed: true
+      });
+    },
+    [updateSuggestion]
+  );
 
-  const handleSuggestionBookmark = (suggestionId: string, saved: boolean) => {
-    updateSuggestion.mutate({
-      suggestionId,
-      saved
-    });
-  };
+  const handleSuggestionBookmark = useCallback(
+    (suggestionId: string, saved: boolean) => {
+      updateSuggestion.mutate({
+        suggestionId,
+        saved
+      });
+    },
+    [updateSuggestion]
+  );
 
-  const handleSuggestionDislike = (suggestionId: string, bad: boolean) => {
-    updateSuggestion.mutate({
-      suggestionId,
-      bad
-    });
-  };
+  const handleSuggestionDislike = useCallback(
+    (suggestionId: string, bad: boolean) => {
+      updateSuggestion.mutate({
+        suggestionId,
+        bad
+      });
+    },
+    [updateSuggestion]
+  );
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -327,6 +362,8 @@ export function ChatInterface() {
     },
     [append, chatType, chatId, createMessage, input, setInput]
   );
+
+  console.log('messages', messages);
 
   return (
     <div className='absolute inset-0 flex flex-col'>

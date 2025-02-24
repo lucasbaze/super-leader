@@ -17,7 +17,8 @@ export const MESSAGE_TYPE = {
   GROUP: 'group',
   HOME: 'home',
   NETWORK: 'network',
-  PEOPLE: 'people'
+  PEOPLE: 'people',
+  CONTEXT: 'context'
 } as const;
 
 export type TMessageType = (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE];

@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { User } from '@supabase/supabase-js';
 
-import { Bell, Bookmark, CircleUser, Command, Home, Orbit } from '@/components/icons';
+import { Bookmark, CircleUser, Command, Home, Layers, Orbit } from '@/components/icons';
 import { CoreGroupsNav } from '@/components/sidebar/core-groups-nav';
 import { MainNav } from '@/components/sidebar/main-nav';
 import { UserGroupsNav } from '@/components/sidebar/user-groups-nav';
@@ -41,6 +41,12 @@ const mainNavItems = [
     title: 'Saved',
     url: ROUTES.BOOKMARKS,
     icon: Bookmark,
+    isActive: false
+  },
+  {
+    title: 'Context',
+    url: ROUTES.CONTEXT,
+    icon: Layers,
     isActive: false
   }
 ];

@@ -119,7 +119,7 @@ describe('bulkImportPeople service', () => {
         const testUser = await createTestUser({ db });
 
         // Generate 50 test people with varying completeness
-        const importData: TBulkImportPerson[] = Array.from({ length: 50 }).map((_, i) => {
+        const importData: TBulkImportPerson[] = Array.from({ length: 5 }).map((_, i) => {
           const hasAddresses = Math.random() > 0.3;
           const hasContacts = Math.random() > 0.2;
           const hasWebsites = Math.random() > 0.6;

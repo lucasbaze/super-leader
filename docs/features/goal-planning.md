@@ -4,10 +4,11 @@ Primary:
 
 - [x] ~~_We'll create a new table called "user_profile" that will store the user's profile information. (This will need to be created on new-user-setup)_~~ [2025-02-23]
 - [x] ~~_Create a new service to get the user_profile for the current user_~~ [2025-02-23]
+- [x] ~~_Create the service tests for the context_summary generation_~~ [2025-02-24]
+- [ ] Create a new chat interface for the goal planner (looks identical but differnet end point and tool calls)
 - [ ] Create a new route for the goal planner
 - [ ] Need to create a new page that will display the goal planner.
 - [ ] Create a new goal planner agent and tool calls
-- [ ] Create a new chat interface for the goal planner (looks identical but differnet end point and tool calls)
 - [ ] Create a new table for storing "user context" records ( we can have a "factored_in" attribute that will be a boolean for whether the context has been factored into the context summary). That way we're only grabbing net new additions to update the context window. i.e. changes over time. The content will be the { content and a reason }
 
 Secondary:

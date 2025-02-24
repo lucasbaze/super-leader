@@ -21,13 +21,14 @@ export async function generateObject({
   model = 'openai/gpt-4'
 }: TGenerateObjectOptions) {
   try {
-    // const openRouterClient = createOpenRouterClient({ webResults });
+    const openRouterClient = createOpenRouterClient({ webResults });
 
     console.log('AI::GenerateObject::Starting', { model });
 
     const completion = await generateObjectAi({
-      model: openai('o1-mini'),
-      // model: openRouterClient.chat(model),
+      // TODO: Used for generating the summaries about individuals... may not be needed if 4o is good enough
+      // model: openai('o1-mini'),
+      model: openRouterClient.chat(model),
       messages,
       schema
     });

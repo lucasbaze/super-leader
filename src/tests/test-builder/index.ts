@@ -6,3 +6,4 @@ export { createTestInteraction } from './create-interaction';
 export { createTestSuggestion } from './create-suggestion';
 export { createTestTask } from './create-task';
 export { createTestUserProfile } from './create-user-profile';
+export { createTestUserContext } from './create-user-context';

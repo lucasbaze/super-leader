@@ -461,7 +461,7 @@ export type Database = {
       user_profile: {
         Row: {
           context_summary: Json | null
-          context_summary_completeness: number
+          context_summary_completeness_score: number
           created_at: string
           first_name: string | null
           id: string
@@ -471,7 +471,7 @@ export type Database = {
         }
         Insert: {
           context_summary?: Json | null
-          context_summary_completeness?: number
+          context_summary_completeness_score?: number
           created_at?: string
           first_name?: string | null
           id?: string
@@ -481,7 +481,7 @@ export type Database = {
         }
         Update: {
           context_summary?: Json | null
-          context_summary_completeness?: number
+          context_summary_completeness_score?: number
           created_at?: string
           first_name?: string | null
           id?: string

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { redirect } from 'next/navigation';
 
-import { ChatInterface } from '@/components/chat/chat-interface';
+import { ChatInterfaceProvider } from '@/components/chat/chat-interface-provider';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
@@ -9,7 +9,6 @@ import { NavUser } from '@/components/nav-user';
 import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
-import { Input } from '@/components/ui/input';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { createClient } from '@/utils/supabase/server';
 
@@ -51,7 +50,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
         <ResizablePanels
           leftPanel={
             <MainContentLayout>
-              <ChatInterface />
+              <ChatInterfaceProvider />
             </MainContentLayout>
           }
           rightPanel={<MainContentLayout>{children}</MainContentLayout>}

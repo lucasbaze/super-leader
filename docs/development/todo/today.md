@@ -21,7 +21,7 @@
 
 ### Feb 20th
 
-- [ ] Attempt to create "agentic" behavior for the AI to respond to the user. Adding more functionality to the AI. Let's expect this to take a week to really get the ball rolling and feel good with it.
+- [x] ~~_Attempt to create "agentic" behavior for the AI to respond to the user. Adding more functionality to the AI. Let's expect this to take a week to really get the ball rolling and feel good with it._~~ [2025-02-25]
 
 Plan: Review multiple tool calls, add "search" functionality, so if I can get it to display pending results in the chat...
 

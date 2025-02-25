@@ -75,7 +75,8 @@ const createMessageSchema = z.object({
     MESSAGE_TYPE.GROUP,
     MESSAGE_TYPE.HOME,
     MESSAGE_TYPE.NETWORK,
-    MESSAGE_TYPE.PEOPLE
+    MESSAGE_TYPE.PEOPLE,
+    MESSAGE_TYPE.CONTEXT
   ]),
   personId: z.string().optional(),
   groupId: z.string().optional()

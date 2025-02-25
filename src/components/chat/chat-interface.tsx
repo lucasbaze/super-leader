@@ -13,6 +13,7 @@ import { useCreateMessage, useMessages } from '@/hooks/use-messages';
 import { useCreatePerson } from '@/hooks/use-people';
 import { usePerson } from '@/hooks/use-person';
 import { useCreateInteraction } from '@/hooks/use-person-activity';
+import { useSavedMessages } from '@/hooks/use-saved-messages';
 import { useUpdateSuggestion } from '@/hooks/use-suggestions';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { dateHandler } from '@/lib/dates/helpers';
@@ -22,7 +23,7 @@ import { routes } from '@/lib/routes';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
-import { ChatMessages } from './chat-messages';
+import { ChatMessagesList } from './chat-messages-list';
 import { getChatType } from './utils';
 
 const useChatParams = (params: any, pathname: string) => {
@@ -75,7 +76,6 @@ export function ChatInterface() {
 
   const createPerson = useCreatePerson();
   const createInteraction = useCreateInteraction(pendingAction?.arguments?.person_id || params.id);
-  const updateSuggestion = useUpdateSuggestion();
   const createMessage = useCreateMessage();
 
   const {
@@ -195,103 +195,24 @@ export function ChatInterface() {
     }
   }, [chatFinished, toolsCalled, queryClient, messages]);
 
-  const {
-    data: messagesData,
-    fetchNextPage,
-    isFetchingNextPage,
-    hasNextPage
-  } = useMessages({
-    ...getMessageParams(chatType, chatId),
-    limit: 10,
-    path: pathname
+  const { savedMessagesData, fetchNextPage, isFetchingNextPage, hasNextPage } = useSavedMessages({
+    chatType,
+    chatId,
+    pathname,
+    setMessages
   });
-
-  // Set saved messages
-  useEffect(() => {
-    // messagesData.messages comes from the useMessages hook which returns a messages array
-    // @ts-ignore
-    const newMessages = messagesData?.messages;
-    if (!newMessages?.length) {
-      return;
-    }
-
-    setMessages((prevMessages) => {
-      // Create a Map for O(1) lookups, using most recent version of each message
-      const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
-      console.log('messageMap', messageMap);
-
-      // Update map with any new messages, automatically handling duplicates
-      newMessages.forEach((msg: Message) => {
-        messageMap.set(msg.id, msg);
-      });
-
-      console.log('newMessages', newMessages);
-
-      // Convert map values back to array and sort once
-      return Array.from(messageMap.values()).sort((a, b) =>
-        dateHandler(a.createdAt).isBefore(dateHandler(b.createdAt)) ? -1 : 1
-      );
-    });
-    // @ts-ignore
-  }, [messagesData?.messages]);
-
-  const handleConfirmAction = async () => {
-    if (!pendingAction) return;
-
-    try {
-      if (pendingAction.name === CHAT_TOOLS.CREATE_PERSON) {
-        const result = await createPerson.mutateAsync(pendingAction.arguments);
-        console.log('Create Person result:', result);
-        addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
-
-        // Show toast with link to new person
-        // TODO: Need to fix this, so that it's working properly
-        toast.success(
-          <div className='flex flex-col gap-2'>
-            <p>
-              Successfully created {pendingAction.arguments.first_name}{' '}
-              {pendingAction.arguments.last_name}
-            </p>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={() => router.push(routes.person.activity({ id: result.data?.id || '' }))}>
-              View Profile
-            </Button>
-          </div>
-        );
-      } else if (pendingAction.name === CHAT_TOOLS.CREATE_INTERACTION) {
-        const result = await createInteraction.mutateAsync({
-          type: pendingAction.arguments.type,
-          note: pendingAction.arguments.note
-        });
-        console.log('Create Interaction result:', result);
-        addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
-      }
-      setPendingAction(null);
-    } catch (error) {
-      console.error('Error handling action:', error);
-      toast.error('Failed to create. Please try again.');
-    }
-  };
-
-  const handleCancelAction = useCallback(() => {
-    if (!pendingAction) return;
-    addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Cancelled action' });
-    setPendingAction(null);
-  }, [pendingAction, addToolResult]);
 
   // Set initial scroll position to bottom when first loading messages
   useEffect(() => {
     // @ts-ignore
-    if (messagesData?.messages) {
+    if (savedMessagesData?.messages) {
       requestAnimationFrame(() => {
         if (messagesContainerRef.current) {
           messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
         }
       });
     }
-  }, [messagesData]);
+  }, [savedMessagesData]);
 
   // Track scroll position to determine if we should auto-scroll new messages
   const handleScroll = useCallback(
@@ -307,36 +228,6 @@ export function ChatInterface() {
       }
     },
     [fetchNextPage, hasNextPage, isFetchingNextPage]
-  );
-
-  const handleSuggestionViewed = useCallback(
-    (suggestionId: string) => {
-      updateSuggestion.mutate({
-        suggestionId,
-        viewed: true
-      });
-    },
-    [updateSuggestion]
-  );
-
-  const handleSuggestionBookmark = useCallback(
-    (suggestionId: string, saved: boolean) => {
-      updateSuggestion.mutate({
-        suggestionId,
-        saved
-      });
-    },
-    [updateSuggestion]
-  );
-
-  const handleSuggestionDislike = useCallback(
-    (suggestionId: string, bad: boolean) => {
-      updateSuggestion.mutate({
-        suggestionId,
-        bad
-      });
-    },
-    [updateSuggestion]
   );
 
   const handleSubmit = useCallback(
@@ -363,27 +254,23 @@ export function ChatInterface() {
     [append, chatType, chatId, createMessage, input, setInput]
   );
 
-  console.log('messages', messages);
-
   return (
     <div className='absolute inset-0 flex flex-col'>
       <ChatHeader append={append} />
       <div className='relative flex-1 overflow-hidden'>
-        <ChatMessages
+        <ChatMessagesList
           ref={messagesContainerRef}
           messages={messages}
           isLoading={isLoading}
-          handleConfirmAction={handleConfirmAction}
-          handleCancelAction={handleCancelAction}
           append={append}
           onScroll={handleScroll}
           messagesEndRef={messagesEndRef}
-          onSuggestionViewed={handleSuggestionViewed}
-          onSuggestionBookmark={handleSuggestionBookmark}
-          onSuggestionDislike={handleSuggestionDislike}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
           hasMore={hasNextPage || false}
+          pendingAction={pendingAction}
+          setPendingAction={setPendingAction}
+          addToolResult={addToolResult}
         />
       </div>
       <ChatInput

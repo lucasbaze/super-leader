@@ -11,24 +11,19 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 import { TContentSuggestionWithId } from '@/services/suggestions/types';
 
+import { useSuggestionActions } from './use-suggestion-actions';
+
 interface SuggestionCardProps {
   suggestion: TContentSuggestionWithId;
   append: (message: CreateMessage) => void;
-  onBookmark: (suggestionId: string, saved: boolean) => void;
-  onDislike: (suggestionId: string, bad: boolean) => void;
-  onViewed: (suggestionId: string) => void;
 }
 
-export function SuggestionCard({
-  suggestion,
-  append,
-  onBookmark,
-  onDislike,
-  onViewed
-}: SuggestionCardProps) {
+export function SuggestionCard({ suggestion, append }: SuggestionCardProps) {
   const [viewed, setViewed] = useState(false);
   const [saved, setSaved] = useState(false);
   const [bad, setBad] = useState(false);
+  const { handleSuggestionViewed, handleSuggestionBookmark, handleSuggestionDislike } =
+    useSuggestionActions();
 
   const handleAppend = () => {
     const prompt = 'Please create message variants based on the following content:';
@@ -56,7 +51,7 @@ export function SuggestionCard({
                   size='icon'
                   className={cn('size-8 hover:bg-accent', saved && 'text-primary')}
                   onClick={() => {
-                    onBookmark(suggestion.id, !saved);
+                    handleSuggestionBookmark(suggestion.id, !saved);
                     setSaved(!saved);
                   }}>
                   <Bookmark className='size-4' fill={saved ? 'currentColor' : 'none'} />
@@ -76,7 +71,7 @@ export function SuggestionCard({
                   size='icon'
                   className={cn('size-8 hover:bg-accent', bad && 'text-destructive')}
                   onClick={() => {
-                    onDislike(suggestion.id, !bad);
+                    handleSuggestionDislike(suggestion.id, !bad);
                     setBad(!bad);
                   }}>
                   <ThumbsDown className='size-4' fill={bad ? 'currentColor' : 'none'} />
@@ -101,7 +96,7 @@ export function SuggestionCard({
             size='sm'
             className={cn(viewed && 'bg-accent/50')}
             onClick={() => {
-              onViewed(suggestion.id);
+              handleSuggestionViewed(suggestion.id);
               setViewed(true);
               window.open(suggestion.contentUrl, '_blank');
             }}>

@@ -48,8 +48,6 @@ interface UseCreateMessageProps {
 }
 
 export function useCreateMessage({ onSuccess }: UseCreateMessageProps = {}) {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async ({ message, conversationId }: { message: any; conversationId: string }) => {
       const response = await fetch('/api/messages', {
@@ -64,9 +62,7 @@ export function useCreateMessage({ onSuccess }: UseCreateMessageProps = {}) {
 
       return json.data;
     },
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['messages', variables.conversationId] });
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    onSuccess: (data) => {
       if (onSuccess) onSuccess(data);
     }
   });

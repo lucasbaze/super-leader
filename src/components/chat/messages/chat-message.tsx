@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
 
-import { PendingAction } from '@/hooks/use-chat-interface';
+import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
 

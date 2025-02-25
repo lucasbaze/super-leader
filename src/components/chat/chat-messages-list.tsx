@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { CreateMessage, Message } from 'ai';
 
 import { Loader } from '@/components/icons';
-import type { PendingAction } from '@/hooks/use-chat-interface';
+import type { PendingAction } from '@/hooks/chat/use-chat-interface';
 
 import { ChatMessage } from './messages/chat-message';
 

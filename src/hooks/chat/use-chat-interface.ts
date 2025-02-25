@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
 import { Message, ToolCall } from 'ai';
 import { useChat } from 'ai/react';
 
 import { useCreateMessage } from '@/hooks/use-messages';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { $user } from '@/lib/llm/messages';
+
+import { useSaveAssistantMessages } from './use-save-assistant-messages';
 
 interface UseChatInterfaceProps {
   apiEndpoint: string;
@@ -26,11 +27,12 @@ export function useChatInterface({
   conversationId,
   extraBody = {}
 }: UseChatInterfaceProps) {
-  const queryClient = useQueryClient();
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
   const [chatFinished, setChatFinished] = useState(false);
+  const [resultingMessage, setResultingMessage] = useState<Message | null>(null);
   const createMessage = useCreateMessage({});
+  const { saveAssistantMessages } = useSaveAssistantMessages({ conversationId });
 
   const chatInterface = useChat({
     api: apiEndpoint,
@@ -49,7 +51,6 @@ export function useChatInterface({
       ]);
     },
     onToolCall: async ({ toolCall }) => {
-      console.log('Tool Called:', toolCall);
       setToolsCalled((prevActions) => {
         const tool = ChatTools.get(toolCall.toolName);
         const shouldCallEachTime = tool?.onSuccessEach ?? false;
@@ -75,56 +76,22 @@ export function useChatInterface({
       });
     },
     onFinish: async (result) => {
+      // Call "saveMessages" method and pass in this last
       setChatFinished(true);
-      if (conversationId) {
-        await createMessage.mutateAsync({
-          conversationId,
-          message: result
-        });
-      }
+      setResultingMessage(result);
     }
   });
 
   // This handles the saving of tool call messages after the chat is finished
   useEffect(() => {
     if (chatFinished && toolsCalled.length > 0 && conversationId) {
-      toolsCalled.forEach((toolCall) => {
-        const tool = ChatTools.get(toolCall.toolName);
-        if (tool?.onSuccess) {
-          tool.onSuccess({ queryClient, args: toolCall.args });
-        }
-      });
-
-      const saveAllMessages = async (messagesToSave: (Message | undefined)[]) => {
-        if (!messagesToSave) return;
-        // Save messages sequentially with a small delay to ensure unique timestamps
-        for (const msg of messagesToSave) {
-          if (!msg) continue;
-          await createMessage.mutateAsync({
-            conversationId,
-            message: msg
-          });
-          // Add 10ms delay between saves to ensure unique timestamps
-          await new Promise((resolve) => setTimeout(resolve, 10));
-        }
-      };
-      // Save all unsaved messages
-      // Get all unsaved messages that need to be persisted
-      const messagesToSave = toolsCalled.map((tool) =>
-        chatInterface.messages.find((msg) =>
-          msg.toolInvocations?.some((invocation) => invocation.toolCallId === tool.toolCallId)
-        )
-      );
-      console.log('messagesToSave', messagesToSave);
-
-      // Save all unsaved messages
-      saveAllMessages(messagesToSave);
+      saveAssistantMessages(resultingMessage, toolsCalled, chatInterface.messages);
 
       // Reset states
       setToolsCalled([]);
       setChatFinished(false);
     }
-  }, [chatFinished, toolsCalled, queryClient, chatInterface, conversationId]);
+  }, [chatFinished, toolsCalled, resultingMessage, chatInterface, conversationId]);
 
   // Handle submitting a message
   const handleSubmit = useCallback(
@@ -133,7 +100,7 @@ export function useChatInterface({
       const messageContent = chatInterface.input;
       if (!messageContent.trim()) return;
 
-      // Add the user message to the UI immediately
+      // // Add the user message to the UI immediately
       chatInterface.append({
         id: Date.now().toString(),
         content: messageContent,
@@ -160,7 +127,6 @@ export function useChatInterface({
     handleSubmit,
     pendingAction,
     setPendingAction,
-    chatFinished,
     toolsCalled
   };
 }

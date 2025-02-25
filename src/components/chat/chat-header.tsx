@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import { Message as AIMessage, ChatRequestOptions, CreateMessage } from 'ai';
-import { ChevronDown, Plus } from 'lucide-react';
+import { History, Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -39,9 +39,6 @@ export function ChatHeader({
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Find the active conversation
-  const activeConversation = conversations.find((c) => c.id === activeConversationId);
-
   const getHeader = () => {
     const isPersonPage = isPath.person(pathname);
     if (isPersonPage) return <PersonChatHeader append={append} />;
@@ -53,9 +50,8 @@ export function ChatHeader({
       <div className='flex items-center'>
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='flex items-center gap-2'>
-              <span className='font-medium'>{activeConversation?.name || 'Conversation'}</span>
-              <ChevronDown className='size-4' />
+            <Button variant='ghost' size='icon' className='flex items-center gap-2'>
+              <History className='size-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='start' className='w-56'>
@@ -77,7 +73,7 @@ export function ChatHeader({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className='flex items-center gap-2'>{/* Additional header actions can go here */}</div>
+      <div className='flex items-center gap-2'>{getHeader()}</div>
     </div>
   );
 }

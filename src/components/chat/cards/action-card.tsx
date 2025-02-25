@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/toast';
-import { PendingAction } from '@/hooks/use-chat-interface';
+import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { useCreatePerson } from '@/hooks/use-people';
 import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
 import { routes } from '@/lib/routes';

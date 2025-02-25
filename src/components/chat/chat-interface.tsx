@@ -2,8 +2,8 @@
 
 import { useRef } from 'react';
 
-import { useChatInterface } from '@/hooks/use-chat-interface';
-import { useSavedMessages } from '@/hooks/use-saved-messages';
+import { useChatInterface } from '@/hooks/chat/use-chat-interface';
+import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
 
 import { ChatHeader } from './chat-header';
@@ -53,8 +53,6 @@ export function ChatInterface({
   if (isLoadingConversations) {
     return <div className='flex h-full items-center justify-center'>Loading...</div>;
   }
-
-  console.log('messages', chatInterface.messages);
 
   return (
     <div className='absolute inset-0 flex flex-col'>

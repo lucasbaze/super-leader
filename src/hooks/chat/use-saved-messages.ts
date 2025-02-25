@@ -30,7 +30,6 @@ export function useSavedMessages({
 
   // Update messages when new data is received
   useEffect(() => {
-    console.log('savedMessagesData', savedMessagesData);
     // Skip if no conversation or no messages
     if (!conversationId || !savedMessagesData?.messages) {
       return;
@@ -46,6 +45,7 @@ export function useSavedMessages({
       const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
 
       // Update map with any new messages, automatically handling duplicates
+      // @ts-ignore
       newMessages.forEach((msg: Message) => {
         messageMap.set(msg.id, msg);
       });

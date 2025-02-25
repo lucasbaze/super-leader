@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { redirect } from 'next/navigation';
 
-import { ChatInterfaceProvider } from '@/components/chat/chat-interface-provider';
+import { ChatInterfaceWrapper } from '@/components/chat/chat-interface-wrapper';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
@@ -24,36 +24,43 @@ export default async function Page({ children }: { children: React.ReactNode }) 
     <SidebarProvider>
       <AppSidebar user={data.user} />
       <main className='flex flex-1 flex-col pr-2'>
-        <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
-          <SidebarTrigger className='-ml-1' />
-          <div className='m-auto flex-1 basis-1/3'>
-            <GlobalSearch />
-          </div>
-          <div className='ml-auto flex items-center gap-2'>
-            <div className='mr-6 flex items-center gap-2'>
-              <OneRing />
-              <TwoRing />
-              <ThreeRing />
-            </div>
-            <ThemeToggle />
-            <NavUser
-              user={{
-                id: data.user.id,
-                name: 'John Doe',
-                email: 'john.doe@example.com',
-                avatar: 'https://github.com/shadcn.png'
-              }}
-            />
-          </div>
-        </div>
-
         <ResizablePanels
           leftPanel={
-            <MainContentLayout>
-              <ChatInterfaceProvider />
-            </MainContentLayout>
+            <>
+              <div className='flex h-12 shrink-0 items-center gap-4 pl-2 pr-1'>
+                <SidebarTrigger className='-ml-1' />
+                <div className='m-auto flex-1'>
+                  <GlobalSearch />
+                </div>
+              </div>
+              <MainContentLayout>
+                <ChatInterfaceWrapper />
+              </MainContentLayout>
+            </>
           }
-          rightPanel={<MainContentLayout>{children}</MainContentLayout>}
+          rightPanel={
+            <>
+              <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
+                <div className='ml-auto flex items-center gap-2'>
+                  <div className='mr-6 flex items-center gap-2'>
+                    <OneRing />
+                    <TwoRing />
+                    <ThreeRing />
+                  </div>
+                  <ThemeToggle />
+                  <NavUser
+                    user={{
+                      id: data.user.id,
+                      name: 'John Doe',
+                      email: 'john.doe@example.com',
+                      avatar: 'https://github.com/shadcn.png'
+                    }}
+                  />
+                </div>
+              </div>
+              <MainContentLayout>{children}</MainContentLayout>
+            </>
+          }
         />
       </main>
     </SidebarProvider>

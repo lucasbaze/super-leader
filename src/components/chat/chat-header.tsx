@@ -41,38 +41,37 @@ export function ChatHeader({
 
   const getHeader = () => {
     const isPersonPage = isPath.person(pathname);
-    if (isPersonPage) return <PersonChatHeader append={append} />;
+    if (isPersonPage)
+      return <PersonChatHeader append={append} conversationId={activeConversationId} />;
     return <DefaultChatHeader />;
   };
 
   return (
-    <div className='flex items-center justify-between border-b p-1'>
-      <div className='flex items-center'>
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon' className='flex items-center gap-2'>
-              <History className='size-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='start' className='w-56'>
-            {conversations.map((conversation) => (
-              <DropdownMenuItem
-                key={conversation.id}
-                className={`${conversation.id === activeConversationId ? 'bg-muted' : ''}`}
-                onClick={() => {
-                  onSelectConversation(conversation.id);
-                  setIsOpen(false);
-                }}>
-                {conversation.name}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuItem onClick={onCreateConversation}>
-              <Plus className='mr-2 size-4' />
-              New Conversation
+    <div className='flex items-center border-b p-1'>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' size='icon' className='flex items-center gap-2'>
+            <History className='size-4' />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='start' className='w-56'>
+          {conversations.map((conversation) => (
+            <DropdownMenuItem
+              key={conversation.id}
+              className={`${conversation.id === activeConversationId ? 'bg-muted' : ''}`}
+              onClick={() => {
+                onSelectConversation(conversation.id);
+                setIsOpen(false);
+              }}>
+              {conversation.name}
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+          ))}
+          <DropdownMenuItem onClick={onCreateConversation}>
+            <Plus className='mr-2 size-4' />
+            New Conversation
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <div className='flex items-center gap-2'>{getHeader()}</div>
     </div>
   );

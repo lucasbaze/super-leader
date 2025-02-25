@@ -6,7 +6,7 @@ import { useConversations, useCreateConversation } from '@/hooks/use-conversatio
 
 import { ChatInterface } from './chat-interface';
 
-export const ChatInterfaceProvider = () => {
+export const ChatInterfaceWrapper = () => {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
 
   // Fetch conversations

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
 
+import { PendingAction } from '@/hooks/use-chat-interface';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
 
@@ -17,12 +18,10 @@ interface ChatMessageProps {
   isLoading: boolean;
   isLastMessage: boolean;
   containerRef: React.ForwardedRef<HTMLDivElement>;
-  handleConfirmAction: () => void;
-  handleCancelAction: () => void;
   append: (message: CreateMessage) => void;
-  onSuggestionViewed: (suggestionId: string) => void;
-  onSuggestionBookmark: (suggestionId: string, saved: boolean) => void;
-  onSuggestionDislike: (suggestionId: string, bad: boolean) => void;
+  pendingAction: PendingAction;
+  setPendingAction: (action: PendingAction) => void;
+  addToolResult: (result: { toolCallId: string; result: string }) => void;
 }
 
 // Helper function moved from chat-messages.tsx
@@ -50,12 +49,10 @@ export function ChatMessage({
   isLoading,
   isLastMessage,
   containerRef,
-  handleConfirmAction,
-  handleCancelAction,
   append,
-  onSuggestionViewed,
-  onSuggestionBookmark,
-  onSuggestionDislike
+  pendingAction,
+  setPendingAction,
+  addToolResult
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
@@ -116,22 +113,10 @@ export function ChatMessage({
             className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
             <ActionCard
               person={toolInvocation.args}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
               completed={toolInvocation.state === 'result'}
-            />
-          </div>
-        );
-      }
-
-      if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
-        return (
-          <div key={toolInvocation.toolCallId} className={'max-w-[90%] break-words text-sm'}>
-            <ActionCard
-              interaction={toolInvocation.args}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
-              completed={toolInvocation.state === 'result'}
+              pendingAction={pendingAction}
+              setPendingAction={setPendingAction}
+              addToolResult={addToolResult}
             />
           </div>
         );
@@ -146,14 +131,7 @@ export function ChatMessage({
         return (
           <>
             {suggestions.map((suggestion: TContentSuggestionWithId) => (
-              <SuggestionCard
-                key={suggestion.id}
-                suggestion={suggestion}
-                append={append}
-                onViewed={onSuggestionViewed}
-                onBookmark={onSuggestionBookmark}
-                onDislike={onSuggestionDislike}
-              />
+              <SuggestionCard key={suggestion.id} suggestion={suggestion} append={append} />
             ))}
           </>
         );
@@ -172,9 +150,6 @@ export function ChatMessage({
         );
       }
     });
-
-    // const minHeight =
-    //   isLastMessage && message.role === 'assistant' ? `calc(-184px + 100dvh)` : undefined;
 
     return (
       <div

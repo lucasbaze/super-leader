@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
   const { messages, personId, personName } = (await req.json()) as ChatRequestBody;
 
   const lastMessage = messages.slice(-1)[0];
+  // This will need to update to include the context that may be passed in on a message by message basis...
   const messageData = getDataFromMessage(lastMessage);
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. You are also a friendly contact manager asisstant with  responsibilities revolving around general contact management, such as, but not limited to, creating new contacts, updating existing contacts, and searching for contacts.

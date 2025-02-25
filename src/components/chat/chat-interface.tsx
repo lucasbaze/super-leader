@@ -1,53 +1,42 @@
 'use client';
 
-import { useParams, usePathname } from 'next/navigation';
 import { useRef } from 'react';
 
 import { useChatInterface } from '@/hooks/use-chat-interface';
-import { usePerson } from '@/hooks/use-person';
 import { useSavedMessages } from '@/hooks/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
-import { MESSAGE_TYPE } from '@/lib/messages/constants';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
 import { ChatMessagesList } from './chat-messages-list';
-import { getChatType } from './utils';
 
-const useChatParams = (params: any, pathname: string) => {
-  const { type, id } = getChatType(pathname, params.id);
-  return { chatType: type, chatId: id };
-};
+interface ChatInterfaceProps {
+  conversationId: string | null;
+  conversations: any[];
+  isLoadingConversations: boolean;
+  onCreateConversation: () => void;
+  onSelectConversation: (id: string) => void;
+}
 
-export function ChatInterface() {
+export function ChatInterface({
+  conversationId,
+  conversations,
+  isLoadingConversations,
+  onCreateConversation,
+  onSelectConversation
+}: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const params = useParams();
-  const pathname = usePathname();
-  const { chatType, chatId } = useChatParams(params, pathname);
-
-  // Get person data if needed
-  const { data: personData } = usePerson(
-    chatType === MESSAGE_TYPE.PERSON ? (params.id as string) : null
-  );
 
   // Set up chat interface
   const chatInterface = useChatInterface({
     apiEndpoint: '/api/chat',
-    chatParams: {
-      id: chatId,
-      type: chatType
-    },
-    chatType,
-    chatId
+    conversationId
   });
 
   // Get saved messages
   const { savedMessagesData, fetchNextPage, isFetchingNextPage, hasNextPage } = useSavedMessages({
-    chatType,
-    chatId,
-    pathname,
+    conversationId,
     setMessages: chatInterface.setMessages
   });
 
@@ -60,9 +49,22 @@ export function ChatInterface() {
     fetchNextPage
   });
 
+  // Show loading state if we're still loading conversations
+  if (isLoadingConversations) {
+    return <div className='flex h-full items-center justify-center'>Loading...</div>;
+  }
+
+  console.log('messages', chatInterface.messages);
+
   return (
     <div className='absolute inset-0 flex flex-col'>
-      <ChatHeader append={chatInterface.append} />
+      <ChatHeader
+        append={chatInterface.append}
+        conversations={conversations}
+        activeConversationId={conversationId || ''}
+        onSelectConversation={onSelectConversation}
+        onCreateConversation={onCreateConversation}
+      />
       <div className='relative flex-1 overflow-hidden'>
         <ChatMessagesList
           ref={messagesContainerRef}

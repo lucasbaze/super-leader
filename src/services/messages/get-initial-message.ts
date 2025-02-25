@@ -20,8 +20,8 @@ type TGetInitialMessagesParams = {
   db: DBClient;
   userId: string;
   path: string;
-  personId?: string;
-  groupId?: string;
+  ownerType: string;
+  ownerId?: string;
 };
 
 // Helper to create a standard message structure
@@ -104,16 +104,16 @@ export async function getInitialMessages({
   db,
   userId,
   path,
-  personId,
-  groupId
+  ownerType,
+  ownerId
 }: TGetInitialMessagesParams): Promise<TServiceResponse<Message[]>> {
   try {
     // Handle person-specific messages
-    if (isPath.person(path) && personId) {
+    if (ownerType === 'person' && ownerId) {
       const { data: person, error: personError } = await db
         .from('person')
         .select('first_name')
-        .eq('id', personId)
+        .eq('id', ownerId)
         .eq('user_id', userId)
         .single();
 
@@ -125,12 +125,12 @@ export async function getInitialMessages({
       return { data: createPersonMessages(person.first_name), error: null };
     }
 
-    // Handle group-specific messages
-    if (isPath.group(path) && groupId) {
+    // Handle group-specific messages (for backward compatibility)
+    if (isPath.group(path) && ownerId) {
       const { data: group, error: groupError } = await db
         .from('group')
         .select('slug, name, icon')
-        .eq('id', groupId)
+        .eq('id', ownerId)
         .eq('user_id', userId)
         .single();
 

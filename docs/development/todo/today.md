@@ -1,3 +1,9 @@
+### Feb 25th
+
+- [ ] Refactoring how messages work... hwo to reduce the "cognitive load" of all the various types of messages?
+
+What if there's 1 conversation that spans everything, but the UI will "show" previous conversations that can be "loaded" up if the user wants to switch to the new conversation?
+
 ### Feb 22nd
 
 - [x] ~~_Built out summary mechanism for an individual person._~~ [2025-02-22]

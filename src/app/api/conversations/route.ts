@@ -5,14 +5,12 @@ import { z } from 'zod';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { createMessage } from '@/services/messages/create-message';
-import { getMessages } from '@/services/messages/get-messages';
+import { createConversation } from '@/services/conversations/create-conversation';
+import { getConversations } from '@/services/conversations/get-conversations';
 import { createClient } from '@/utils/supabase/server';
 
-const getMessagesSchema = z.object({
-  conversationId: z.string(),
-  limit: z.coerce.number().optional(),
-  cursor: z.string().optional()
+const getConversationsSchema = z.object({
+  limit: z.coerce.number().optional()
 });
 
 export async function GET(request: NextRequest) {
@@ -25,20 +23,18 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = Object.fromEntries(request.nextUrl.searchParams);
-    const validationResult = getMessagesSchema.safeParse(searchParams);
+    const validationResult = getConversationsSchema.safeParse(searchParams);
 
     if (!validationResult.success) {
       return apiResponse.validationError(toError(validationResult.error));
     }
 
-    const { conversationId, limit, cursor } = validationResult.data;
+    const { limit } = validationResult.data;
 
-    const result = await getMessages({
+    const result = await getConversations({
       db: supabase,
       userId: authResult.data.id,
-      conversationId,
-      limit,
-      cursor
+      limit
     });
 
     if (result.error) {
@@ -51,12 +47,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
-const createMessageSchema = z.object({
-  // TODO: Add the right type interface for the message.
-  message: z.custom<any>((data) => {
-    return data && typeof data === 'object' && 'role' in data;
-  }, 'Must be a valid AI Message'),
-  conversationId: z.string()
+const createConversationSchema = z.object({
+  name: z.string().min(1)
 });
 
 export async function POST(request: NextRequest) {
@@ -69,19 +61,18 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = createMessageSchema.safeParse(body);
+    const validationResult = createConversationSchema.safeParse(body);
 
     if (!validationResult.success) {
       return apiResponse.validationError(toError(validationResult.error));
     }
 
-    const result = await createMessage({
+    const { name } = validationResult.data;
+
+    const result = await createConversation({
       db: supabase,
-      data: {
-        message: validationResult.data.message,
-        conversationId: validationResult.data.conversationId,
-        userId: authResult.data.id
-      }
+      userId: authResult.data.id,
+      name
     });
 
     if (result.error) {

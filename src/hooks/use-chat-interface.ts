@@ -5,18 +5,12 @@ import { Message, ToolCall } from 'ai';
 import { useChat } from 'ai/react';
 
 import { useCreateMessage } from '@/hooks/use-messages';
-import { ChatParams } from '@/lib/chat/chat-params-factory';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { $user } from '@/lib/llm/messages';
-import { MESSAGE_TYPE, TMessageType } from '@/lib/messages/constants';
 
 interface UseChatInterfaceProps {
   apiEndpoint: string;
-  chatParams: ChatParams;
-  chatType: string;
-  chatId: string;
-  personId?: string;
-  groupId?: string;
+  conversationId: string | null;
   extraBody?: Record<string, any>;
 }
 
@@ -27,44 +21,21 @@ export type PendingAction = {
   toolCallId: string;
 } | null;
 
-const getMessageParams = (type: TMessageType, id: string) => {
-  if (type === MESSAGE_TYPE.PERSON) {
-    return {
-      type,
-      personId: id
-    };
-  } else if (type === MESSAGE_TYPE.GROUP) {
-    return {
-      type,
-      groupId: id
-    };
-  } else {
-    return {
-      type
-    };
-  }
-};
-
 export function useChatInterface({
   apiEndpoint,
-  chatParams,
-  chatType,
-  chatId,
-  personId,
-  groupId,
+  conversationId,
   extraBody = {}
 }: UseChatInterfaceProps) {
   const queryClient = useQueryClient();
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
   const [chatFinished, setChatFinished] = useState(false);
-
-  const createMessage = useCreateMessage();
+  const createMessage = useCreateMessage({});
 
   const chatInterface = useChat({
     api: apiEndpoint,
     initialMessages: [],
-    id: chatParams.id,
+    id: conversationId || undefined,
     body: extraBody,
     onError: (error) => {
       chatInterface.setMessages((messages) => [
@@ -105,11 +76,9 @@ export function useChatInterface({
     },
     onFinish: async (result) => {
       setChatFinished(true);
-      if (chatParams.id) {
+      if (conversationId) {
         await createMessage.mutateAsync({
-          type: chatParams.type,
-          ...(chatParams.personId && { personId: chatParams.personId }),
-          ...(chatParams.groupId && { groupId: chatParams.groupId }),
+          conversationId,
           message: result
         });
       }
@@ -118,7 +87,7 @@ export function useChatInterface({
 
   // This handles the saving of tool call messages after the chat is finished
   useEffect(() => {
-    if (chatFinished && toolsCalled.length > 0) {
+    if (chatFinished && toolsCalled.length > 0 && conversationId) {
       toolsCalled.forEach((toolCall) => {
         const tool = ChatTools.get(toolCall.toolName);
         if (tool?.onSuccess) {
@@ -128,16 +97,16 @@ export function useChatInterface({
 
       const saveAllMessages = async (messagesToSave: (Message | undefined)[]) => {
         if (!messagesToSave) return;
-        await Promise.all(
-          messagesToSave.map((msg) => {
-            if (!msg) return;
-            return createMessage.mutateAsync({
-              // Change to create a "builder" message that handles this silliness
-              ...getMessageParams(chatType, chatId),
-              message: msg
-            });
-          })
-        );
+        // Save messages sequentially with a small delay to ensure unique timestamps
+        for (const msg of messagesToSave) {
+          if (!msg) continue;
+          await createMessage.mutateAsync({
+            conversationId,
+            message: msg
+          });
+          // Add 10ms delay between saves to ensure unique timestamps
+          await new Promise((resolve) => setTimeout(resolve, 10));
+        }
       };
       // Save all unsaved messages
       // Get all unsaved messages that need to be persisted
@@ -155,31 +124,35 @@ export function useChatInterface({
       setToolsCalled([]);
       setChatFinished(false);
     }
-  }, [chatFinished, toolsCalled, queryClient, chatInterface]);
+  }, [chatFinished, toolsCalled, queryClient, chatInterface, conversationId]);
 
+  // Handle submitting a message
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!chatInterface.input.trim()) return;
-
       const messageContent = chatInterface.input;
+      if (!messageContent.trim()) return;
+
+      // Add the user message to the UI immediately
+      chatInterface.append({
+        id: Date.now().toString(),
+        content: messageContent,
+        role: 'user',
+        createdAt: new Date()
+      });
+
+      // Clear the input
       chatInterface.setInput('');
 
-      if (chatParams.id) {
+      // Save the user message to the database
+      if (conversationId) {
         await createMessage.mutateAsync({
-          type: chatParams.type,
-          ...(chatParams.personId && { personId: chatParams.personId }),
-          ...(chatParams.groupId && { groupId: chatParams.groupId }),
-          message: $user(messageContent)
+          message: $user(messageContent),
+          conversationId
         });
       }
-
-      await chatInterface.append({
-        content: messageContent,
-        role: 'user'
-      });
     },
-    [chatInterface, chatParams, createMessage]
+    [chatInterface, createMessage, conversationId]
   );
 
   return {

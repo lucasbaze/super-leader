@@ -4,51 +4,39 @@ import { Message } from 'ai';
 
 import { useMessages } from '@/hooks/use-messages';
 import { dateHandler } from '@/lib/dates/helpers';
-import { TMessageType } from '@/lib/messages/constants';
 
 interface UseSavedMessagesProps {
-  chatType: TMessageType;
-  chatId: string;
-  pathname: string;
   setMessages: (updater: (messages: Message[]) => Message[]) => void;
+  conversationId?: string | null;
   limit?: number;
 }
 
 export function useSavedMessages({
-  chatType,
-  chatId,
-  pathname,
+  conversationId,
   setMessages,
   limit = 10
 }: UseSavedMessagesProps) {
-  // Get message parameters based on chat type
-  const getMessageParams = (type: TMessageType, id: string) => {
-    if (type === 'person') {
-      return { type, personId: id };
-    } else if (type === 'group') {
-      return { type, groupId: id };
-    } else {
-      return { type };
-    }
-  };
-
-  // Fetch messages from the API
+  // Fetch messages for the conversation
   const {
     data: savedMessagesData,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage
   } = useMessages({
-    ...getMessageParams(chatType, chatId),
+    conversationId: conversationId || '',
     limit,
-    path: pathname
+    enabled: !!conversationId // Only fetch when we have a conversationId
   });
 
   // Update messages when new data is received
   useEffect(() => {
-    // messagesData.messages comes from the useMessages hook which returns a messages array
-    // @ts-ignore
-    const newMessages = savedMessagesData?.messages;
+    console.log('savedMessagesData', savedMessagesData);
+    // Skip if no conversation or no messages
+    if (!conversationId || !savedMessagesData?.messages) {
+      return;
+    }
+
+    const newMessages = savedMessagesData.messages;
     if (!newMessages?.length) {
       return;
     }
@@ -67,8 +55,7 @@ export function useSavedMessages({
         dateHandler(a.createdAt).isBefore(dateHandler(b.createdAt)) ? -1 : 1
       );
     });
-    // @ts-ignore
-  }, [savedMessagesData?.messages, setMessages]);
+  }, [savedMessagesData?.messages, setMessages, conversationId]);
 
   // Return the data and functions needed by the component
   return {

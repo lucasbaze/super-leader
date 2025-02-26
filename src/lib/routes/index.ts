@@ -73,7 +73,8 @@ export const isPath = {
   group: (pathname: string) => pathname.startsWith(routes.groups.root()),
   network: (pathname: string) => pathname.startsWith(routes.network.root()),
   people: (pathname: string) => pathname.startsWith(routes.people.root()),
-  bookmarks: (pathname: string) => pathname.startsWith(routes.bookmarks.root())
+  bookmarks: (pathname: string) => pathname.startsWith(routes.bookmarks.root()),
+  context: (pathname: string) => pathname.startsWith(routes.context.root())
 };
 
 // Static routes for direct use

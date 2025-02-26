@@ -1,3 +1,5 @@
+import { MESSAGE_TYPE } from '../messages/constants';
+
 export type TToolError = {
   error: true;
   message: string;
@@ -14,3 +16,10 @@ export function handleToolError(error: unknown, context: string): TToolError {
     details: JSON.stringify(error)
   };
 }
+
+export const CHAT_TYPE = {
+  CONTEXT: 'context',
+  ROOT: 'root'
+} as const;
+
+export type ChatType = (typeof CHAT_TYPE)[keyof typeof CHAT_TYPE];

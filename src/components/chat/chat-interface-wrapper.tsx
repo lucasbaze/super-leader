@@ -1,12 +1,15 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import { useConversations, useCreateConversation } from '@/hooks/use-conversations';
 
 import { ChatInterface } from './chat-interface';
+import { getChatType } from './utils';
 
 export const ChatInterfaceWrapper = () => {
+  const pathname = usePathname();
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
 
   // Fetch conversations
@@ -38,6 +41,7 @@ export const ChatInterfaceWrapper = () => {
       isLoadingConversations={isLoadingConversations}
       onCreateConversation={handleCreateConversation}
       onSelectConversation={setActiveConversationId}
+      chatType={getChatType(pathname)}
     />
   );
 };

@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { useChatInterface } from '@/hooks/chat/use-chat-interface';
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
+import { ChatType } from '@/lib/chat/utils';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
@@ -16,6 +17,7 @@ interface ChatInterfaceProps {
   isLoadingConversations: boolean;
   onCreateConversation: () => void;
   onSelectConversation: (id: string) => void;
+  chatType: ChatType;
 }
 
 export function ChatInterface({
@@ -23,7 +25,8 @@ export function ChatInterface({
   conversations,
   isLoadingConversations,
   onCreateConversation,
-  onSelectConversation
+  onSelectConversation,
+  chatType
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);

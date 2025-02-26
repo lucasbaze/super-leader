@@ -133,6 +133,4 @@ When asking a follow up question, it should always be framed in a Socratic style
 *   **Reference the user's previous responses** to demonstrate you're listening and personalize the conversation.
 *   **Do not directly state the completeness score to the user.** That remains an internal metric.
 *   **Ensure the goal is to build the narratives**
-
-
 `;

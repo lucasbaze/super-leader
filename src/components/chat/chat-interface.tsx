@@ -18,6 +18,7 @@ interface ChatInterfaceProps {
   onCreateConversation: () => void;
   onSelectConversation: (id: string) => void;
   chatType: ChatType;
+  chatRoute: string;
 }
 
 export function ChatInterface({
@@ -26,14 +27,15 @@ export function ChatInterface({
   isLoadingConversations,
   onCreateConversation,
   onSelectConversation,
-  chatType
+  chatType,
+  chatRoute
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Set up chat interface
   const chatInterface = useChatInterface({
-    apiEndpoint: '/api/chat',
+    apiEndpoint: chatRoute,
     conversationId
   });
 

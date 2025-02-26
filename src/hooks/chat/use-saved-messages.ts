@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { Message } from 'ai';
 
 import { useMessages } from '@/hooks/use-messages';
-import type { ChatType } from '@/lib/chat/utils';
 import { dateHandler } from '@/lib/dates/helpers';
 
 interface UseSavedMessagesProps {

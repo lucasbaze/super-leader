@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useConversations, useCreateConversation } from '@/hooks/use-conversations';
 
 import { ChatInterface } from './chat-interface';
-import { getChatType } from './utils';
+import { getChatRoute, getChatType } from './utils';
 
 export const ChatInterfaceWrapper = () => {
   const pathname = usePathname();
@@ -42,6 +42,7 @@ export const ChatInterfaceWrapper = () => {
       onCreateConversation={handleCreateConversation}
       onSelectConversation={setActiveConversationId}
       chatType={getChatType(pathname)}
+      chatRoute={getChatRoute(pathname)}
     />
   );
 };

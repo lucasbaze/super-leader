@@ -44,16 +44,18 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     <div className='absolute inset-0'>
       {/* Fixed Header Section */}
       <BaseHeader className='flex flex-1 items-center justify-between'>
-        <div className='mr-2 text-sm text-muted-foreground'>
-          {data?.person.first_name} {data?.person?.last_name}
-        </div>
-        <div className='flex items-center gap-2 pr-4'>
-          <FollowUpIndicator
+        <div className='flex items-center gap-2 pr-2 text-sm font-semibold text-muted-foreground'>
+          <span className='pr-2'>
+            {data?.person.first_name} {data?.person?.last_name}
+          </span>
+          {/* <FollowUpIndicator
             value={data?.person.follow_up_score ?? 0}
             personId={data?.person.id}
             size='sm'
             editable
-          />
+          /> */}
+        </div>
+        <div className='flex items-center gap-2 pr-4'>
           <Button
             variant='outline'
             size='sm'

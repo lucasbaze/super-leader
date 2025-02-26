@@ -2,15 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 
-import { toast } from 'sonner';
-
 import { GroupBadge } from '@/components/groups/group-badge';
+import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-score-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { routes } from '@/lib/routes';
 import type { TPersonGroup } from '@/types/custom';
 import type { Person } from '@/types/database';
+
+import { CircleProgress } from '../ui/circle-progress';
 
 interface PersonHeaderProps {
   person: Person | undefined;
@@ -51,13 +53,31 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
               value='activity'
               variant='underline'
               onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
-              Activity
+              <span className='mr-2'>Activity</span>
+              <FollowUpIndicator
+                value={person?.follow_up_score ?? 0}
+                personId={person?.id}
+                size='sm'
+                editable
+              />
             </TabsTrigger>
             <TabsTrigger
               value='summary'
               variant='underline'
               onClick={() => router.push(routes.person.summary({ id: person?.id || '' }))}>
-              Summary
+              <span className='mr-2'>Summary</span>
+              <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <div className='hover:cursor-pointer'>
+                      <CircleProgress value={person?.completeness_score ?? 0} size={16} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Profile Completeness: {person?.completeness_score ?? 0}%</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </TabsTrigger>
             {/* <TabsTrigger
               value='discovered'

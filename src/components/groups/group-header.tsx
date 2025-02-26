@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 
 import { AddPeopleSheet } from '@/components/groups/add-people-sheet';
@@ -8,13 +7,6 @@ import { DeleteGroupDialog } from '@/components/groups/delete-group-dialog';
 import { EditGroupSheet } from '@/components/groups/edit-group-sheet';
 import { BaseHeader } from '@/components/headers/base-header';
 import { MoreHorizontal, Settings, Trash, UserPlus, Users } from '@/components/icons';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -24,7 +16,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
-import { ROUTES } from '@/lib/routes';
+import { IconMap } from '@/lib/ui/icon-map';
 import { Group } from '@/types/database';
 
 interface GroupHeaderProps {
@@ -43,8 +35,8 @@ export function GroupHeader({ group, groupMemberCount }: GroupHeaderProps) {
     <BaseHeader className='flex flex-1 justify-between'>
       <div className='flex items-center gap-3'>
         <div className='flex items-center gap-2 text-sm text-muted-foreground'>
-          <Users className='size-4' />
-          {group.name}
+          <span>{IconMap[group.icon] ? IconMap[group.icon]({ size: 4 }) : group.icon}</span>
+          <h1 className='text-md font-semibold text-muted-foreground'>{group.name}</h1>
         </div>
       </div>
 

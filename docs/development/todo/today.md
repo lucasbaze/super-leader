@@ -3,7 +3,8 @@
 - [ ] Partially undo the refactoring of the chat interface... it doesn't "feel" right from an interaction standpoint. When the chat doesn't moves, it doesn't feel like it's "with me" in context with what I'm doing.
 - [x] ~~_Swap Activity to be first?_~~ [2025-02-26]
 - [x] ~~_Remove "follow up" button_~~ [2025-02-26]
-- [ ] Swap breadcrumsb for back button
+- [x] ~~_Swap breadcrumsb for back button_~~ [2025-02-26]
+- [ ] Fix update details actions so I can add the birthday attribute.
 - [ ] Get the first phase of the network stats showing for people. Using the completeness score.
 
 ### Feb 25th

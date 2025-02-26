@@ -9,7 +9,9 @@ export function ContextHeader() {
   return (
     <BaseHeader>
       {userProfile?.first_name && (
-        <h1 className='font-semibold'>{userProfile.first_name}'s Context</h1>
+        <h1 className='text-md font-semibold text-muted-foreground'>
+          {userProfile.first_name}'s Context
+        </h1>
       )}
     </BaseHeader>
   );

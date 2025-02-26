@@ -1,5 +1,3 @@
-import { MESSAGE_TYPE } from '../messages/constants';
-
 export type TToolError = {
   error: true;
   message: string;

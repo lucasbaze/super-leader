@@ -4,9 +4,11 @@ import { CreateMessage, Message } from 'ai';
 
 import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
+import { TContextMessage } from '@/services/context/generate-initial-context-message';
 import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
 
 import { ActionCard } from '../cards/action-card';
+import { ContextMessageCard } from '../cards/context-message-card';
 import { MessageCard } from '../cards/message-card';
 import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
@@ -122,6 +124,25 @@ export function ChatMessage({
         );
       }
       // Handle auto execute tool invocations (state === 'result' is required for type inference)
+
+      if (
+        toolInvocation.state === 'result' &&
+        toolInvocation.toolName === CHAT_TOOLS.INITIAL_CONTEXT_MESSAGE
+      ) {
+        const results = toolInvocation.result?.data as TContextMessage;
+        if (!results) return null;
+        return (
+          <div key={toolInvocation.toolCallId} className='flex flex-col items-start gap-2'>
+            <ContextMessageCard
+              initialQuestion={results.initialQuestion}
+              followUpQuestions={results.followUpQuestions}
+              priority={results.priority}
+              reasoning={results.reasoning}
+            />
+          </div>
+        );
+      }
+
       if (
         toolInvocation.state === 'result' &&
         toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS

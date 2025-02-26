@@ -19,6 +19,8 @@ export function useSavedMessages({
   // Fetch messages for the conversation
   const {
     data: savedMessagesData,
+    isLoading,
+    isFetching,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage
@@ -60,6 +62,7 @@ export function useSavedMessages({
   // Return the data and functions needed by the component
   return {
     savedMessagesData,
+    isLoading: isLoading || isFetching,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage

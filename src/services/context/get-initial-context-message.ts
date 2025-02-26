@@ -29,10 +29,12 @@ export const ERRORS = {
   }
 };
 
+export type InitialContextMessageResult = TServiceResponse<TContextMessage>;
+
 export async function getInitialContextMessage({
   db,
   userId
-}: TCalculateContextMessageParams): Promise<TServiceResponse<TContextMessage>> {
+}: TCalculateContextMessageParams): Promise<InitialContextMessageResult> {
   try {
     // Get user profile data
     const { data: profile, error: profileError } = await db

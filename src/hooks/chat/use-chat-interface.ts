@@ -35,7 +35,7 @@ export function useChatInterface({
   const { saveAssistantMessages } = useSaveAssistantMessages({ conversationId });
 
   const chatInterface = useChat({
-    api: apiEndpoint,
+    api: 'api/chat/context',
     initialMessages: [],
     id: conversationId || undefined,
     body: extraBody,

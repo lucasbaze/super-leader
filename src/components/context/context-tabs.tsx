@@ -12,7 +12,7 @@ type ContextTabsProps = {
 };
 
 export function ContextTabs({ contextSummary }: ContextTabsProps) {
-  const [activeTab, setActiveTab] = useState<'about' | 'plan'>('about');
+  const [activeTab, setActiveTab] = useState<'about' | 'plan' | 'raw'>('about');
 
   return (
     <div className='flex h-full flex-col'>
@@ -38,6 +38,17 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
                 : 'text-muted-foreground hover:bg-muted'
             )}>
             Plan
+          </button>
+          <div className='mx-2 h-4 w-px bg-border'></div>
+          <button
+            onClick={() => setActiveTab('raw')}
+            className={cn(
+              'rounded-md px-2 py-1 text-sm font-medium',
+              activeTab === 'raw'
+                ? 'bg-muted text-foreground'
+                : 'text-muted-foreground hover:bg-muted'
+            )}>
+            Raw
           </button>
         </div>
       </div>
@@ -71,6 +82,25 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
               </p>
             </div>
           </div>
+        )}
+
+        {activeTab === 'raw' && (
+          <>
+            {contextSummary ? (
+              <ContextSummary data={contextSummary} />
+            ) : (
+              <div className='flex h-full items-center justify-center'>
+                <div className='p-6 text-center'>
+                  <h3 className='mb-2 text-xl font-medium'>No context summary available</h3>
+                  <p className='text-muted-foreground'>
+                    This context summary is generated from your activity within the platform, and
+                    helps build your pland and personalize suggestions, tasks, and more within the
+                    application
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

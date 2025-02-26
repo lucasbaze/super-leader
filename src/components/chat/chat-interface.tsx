@@ -1,11 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useChatInterface } from '@/hooks/chat/use-chat-interface';
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
-import { ChatType } from '@/lib/chat/utils';
+import { CHAT_TYPE, ChatType } from '@/lib/chat/utils';
 
 import { ChatHeader } from './chat-header';
 import { ChatInput } from './chat-input';
@@ -17,8 +17,6 @@ interface ChatInterfaceProps {
   isLoadingConversations: boolean;
   onCreateConversation: () => void;
   onSelectConversation: (id: string) => void;
-  chatType: ChatType;
-  chatRoute: string;
 }
 
 export function ChatInterface({
@@ -26,24 +24,23 @@ export function ChatInterface({
   conversations,
   isLoadingConversations,
   onCreateConversation,
-  onSelectConversation,
-  chatType,
-  chatRoute
+  onSelectConversation
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Set up chat interface
   const chatInterface = useChatInterface({
-    apiEndpoint: chatRoute,
+    apiEndpoint: '/api/chat',
     conversationId
   });
 
   // Get saved messages
-  const { savedMessagesData, fetchNextPage, isFetchingNextPage, hasNextPage } = useSavedMessages({
-    conversationId,
-    setMessages: chatInterface.setMessages
-  });
+  const { savedMessagesData, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useSavedMessages({
+      conversationId,
+      setMessages: chatInterface.setMessages
+    });
 
   // Handle scrolling behavior
   const { handleScroll } = useScrollHandling({
@@ -53,6 +50,36 @@ export function ChatInterface({
     isFetchingNextPage,
     fetchNextPage
   });
+
+  // Track if we've already sent the initial message for this session
+  const hasInitializedContextChat = useRef(false);
+
+  // useEffect(() => {
+  //   // Only run this once when the component mounts with context chat type
+  //   // and we haven't already initialized this session
+  //   if (
+  //     chatType === CHAT_TYPE.CONTEXT &&
+  //     !isLoadingConversations &&
+  //     conversationId &&
+  //     !isLoading &&
+  //     !hasInitializedContextChat.current
+  //   ) {
+  //     // Mark that we've initialized the context chat for this session
+  //     hasInitializedContextChat.current = true;
+
+  //     // Send the system message to trigger the initial context
+  //     chatInterface.append({
+  //       role: 'system',
+  //       content: 'Call the `getInitialContext` tool to get started.'
+  //     });
+
+  //     // Send a user message to start the conversation
+  //     chatInterface.append({
+  //       role: 'user',
+  //       content: 'Please ask me a question to get started.'
+  //     });
+  //   }
+  // }, [chatType, isLoadingConversations, conversationId, chatInterface, isLoading]);
 
   // Show loading state if we're still loading conversations
   if (isLoadingConversations) {

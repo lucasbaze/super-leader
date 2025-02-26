@@ -64,8 +64,6 @@ export async function POST(req: NextRequest) {
   - If you are given a person's ID, you do not need to search for a person, just use that ID to perform the action.
   `;
 
-  console.log('System Prompt:', systemPrompt);
-
   const contextualMessages: Message[] = [
     {
       id: 'system',

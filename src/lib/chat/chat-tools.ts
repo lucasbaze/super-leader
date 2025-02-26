@@ -6,6 +6,7 @@ import { createInteractionTool } from './tools/create-interaction';
 import { createPersonTool } from './tools/create-person';
 import { findPersonTool } from './tools/find-person';
 import { getGroupsTool } from './tools/get-groups';
+import { getInitialMessageTool } from './tools/get-initial-message';
 
 // Define all possible tool names as a const
 // TODO: Gotta somehow derive this better
@@ -13,7 +14,8 @@ export const CHAT_TOOLS = {
   CREATE_PERSON: 'createPerson',
   CREATE_INTERACTION: 'createInteraction',
   GET_PERSON_SUGGESTIONS: 'getPersonSuggestions',
-  CREATE_MESSAGE_SUGGESTIONS: 'createMessageSuggestionsFromArticleForUser'
+  CREATE_MESSAGE_SUGGESTIONS: 'createMessageSuggestionsFromArticleForUser',
+  INITIAL_CONTEXT_MESSAGE: 'initialContextMessage'
 } as const;
 
 const ChatTools = createChatToolRegistry();
@@ -24,7 +26,9 @@ ChatTools.register(createGroupTool);
 ChatTools.register(createPersonTool);
 ChatTools.register(addPeopleToGroupTool);
 ChatTools.register(getGroupsTool);
+ChatTools.register(getInitialMessageTool);
 
+// Get all the rules for the AI
 const getAllRulesForAI = () => {
   return ChatTools.list()
     .reduce<string[]>((acc, toolName) => {

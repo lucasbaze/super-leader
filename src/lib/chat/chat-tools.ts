@@ -4,6 +4,7 @@ import { addPeopleToGroupTool } from './tools/add-people-to-group';
 import { createGroupTool } from './tools/create-group';
 import { createInteractionTool } from './tools/create-interaction';
 import { createPersonTool } from './tools/create-person';
+import { createUserContextTool } from './tools/create-user-context';
 import { findPersonTool } from './tools/find-person';
 import { getGroupsTool } from './tools/get-groups';
 import { getInitialMessageTool } from './tools/get-initial-message';
@@ -15,11 +16,13 @@ export const CHAT_TOOLS = {
   CREATE_INTERACTION: 'createInteraction',
   GET_PERSON_SUGGESTIONS: 'getPersonSuggestions',
   CREATE_MESSAGE_SUGGESTIONS: 'createMessageSuggestionsFromArticleForUser',
-  INITIAL_CONTEXT_MESSAGE: 'initialContextMessage'
+  INITIAL_CONTEXT_MESSAGE: 'initialContextMessage',
+  CREATE_USER_CONTEXT: 'createUserContext'
 } as const;
 
 const ChatTools = createChatToolRegistry();
 
+ChatTools.register(createUserContextTool);
 ChatTools.register(findPersonTool);
 ChatTools.register(createInteractionTool);
 ChatTools.register(createGroupTool);

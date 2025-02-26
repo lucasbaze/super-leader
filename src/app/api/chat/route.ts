@@ -52,6 +52,12 @@ export async function POST(req: NextRequest) {
   const messageData = getDataFromMessage(lastMessage);
 
   const systemPrompt = `You are an expert in relationship management and helping people connect and build deeper relationships. You are also a friendly contact manager asisstant with  responsibilities revolving around general contact management, such as, but not limited to, creating new contacts, updating existing contacts, and searching for contacts.
+
+  As an expert in relationship management, you're also responsible for creating a comprehensive profile of the user. This profile will be used to help you better understand the user and provide more accurate and relevant suggestions for interactions, events, and other opportunities. 
+
+  Make sure to always create a new user context record whenever the user mentions something about themselves or activities they're involved in, such as their hobbies, preferences, goals, or their plans, family, hopes, fears, likes, dislikes, previous history, previous successes, aspirations, favorite books, relationship status, or anything else that is relevant to their life.
+
+  Before calling any tools, think like an expert in relationship management about the user's message and see if the user mentions anything about themselves.
   
   **Available Tools & Guidelines**
   ${getAllRulesForAI()}
@@ -63,6 +69,8 @@ export async function POST(req: NextRequest) {
    ** General Rules
   - If you are given a person's ID, you do not need to search for a person, just use that ID to perform the action.
   `;
+
+  console.log('systemPrompt', systemPrompt);
 
   const contextualMessages: Message[] = [
     {
@@ -100,10 +108,10 @@ export async function POST(req: NextRequest) {
       return acc;
     }, {}),
     onStepFinish: (step) => {
-      console.log('Step:', JSON.stringify(step, null, 2));
+      // console.log('Step:', JSON.stringify(step, null, 2));
     },
     onFinish: (result) => {
-      console.log('Result:', JSON.stringify(result, null, 2));
+      // console.log('Result:', JSON.stringify(result, null, 2));
     },
     // TODO: test this out... can I "stream" the tool call results?
     toolCallStreaming: true

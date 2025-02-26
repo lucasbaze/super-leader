@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { ContextSummary as ContextSummarySchema } from '@/services/context/schemas';
 
+import { ContextRawListContainer } from './context-raw-list-container';
 import { ContextSummary } from './context-summary';
 
 type ContextTabsProps = {
@@ -64,7 +65,7 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
                   <h3 className='mb-2 text-xl font-medium'>No context summary available</h3>
                   <p className='text-muted-foreground'>
                     This context summary is generated from your activity within the platform, and
-                    helps build your pland and personalize suggestions, tasks, and more within the
+                    helps build your plan and personalize suggestions, tasks, and more within the
                     application
                   </p>
                 </div>
@@ -84,24 +85,7 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
           </div>
         )}
 
-        {activeTab === 'raw' && (
-          <>
-            {contextSummary ? (
-              <ContextSummary data={contextSummary} />
-            ) : (
-              <div className='flex h-full items-center justify-center'>
-                <div className='p-6 text-center'>
-                  <h3 className='mb-2 text-xl font-medium'>No context summary available</h3>
-                  <p className='text-muted-foreground'>
-                    This context summary is generated from your activity within the platform, and
-                    helps build your pland and personalize suggestions, tasks, and more within the
-                    application
-                  </p>
-                </div>
-              </div>
-            )}
-          </>
-        )}
+        {activeTab === 'raw' && <ContextRawListContainer />}
       </div>
     </div>
   );

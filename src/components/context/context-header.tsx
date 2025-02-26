@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { ChevronLeft } from 'lucide-react';
-
+import { ChevronLeft } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { useUserProfile } from '@/hooks/use-user-profile';
 

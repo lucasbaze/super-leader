@@ -41,8 +41,6 @@ export const ChatInterfaceWrapper = () => {
       isLoadingConversations={isLoadingConversations}
       onCreateConversation={handleCreateConversation}
       onSelectConversation={setActiveConversationId}
-      chatType={getChatType(pathname)}
-      chatRoute={getChatRoute(pathname)}
     />
   );
 };

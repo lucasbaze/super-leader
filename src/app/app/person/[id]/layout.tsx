@@ -1,30 +1,22 @@
 'use client';
 
-import Link from 'next/link';
-import { useParams, useSelectedLayoutSegment } from 'next/navigation';
+import { useParams, useRouter, useSelectedLayoutSegment } from 'next/navigation';
 import React from 'react';
 
-import { Loader, Sparkles, Users } from '@/components/icons';
+import { ChevronLeft, Loader, Sparkles } from '@/components/icons';
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePerson } from '@/hooks/use-person';
 import { useUpdateAISummary } from '@/hooks/use-update-ai-summary';
-import { ROUTES } from '@/lib/routes';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 export default function PersonLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
-  const segment = useSelectedLayoutSegment() || 'summary';
+  const router = useRouter();
+  const segment = useSelectedLayoutSegment() || 'activity';
   const addRecentlyViewed = useRecentlyViewedStore((state) => state.addPerson);
   const { data, isLoading } = usePerson(params.id as string, {
     withContactMethods: true,
@@ -52,25 +44,17 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
       <div className='flex h-[calc(100svh-theme(spacing.16))] flex-col'>
         {/* Fixed Header Section */}
         <div className='flex items-center border-b bg-background md:rounded-t-md'>
-          <div className='py-3 pl-5 pr-3'>
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={ROUTES.PEOPLE}
-                      className='flex items-center gap-2 text-muted-foreground'>
-                      <Users className='size-4' />
-                      <span>People</span>
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  {data?.person.first_name} {data?.person?.last_name}
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+          <div className='flex items-center p-1'>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => router.back()}
+              className='mr-2 text-muted-foreground'>
+              <ChevronLeft className='size-4' />
+            </Button>
+            <div className='mr-2 text-sm text-muted-foreground'>
+              {data?.person.first_name} {data?.person?.last_name}
+            </div>
           </div>
           <div className='flex items-center gap-2 pr-4'>
             <FollowUpIndicator

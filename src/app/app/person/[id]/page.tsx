@@ -2,25 +2,25 @@
 
 import { useParams } from 'next/navigation';
 
-import { PersonSummary } from '@/components/person/person-summary';
-import { usePerson } from '@/hooks/use-person';
+import { ActivityTimeline } from '@/components/timeline/activity-timeline';
+import { usePersonActivity } from '@/hooks/use-person-activity';
 
-export default function PersonSummaryPage() {
+export default function PersonActivityPage() {
   const params = useParams();
-  const { data } = usePerson(params.id as string);
+  const { data: interactions, isLoading, error } = usePersonActivity(params.id as string);
 
-  if (!data?.person?.ai_summary) {
-    return (
-      <div className='p-4 text-sm text-muted-foreground'>
-        No summary available. Click &quot;Update Summary&quot; to generate one.
-      </div>
-    );
+  if (isLoading) {
+    return <div className='text-muted-foreground'>Loading activity...</div>;
+  }
+
+  if (error) {
+    return <div className='text-destructive'>Failed to load activity</div>;
   }
 
   return (
-    <div className='flex flex-col space-y-4 overflow-y-auto'>
-      {/* @ts-ignore TODO: Fix this */}
-      <PersonSummary data={data.person.ai_summary} />
+    <div className='space-y-4'>
+      <h2 className='text-xl font-semibold'>Recent Activity</h2>
+      <ActivityTimeline interactions={interactions || []} />
     </div>
   );
 }

@@ -45,28 +45,28 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
       </div>
 
       <div className='-mx-5'>
-        <Tabs value={segment || 'summary'} className='mt-6'>
+        <Tabs value={segment || 'activity'} className='mt-6'>
           <TabsList variant='underline' className='w-full justify-start gap-2 px-5'>
-            <TabsTrigger
-              value='summary'
-              variant='underline'
-              onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
-              Summary
-            </TabsTrigger>
             <TabsTrigger
               value='activity'
               variant='underline'
-              onClick={() => router.push(routes.person.activity({ id: person?.id || '' }))}>
+              onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
               Activity
             </TabsTrigger>
             <TabsTrigger
+              value='summary'
+              variant='underline'
+              onClick={() => router.push(routes.person.summary({ id: person?.id || '' }))}>
+              Summary
+            </TabsTrigger>
+            {/* <TabsTrigger
               value='discovered'
               variant='underline'
               onClick={() => {
                 toast.info('Coming soon');
               }}>
               Discovered
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
         </Tabs>
       </div>

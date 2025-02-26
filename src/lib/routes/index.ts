@@ -16,7 +16,7 @@ const APP_SEGMENTS = {
 
 // Define sub-segments
 const PERSON_SEGMENTS = {
-  ACTIVITY: 'activity'
+  SUMMARY: 'summary'
 } as const;
 
 // Base path
@@ -36,7 +36,7 @@ export const routes = {
   person: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.PERSON}`,
     byId: (params: PersonIdParam) => `${routes.person.root()}/${params.id}`,
-    activity: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.ACTIVITY}`
+    summary: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.SUMMARY}`
   },
 
   // Group routes

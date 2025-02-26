@@ -1,3 +1,11 @@
+### Feb 26th
+
+- [ ] Partially undo the refactoring of the chat interface... it doesn't "feel" right from an interaction standpoint. When the chat doesn't moves, it doesn't feel like it's "with me" in context with what I'm doing.
+- [x] ~~_Swap Activity to be first?_~~ [2025-02-26]
+- [x] ~~_Remove "follow up" button_~~ [2025-02-26]
+- [ ] Swap breadcrumsb for back button
+- [ ] Get the first phase of the network stats showing for people. Using the completeness score.
+
 ### Feb 25th
 
 - [ ] Refactoring how messages work... hwo to reduce the "cognitive load" of all the various types of messages?

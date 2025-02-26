@@ -20,9 +20,7 @@ export default function PeoplePage() {
 
   return (
     <div className='absolute inset-0'>
-      <div className='mb-4 flex flex-col rounded-t-md border-b bg-background'>
-        <PeopleHeader peopleCount={isLoading ? 0 : people.length} />
-      </div>
+      <PeopleHeader peopleCount={isLoading ? 0 : people.length} />
       <div className='absolute inset-0 top-[48px] mt-[1px]'>
         {isLoading ? (
           <PeopleTableSkeleton />

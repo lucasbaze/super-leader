@@ -19,9 +19,7 @@ export default function ContextPage() {
 
   return (
     <div className='absolute inset-0 flex flex-col'>
-      <div className='border-b bg-background p-1'>
-        <ContextHeader />
-      </div>
+      <ContextHeader />
       <div className='flex-1 overflow-hidden'>
         {isLoading ? (
           <div className='flex h-full items-center justify-center'>

@@ -13,9 +13,7 @@ export default function HomePage() {
 
   return (
     <div className='absolute inset-0'>
-      <div className='mb-4 flex flex-col rounded-t-md border-b bg-background'>
-        <HomeHeader />
-      </div>
+      <HomeHeader />
       <div className='absolute inset-0 top-[48px] mt-[1px] overflow-auto'>
         <div className='p-4'>
           {isLoading ? (

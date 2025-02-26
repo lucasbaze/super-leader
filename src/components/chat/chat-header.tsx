@@ -47,7 +47,7 @@ export function ChatHeader({
   };
 
   return (
-    <div className='flex items-center border-b p-1'>
+    <div className='flex h-12 items-center border-b p-1'>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' size='icon' className='flex items-center gap-2'>

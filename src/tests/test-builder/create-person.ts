@@ -23,6 +23,7 @@ export interface TestPerson {
     url: string;
     type: string;
   }>;
+  completeness_score?: number;
 }
 
 export interface CreateTestPersonParams {
@@ -40,7 +41,8 @@ export async function createTestPerson({ db, data }: CreateTestPersonParams) {
       last_name: `${testPrefix}${data.last_name}`,
       bio: data.bio ? `${testPrefix}${data.bio}` : null,
       user_id: data.user_id,
-      birthday: data.birthday || null
+      birthday: data.birthday || null,
+      completeness_score: data.completeness_score || null
     })
     .select()
     .single();

@@ -82,6 +82,8 @@ There are MANY thing to consider on the home page that I need to consider / thin
 - Need to be able to update the name of people / profile's
 - [ ] Need to save the gravatar color scheme for the user, so that it doesn't re-render all of the time.
 
+- [ ] I'm looking at my Strategic 100 group, and I'm wondering "WHY" is this person in my Strategic 100 group? I don't get that immediate sense of "why" from the group / person. That's on me for sure, but I'm wondering if there's a way to "hint" at that...
+
 This single action needs to do several things:
 
 - Check to see if Anthony D already exists

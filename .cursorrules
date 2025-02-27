@@ -97,6 +97,10 @@ Developer Experience (DX)
   - Error objects should include name, type, message, and displayMessage
   - Services should use errorLogger.log for all errors before returning them
 
+- **Service Considerations**
+
+  - Whenever making changes or additions to service methods, always make sure to create or update the service tests accordingly.
+
 - **Error Types**
 
   - Use `ServiceErrorType` enum for categorizing errors

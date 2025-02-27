@@ -7,12 +7,11 @@ import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-score-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { routes } from '@/lib/routes';
 import type { TPersonGroup } from '@/types/custom';
 import type { Person } from '@/types/database';
 
-import { CircleProgress } from '../ui/circle-progress';
+import { ProfileCompleteness } from '../indicators/profile-completeness';
 
 interface PersonHeaderProps {
   person: Person | undefined;
@@ -66,27 +65,8 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
               variant='underline'
               onClick={() => router.push(routes.person.summary({ id: person?.id || '' }))}>
               <span className='mr-2'>Summary</span>
-              <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
-                    <div className='hover:cursor-pointer'>
-                      <CircleProgress value={person?.completeness_score ?? 0} size={16} />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Profile Completeness: {person?.completeness_score ?? 0}%</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <ProfileCompleteness score={person?.completeness_score ?? 0} size={16} />
             </TabsTrigger>
-            {/* <TabsTrigger
-              value='discovered'
-              variant='underline'
-              onClick={() => {
-                toast.info('Coming soon');
-              }}>
-              Discovered
-            </TabsTrigger> */}
           </TabsList>
         </Tabs>
       </div>

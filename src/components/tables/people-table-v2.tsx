@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/table';
 import { Person } from '@/types/database';
 
+import { ProfileCompleteness } from '../indicators/profile-completeness';
+
 interface TanStackPeopleTableProps {
   people: Person[];
   onRowClick?: (personId: string) => void;
@@ -77,6 +79,16 @@ export function PeopleTableV2({
             personId={row.original.id}
             editable
           />
+        </div>
+      )
+    },
+    {
+      accessorKey: 'completeness_score',
+      header: 'Profile Completeness',
+      size: 150,
+      cell: ({ row }) => (
+        <div className='flex items-center'>
+          <ProfileCompleteness score={row.original.completeness_score ?? 0} size={16} />
         </div>
       )
     },

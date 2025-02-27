@@ -1,9 +1,10 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { createTestUser } from '@/tests/test-builder';
+import { createTestPerson, createTestUser } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
+import { CONVERSATION_OWNER_TYPES } from '../constants';
 import { createConversation } from '../create-conversation';
 import { ERRORS, getConversations } from '../get-conversations';
 
@@ -15,28 +16,50 @@ describe('getConversations', () => {
   });
 
   describe('success cases', () => {
-    it('should get conversations', async () => {
+    it('should get conversations for a specific owner type and identifier', async () => {
       await withTestTransaction(supabase, async (db) => {
         // Create a test user
         const user = await createTestUser({ db });
 
+        const testPerson = await createTestPerson({
+          db,
+          data: {
+            user_id: user.id,
+            first_name: 'John',
+            last_name: 'Doe'
+          }
+        });
         // Create some conversations
         await createConversation({
           db,
           userId: user.id,
-          name: 'Conversation 1'
+          name: 'Conversation 1',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
         await createConversation({
           db,
           userId: user.id,
-          name: 'Conversation 2'
+          name: 'Conversation 2',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
+        // Create a conversation for a different owner type
+        await createConversation({
+          db,
+          userId: user.id,
+          name: 'Conversation 3',
+          ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+          ownerIdentifier: 'network-route'
+        });
         // Get conversations
         const result = await getConversations({
           db,
-          userId: user.id
+          userId: user.id,
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
         expect(result.error).toBeNull();
@@ -54,25 +77,33 @@ describe('getConversations', () => {
         await createConversation({
           db,
           userId: user.id,
-          name: 'Conversation 1'
+          name: 'Conversation 1',
+          ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+          ownerIdentifier: 'network-route'
         });
 
         await createConversation({
           db,
           userId: user.id,
-          name: 'Conversation 2'
+          name: 'Conversation 2',
+          ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+          ownerIdentifier: 'network-route'
         });
 
         await createConversation({
           db,
           userId: user.id,
-          name: 'Conversation 3'
+          name: 'Conversation 3',
+          ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+          ownerIdentifier: 'network-route'
         });
 
         // Get conversations with limit
         const result = await getConversations({
           db,
           userId: user.id,
+          ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+          ownerIdentifier: 'network-route',
           limit: 2
         });
 
@@ -87,11 +118,13 @@ describe('getConversations', () => {
       await withTestTransaction(supabase, async (db) => {
         const result = await getConversations({
           db,
-          userId: ''
+          userId: '',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: ''
         });
 
         expect(result.data).toBeNull();
-        expect(result.error).toEqual(ERRORS.MISSING_USER_ID);
+        expect(result.error).toEqual(ERRORS.VALIDATION_ERROR);
       });
     });
   });

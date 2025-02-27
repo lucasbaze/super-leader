@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { MESSAGE_ROLE, MESSAGE_TOOL_INVOCATION_STATE } from '@/lib/messages/constants';
+import { CONVERSATION_OWNER_TYPES } from '@/services/conversations/constants';
 import { createConversation } from '@/services/conversations/create-conversation';
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
@@ -21,11 +22,18 @@ describe('message-service', () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
 
+        const testPerson = await createTestPerson({
+          db,
+          data: { user_id: testUser.id, first_name: 'John', last_name: 'Doe' }
+        });
+
         // Create a conversation for the person
         const conversation = await createConversation({
           db,
           userId: testUser.id,
-          name: 'Test Conversation'
+          name: 'Test Conversation',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
         const messageData = {
@@ -64,7 +72,9 @@ describe('message-service', () => {
         const conversation = await createConversation({
           db,
           userId: testUser.id,
-          name: 'Test Conversation'
+          name: 'Test Conversation',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
         const messageData = {
@@ -123,12 +133,18 @@ describe('message-service', () => {
     it('should create a new message in a root conversation', async () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
+        const testPerson = await createTestPerson({
+          db,
+          data: { user_id: testUser.id, first_name: 'Michael', last_name: 'Orcutt' }
+        });
 
         // Create a root conversation
         const conversation = await createConversation({
           db,
           userId: testUser.id,
-          name: 'Test Conversation'
+          name: 'Test Conversation',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
         const messageData = {
@@ -160,10 +176,17 @@ describe('message-service', () => {
     it('should return an error if message is missing', async () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
+        const testPerson = await createTestPerson({
+          db,
+          data: { user_id: testUser.id, first_name: 'Michael', last_name: 'Orcutt' }
+        });
+
         const conversation = await createConversation({
           db,
           userId: testUser.id,
-          name: 'Test Conversation'
+          name: 'Test Conversation',
+          ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+          ownerIdentifier: testPerson.id
         });
 
         const result = await createMessage({

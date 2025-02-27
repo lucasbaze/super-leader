@@ -6,12 +6,13 @@ import { useChat } from 'ai/react';
 import { useCreateMessage } from '@/hooks/use-messages';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { $user } from '@/lib/llm/messages';
+import { Conversation } from '@/types/database';
 
 import { useSaveAssistantMessages } from './use-save-assistant-messages';
 
 interface UseChatInterfaceProps {
-  apiEndpoint: string;
   conversationId: string | null;
+  handleCreateConversation: ({ title }: { title: string }) => Promise<Conversation>;
   extraBody?: Record<string, any>;
 }
 
@@ -23,16 +24,19 @@ export type PendingAction = {
 } | null;
 
 export function useChatInterface({
-  apiEndpoint,
   conversationId,
+  handleCreateConversation,
   extraBody = {}
 }: UseChatInterfaceProps) {
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(conversationId);
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
   const [chatFinished, setChatFinished] = useState(false);
   const [resultingMessage, setResultingMessage] = useState<Message | null>(null);
   const createMessage = useCreateMessage({});
-  const { saveAssistantMessages } = useSaveAssistantMessages({ conversationId });
+  const { saveAssistantMessages } = useSaveAssistantMessages({
+    conversationId: activeConversationId
+  });
 
   const chatInterface = useChat({
     api: '/api/chat',
@@ -82,16 +86,21 @@ export function useChatInterface({
     }
   });
 
+  // Resets the chat interface when the conversationId changes
+  useEffect(() => {
+    chatInterface.setMessages([]);
+  }, [conversationId]);
+
   // This handles the saving of tool call messages after the chat is finished
   useEffect(() => {
-    if (chatFinished && toolsCalled.length > 0 && conversationId) {
+    if (chatFinished && toolsCalled.length > 0 && activeConversationId) {
       saveAssistantMessages(resultingMessage, toolsCalled, chatInterface.messages);
 
       // Reset states
       setToolsCalled([]);
       setChatFinished(false);
     }
-  }, [chatFinished, toolsCalled, resultingMessage, chatInterface, conversationId]);
+  }, [chatFinished, toolsCalled, resultingMessage, chatInterface, activeConversationId]);
 
   // Handle submitting a message
   const handleSubmit = useCallback(
@@ -100,7 +109,16 @@ export function useChatInterface({
       const messageContent = chatInterface.input;
       if (!messageContent.trim()) return;
 
-      // // Add the user message to the UI immediately
+      let newConversation;
+      if (!conversationId || !activeConversationId) {
+        // Create a new conversation
+        newConversation = await handleCreateConversation({
+          title: messageContent.substring(0, 40)
+        });
+        setActiveConversationId(newConversation.id);
+      }
+
+      // // Add the user message to the after the conversation has been created
       chatInterface.append({
         id: Date.now().toString(),
         content: messageContent,
@@ -111,15 +129,24 @@ export function useChatInterface({
       // Clear the input
       chatInterface.setInput('');
 
-      // Save the user message to the database
-      if (conversationId) {
-        await createMessage.mutateAsync({
-          message: $user(messageContent),
-          conversationId
-        });
+      // Don't save the user message to the database if the conversation hasn't been created yet
+      if (!newConversation || !activeConversationId) {
+        return;
       }
+
+      await createMessage.mutateAsync({
+        message: $user(messageContent),
+        conversationId: newConversation?.id || activeConversationId
+      });
     },
-    [chatInterface, createMessage, conversationId]
+    [
+      chatInterface.input,
+      chatInterface.append,
+      chatInterface.setInput,
+      createMessage,
+      activeConversationId,
+      conversationId
+    ]
   );
 
   return {

@@ -1,16 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
+import { ConversationOwnerType } from '@/services/conversations/constants';
 
 interface UseConversationsProps {
+  ownerType: ConversationOwnerType;
+  ownerIdentifier: string;
   limit?: number;
 }
 
-export function useConversations({ limit }: UseConversationsProps = {}) {
+export function useConversations({ ownerType, ownerIdentifier, limit }: UseConversationsProps) {
   return useQuery({
-    queryKey: ['conversations', limit],
+    queryKey: ['conversations', ownerType, ownerIdentifier, limit],
     queryFn: async () => {
       const params = new URLSearchParams();
+      params.append('ownerType', ownerType);
+      params.append('ownerIdentifier', ownerIdentifier);
       if (limit) params.append('limit', limit.toString());
 
       const response = await fetch(`/api/conversations?${params.toString()}`);
@@ -29,14 +34,20 @@ interface UseCreateConversationProps {
   onSuccess?: (data: any) => void;
 }
 
+interface CreateConversationParams {
+  name: string;
+  ownerType: ConversationOwnerType;
+  ownerIdentifier: string;
+}
+
 export function useCreateConversation({ onSuccess }: UseCreateConversationProps = {}) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ name }: { name: string }) => {
+    mutationFn: async ({ name, ownerType, ownerIdentifier }: CreateConversationParams) => {
       const response = await fetch('/api/conversations', {
         method: 'POST',
-        body: JSON.stringify({ name })
+        body: JSON.stringify({ name, ownerType, ownerIdentifier })
       });
       const json = await response.json();
 
@@ -47,7 +58,9 @@ export function useCreateConversation({ onSuccess }: UseCreateConversationProps 
       return json.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({
+        queryKey: ['conversations', data.owner_type, data.owner_identifier]
+      });
       if (onSuccess) onSuccess(data);
     }
   });

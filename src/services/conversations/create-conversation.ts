@@ -1,5 +1,5 @@
 import { createError, errorLogger } from '@/lib/errors';
-import { DBClient } from '@/types/database';
+import { Conversation, ConversationInsert, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
@@ -10,45 +10,43 @@ export const ERRORS = {
     'Error creating conversation',
     'Unable to create conversation'
   ),
-  MISSING_USER_ID: createError(
-    'missing_user_id',
+  VALIDATION_ERROR: createError(
+    'validation_error',
     ErrorType.VALIDATION_ERROR,
-    'User ID is required',
-    'User identifier is missing'
-  ),
-  MISSING_NAME: createError(
-    'missing_name',
-    ErrorType.VALIDATION_ERROR,
-    'Conversation name is required',
-    'Conversation name is missing'
+    'Validation error: missing required fields',
+    'Validation error: missing required fields for conversation creation'
   )
 };
 
 export type TCreateConversationParams = {
   db: DBClient;
   userId: string;
-  name: string;
+  name: ConversationInsert['name'];
+  ownerType: ConversationInsert['owner_type'];
+  ownerIdentifier: ConversationInsert['owner_identifier'];
 };
+
+export type CreateConversationResult = TServiceResponse<Conversation>;
 
 export async function createConversation({
   db,
   userId,
+  ownerType,
+  ownerIdentifier,
   name
 }: TCreateConversationParams): Promise<TServiceResponse<any>> {
   try {
-    if (!userId) {
-      return { data: null, error: ERRORS.MISSING_USER_ID };
-    }
-
-    if (!name) {
-      return { data: null, error: ERRORS.MISSING_NAME };
+    if (!userId || !ownerType || !ownerIdentifier || !name) {
+      return { data: null, error: ERRORS.VALIDATION_ERROR };
     }
 
     const { data: conversation, error } = await db
       .from('conversations')
       .insert({
         user_id: userId,
-        name
+        name,
+        owner_type: ownerType,
+        owner_identifier: ownerIdentifier
       })
       .select('*')
       .single();

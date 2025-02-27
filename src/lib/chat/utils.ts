@@ -14,10 +14,3 @@ export function handleToolError(error: unknown, context: string): TToolError {
     details: JSON.stringify(error)
   };
 }
-
-export const CHAT_TYPE = {
-  CONTEXT: 'context',
-  ROOT: 'root'
-} as const;
-
-export type ChatType = (typeof CHAT_TYPE)[keyof typeof CHAT_TYPE];

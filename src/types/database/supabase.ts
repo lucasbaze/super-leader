@@ -142,6 +142,8 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          owner_identifier: string
+          owner_type: string
           updated_at: string
           user_id: string
         }
@@ -149,6 +151,8 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          owner_identifier: string
+          owner_type: string
           updated_at?: string
           user_id: string
         }
@@ -156,6 +160,8 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          owner_identifier?: string
+          owner_type?: string
           updated_at?: string
           user_id?: string
         }
@@ -551,6 +557,16 @@ export type Database = {
       begin_test_transaction: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      get_everyone_else_completeness_score: {
+        Args: {
+          p_user_id: string
+          p_core_group_slugs: string[]
+        }
+        Returns: {
+          avg_completeness: number
+          count: number
+        }[]
       }
       rollback_test_transaction: {
         Args: Record<PropertyKey, never>

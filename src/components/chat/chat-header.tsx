@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import { Message as AIMessage, ChatRequestOptions, CreateMessage } from 'ai';
-import { History, Plus } from 'lucide-react';
 
+import { History, Loader, Plus } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,8 +25,9 @@ interface ChatHeaderProps {
   ) => Promise<string | null | undefined>;
   conversations: any[];
   activeConversationId: string;
+  isLoadingConversations: boolean;
   onSelectConversation: (id: string) => void;
-  onCreateConversation: () => void;
+  onNewConversation: () => void;
 }
 
 export function ChatHeader({
@@ -34,7 +35,8 @@ export function ChatHeader({
   conversations,
   activeConversationId,
   onSelectConversation,
-  onCreateConversation
+  onNewConversation,
+  isLoadingConversations
 }: ChatHeaderProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -50,8 +52,12 @@ export function ChatHeader({
     <div className='flex h-12 items-center border-b p-1'>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' size='icon' className='flex items-center gap-2'>
-            <History className='size-4' />
+          <Button variant='ghost' size='icon' className='mr-2 flex items-center gap-2'>
+            {isLoadingConversations ? (
+              <Loader className='size-4 animate-spin' />
+            ) : (
+              <History className='size-4' />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start' className='w-56'>
@@ -63,10 +69,10 @@ export function ChatHeader({
                 onSelectConversation(conversation.id);
                 setIsOpen(false);
               }}>
-              {conversation.name}
+              <span className='truncate'>{conversation.name}</span>
             </DropdownMenuItem>
           ))}
-          <DropdownMenuItem onClick={onCreateConversation}>
+          <DropdownMenuItem onClick={onNewConversation}>
             <Plus className='mr-2 size-4' />
             New Conversation
           </DropdownMenuItem>

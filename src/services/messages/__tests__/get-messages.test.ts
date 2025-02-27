@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { routes } from '@/lib/routes';
+import { CONVERSATION_OWNER_TYPES } from '@/services/conversations/constants';
 import { createConversation } from '@/services/conversations/create-conversation';
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
@@ -28,7 +28,9 @@ describe('get-messages-service', () => {
           const conversation = await createConversation({
             db,
             userId: testUser.id,
-            name: 'Test Conversation'
+            name: 'Test Conversation',
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'home'
           });
 
           // Create 25 test messages
@@ -82,7 +84,9 @@ describe('get-messages-service', () => {
           const conversation = await createConversation({
             db,
             userId: testUser.id,
-            name: 'Empty Conversation'
+            name: 'Empty Conversation',
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'home'
           });
 
           // Get messages
@@ -110,7 +114,9 @@ describe('get-messages-service', () => {
           const conversation = await createConversation({
             db,
             userId: testUser.id,
-            name: testPerson.data.first_name
+            name: testPerson.data.first_name,
+            ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+            ownerIdentifier: testPerson.data.id
           });
 
           // Get messages (should return initial messages)
@@ -139,7 +145,9 @@ describe('get-messages-service', () => {
           const conversation = await createConversation({
             db,
             userId: testUser.id,
-            name: 'Welcome to Superleader'
+            name: 'Welcome to Superleader',
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'home'
           });
 
           // Get messages (should return initial messages)
@@ -168,7 +176,9 @@ describe('get-messages-service', () => {
           const conversation = await createConversation({
             db,
             userId: testUser.id,
-            name: 'Test Conversation'
+            name: 'Test Conversation',
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'home'
           });
 
           const result = await getMessages({

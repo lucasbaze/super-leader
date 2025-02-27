@@ -20,7 +20,7 @@ const PERSON_SEGMENTS = {
 } as const;
 
 // Base path
-const BASE_PATH = `/${APP_SEGMENTS.ROOT}`;
+export const BASE_PATH = `/${APP_SEGMENTS.ROOT}`;
 
 // Route builder functions
 export const routes = {

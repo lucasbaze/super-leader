@@ -10,6 +10,7 @@ import { ChatMessage } from './messages/chat-message';
 interface ChatMessagesProps {
   messages: Message[];
   isLoading: boolean;
+  isLoadingConversations: boolean;
   pendingAction: PendingAction;
   setPendingAction: (action: PendingAction) => void;
   append: (message: CreateMessage) => void;
@@ -23,7 +24,16 @@ interface ChatMessagesProps {
 
 export const ChatMessagesList = forwardRef<HTMLDivElement, ChatMessagesProps>(
   (
-    { messages, pendingAction, setPendingAction, addToolResult, append, isLoading, ...props },
+    {
+      messages,
+      pendingAction,
+      setPendingAction,
+      addToolResult,
+      append,
+      isLoading,
+      isLoadingConversations,
+      ...props
+    },
     ref
   ) => {
     return (

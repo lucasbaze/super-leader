@@ -37,7 +37,6 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
   return {
     position: isPinned ? 'sticky' : 'relative',
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    background: isPinned ? 'var(--background)' : undefined,
     boxShadow: isPinned === 'left' ? '4px 0 4px -4px rgba(0, 0, 0, 0.1)' : undefined,
     zIndex: isPinned ? 1 : 0
   };
@@ -176,7 +175,7 @@ export function PeopleTableV2({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className='border-b'
+                      className='border-b bg-white hover:bg-accent'
                       style={{
                         width: cell.column.getSize(),
                         ...getCommonPinningStyles(cell.column)

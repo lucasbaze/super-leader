@@ -129,69 +129,23 @@ async function getGroupCompleteness(
 // Helper function to get overall completeness (excluding people in core groups)
 async function getEveryoneElseCompleteness(db: DBClient, userId: string): Promise<number> {
   try {
-    // First, get all person IDs from the core groups
-    const { data: coreGroupMembers, error: coreGroupError } = await db
-      .from('group')
-      .select(
-        `
-        group_member!inner(person_id)
-      `
-      )
-      .eq('user_id', userId)
-      .in('slug', [
+    // Use a raw SQL query to calculate the average directly in the database
+    const { data, error } = await db.rpc('get_everyone_else_completeness_score', {
+      p_user_id: userId, // Make sure this matches the parameter name in the function
+      p_core_group_slugs: [
+        // Make sure this matches the parameter name in the function
         RESERVED_GROUP_SLUGS.INNER_5,
         RESERVED_GROUP_SLUGS.CENTRAL_50,
         RESERVED_GROUP_SLUGS.STRATEGIC_100
-      ]);
-
-    if (coreGroupError) {
-      console.error('Error fetching core group members:', coreGroupError);
-      return 0;
-    }
-
-    // Extract all person IDs from the core groups
-    const corePersonIds = new Set<string>();
-
-    if (coreGroupMembers) {
-      coreGroupMembers.forEach((group) => {
-        if (group.group_member) {
-          group.group_member.forEach((member: any) => {
-            if (member.person_id) {
-              corePersonIds.add(member.person_id);
-            }
-          });
-        }
-      });
-    }
-
-    // Get all people excluding those in core groups
-    let query = db.from('person').select('completeness_score').eq('user_id', userId);
-
-    // If we have core person IDs, exclude them
-    if (corePersonIds.size > 0) {
-      // Convert to array and use the 'in' operator with 'not'
-      const corePersonIdsArray = Array.from(corePersonIds);
-      query = query.not('id', 'in', `(${corePersonIdsArray.map((id) => `${id}`).join(',')})`);
-    }
-
-    const { data: people, error } = await query;
+      ]
+    });
 
     if (error) {
-      console.error('Error fetching people for everyone else:', error);
+      console.error('Error fetching everyone else completeness:', error);
       return 0;
     }
 
-    if (!people || people.length === 0) {
-      return 0;
-    }
-
-    // Calculate average completeness
-    const totalCompleteness = people.reduce(
-      (sum, person) => sum + (person.completeness_score || 0),
-      0
-    );
-
-    return Math.round(totalCompleteness / people.length);
+    return Math.round(data || 0);
   } catch (error) {
     console.error('Error getting everyone else completeness:', error);
     return 0;

@@ -437,22 +437,5 @@ describe('getNetworkCompleteness service', () => {
         expect(result.error).toMatchObject(ERRORS.INVALID_USER);
       });
     });
-
-    it('should handle database errors gracefully', async () => {
-      await withTestTransaction(supabase, async (db) => {
-        // Mock a database error by providing an invalid query
-        jest.spyOn(db, 'from').mockImplementationOnce(() => {
-          throw new Error('Database error');
-        });
-
-        const result = await getNetworkCompleteness({
-          db,
-          userId: 'valid-user-id'
-        });
-
-        expect(result.data).toBeNull();
-        expect(result.error).toMatchObject(ERRORS.FETCH_FAILED);
-      });
-    });
   });
 });

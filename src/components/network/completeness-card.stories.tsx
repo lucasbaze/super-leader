@@ -13,6 +13,9 @@ const meta: Meta<typeof CompletionCard> = {
     percentage: {
       control: { type: 'range', min: 0, max: 100, step: 1 }
     },
+    count: {
+      control: { type: 'number', min: 0 }
+    },
     variant: {
       control: 'radio',
       options: ['default', 'horizontal']
@@ -26,8 +29,9 @@ type Story = StoryObj<typeof CompletionCard>;
 export const Inner5: Story = {
   args: {
     title: 'Inner 5',
-    subtitle: 'Closest family',
+    subtitle: 'Your Closest family',
     percentage: 85,
+    count: 5,
     icon: '5'
   }
 };
@@ -37,6 +41,7 @@ export const Central50: Story = {
     title: 'Central 50',
     subtitle: 'Your strongest allies',
     percentage: 65,
+    count: 32,
     icon: '50'
   }
 };
@@ -46,6 +51,7 @@ export const Strategic100: Story = {
     title: 'Strategic 100',
     subtitle: 'Your long term partnerships',
     percentage: 45,
+    count: 78,
     icon: '100'
   }
 };
@@ -55,6 +61,7 @@ export const EveryoneElse: Story = {
     title: 'Everyone Else',
     subtitle: 'Your extended network',
     percentage: 25,
+    count: 143,
     icon: ''
   }
 };
@@ -64,6 +71,7 @@ export const HorizontalVariant: Story = {
     title: 'Everyone Else',
     subtitle: 'Your extended network',
     percentage: 25,
+    count: 143,
     icon: '',
     variant: 'horizontal'
   }

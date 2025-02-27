@@ -3,10 +3,10 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
-import { TNetworkCompletenessData } from '@/services/network/get-network-completeness';
+import { NetworkCompletenessData } from '@/services/network/get-network-completeness';
 
 export function useNetworkCompleteness() {
-  return useQuery<TNetworkCompletenessData>({
+  return useQuery<NetworkCompletenessData>({
     queryKey: ['network-completeness'],
     queryFn: async () => {
       const response = await fetch('/api/network/completeness');

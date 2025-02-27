@@ -155,16 +155,20 @@ describe('getNetworkCompleteness service', () => {
 
         if (result.data) {
           // Inner 5 should be 80 (average of 80, 80, 80, 80)
-          expect(result.data.inner5).toBe(80);
+          expect(result.data.inner5.completeness_score).toBe(80);
+          expect(result.data.inner5.count).toBe(4);
 
           // Central 50 should be 60 (average of 60, 60, 60, 60)
-          expect(result.data.central50).toBe(60);
+          expect(result.data.central50.completeness_score).toBe(60);
+          expect(result.data.central50.count).toBe(4);
 
           // Strategic 100 should be 40 (average of 40, 40, 40, 40)
-          expect(result.data.strategic100).toBe(40);
+          expect(result.data.strategic100.completeness_score).toBe(40);
+          expect(result.data.strategic100.count).toBe(4);
 
           // Everyone should be 20 (average of only the 8 people not in core groups)
-          expect(result.data.everyone).toBe(20);
+          expect(result.data.everyone.completeness_score).toBe(20);
+          expect(result.data.everyone.count).toBe(8);
         }
       });
     });
@@ -227,12 +231,16 @@ describe('getNetworkCompleteness service', () => {
 
         if (result.data) {
           // All group scores should be 0 since groups are empty
-          expect(result.data.inner5).toBe(0);
-          expect(result.data.central50).toBe(0);
-          expect(result.data.strategic100).toBe(0);
+          expect(result.data.inner5.completeness_score).toBe(0);
+          expect(result.data.inner5.count).toBe(0);
+          expect(result.data.central50.completeness_score).toBe(0);
+          expect(result.data.central50.count).toBe(0);
+          expect(result.data.strategic100.completeness_score).toBe(0);
+          expect(result.data.strategic100.count).toBe(0);
 
           // Everyone should be 30 (average of 30, 30, 30)
-          expect(result.data.everyone).toBe(30);
+          expect(result.data.everyone.completeness_score).toBe(30);
+          expect(result.data.everyone.count).toBe(3);
         }
       });
     });
@@ -327,10 +335,12 @@ describe('getNetworkCompleteness service', () => {
 
         if (result.data) {
           // Inner 5 should be 25 (average of 50, 50, 0, 0)
-          expect(result.data.inner5).toBe(25);
+          expect(result.data.inner5.completeness_score).toBe(25);
+          expect(result.data.inner5.count).toBe(4);
 
           // Everyone should be 10 since it only includes people not in core groups
-          expect(result.data.everyone).toBe(10);
+          expect(result.data.everyone.completeness_score).toBe(10);
+          expect(result.data.everyone.count).toBe(3);
         }
       });
     });
@@ -413,13 +423,16 @@ describe('getNetworkCompleteness service', () => {
 
         if (result.data) {
           // Inner 5 should be 75
-          expect(result.data.inner5).toBe(75);
+          expect(result.data.inner5.completeness_score).toBe(75);
+          expect(result.data.inner5.count).toBe(1);
 
           // Central 50 should be 75
-          expect(result.data.central50).toBe(75);
+          expect(result.data.central50.completeness_score).toBe(75);
+          expect(result.data.central50.count).toBe(1);
 
           // Everyone should be 25 (only the one person not in core groups)
-          expect(result.data.everyone).toBe(25);
+          expect(result.data.everyone.completeness_score).toBe(25);
+          expect(result.data.everyone.count).toBe(1);
         }
       });
     });

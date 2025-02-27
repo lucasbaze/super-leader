@@ -5,11 +5,23 @@ import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
 
 // Define the response type
-export type TNetworkCompletenessData = {
-  inner5: number;
-  central50: number;
-  strategic100: number;
-  everyone: number;
+export type NetworkCompletenessData = {
+  inner5: {
+    completeness_score: number;
+    count: number;
+  };
+  central50: {
+    completeness_score: number;
+    count: number;
+  };
+  strategic100: {
+    completeness_score: number;
+    count: number;
+  };
+  everyone: {
+    completeness_score: number;
+    count: number;
+  };
 };
 
 // Define service params interface
@@ -34,7 +46,7 @@ export const ERRORS = {
   )
 };
 
-export type GetNetworkCompletenessServiceResult = TServiceResponse<TNetworkCompletenessData>;
+export type GetNetworkCompletenessServiceResult = TServiceResponse<NetworkCompletenessData>;
 
 export async function getNetworkCompleteness({
   db,
@@ -81,9 +93,8 @@ async function getGroupCompleteness(
   db: DBClient,
   userId: string,
   groupSlug: string
-): Promise<number> {
+): Promise<{ completeness_score: number; count: number }> {
   try {
-    // Get average completeness score in a single query using joins
     const { data, error } = await db
       .from('group')
       .select(
@@ -101,7 +112,7 @@ async function getGroupCompleteness(
       .single();
 
     if (error || !data || !data.person || data.person.length === 0) {
-      return 0;
+      return { completeness_score: 0, count: 0 };
     }
 
     // Extract all completeness scores from the nested result
@@ -110,7 +121,7 @@ async function getGroupCompleteness(
       .filter((score: number) => score !== null);
 
     if (completenessScores.length === 0) {
-      return 0;
+      return { completeness_score: 0, count: 0 };
     }
 
     // Calculate average
@@ -119,35 +130,52 @@ async function getGroupCompleteness(
       0
     );
 
-    return Math.round(totalCompleteness / completenessScores.length);
+    return {
+      completeness_score: Math.round(totalCompleteness / completenessScores.length),
+      count: completenessScores.length
+    };
   } catch (error) {
     console.error('Error getting group completeness:', error);
-    return 0;
+    return { completeness_score: 0, count: 0 };
   }
 }
 
 // Helper function to get overall completeness (excluding people in core groups)
-async function getEveryoneElseCompleteness(db: DBClient, userId: string): Promise<number> {
+async function getEveryoneElseCompleteness(
+  db: DBClient,
+  userId: string
+): Promise<{ completeness_score: number; count: number }> {
   try {
     // Use a raw SQL query to calculate the average directly in the database
-    const { data, error } = await db.rpc('get_everyone_else_completeness_score', {
-      p_user_id: userId, // Make sure this matches the parameter name in the function
-      p_core_group_slugs: [
-        // Make sure this matches the parameter name in the function
-        RESERVED_GROUP_SLUGS.INNER_5,
-        RESERVED_GROUP_SLUGS.CENTRAL_50,
-        RESERVED_GROUP_SLUGS.STRATEGIC_100
-      ]
-    });
+    const {
+      data,
+      error
+    }: { data: { avg_completeness: number; count: number } | null; error: any } = await db
+      .rpc('get_everyone_else_completeness_score', {
+        p_user_id: userId,
+        p_core_group_slugs: [
+          RESERVED_GROUP_SLUGS.INNER_5,
+          RESERVED_GROUP_SLUGS.CENTRAL_50,
+          RESERVED_GROUP_SLUGS.STRATEGIC_100
+        ]
+      })
+      .single();
 
     if (error) {
       console.error('Error fetching everyone else completeness:', error);
-      return 0;
+      return { completeness_score: 0, count: 0 };
     }
 
-    return Math.round(data || 0);
+    if (!data) {
+      return { completeness_score: 0, count: 0 };
+    }
+
+    return {
+      completeness_score: Math.round(data.avg_completeness || 0),
+      count: data.count || 0
+    };
   } catch (error) {
     console.error('Error getting everyone else completeness:', error);
-    return 0;
+    return { completeness_score: 0, count: 0 };
   }
 }

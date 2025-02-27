@@ -17,10 +17,22 @@ type Story = StoryObj<typeof CompletenessOverview>;
 export const Default: Story = {
   args: {
     data: {
-      inner5: 85,
-      central50: 65,
-      strategic100: 45,
-      everyone: 25
+      inner5: {
+        completeness_score: 85,
+        count: 5
+      },
+      central50: {
+        completeness_score: 65,
+        count: 32
+      },
+      strategic100: {
+        completeness_score: 45,
+        count: 78
+      },
+      everyone: {
+        completeness_score: 25,
+        count: 143
+      }
     }
   }
 };
@@ -28,10 +40,22 @@ export const Default: Story = {
 export const AllHigh: Story = {
   args: {
     data: {
-      inner5: 90,
-      central50: 85,
-      strategic100: 80,
-      everyone: 75
+      inner5: {
+        completeness_score: 90,
+        count: 5
+      },
+      central50: {
+        completeness_score: 85,
+        count: 32
+      },
+      strategic100: {
+        completeness_score: 80,
+        count: 78
+      },
+      everyone: {
+        completeness_score: 75,
+        count: 143
+      }
     }
   }
 };
@@ -39,10 +63,22 @@ export const AllHigh: Story = {
 export const AllMedium: Story = {
   args: {
     data: {
-      inner5: 60,
-      central50: 55,
-      strategic100: 50,
-      everyone: 45
+      inner5: {
+        completeness_score: 60,
+        count: 5
+      },
+      central50: {
+        completeness_score: 55,
+        count: 32
+      },
+      strategic100: {
+        completeness_score: 50,
+        count: 78
+      },
+      everyone: {
+        completeness_score: 45,
+        count: 143
+      }
     }
   }
 };
@@ -50,10 +86,22 @@ export const AllMedium: Story = {
 export const AllLow: Story = {
   args: {
     data: {
-      inner5: 30,
-      central50: 25,
-      strategic100: 20,
-      everyone: 15
+      inner5: {
+        completeness_score: 30,
+        count: 5
+      },
+      central50: {
+        completeness_score: 25,
+        count: 32
+      },
+      strategic100: {
+        completeness_score: 20,
+        count: 78
+      },
+      everyone: {
+        completeness_score: 15,
+        count: 143
+      }
     }
   }
 };
@@ -61,10 +109,22 @@ export const AllLow: Story = {
 export const Mixed: Story = {
   args: {
     data: {
-      inner5: 95,
-      central50: 60,
-      strategic100: 30,
-      everyone: 10
+      inner5: {
+        completeness_score: 95,
+        count: 5
+      },
+      central50: {
+        completeness_score: 60,
+        count: 32
+      },
+      strategic100: {
+        completeness_score: 30,
+        count: 78
+      },
+      everyone: {
+        completeness_score: 10,
+        count: 143
+      }
     }
   }
 };

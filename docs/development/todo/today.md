@@ -1,15 +1,36 @@
+### Mar 5th
+
+- [ ] Remove someone from a group
+
+### Mar 3rd
+
+- [ ] Bug when trying to add multiple people at the same time. It will only add the last person.
+- [ ] Bug when trying to create a person and then add them to a group.
+- [ ] Bug when adding multiple people to a group at once? "Create a new group called "Dinner" and add Derek Burgman, Roberto, Darian, Andy, Magui, Tim, Eli, Charles, Anthony, Katie, Samantha G" this failed in production... well it worked actually? Just failed to return a message?
+- [ ] Need a better aesthetic for someone being in more than 3 groups
+- [ ] I want this function to work: "Add anyone that has an address in Austin to this group" ( Ideally I can auto-create the group )
+
+### Feb 28th
+
+- [ ] Revisit the use cases and workflows for the tool.
+- [ ] Think about the short term value prop beyond just a tool
+
+### Feb 27th
+
+- [x] ~~_Get multi-chat working so that each route, group, and person has their own set of conversations._~~ [2025-02-27]
+
 ### Feb 26th
 
-- [ ] Partially undo the refactoring of the chat interface... it doesn't "feel" right from an interaction standpoint. When the chat doesn't moves, it doesn't feel like it's "with me" in context with what I'm doing.
+- [x] ~~_Partially undo the refactoring of the chat interface... it doesn't "feel" right from an interaction standpoint. When the chat doesn't moves, it doesn't feel like it's "with me" in context with what I'm doing._~~ [2025-02-27] Fixed
 - [x] ~~_Swap Activity to be first?_~~ [2025-02-26]
 - [x] ~~_Remove "follow up" button_~~ [2025-02-26]
 - [x] ~~_Swap breadcrumsb for back button_~~ [2025-02-26]
 - [ ] Fix update details actions so I can add the birthday attribute.
-- [ ] Get the first phase of the network stats showing for people. Using the completeness score.
+- [x] ~~_Get the first phase of the network stats showing for people. Using the completeness score._~~ [2025-02-27]
 
 ### Feb 25th
 
-- [ ] Refactoring how messages work... hwo to reduce the "cognitive load" of all the various types of messages?
+- [x] ~~_Refactoring how messages work... hwo to reduce the "cognitive load" of all the various types of messages?_~~ [2025-02-27]
 
 What if there's 1 conversation that spans everything, but the UI will "show" previous conversations that can be "loaded" up if the user wants to switch to the new conversation?
 
@@ -22,7 +43,7 @@ What if there's 1 conversation that spans everything, but the UI will "show" pre
 - [ ] Try to use the "o1-mini" model to see if it's any better at summarizing.
 - [ ] Update the prompt to get "good enough" for now.
 - [ ] Somehow display the "completeness" metric to the user.
-- [ ] Summarize in the "network" view.
+- [x] ~~_Summarize in the "network" view._~~ [2025-02-27]
 - [ ] Add tests to the summary service.
 - [ ] Can I build a CRON job that runs every 24 hours and updates all the summaries (or just the ones that haven't been updated in a while)?
 - [ ] Should start by testing if there are any timeout issues on production as is... Should make sure the current model and implementation will work in prod.

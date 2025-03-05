@@ -8,6 +8,7 @@ import { createUserContextTool } from './tools/create-user-context';
 import { findPersonTool } from './tools/find-person';
 import { getGroupsTool } from './tools/get-groups';
 import { getInitialMessageTool } from './tools/get-initial-message';
+import { removePeopleFromGroupTool } from './tools/remove-people-from-group';
 
 // Define all possible tool names as a const
 // TODO: Gotta somehow derive this better
@@ -28,6 +29,7 @@ ChatTools.register(createInteractionTool);
 ChatTools.register(createGroupTool);
 ChatTools.register(createPersonTool);
 ChatTools.register(addPeopleToGroupTool);
+ChatTools.register(removePeopleFromGroupTool);
 ChatTools.register(getGroupsTool);
 ChatTools.register(getInitialMessageTool);
 

@@ -2,7 +2,7 @@ import { isSameDayUTC } from '@/lib/dates/helpers';
 import { createError } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { generateFollowUpScore, TFollowUpScore } from './generate-follow-up-score';
 import { getPerson } from './get-person';
@@ -40,7 +40,7 @@ export const ERRORS = {
 export async function calculateFollowUpScore({
   db,
   personId
-}: TCalculateFollowUpScoreParams): Promise<TServiceResponse<TFollowUpScore>> {
+}: TCalculateFollowUpScoreParams): Promise<ServiceResponse<TFollowUpScore>> {
   try {
     console.log('Person::CalculateFollowUpScore::PersonId', personId);
     const { data, error: personError } = await getPerson({

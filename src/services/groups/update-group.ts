@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { DBClient, Group } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { createUniqueSlug } from './create-unique-slug';
 
@@ -51,7 +51,7 @@ export async function updateGroup({
   name,
   icon,
   userId
-}: UpdateGroupParams): Promise<TServiceResponse<TUpdateGroupResponse>> {
+}: UpdateGroupParams): Promise<ServiceResponse<TUpdateGroupResponse>> {
   try {
     if (!groupId) {
       return { data: null, error: ERRORS.UPDATE_GROUP.MISSING_ID };

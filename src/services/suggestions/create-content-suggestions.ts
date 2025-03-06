@@ -4,7 +4,7 @@ import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/messages';
 import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
 import { ContentSuggestionsResponseSchema, SuggestionSchema, TSuggestion } from './types';
@@ -43,7 +43,7 @@ export async function createContentSuggestions({
   userContent,
   suggestions,
   type
-}: TCreateContentSuggestionsParams): Promise<TServiceResponse<TSuggestion[]>> {
+}: TCreateContentSuggestionsParams): Promise<ServiceResponse<TSuggestion[]>> {
   try {
     const messages = [
       $system(

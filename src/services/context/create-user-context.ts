@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, UserContext } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   CREATE_FAILED: createError(
@@ -34,7 +34,7 @@ export type TCreateUserContextParams = {
   };
 };
 
-export type CreateUserContextServiceResult = TServiceResponse<UserContext>;
+export type CreateUserContextServiceResult = ServiceResponse<UserContext>;
 
 export async function createUserContext({
   db,

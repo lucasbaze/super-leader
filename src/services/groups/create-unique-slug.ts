@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { generateSlug } from '@/lib/utils';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   CREATE_SLUG: {
@@ -33,7 +33,7 @@ export async function createUniqueSlug({
   name,
   table,
   userId
-}: CreateUniqueSlugParams): Promise<TServiceResponse<string>> {
+}: CreateUniqueSlugParams): Promise<ServiceResponse<string>> {
   try {
     if (!name) {
       return { data: null, error: ERRORS.CREATE_SLUG.MISSING_NAME };

@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, UserContext } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   FETCH_FAILED: createError(
@@ -25,7 +25,7 @@ export type TGetUserContextParams = {
   processed?: boolean;
 };
 
-export type GetUserContextServiceResult = TServiceResponse<UserContext[]>;
+export type GetUserContextServiceResult = ServiceResponse<UserContext[]>;
 
 export async function getUserContext({
   db,

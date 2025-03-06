@@ -3,7 +3,7 @@ import { CoreAssistantMessage, CoreToolMessage, Message, ToolResult } from 'ai';
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Message as DBMessage } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 type ResponseMessage = Message | CoreAssistantMessage | CoreToolMessage;
 
@@ -76,7 +76,7 @@ function transformToolInvocations(message: ResponseMessage) {
 export async function createMessage({
   db,
   data
-}: TCreateMessageParams): Promise<TServiceResponse<TChatMessage>> {
+}: TCreateMessageParams): Promise<ServiceResponse<TChatMessage>> {
   try {
     if (!data.message) {
       return { data: null, error: ERRORS.INVALID_MESSAGE };

@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { generateSlug } from '@/lib/utils';
 import { DBClient, Group } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { createUniqueSlug } from './create-unique-slug';
 
@@ -43,7 +43,7 @@ export type TCreateGroupParams = {
   };
 };
 
-export type CreateGroupServiceResult = TServiceResponse<Group>;
+export type CreateGroupServiceResult = ServiceResponse<Group>;
 
 export async function createGroup({
   db,

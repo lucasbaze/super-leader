@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   GROUP_MEMBERS: {
@@ -36,7 +36,7 @@ export async function getGroupMembers({
   db,
   userId,
   id
-}: GetGroupMembersParams): Promise<TServiceResponse<Person[]>> {
+}: GetGroupMembersParams): Promise<ServiceResponse<Person[]>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.GROUP_MEMBERS.MISSING_USER_ID };

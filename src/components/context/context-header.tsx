@@ -10,7 +10,7 @@ export function ContextHeader() {
     <BaseHeader>
       {userProfile?.first_name && (
         <h1 className='text-md font-semibold text-muted-foreground'>
-          {userProfile.first_name}'s Context
+          {userProfile.first_name}'s Goals
         </h1>
       )}
     </BaseHeader>

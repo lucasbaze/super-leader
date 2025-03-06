@@ -31,8 +31,6 @@ export function ChatInterface({
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
-  console.log('conversationId', conversationId);
-
   // Set up chat interface
   const chatInterface = useChatInterface({
     conversationId,
@@ -54,8 +52,6 @@ export function ChatInterface({
     isFetchingNextPage,
     fetchNextPage
   });
-
-  console.log('messages', chatInterface.messages);
 
   return (
     <div className='absolute inset-0 flex flex-col'>

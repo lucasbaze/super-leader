@@ -13,21 +13,21 @@ type ContextTabsProps = {
 };
 
 export function ContextTabs({ contextSummary }: ContextTabsProps) {
-  const [activeTab, setActiveTab] = useState<'about' | 'plan' | 'raw'>('about');
+  const [activeTab, setActiveTab] = useState<'summary' | 'plan' | 'memory'>('summary');
 
   return (
     <div className='flex h-full flex-col'>
       <div className='border-b bg-background'>
         <div className='flex items-center px-3 py-2'>
           <button
-            onClick={() => setActiveTab('about')}
+            onClick={() => setActiveTab('summary')}
             className={cn(
               'rounded-md px-2 py-1 text-sm font-medium',
-              activeTab === 'about'
+              activeTab === 'summary'
                 ? 'bg-muted text-foreground'
                 : 'text-muted-foreground hover:bg-muted'
             )}>
-            You
+            Summary Profile
           </button>
           <div className='mx-2 h-4 w-px bg-border'></div>
           <button
@@ -38,24 +38,24 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
                 ? 'bg-muted text-foreground'
                 : 'text-muted-foreground hover:bg-muted'
             )}>
-            Plan
+            Networking Plan
           </button>
           <div className='mx-2 h-4 w-px bg-border'></div>
           <button
-            onClick={() => setActiveTab('raw')}
+            onClick={() => setActiveTab('memory')}
             className={cn(
               'rounded-md px-2 py-1 text-sm font-medium',
-              activeTab === 'raw'
+              activeTab === 'memory'
                 ? 'bg-muted text-foreground'
                 : 'text-muted-foreground hover:bg-muted'
             )}>
-            Raw
+            Memory
           </button>
         </div>
       </div>
 
       <div className='flex-1 overflow-hidden'>
-        {activeTab === 'about' && (
+        {activeTab === 'summary' && (
           <>
             {contextSummary ? (
               <ContextSummary data={contextSummary} />
@@ -85,7 +85,7 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
           </div>
         )}
 
-        {activeTab === 'raw' && <ContextRawListContainer />}
+        {activeTab === 'memory' && <ContextRawListContainer />}
       </div>
     </div>
   );

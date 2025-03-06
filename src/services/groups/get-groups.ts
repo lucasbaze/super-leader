@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Group } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   GROUPS: {
@@ -25,7 +25,7 @@ export interface GetGroupsParams {
   userId: string;
 }
 
-export type GetGroupsServiceResult = TServiceResponse<
+export type GetGroupsServiceResult = ServiceResponse<
   Omit<Group, 'created_at' | 'user_id' | 'updated_at'>[]
 >;
 

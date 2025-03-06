@@ -6,7 +6,7 @@ import { $system, $user } from '@/lib/llm/messages';
 import { getPerson, GetPersonResult } from '@/services/person/get-person';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
 import { MessageSuggestionsResponseSchema, TMessageSuggestion } from './types';
@@ -54,7 +54,7 @@ export async function createMessageSuggestions({
   personId,
   contentUrl,
   contentTitle
-}: TCreateMessageSuggestionsParams): Promise<TServiceResponse<TMessageSuggestion[]>> {
+}: TCreateMessageSuggestionsParams): Promise<ServiceResponse<TMessageSuggestion[]>> {
   try {
     if (!personId) {
       return { data: null, error: ERRORS.MESSAGE_SUGGESTIONS.PERSON_REQUIRED };

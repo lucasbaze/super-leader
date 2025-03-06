@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { User } from '@supabase/supabase-js';
 
-import { Bookmark, CircleUser, Command, Home, Layers, Orbit } from '@/components/icons';
+import { Bookmark, CircleUser, Command, Home, LandPlot, Orbit } from '@/components/icons';
 import { CoreGroupsNav } from '@/components/sidebar/core-groups-nav';
 import { MainNav } from '@/components/sidebar/main-nav';
 import { UserGroupsNav } from '@/components/sidebar/user-groups-nav';
@@ -44,9 +44,9 @@ const mainNavItems = [
     isActive: false
   },
   {
-    title: 'Context',
+    title: 'Goals',
     url: ROUTES.CONTEXT,
-    icon: Layers,
+    icon: LandPlot,
     isActive: false
   }
 ];

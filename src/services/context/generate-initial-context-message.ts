@@ -5,7 +5,7 @@ import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/messages';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
 // Response schema
@@ -50,7 +50,7 @@ type TGenerateContextMessageParams = {
 export async function generateInitialContextMessage({
   completenessScore,
   contextSummary
-}: TGenerateContextMessageParams): Promise<TServiceResponse<TContextMessage>> {
+}: TGenerateContextMessageParams): Promise<ServiceResponse<TContextMessage>> {
   try {
     const messages = [
       $system(buildSystemPrompt().prompt),

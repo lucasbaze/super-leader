@@ -239,7 +239,7 @@ If you're creating a **dossier** on an individual, it should be structured in a 
 
 ---
 
-### **Comprehensive Individual Dossier Categories**
+### **Comprehensive Individual SinglePersonSummary Categories**
 
 #### **1. Relationship Context & History**
 
@@ -386,7 +386,7 @@ If you're creating a **dossier** on an individual, it should be structured in a 
 
 ---
 
-### **How to Use This Dossier Structure**
+### **How to Use This SinglePersonSummary Structure**
 
 - This structure allows you to **quickly assess** key aspects of an individual, whether for **business, friendship, or networking**.
 - You can prioritize **what to track and update** depending on your goals with the relationship.

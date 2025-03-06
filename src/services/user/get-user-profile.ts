@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, UserProfile } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   USER_PROFILE: {
@@ -25,7 +25,7 @@ export interface GetUserProfileParams {
   userId: string;
 }
 
-export type GetUserProfileServiceResult = TServiceResponse<UserProfile>;
+export type GetUserProfileServiceResult = ServiceResponse<UserProfile>;
 
 export async function getUserProfile({
   db,

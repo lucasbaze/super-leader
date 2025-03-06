@@ -3,7 +3,7 @@ import { errorLogger } from '@/lib/errors/error-logger';
 import { TPersonGroup } from '@/types/custom';
 import { Address, ContactMethod, DBClient, Group, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { TInteraction } from './person-activity';
 
@@ -85,7 +85,7 @@ export async function getPerson({
   withWebsites = false,
   withInteractions = false,
   withGroups = false
-}: GetPersonParams): Promise<TServiceResponse<GetPersonResult>> {
+}: GetPersonParams): Promise<ServiceResponse<GetPersonResult>> {
   try {
     // Get person
     const { data: person, error: personError } = await db

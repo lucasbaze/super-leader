@@ -3,7 +3,7 @@ import { errorLogger } from '@/lib/errors/error-logger';
 import { getPerson, GetPersonResult } from '@/services/person/get-person';
 import { DBClient, Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { createContentSuggestionPrompt } from './create-content-suggestion-prompt';
 import { createContentSuggestions } from './create-content-suggestions';
@@ -67,7 +67,7 @@ export async function getContentSuggestionsForPerson({
   personId,
   type = 'content'
 }: TGetSuggestionsForPersonParams): Promise<
-  TServiceResponse<TGetContentSuggestionsForPersonResponse>
+  ServiceResponse<TGetContentSuggestionsForPersonResponse>
 > {
   try {
     if (!personId) {

@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   REMOVE_MEMBERS: {
@@ -33,7 +33,7 @@ export interface RemoveGroupMembersParams {
   userId: string;
 }
 
-export type RemoveGroupMembersServiceResult = TServiceResponse<null>;
+export type RemoveGroupMembersServiceResult = ServiceResponse<null>;
 
 export async function removeGroupMembers({
   db,

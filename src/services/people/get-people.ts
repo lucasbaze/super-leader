@@ -2,7 +2,7 @@ import { createError } from '@/lib/errors/error-factory';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { DBClient, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   PEOPLE: {
@@ -23,7 +23,7 @@ export interface GetPeopleParams {
 export async function getPeople({
   db,
   userId
-}: GetPeopleParams): Promise<TServiceResponse<Person[]>> {
+}: GetPeopleParams): Promise<ServiceResponse<Person[]>> {
   try {
     const { data: people, error } = await db
       .from('person')

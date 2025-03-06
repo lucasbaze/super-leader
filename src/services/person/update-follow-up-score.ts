@@ -1,7 +1,7 @@
 import { createError } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { calculateFollowUpScore } from './calculate-follow-up-score';
 import { TFollowUpScore } from './generate-follow-up-score';
@@ -35,7 +35,7 @@ export async function updateFollowUpScore({
   db,
   personId,
   manualScore
-}: TUpdateFollowUpScoreParams): Promise<TServiceResponse<TFollowUpScore>> {
+}: TUpdateFollowUpScoreParams): Promise<ServiceResponse<TFollowUpScore>> {
   try {
     if (!personId) {
       return { data: null, error: ERRORS.UPDATE.PERSON_REQUIRED };

@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { Database, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export type TInteraction = Database['public']['Tables']['interactions']['Row'];
 
@@ -50,7 +50,7 @@ export type TCreateInteractionParams = {
 export async function getPersonActivity({
   db,
   personId
-}: TGetPersonActivityParams): Promise<TServiceResponse<TInteraction[]>> {
+}: TGetPersonActivityParams): Promise<ServiceResponse<TInteraction[]>> {
   try {
     console.log('getPersonActivity:', personId);
     const { data, error } = await db
@@ -70,7 +70,7 @@ export async function getPersonActivity({
   }
 }
 
-export type CreateInteractionServiceResult = TServiceResponse<TInteraction>;
+export type CreateInteractionServiceResult = ServiceResponse<TInteraction>;
 
 export async function createInteraction({
   db,

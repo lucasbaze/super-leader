@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   DELETE_GROUP: {
@@ -37,7 +37,7 @@ export async function deleteGroup({
   db,
   groupId,
   userId
-}: DeleteGroupParams): Promise<TServiceResponse<null>> {
+}: DeleteGroupParams): Promise<ServiceResponse<null>> {
   try {
     if (!groupId) {
       return { data: null, error: ERRORS.DELETE_GROUP.MISSING_ID };

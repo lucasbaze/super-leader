@@ -18,7 +18,7 @@ const GroupedSectionSchema = z.object({
   suggestion: SuggestionSchema
 });
 
-const DossierSchema = z.object({
+const SinglePersonSummarySchema = z.object({
   completeness: z.number().min(0).max(100),
   highlights: z
     .string()
@@ -27,6 +27,6 @@ const DossierSchema = z.object({
 });
 
 // Example usage:
-// const parsedData = DossierSchema.parse(yourJsonData);
+// const parsedData = SinglePersonSummarySchema.parse(yourJsonData);
 
-export { DossierSchema };
+export { SinglePersonSummarySchema };

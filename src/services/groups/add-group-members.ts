@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   ADD_MEMBERS: {
@@ -35,7 +35,7 @@ export interface AddGroupMembersParams {
   userId: string;
 }
 
-export type AddGroupMembersServiceResult = TServiceResponse<null>;
+export type AddGroupMembersServiceResult = ServiceResponse<null>;
 
 export async function addGroupMembers({
   db,

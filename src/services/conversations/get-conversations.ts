@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { Conversation, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import type { ConversationOwnerType } from './constants';
 
@@ -28,7 +28,7 @@ export type TGetConversationsParams = {
   limit?: number;
 };
 
-export type GetConversationResult = TServiceResponse<Conversation[]>;
+export type GetConversationResult = ServiceResponse<Conversation[]>;
 
 export async function getConversations({
   db,
@@ -36,7 +36,7 @@ export async function getConversations({
   ownerType,
   ownerIdentifier,
   limit = 10
-}: TGetConversationsParams): Promise<TServiceResponse<any>> {
+}: TGetConversationsParams): Promise<ServiceResponse<any>> {
   try {
     if (!userId || !ownerType || !ownerIdentifier) {
       return { data: null, error: ERRORS.VALIDATION_ERROR };

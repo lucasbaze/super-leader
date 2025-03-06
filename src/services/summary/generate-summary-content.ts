@@ -6,12 +6,12 @@ import { $system, $user } from '@/lib/llm/messages';
 import { TPersonGroup } from '@/types/custom';
 import { Address, ContactMethod, Interaction, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
-import { DossierSchema } from './schemas';
+import { SinglePersonSummarySchema } from './schemas';
 
-export type TDossier = z.infer<typeof DossierSchema>;
+export type SinglePersonSummary = z.infer<typeof SinglePersonSummarySchema>;
 
 // Define errors
 export const ERRORS = {
@@ -45,7 +45,7 @@ export async function generateSummaryContent({
   groups,
   contactMethods = [],
   addresses = []
-}: TGenerateAISummaryParams): Promise<TServiceResponse<TDossier>> {
+}: TGenerateAISummaryParams): Promise<ServiceResponse<SinglePersonSummary>> {
   try {
     const messages = [
       $system(buildSystemPrompt().prompt),
@@ -54,7 +54,7 @@ export async function generateSummaryContent({
 
     const response = await generateObject({
       messages,
-      schema: DossierSchema,
+      schema: SinglePersonSummarySchema,
       model: 'openai/gpt-4'
     });
 
@@ -62,7 +62,7 @@ export async function generateSummaryContent({
       return { data: null, error: ERRORS.GENERATION.FAILED };
     }
 
-    const parsedContent = DossierSchema.safeParse(response);
+    const parsedContent = SinglePersonSummarySchema.safeParse(response);
 
     if (!parsedContent.success) {
       return {

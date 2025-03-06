@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 // Define the response type
 export type NetworkCompletenessData = {
@@ -46,7 +46,7 @@ export const ERRORS = {
   )
 };
 
-export type GetNetworkCompletenessServiceResult = TServiceResponse<NetworkCompletenessData>;
+export type GetNetworkCompletenessServiceResult = ServiceResponse<NetworkCompletenessData>;
 
 export async function getNetworkCompleteness({
   db,

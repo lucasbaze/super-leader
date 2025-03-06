@@ -1,6 +1,6 @@
 'use client';
 
-import { TDossier } from '@/services/summary/generate-summary-content';
+import { SinglePersonSummary } from '@/services/summary/generate-summary-content';
 
 import { Completeness } from './completeness';
 import { Highlights } from './highlights';
@@ -8,7 +8,7 @@ import { SectionGroup } from './section-group';
 import { Suggestion } from './suggestion';
 
 type TPersonSummaryProps = {
-  data: TDossier;
+  data: SinglePersonSummary;
 };
 
 export function PersonSummary({ data }: TPersonSummaryProps) {

@@ -1,10 +1,10 @@
 import { createError } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { buildAISummary } from './build-ai-summary';
-import { TDossier } from './generate-summary-content';
+import { SinglePersonSummary } from './generate-summary-content';
 
 // Service params interface
 export interface TUpdateAISummaryParams {
@@ -33,7 +33,7 @@ export const ERRORS = {
 export async function updateAISummary({
   db,
   personId
-}: TUpdateAISummaryParams): Promise<TServiceResponse<TDossier>> {
+}: TUpdateAISummaryParams): Promise<ServiceResponse<SinglePersonSummary>> {
   try {
     console.log('Person::UpdateAISummary::Starting', { personId });
 

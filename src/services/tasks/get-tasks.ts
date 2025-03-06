@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import type { GetTaskSuggestionResult } from './types';
 
@@ -30,7 +30,7 @@ export interface GetTasksParams {
 export async function getTasks({
   db,
   userId
-}: GetTasksParams): Promise<TServiceResponse<GetTaskSuggestionResult[]>> {
+}: GetTasksParams): Promise<ServiceResponse<GetTaskSuggestionResult[]>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.TASKS.MISSING_USER_ID };

@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { Conversation, ConversationInsert, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   FETCH_FAILED: createError(
@@ -26,7 +26,7 @@ export type TCreateConversationParams = {
   ownerIdentifier: ConversationInsert['owner_identifier'];
 };
 
-export type CreateConversationResult = TServiceResponse<Conversation>;
+export type CreateConversationResult = ServiceResponse<Conversation>;
 
 export async function createConversation({
   db,
@@ -34,7 +34,7 @@ export async function createConversation({
   ownerType,
   ownerIdentifier,
   name
-}: TCreateConversationParams): Promise<TServiceResponse<any>> {
+}: TCreateConversationParams): Promise<ServiceResponse<any>> {
   try {
     if (!userId || !ownerType || !ownerIdentifier || !name) {
       return { data: null, error: ERRORS.VALIDATION_ERROR };

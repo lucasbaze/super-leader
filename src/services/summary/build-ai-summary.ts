@@ -1,10 +1,10 @@
 import { createError } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { getPerson } from '../person/get-person';
-import { generateSummaryContent, TDossier } from './generate-summary-content';
+import { generateSummaryContent, SinglePersonSummary } from './generate-summary-content';
 
 // Service params interface
 export interface TCalculateAISummaryParams {
@@ -39,7 +39,7 @@ export const ERRORS = {
 export async function buildAISummary({
   db,
   personId
-}: TCalculateAISummaryParams): Promise<TServiceResponse<TDossier>> {
+}: TCalculateAISummaryParams): Promise<ServiceResponse<SinglePersonSummary>> {
   try {
     console.log('Person::CalculateAISummary::Starting', { personId });
 

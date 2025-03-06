@@ -6,7 +6,7 @@ import { $system, $user } from '@/lib/llm/messages';
 import { TPersonGroup } from '@/types/custom';
 import { Interaction, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
 // Response schema
@@ -45,7 +45,7 @@ export async function generateFollowUpScore({
   person,
   interactions,
   groups
-}: TGenerateFollowUpScoreParams): Promise<TServiceResponse<TFollowUpScore>> {
+}: TGenerateFollowUpScoreParams): Promise<ServiceResponse<TFollowUpScore>> {
   try {
     const messages = [
       $system(buildSystemPrompt().prompt),

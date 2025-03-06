@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Message } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   FETCH_FAILED: createError(
@@ -44,7 +44,7 @@ export async function getMessages({
   conversationId,
   limit = 10,
   cursor
-}: TGetMessagesParams): Promise<TServiceResponse<TGetMessagesResponse>> {
+}: TGetMessagesParams): Promise<ServiceResponse<TGetMessagesResponse>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.MISSING_USER_ID };

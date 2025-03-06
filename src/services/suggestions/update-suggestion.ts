@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   UPDATE_SUGGESTION: {
@@ -44,7 +44,7 @@ export async function updateSuggestion({
   saved,
   bad,
   userId
-}: UpdateSuggestionParams): Promise<TServiceResponse<TUpdateSuggestionResponse>> {
+}: UpdateSuggestionParams): Promise<ServiceResponse<TUpdateSuggestionResponse>> {
   try {
     if (!suggestionId) {
       return { data: null, error: ERRORS.UPDATE_SUGGESTION.MISSING_ID };

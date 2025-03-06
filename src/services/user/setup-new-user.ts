@@ -2,7 +2,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   SETUP_FAILED: createError(
@@ -60,7 +60,7 @@ export type TSetupNewUserParams = {
 export async function setupNewUser({
   db,
   userId
-}: TSetupNewUserParams): Promise<TServiceResponse<boolean | null>> {
+}: TSetupNewUserParams): Promise<ServiceResponse<boolean | null>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.INVALID_USER };

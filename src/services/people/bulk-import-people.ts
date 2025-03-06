@@ -12,7 +12,7 @@ import {
   Website
 } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 // Define the expected input format for a single person
 export interface TBulkImportPerson {
@@ -156,7 +156,7 @@ export async function bulkImportPeople({
   db,
   userId,
   people
-}: TBulkImportPeopleParams): Promise<TServiceResponse<TBulkImportResult>> {
+}: TBulkImportPeopleParams): Promise<ServiceResponse<TBulkImportResult>> {
   const result: TBulkImportResult = {
     successful: 0,
     failed: 0,

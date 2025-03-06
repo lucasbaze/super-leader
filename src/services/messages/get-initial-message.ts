@@ -5,7 +5,7 @@ import { $assistant } from '@/lib/llm/messages';
 import { isPath } from '@/lib/routes';
 import { DBClient, Message } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
   FETCH_FAILED: createError(
@@ -106,7 +106,7 @@ export async function getInitialMessages({
   path,
   ownerType,
   ownerId
-}: TGetInitialMessagesParams): Promise<TServiceResponse<Message[]>> {
+}: TGetInitialMessagesParams): Promise<ServiceResponse<Message[]>> {
   try {
     // Handle person-specific messages
     if (ownerType === 'person' && ownerId) {

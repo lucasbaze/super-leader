@@ -3,6 +3,7 @@ export {
   BookOpen,
   Bot,
   Orbit,
+  LandPlot,
   Eye,
   EyeOff,
   CircleUser,

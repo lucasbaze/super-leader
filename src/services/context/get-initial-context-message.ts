@@ -1,7 +1,7 @@
 import { createError } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { generateInitialContextMessage, TContextMessage } from './generate-initial-context-message';
 
@@ -29,7 +29,7 @@ export const ERRORS = {
   }
 };
 
-export type InitialContextMessageResult = TServiceResponse<TContextMessage>;
+export type InitialContextMessageResult = ServiceResponse<TContextMessage>;
 
 export async function getInitialContextMessage({
   db,

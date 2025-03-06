@@ -1,6 +1,7 @@
 ### Mar 5th
 
-- [ ] Remove someone from a group
+- [x] ~~_Remove someone from a group_~~ [2025-03-05]
+- [ ] Bug: When updating the summary and there are no interactions, the service will fail
 
 ### Mar 3rd
 
@@ -42,7 +43,7 @@ What if there's 1 conversation that spans everything, but the UI will "show" pre
       Should fall back to completed if it's not in progress. Client should "timeout" after ~ 10 minutes of polling every 5 seconds... probably?
 - [ ] Try to use the "o1-mini" model to see if it's any better at summarizing.
 - [ ] Update the prompt to get "good enough" for now.
-- [ ] Somehow display the "completeness" metric to the user.
+- [x] ~~_Somehow display the "completeness" metric to the user._~~ [2025-03-05]
 - [x] ~~_Summarize in the "network" view._~~ [2025-02-27]
 - [ ] Add tests to the summary service.
 - [ ] Can I build a CRON job that runs every 24 hours and updates all the summaries (or just the ones that haven't been updated in a while)?
@@ -95,11 +96,11 @@ There are MANY thing to consider on the home page that I need to consider / thin
 
 ## From Production Usage
 
-- [ ] Breadcrumbs need to properly navigate back to the previous page.
+- [x] ~~_Breadcrumbs need to properly navigate back to the previous page._~~ [2025-03-05]
 - [ ] Show loading indicators on save of the address information about a person.
 - [ ] There's a "comma" issue in the copy / pasting of the phones numbers.
 - [ ] Successfully adding a person to the system doesn't link to the right profile.
-- [ ] Really want this message to coordinate and "work" ("Add Anthony D as a new person the the Strategic 100 group. Make a note that we met through Johnny Ives. We texted a few weeks ago, and he's a huge NBA fan and actually runs the nba.com home page)
+- [x] ~~_Really want this message to coordinate and "work" ("Add Anthony D as a new person the the Strategic 100 group. Make a note that we met through Johnny Ives. We texted a few weeks ago, and he's a huge NBA fan and actually runs the nba.com home page)_~~ [2025-03-05]
 - Need to be able to update the name of people / profile's
 - [ ] Need to save the gravatar color scheme for the user, so that it doesn't re-render all of the time.
 

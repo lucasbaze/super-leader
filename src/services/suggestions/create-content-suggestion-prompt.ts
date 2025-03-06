@@ -7,7 +7,7 @@ import { wrapTicks } from '@/lib/utils/strings';
 import { GetPersonResult } from '@/services/person/get-person';
 import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
 import {
@@ -50,7 +50,7 @@ export async function createContentSuggestionPrompt({
   personResult,
   suggestions,
   type
-}: TCreateSuggestionPromptParams): Promise<TServiceResponse<TSuggestionPromptResponse>> {
+}: TCreateSuggestionPromptParams): Promise<ServiceResponse<TSuggestionPromptResponse>> {
   try {
     const promptMessages = [
       $system(

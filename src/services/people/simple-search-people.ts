@@ -1,7 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient, Group, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { TServiceResponse } from '@/types/service-response';
+import { ServiceResponse } from '@/types/service-response';
 
 import { SimpleSearchPeopleResult } from './types';
 
@@ -35,7 +35,7 @@ type DatabasePerson = Pick<Person, 'id' | 'first_name' | 'last_name' | 'bio' | '
   }[];
 };
 
-export type SimpleSearchPeopleServiceResult = TServiceResponse<SimpleSearchPeopleResult[]>;
+export type SimpleSearchPeopleServiceResult = ServiceResponse<SimpleSearchPeopleResult[]>;
 
 export async function simpleSearchPeople({
   db,

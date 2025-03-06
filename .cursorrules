@@ -90,7 +90,7 @@ Developer Experience (DX)
 
 - **Service Response Structure**
 
-  - All service methods should return a `TServiceResponse<T>` type
+  - All service methods should return a `ServiceResponse<T>` type
   - Response should always include both `data` and `error` and data should be null if there is an error
   - Services should define their own ERRORS object using createError from error-factory
   - Each service should export its ERRORS object for reuse in tests and API routes
@@ -136,7 +136,7 @@ Developer Experience (DX)
 
 - **Response Structure**
 
-  - Use TServiceResponse<T> type for all returns
+  - Use ServiceResponse<T> type for all returns
   - Return { data: null, error: serviceError } for errors
   - Return { data: result, error: null } for success
 
@@ -175,7 +175,7 @@ Developer Experience (DX)
   - Define and export error constants second
   - Main service function last
   - Helper/utility functions at bottom
-  - Use TServiceResponse<T> for return types
+  - Use ServiceResponse<T> for return types
 
 **Schema Patterns**
 

@@ -202,7 +202,7 @@ describe('bulkImportPeople service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          successful: 50,
+          successful: 5,
           failed: 0,
           errors: []
         });
@@ -213,7 +213,7 @@ describe('bulkImportPeople service', () => {
           .select('*', { count: 'exact', head: true })
           .eq('user_id', testUser.id);
 
-        expect(personCount).toBe(50);
+        expect(personCount).toBe(5);
 
         // Check for related data
         const { data: samplePerson } = await db

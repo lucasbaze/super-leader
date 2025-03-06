@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -7,9 +7,13 @@ import { toast } from '@/components/ui/toast';
 import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { useCreatePerson } from '@/hooks/use-people';
 import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
-import { routes } from '@/lib/routes';
+
+// import { routes } from '@/lib/routes';
 
 export interface ActionCardProps {
+  pendingAction: PendingAction;
+  setPendingAction: (action: PendingAction) => void;
+  addToolResult: (result: { toolCallId: string; result: string }) => void;
   person?: {
     first_name: string;
     last_name: string;
@@ -17,20 +21,17 @@ export interface ActionCardProps {
     phone?: string;
   };
   completed?: boolean;
-  pendingAction: PendingAction;
-  setPendingAction: (action: PendingAction) => void;
-  addToolResult: (result: { toolCallId: string; result: string }) => void;
 }
 
 export function ActionCard({
-  person,
-  completed = false,
   pendingAction,
   setPendingAction,
-  addToolResult
+  addToolResult,
+  person,
+  completed = false
 }: ActionCardProps) {
   const createPerson = useCreatePerson();
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleConfirmAction = async () => {
     if (!pendingAction) return;
@@ -49,12 +50,13 @@ export function ActionCard({
               Successfully created {pendingAction.arguments.first_name}{' '}
               {pendingAction.arguments.last_name}
             </p>
-            <Button
+            {/* TODO: Show the newly created person */}
+            {/* <Button
               variant='outline'
               size='sm'
               onClick={() => router.push(routes.person.activity({ id: result.data?.id || '' }))}>
               View Profile
-            </Button>
+            </Button> */}
           </div>
         );
       }

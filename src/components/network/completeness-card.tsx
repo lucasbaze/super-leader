@@ -52,7 +52,7 @@ export function CompletionCard({
     const circleContent = (
       <div className={`relative flex items-center justify-center ${circleSize} mx-auto`}>
         {/* Background circle */}
-        <svg className='absolute h-full w-full' viewBox='0 0 100 100'>
+        <svg className='absolute size-full' viewBox='0 0 100 100'>
           <circle
             cx='50'
             cy='50'
@@ -65,7 +65,7 @@ export function CompletionCard({
         </svg>
 
         {/* Foreground circle */}
-        <svg className='absolute h-full w-full -rotate-90' viewBox='0 0 100 100'>
+        <svg className='absolute size-full -rotate-90' viewBox='0 0 100 100'>
           <circle
             cx='50'
             cy='50'

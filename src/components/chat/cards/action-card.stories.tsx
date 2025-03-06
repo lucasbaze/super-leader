@@ -21,20 +21,9 @@ export const PersonCard: Story = {
       email: 'john@example.com',
       phone: '+1234567890'
     },
-    onConfirm: () => console.log('Confirm clicked'),
-    onCancel: () => console.log('Cancel clicked')
-  }
-};
-
-export const InteractionCard: Story = {
-  args: {
-    interaction: {
-      person_id: '123',
-      type: 'Meeting',
-      note: 'Had a great discussion about future collaborations',
-      person_name: 'John Doe'
-    },
-    onConfirm: () => console.log('Confirm clicked'),
-    onCancel: () => console.log('Cancel clicked')
+    pendingAction: null,
+    setPendingAction: () => {},
+    addToolResult: () => {},
+    completed: false
   }
 };

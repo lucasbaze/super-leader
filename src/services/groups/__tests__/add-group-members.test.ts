@@ -152,7 +152,7 @@ describe('addGroupMembers service', () => {
         await addGroupMembers({
           db,
           groupId: innerFiveGroup.id,
-          groupSlug: innerFiveGroup.slug,
+          groupSlug: RESERVED_GROUP_SLUGS.INNER_5,
           personIds: [testPerson.id],
           userId: testUser.id
         });
@@ -169,18 +169,10 @@ describe('addGroupMembers service', () => {
         await addGroupMembers({
           db,
           groupId: centralFiftyGroup.id,
-          groupSlug: centralFiftyGroup.slug,
+          groupSlug: RESERVED_GROUP_SLUGS.CENTRAL_50,
           personIds: [testPerson.id],
           userId: testUser.id
         });
-
-        // Verify person was removed from Inner Five
-        const updatedInnerFiveMembers = await getGroupMembers({
-          db,
-          id: innerFiveGroup.id,
-          userId: testUser.id
-        });
-        expect(updatedInnerFiveMembers.data).toHaveLength(0);
 
         // Verify person is now in Central Fifty
         const centralFiftyMembers = await getGroupMembers({
@@ -189,6 +181,14 @@ describe('addGroupMembers service', () => {
           userId: testUser.id
         });
         expect(centralFiftyMembers.data).toHaveLength(1);
+
+        // Verify person was removed from Inner Five
+        const updatedInnerFiveMembers = await getGroupMembers({
+          db,
+          id: innerFiveGroup.id,
+          userId: testUser.id
+        });
+        expect(updatedInnerFiveMembers.data).toHaveLength(0);
       });
     });
 

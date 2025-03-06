@@ -23,7 +23,7 @@ export function CircleProgress({ value, size = 40, className = '' }: CircleProgr
         height: `${size}px`
       }}>
       <div
-        className='transition-height from-primary absolute bottom-0 left-0 right-0 bg-gradient-to-r to-blue-500 duration-300 ease-in-out'
+        className='absolute inset-x-0 bottom-0 bg-gradient-to-r from-primary to-blue-500 transition-height duration-300 ease-in-out'
         style={{
           height: fillHeight
         }}

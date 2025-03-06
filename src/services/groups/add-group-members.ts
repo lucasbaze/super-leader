@@ -62,6 +62,7 @@ export async function addGroupMembers({
         .from('group')
         .select('id')
         .in('slug', Object.values(RESERVED_GROUP_SLUGS))
+        .eq('user_id', userId)
         .neq('id', groupId);
 
       if (reservedGroups?.length) {

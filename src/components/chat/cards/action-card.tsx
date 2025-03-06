@@ -1,5 +1,13 @@
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from '@/components/ui/toast';
+import { PendingAction } from '@/hooks/chat/use-chat-interface';
+import { useCreatePerson } from '@/hooks/use-people';
+import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
+import { routes } from '@/lib/routes';
 
 export interface ActionCardProps {
   person?: {
@@ -8,27 +16,64 @@ export interface ActionCardProps {
     email?: string;
     phone?: string;
   };
-  interaction?: {
-    person_id: string;
-    type: string;
-    note?: string;
-    person_name: string;
-  };
-  onConfirm: () => void;
-  onCancel: () => void;
   completed?: boolean;
+  pendingAction: PendingAction;
+  setPendingAction: (action: PendingAction) => void;
+  addToolResult: (result: { toolCallId: string; result: string }) => void;
 }
 
 export function ActionCard({
   person,
-  interaction,
-  onConfirm,
-  onCancel,
-  completed = false
+  completed = false,
+  pendingAction,
+  setPendingAction,
+  addToolResult
 }: ActionCardProps) {
+  const createPerson = useCreatePerson();
+  const router = useRouter();
+
+  const handleConfirmAction = async () => {
+    if (!pendingAction) return;
+
+    try {
+      if (pendingAction.name === CHAT_TOOLS.CREATE_PERSON) {
+        const result = await createPerson.mutateAsync(pendingAction.arguments);
+        console.log('Create Person result:', result);
+        addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Yes' });
+
+        // Show toast with link to new person
+        // TODO: Need to fix this, so that it's working properly
+        toast.success(
+          <div className='flex flex-col gap-2'>
+            <p>
+              Successfully created {pendingAction.arguments.first_name}{' '}
+              {pendingAction.arguments.last_name}
+            </p>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => router.push(routes.person.activity({ id: result.data?.id || '' }))}>
+              View Profile
+            </Button>
+          </div>
+        );
+      }
+      setPendingAction(null);
+    } catch (error) {
+      console.error('Error handling action:', error);
+      toast.error('Failed to create. Please try again.');
+    }
+  };
+
+  const handleCancelAction = useCallback(() => {
+    if (!pendingAction) return;
+    addToolResult({ toolCallId: pendingAction.toolCallId, result: 'Cancelled action' });
+    setPendingAction(null);
+  }, [pendingAction, addToolResult]);
+
   if (person) {
     return (
-      <Card>
+      <Card className='shadow-none'>
         <CardHeader>
           <CardTitle>Create New Person</CardTitle>
         </CardHeader>
@@ -52,46 +97,10 @@ export function ActionCard({
         </CardContent>
         {!completed && (
           <CardFooter className='flex justify-end gap-2'>
-            <Button variant='outline' onClick={onCancel}>
+            <Button variant='outline' onClick={handleCancelAction}>
               Cancel
             </Button>
-            <Button onClick={onConfirm}>Create Person</Button>
-          </CardFooter>
-        )}
-      </Card>
-    );
-  }
-
-  if (interaction) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Create New Interaction</CardTitle>
-        </CardHeader>
-        <CardContent className='space-y-2'>
-          <div>
-            <span className='font-medium'>For: </span>
-            {interaction.person_name}
-          </div>
-          <div>
-            <span className='font-medium'>Type: </span>
-            {interaction.type}
-          </div>
-          {interaction.note && (
-            <div>
-              <span className='font-medium'>Note: </span>
-              <p className='bg-muted/30 mt-1 whitespace-pre-wrap rounded-md p-2 text-muted-foreground'>
-                {interaction.note}
-              </p>
-            </div>
-          )}
-        </CardContent>
-        {!completed && (
-          <CardFooter className='flex justify-end gap-2'>
-            <Button variant='outline' onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button onClick={onConfirm}>Create Interaction</Button>
+            <Button onClick={handleConfirmAction}>Create Person</Button>
           </CardFooter>
         )}
       </Card>

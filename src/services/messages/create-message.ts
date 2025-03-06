@@ -1,7 +1,6 @@
 import { CoreAssistantMessage, CoreToolMessage, Message, ToolResult } from 'ai';
 
 import { createError, errorLogger } from '@/lib/errors';
-import { MESSAGE_TYPE } from '@/lib/messages/constants';
 import { DBClient, Message as DBMessage } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
@@ -29,6 +28,12 @@ export const ERRORS = {
     ErrorType.VALIDATION_ERROR,
     'Message content is required',
     'Message content is required'
+  ),
+  MISSING_CONVERSATION_ID: createError(
+    'missing_conversation_id',
+    ErrorType.VALIDATION_ERROR,
+    'Conversation ID is required',
+    'Conversation identifier is missing'
   )
 };
 
@@ -36,10 +41,8 @@ export type TCreateMessageParams = {
   db: DBClient;
   data: {
     message: ResponseMessage; // Now properly typed as AI Message
-    type: (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE];
+    conversationId: string;
     userId: string;
-    personId?: string;
-    groupId?: string;
   };
 };
 
@@ -79,6 +82,10 @@ export async function createMessage({
       return { data: null, error: ERRORS.INVALID_MESSAGE };
     }
 
+    if (!data.conversationId) {
+      return { data: null, error: ERRORS.MISSING_CONVERSATION_ID };
+    }
+
     // Transform the message before saving
     const transformedMessage = transformToolInvocations(data.message);
 
@@ -86,10 +93,8 @@ export async function createMessage({
       .from('messages')
       .insert({
         message: transformedMessage,
-        type: data.type,
-        user_id: data.userId,
-        person_id: data.personId || null,
-        group_id: data.groupId || null
+        conversation_id: data.conversationId,
+        user_id: data.userId
       })
       .select('*')
       .single();

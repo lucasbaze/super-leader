@@ -10,16 +10,17 @@ const APP_SEGMENTS = {
   NETWORK: 'network',
   PEOPLE: 'people',
   BOOKMARKS: 'bookmarks',
-  LOGIN: 'login'
+  LOGIN: 'login',
+  CONTEXT: 'context'
 } as const;
 
 // Define sub-segments
 const PERSON_SEGMENTS = {
-  ACTIVITY: 'activity'
+  SUMMARY: 'summary'
 } as const;
 
 // Base path
-const BASE_PATH = `/${APP_SEGMENTS.ROOT}`;
+export const BASE_PATH = `/${APP_SEGMENTS.ROOT}`;
 
 // Route builder functions
 export const routes = {
@@ -35,7 +36,7 @@ export const routes = {
   person: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.PERSON}`,
     byId: (params: PersonIdParam) => `${routes.person.root()}/${params.id}`,
-    activity: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.ACTIVITY}`
+    summary: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.SUMMARY}`
   },
 
   // Group routes
@@ -57,6 +58,11 @@ export const routes = {
   // Bookmarks routes
   bookmarks: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.BOOKMARKS}`
+  },
+
+  // Context routes
+  context: {
+    root: () => `${BASE_PATH}/${APP_SEGMENTS.CONTEXT}`
   }
 } as const;
 
@@ -67,7 +73,8 @@ export const isPath = {
   group: (pathname: string) => pathname.startsWith(routes.groups.root()),
   network: (pathname: string) => pathname.startsWith(routes.network.root()),
   people: (pathname: string) => pathname.startsWith(routes.people.root()),
-  bookmarks: (pathname: string) => pathname.startsWith(routes.bookmarks.root())
+  bookmarks: (pathname: string) => pathname.startsWith(routes.bookmarks.root()),
+  context: (pathname: string) => pathname.startsWith(routes.context.root())
 };
 
 // Static routes for direct use
@@ -78,5 +85,6 @@ export const ROUTES = {
   GROUPS: routes.groups.root(),
   NETWORK: routes.network.root(),
   PEOPLE: routes.people.root(),
-  BOOKMARKS: routes.bookmarks.root()
+  BOOKMARKS: routes.bookmarks.root(),
+  CONTEXT: routes.context.root()
 } as const;

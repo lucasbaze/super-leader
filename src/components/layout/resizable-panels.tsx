@@ -17,7 +17,7 @@ interface ResizablePanelsProps {
 export function ResizablePanels({
   leftPanel,
   rightPanel,
-  defaultWidth = 400,
+  defaultWidth = 350,
   minWidth = 300,
   maxWidth = 800
 }: ResizablePanelsProps) {
@@ -39,7 +39,12 @@ export function ResizablePanels({
     <div className='flex flex-1'>
       <div style={{ width: chatWidth }}>{leftPanel}</div>
 
-      <DragHandle onWidthChange={handleWidthChange} initialWidth={chatWidth} minWidth={minWidth} maxWidth={maxWidth} />
+      <DragHandle
+        onWidthChange={handleWidthChange}
+        initialWidth={chatWidth}
+        minWidth={minWidth}
+        maxWidth={maxWidth}
+      />
 
       <div className='flex-1'>{rightPanel}</div>
     </div>

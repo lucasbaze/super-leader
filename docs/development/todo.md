@@ -5,7 +5,7 @@
 - [x] ~~_Handle new user setup via the server and not via the database & undo the migration_~~ [2025-02-09]
 - [x] ~~_Add postal_code to the address schema._~~ [2025-02-09]
 
-- [ ] Save chat messages in the database
+- [x] ~~_Save chat messages in the database_~~ [2025-02-25]
 
 We'll need to save the chats for each person. We could also save chats for "routes" or "flows" of the application such as group-chat, home-chat, etc... That could be overkill...? We should add infinite scroll and load after hitting a certain point.
 
@@ -52,7 +52,7 @@ Special people that aren't in the 5,50,100: Recently met folks, folks that you h
 
 - [ ] Add a "gift" button that will prompt to get gift suggestions for the person.
 
-We'll add a header
+We'll add a header to the chat that will show the gift suggestions.
 
 #### Suggestions: Nice to have
 
@@ -83,6 +83,7 @@ We'll add a header
 
 - [ ] Need to figure out a way to consistently handle the timezone of the user. For example displaying the date in the correct timezone coming from the server on the client side.
 - [ ] Remove open-ai structuredObject call vendor from create-message-suggestions.ts
+- [ ] Need to limit the number of messages that are sent to the chat to prevent too many tokens from being used if the user searches back really far...
 
 ### UI Improvements
 
@@ -126,11 +127,11 @@ Basically this is just marking a suggestion with the bookmarked icon.
 
 This is allowing the user to input a link or file or piece of content and save it for later. This could trigger additional suggestions or just save it for later usage.
 
-- [ ] Get the search bar to work and just be like a dropdown search action.
+- [x] ~~_Get the search bar to work and just be like a dropdown search action._~~ [2025-02-25]
 
 This will be a quick search for people in the header. The question should then be, does this "negate" the search for people in the chat? Is the search chat a "more sophisticated" search?
 
-- [ ] Save Chat messages to the database.
+- [x] ~~_Save Chat messages to the database._~~ [2025-02-25]
 
 The reason would be for further AI intelligence in the future. Could also re-load conversations if needed for the user. Can refresh the page and have the same conversation visible. Will "fetch" the messages from the database from previous conversations. Can "start" a new conversation with the same person. Can view previous conversations and load them into the history.
 

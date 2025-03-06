@@ -96,7 +96,7 @@ export function GlobalSearch() {
   };
 
   return (
-    <div className='relative w-full rounded-md border bg-background md:max-w-sm'>
+    <div className='relative w-full rounded-md border bg-background'>
       <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <div className='relative'>

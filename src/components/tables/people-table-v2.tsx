@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/table';
 import { Person } from '@/types/database';
 
+import { ProfileCompleteness } from '../indicators/profile-completeness';
+
 interface TanStackPeopleTableProps {
   people: Person[];
   onRowClick?: (personId: string) => void;
@@ -35,7 +37,6 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
   return {
     position: isPinned ? 'sticky' : 'relative',
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    background: isPinned ? 'var(--background)' : undefined,
     boxShadow: isPinned === 'left' ? '4px 0 4px -4px rgba(0, 0, 0, 0.1)' : undefined,
     zIndex: isPinned ? 1 : 0
   };
@@ -81,6 +82,16 @@ export function PeopleTableV2({
       )
     },
     {
+      accessorKey: 'completeness_score',
+      header: 'Profile Completeness',
+      size: 150,
+      cell: ({ row }) => (
+        <div className='flex items-center'>
+          <ProfileCompleteness score={row.original.completeness_score ?? 0} size={16} />
+        </div>
+      )
+    },
+    {
       accessorKey: 'birthday',
       header: 'Birthday',
       size: 150,
@@ -113,7 +124,8 @@ export function PeopleTableV2({
       header: 'AI Summary',
       size: 300,
       cell: ({ row }) => (
-        <div className='max-w-[250px] truncate'>{row.original.ai_summary || 'No summary'}</div>
+        <div className='max-w-[250px] truncate'>{'No summary'}</div>
+        // <div className='max-w-[250px] truncate'>{row.original.ai_summary || 'No summary'}</div>
       )
     }
   ];
@@ -163,7 +175,7 @@ export function PeopleTableV2({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className='border-b'
+                      className='border-b bg-white hover:bg-accent'
                       style={{
                         width: cell.column.getSize(),
                         ...getCommonPinningStyles(cell.column)

@@ -2,10 +2,13 @@ import { useEffect, useRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
 
+import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
+import { TContextMessage } from '@/services/context/generate-initial-context-message';
 import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
 
 import { ActionCard } from '../cards/action-card';
+import { ContextMessageCard } from '../cards/context-message-card';
 import { MessageCard } from '../cards/message-card';
 import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
@@ -17,12 +20,10 @@ interface ChatMessageProps {
   isLoading: boolean;
   isLastMessage: boolean;
   containerRef: React.ForwardedRef<HTMLDivElement>;
-  handleConfirmAction: () => void;
-  handleCancelAction: () => void;
   append: (message: CreateMessage) => void;
-  onSuggestionViewed: (suggestionId: string) => void;
-  onSuggestionBookmark: (suggestionId: string, saved: boolean) => void;
-  onSuggestionDislike: (suggestionId: string, bad: boolean) => void;
+  pendingAction: PendingAction;
+  setPendingAction: (action: PendingAction) => void;
+  addToolResult: (result: { toolCallId: string; result: string }) => void;
 }
 
 // Helper function moved from chat-messages.tsx
@@ -50,12 +51,10 @@ export function ChatMessage({
   isLoading,
   isLastMessage,
   containerRef,
-  handleConfirmAction,
-  handleCancelAction,
   append,
-  onSuggestionViewed,
-  onSuggestionBookmark,
-  onSuggestionDislike
+  pendingAction,
+  setPendingAction,
+  addToolResult
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
@@ -116,27 +115,34 @@ export function ChatMessage({
             className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
             <ActionCard
               person={toolInvocation.args}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
               completed={toolInvocation.state === 'result'}
-            />
-          </div>
-        );
-      }
-
-      if (toolInvocation.toolName === CHAT_TOOLS.CREATE_INTERACTION) {
-        return (
-          <div key={toolInvocation.toolCallId} className={'max-w-[90%] break-words text-sm'}>
-            <ActionCard
-              interaction={toolInvocation.args}
-              onConfirm={handleConfirmAction}
-              onCancel={handleCancelAction}
-              completed={toolInvocation.state === 'result'}
+              pendingAction={pendingAction}
+              setPendingAction={setPendingAction}
+              addToolResult={addToolResult}
             />
           </div>
         );
       }
       // Handle auto execute tool invocations (state === 'result' is required for type inference)
+
+      if (
+        toolInvocation.state === 'result' &&
+        toolInvocation.toolName === CHAT_TOOLS.INITIAL_CONTEXT_MESSAGE
+      ) {
+        const results = toolInvocation.result?.data as TContextMessage;
+        if (!results) return null;
+        return (
+          <div key={toolInvocation.toolCallId} className='flex flex-col items-start gap-2'>
+            <ContextMessageCard
+              initialQuestion={results.initialQuestion}
+              followUpQuestions={results.followUpQuestions}
+              priority={results.priority}
+              reasoning={results.reasoning}
+            />
+          </div>
+        );
+      }
+
       if (
         toolInvocation.state === 'result' &&
         toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS
@@ -146,14 +152,7 @@ export function ChatMessage({
         return (
           <>
             {suggestions.map((suggestion: TContentSuggestionWithId) => (
-              <SuggestionCard
-                key={suggestion.id}
-                suggestion={suggestion}
-                append={append}
-                onViewed={onSuggestionViewed}
-                onBookmark={onSuggestionBookmark}
-                onDislike={onSuggestionDislike}
-              />
+              <SuggestionCard key={suggestion.id} suggestion={suggestion} append={append} />
             ))}
           </>
         );
@@ -172,9 +171,6 @@ export function ChatMessage({
         );
       }
     });
-
-    // const minHeight =
-    //   isLastMessage && message.role === 'assistant' ? `calc(-184px + 100dvh)` : undefined;
 
     return (
       <div

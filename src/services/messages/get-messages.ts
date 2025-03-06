@@ -1,12 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
-import { $assistant } from '@/lib/llm/messages';
-import { MESSAGE_TYPE } from '@/lib/messages/constants';
-import { isPath } from '@/lib/routes';
 import { DBClient, Message } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { TServiceResponse } from '@/types/service-response';
-
-import { getInitialMessages } from './get-initial-message';
 
 export const ERRORS = {
   FETCH_FAILED: createError(
@@ -20,18 +15,21 @@ export const ERRORS = {
     ErrorType.VALIDATION_ERROR,
     'User ID is required',
     'User identifier is missing'
+  ),
+  MISSING_CONVERSATION_ID: createError(
+    'missing_conversation_id',
+    ErrorType.VALIDATION_ERROR,
+    'Conversation ID is required',
+    'Conversation identifier is missing'
   )
 };
 
 export type TGetMessagesParams = {
   db: DBClient;
   userId: string;
-  type: (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE];
+  conversationId: string;
   limit?: number;
   cursor?: string; // ISO timestamp
-  personId?: string;
-  groupId?: string;
-  path: string; // Add path parameter
 };
 
 export type TGetMessagesResponse = {
@@ -43,41 +41,35 @@ export type TGetMessagesResponse = {
 export async function getMessages({
   db,
   userId,
+  conversationId,
   limit = 10,
-  cursor,
-  type,
-  personId,
-  groupId,
-  path
+  cursor
 }: TGetMessagesParams): Promise<TServiceResponse<TGetMessagesResponse>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.MISSING_USER_ID };
     }
-    console.log('getMessages', { userId, limit, cursor, type, personId, groupId });
 
+    if (!conversationId) {
+      return { data: null, error: ERRORS.MISSING_CONVERSATION_ID };
+    }
+
+    // Query messages
     let query = db
       .from('messages')
       .select('*')
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(limit + 1); // Get one extra to determine if there are more
+      .order('created_at', { ascending: false });
 
-    // Add filters if provided
     if (cursor) {
       query = query.lt('created_at', cursor);
     }
-    if (type) {
-      query = query.eq('type', type);
-    }
-    if (personId) {
-      query = query.eq('person_id', personId);
-    }
-    if (groupId) {
-      query = query.eq('group_id', groupId);
-    }
 
-    const { data: messages, error } = await query.returns<Message[]>();
+    // Get one more than the limit to determine if there are more messages
+    query = query.limit(limit + 1);
+
+    const { data: messages, error } = await query;
 
     if (error) {
       errorLogger.log(ERRORS.FETCH_FAILED, { details: error });
@@ -87,30 +79,6 @@ export async function getMessages({
     const hasMore = messages && messages.length > limit;
     const resultMessages = hasMore ? messages.slice(0, limit) : messages;
     const nextCursor = hasMore ? resultMessages[resultMessages.length - 1].created_at : undefined;
-
-    // Get the initial route messages if no messages exist
-    if (messages.length === 0 && !hasMore) {
-      const initialMessagesResult = await getInitialMessages({
-        db,
-        userId,
-        path,
-        groupId,
-        personId
-      });
-
-      if (initialMessagesResult.error) {
-        return { data: null, error: initialMessagesResult.error };
-      }
-
-      return {
-        data: {
-          messages: initialMessagesResult.data || [],
-          hasMore: false,
-          nextCursor: undefined
-        },
-        error: null
-      };
-    }
 
     return {
       data: {
@@ -124,17 +92,6 @@ export async function getMessages({
     errorLogger.log(ERRORS.FETCH_FAILED, { details: error });
     return { data: null, error: ERRORS.FETCH_FAILED };
   }
-}
-
-// Wrapper methods for better DX
-// prettier-ignore
-export async function getMessagesForPerson({ db, userId, personId, limit, cursor, path }: Omit<TGetMessagesParams, 'type' | 'groupId'> & { personId: string }) {
-  return getMessages({ db, userId, personId, type: MESSAGE_TYPE.PERSON, limit, cursor, path });
-}
-
-// prettier-ignore
-export async function getMessagesForGroup({ db, userId, groupId, limit, cursor, path }: Omit<TGetMessagesParams, 'type' | 'personId'> & { groupId: string }) {
-  return getMessages({ db, userId, groupId, type: MESSAGE_TYPE.GROUP, limit, cursor, path });
 }
 
 // {

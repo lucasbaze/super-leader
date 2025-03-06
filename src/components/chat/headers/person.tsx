@@ -20,9 +20,10 @@ interface ChatHeaderProps {
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
+  conversationId: string;
 }
 
-export function PersonChatHeader({ append }: ChatHeaderProps) {
+export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
   const params = useParams();
   const createMessage = useCreateMessage();
   const { data, isLoading } = usePerson(params.id as string, {
@@ -47,8 +48,7 @@ export function PersonChatHeader({ append }: ChatHeaderProps) {
     });
 
     await createMessage.mutateAsync({
-      type: MESSAGE_TYPE.PERSON,
-      personId: params.id as string,
+      conversationId,
       message: $user(message)
     });
   };
@@ -66,8 +66,7 @@ export function PersonChatHeader({ append }: ChatHeaderProps) {
     });
 
     await createMessage.mutateAsync({
-      type: MESSAGE_TYPE.PERSON,
-      personId: params.id as string,
+      conversationId,
       message: $user(message)
     });
   };

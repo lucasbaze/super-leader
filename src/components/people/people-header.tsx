@@ -1,5 +1,6 @@
 'use client';
 
+import { BaseHeader } from '@/components/headers/base-header';
 import { ListFilter, MoreHorizontal, Users } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,9 +16,9 @@ interface PeopleHeaderProps {
 
 export function PeopleHeader({ peopleCount }: PeopleHeaderProps) {
   return (
-    <div className='flex items-center justify-between px-5 py-2'>
+    <BaseHeader className='flex flex-1 items-center justify-between'>
       <div className='flex items-center gap-3'>
-        <h2 className='text-lg font-semibold'>People</h2>
+        <h2 className='text-md font-semibold text-muted-foreground'>People</h2>
         <Button variant='outline' size='sm'>
           <ListFilter className='mr-2 size-4' />
           Filter
@@ -43,6 +44,6 @@ export function PeopleHeader({ peopleCount }: PeopleHeaderProps) {
           <span>{peopleCount} people</span>
         </div>
       </div>
-    </div>
+    </BaseHeader>
   );
 }

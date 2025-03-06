@@ -19,9 +19,7 @@ export default function GroupLayout({ children }: { children: React.ReactNode })
   return (
     <div className='flex h-[calc(100svh-theme(spacing.16))] flex-col'>
       {/* Fixed Header Section */}
-      <div className='flex flex-col rounded-t-md border-b bg-background'>
-        <GroupHeader group={group} groupMemberCount={people.length} />
-      </div>
+      <GroupHeader group={group} groupMemberCount={people.length} />
 
       {/* Main Content Area */}
       <div className='flex-1 overflow-hidden'>{children}</div>

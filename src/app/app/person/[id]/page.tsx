@@ -2,16 +2,25 @@
 
 import { useParams } from 'next/navigation';
 
-import { usePerson } from '@/hooks/use-person';
+import { ActivityTimeline } from '@/components/timeline/activity-timeline';
+import { usePersonActivity } from '@/hooks/use-person-activity';
 
 export default function PersonActivityPage() {
   const params = useParams();
-  const { data: person } = usePerson(params.id as string);
+  const { data: interactions, isLoading, error } = usePersonActivity(params.id as string);
+
+  if (isLoading) {
+    return <div className='text-muted-foreground'>Loading activity...</div>;
+  }
+
+  if (error) {
+    return <div className='text-destructive'>Failed to load activity</div>;
+  }
 
   return (
-    <div className='flex flex-col space-y-4 overflow-y-auto'>
-      <h2 className='text-xl font-semibold'>Summary</h2>
-      {/* Placeholder for activity feed */}
+    <div className='space-y-4'>
+      <h2 className='text-xl font-semibold'>Recent Activity</h2>
+      <ActivityTimeline interactions={interactions || []} />
     </div>
   );
 }

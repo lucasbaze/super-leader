@@ -5,24 +5,14 @@ import { z } from 'zod';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { MESSAGE_TYPE } from '@/lib/messages/constants';
 import { createMessage } from '@/services/messages/create-message';
 import { getMessages } from '@/services/messages/get-messages';
 import { createClient } from '@/utils/supabase/server';
 
 const getMessagesSchema = z.object({
-  type: z.enum([
-    MESSAGE_TYPE.PERSON,
-    MESSAGE_TYPE.GROUP,
-    MESSAGE_TYPE.HOME,
-    MESSAGE_TYPE.NETWORK,
-    MESSAGE_TYPE.PEOPLE
-  ]),
+  conversationId: z.string(),
   limit: z.coerce.number().optional(),
-  cursor: z.string().optional(),
-  personId: z.string().optional(),
-  groupId: z.string().optional(),
-  path: z.string()
+  cursor: z.string().optional()
 });
 
 export async function GET(request: NextRequest) {
@@ -41,19 +31,15 @@ export async function GET(request: NextRequest) {
       return apiResponse.validationError(toError(validationResult.error));
     }
 
-    const { type, limit, cursor, personId, groupId, path } = validationResult.data;
+    const { conversationId, limit, cursor } = validationResult.data;
 
     const result = await getMessages({
       db: supabase,
       userId: authResult.data.id,
-      type,
+      conversationId,
       limit,
-      cursor,
-      personId,
-      groupId,
-      path
+      cursor
     });
-    console.log('get messages result', result.data?.messages);
 
     if (result.error) {
       return apiResponse.error(result.error);
@@ -70,18 +56,8 @@ const createMessageSchema = z.object({
   message: z.custom<any>((data) => {
     return data && typeof data === 'object' && 'role' in data;
   }, 'Must be a valid AI Message'),
-  type: z.enum([
-    MESSAGE_TYPE.PERSON,
-    MESSAGE_TYPE.GROUP,
-    MESSAGE_TYPE.HOME,
-    MESSAGE_TYPE.NETWORK,
-    MESSAGE_TYPE.PEOPLE
-  ]),
-  personId: z.string().optional(),
-  groupId: z.string().optional()
+  conversationId: z.string()
 });
-
-export type TCreateMessageRequest = z.infer<typeof createMessageSchema>;
 
 export async function POST(request: NextRequest) {
   try {
@@ -103,10 +79,8 @@ export async function POST(request: NextRequest) {
       db: supabase,
       data: {
         message: validationResult.data.message,
-        type: validationResult.data.type,
-        userId: authResult.data.id,
-        personId: validationResult.data.personId,
-        groupId: validationResult.data.groupId
+        conversationId: validationResult.data.conversationId,
+        userId: authResult.data.id
       }
     });
 

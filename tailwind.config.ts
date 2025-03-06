@@ -103,6 +103,9 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         rainbow: 'rainbow var(--speed, 2s) infinite linear'
+      },
+      transitionProperty: {
+        height: 'height'
       }
     }
   },

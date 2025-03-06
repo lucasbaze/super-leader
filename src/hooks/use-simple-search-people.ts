@@ -21,7 +21,9 @@ export function useSimpleSearchPeople(debounceMs = 500) {
       return json.data;
     },
     // Prevents "flashing" when search term changes and data returned in an empty array temporarily
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
 
   const debouncedSetSearchTerm = useCallback(

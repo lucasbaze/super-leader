@@ -1,21 +1,9 @@
-'use client';
-
-import { ListFilter } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { BaseHeader } from '@/components/headers/base-header';
 
 export function HomeHeader() {
   return (
-    <div className='flex items-center justify-between px-5 py-2'>
-      <div className='flex items-center gap-3'>
-        <h2 className='text-lg font-semibold'>Home</h2>
-      </div>
-
-      <div className='flex items-center gap-2'>
-        <Button variant='outline' size='sm'>
-          <ListFilter className='mr-2 size-4' />
-          Filter
-        </Button>
-      </div>
-    </div>
+    <BaseHeader>
+      <h2 className='text-md font-semibold text-muted-foreground'>Home</h2>
+    </BaseHeader>
   );
 }

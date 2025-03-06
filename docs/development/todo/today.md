@@ -1,3 +1,54 @@
+### Mar 5th
+
+- [ ] Remove someone from a group
+
+### Mar 3rd
+
+- [ ] Bug when trying to add multiple people at the same time. It will only add the last person.
+- [ ] Bug when trying to create a person and then add them to a group.
+- [ ] Bug when adding multiple people to a group at once? "Create a new group called "Dinner" and add Derek Burgman, Roberto, Darian, Andy, Magui, Tim, Eli, Charles, Anthony, Katie, Samantha G" this failed in production... well it worked actually? Just failed to return a message?
+- [ ] Need a better aesthetic for someone being in more than 3 groups
+- [ ] I want this function to work: "Add anyone that has an address in Austin to this group" ( Ideally I can auto-create the group )
+
+### Feb 28th
+
+- [ ] Revisit the use cases and workflows for the tool.
+- [ ] Think about the short term value prop beyond just a tool
+
+### Feb 27th
+
+- [x] ~~_Get multi-chat working so that each route, group, and person has their own set of conversations._~~ [2025-02-27]
+
+### Feb 26th
+
+- [x] ~~_Partially undo the refactoring of the chat interface... it doesn't "feel" right from an interaction standpoint. When the chat doesn't moves, it doesn't feel like it's "with me" in context with what I'm doing._~~ [2025-02-27] Fixed
+- [x] ~~_Swap Activity to be first?_~~ [2025-02-26]
+- [x] ~~_Remove "follow up" button_~~ [2025-02-26]
+- [x] ~~_Swap breadcrumsb for back button_~~ [2025-02-26]
+- [ ] Fix update details actions so I can add the birthday attribute.
+- [x] ~~_Get the first phase of the network stats showing for people. Using the completeness score._~~ [2025-02-27]
+
+### Feb 25th
+
+- [x] ~~_Refactoring how messages work... hwo to reduce the "cognitive load" of all the various types of messages?_~~ [2025-02-27]
+
+What if there's 1 conversation that spans everything, but the UI will "show" previous conversations that can be "loaded" up if the user wants to switch to the new conversation?
+
+### Feb 22nd
+
+- [x] ~~_Built out summary mechanism for an individual person._~~ [2025-02-22]
+- [ ] Add a mechanism to allow the user to navigate away and get "notified" that it completed. Internally poll the status of the summary.
+      null = never started, in-progress, completed, error ( i.e. timeout? )
+      Should fall back to completed if it's not in progress. Client should "timeout" after ~ 10 minutes of polling every 5 seconds... probably?
+- [ ] Try to use the "o1-mini" model to see if it's any better at summarizing.
+- [ ] Update the prompt to get "good enough" for now.
+- [ ] Somehow display the "completeness" metric to the user.
+- [x] ~~_Summarize in the "network" view._~~ [2025-02-27]
+- [ ] Add tests to the summary service.
+- [ ] Can I build a CRON job that runs every 24 hours and updates all the summaries (or just the ones that haven't been updated in a while)?
+- [ ] Should start by testing if there are any timeout issues on production as is... Should make sure the current model and implementation will work in prod.
+      (Need to make new migration)
+
 ### Feb 21st
 
 - [ ] Clear chat messages for mental "clarity"
@@ -6,7 +57,7 @@
 
 ### Feb 20th
 
-- [ ] Attempt to create "agentic" behavior for the AI to respond to the user. Adding more functionality to the AI. Let's expect this to take a week to really get the ball rolling and feel good with it.
+- [x] ~~_Attempt to create "agentic" behavior for the AI to respond to the user. Adding more functionality to the AI. Let's expect this to take a week to really get the ball rolling and feel good with it._~~ [2025-02-25]
 
 Plan: Review multiple tool calls, add "search" functionality, so if I can get it to display pending results in the chat...
 
@@ -51,6 +102,8 @@ There are MANY thing to consider on the home page that I need to consider / thin
 - [ ] Really want this message to coordinate and "work" ("Add Anthony D as a new person the the Strategic 100 group. Make a note that we met through Johnny Ives. We texted a few weeks ago, and he's a huge NBA fan and actually runs the nba.com home page)
 - Need to be able to update the name of people / profile's
 - [ ] Need to save the gravatar color scheme for the user, so that it doesn't re-render all of the time.
+
+- [ ] I'm looking at my Strategic 100 group, and I'm wondering "WHY" is this person in my Strategic 100 group? I don't get that immediate sense of "why" from the group / person. That's on me for sure, but I'm wondering if there's a way to "hint" at that...
 
 This single action needs to do several things:
 

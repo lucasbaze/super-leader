@@ -2,15 +2,16 @@
 
 import { useRouter } from 'next/navigation';
 
-import { toast } from 'sonner';
-
 import { GroupBadge } from '@/components/groups/group-badge';
+import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-score-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { routes } from '@/lib/routes';
 import type { TPersonGroup } from '@/types/custom';
 import type { Person } from '@/types/database';
+
+import { ProfileCompleteness } from '../indicators/profile-completeness';
 
 interface PersonHeaderProps {
   person: Person | undefined;
@@ -41,31 +42,30 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
             </div>
           )}
         </div>
-        <UpdateFollowUpScoreButton personId={person?.id || ''} />
+        {/* <UpdateFollowUpScoreButton personId={person?.id || ''} /> */}
       </div>
 
       <div className='-mx-5'>
-        <Tabs value={segment || 'summary'} className='mt-6'>
+        <Tabs value={segment || 'activity'} className='mt-6'>
           <TabsList variant='underline' className='w-full justify-start gap-2 px-5'>
-            <TabsTrigger
-              value='summary'
-              variant='underline'
-              onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
-              Summary
-            </TabsTrigger>
             <TabsTrigger
               value='activity'
               variant='underline'
-              onClick={() => router.push(routes.person.activity({ id: person?.id || '' }))}>
-              Activity
+              onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
+              <span className='mr-2'>Activity</span>
+              <FollowUpIndicator
+                value={person?.follow_up_score ?? 0}
+                personId={person?.id}
+                size='sm'
+                editable
+              />
             </TabsTrigger>
             <TabsTrigger
-              value='discovered'
+              value='summary'
               variant='underline'
-              onClick={() => {
-                toast.info('Coming soon');
-              }}>
-              Discovered
+              onClick={() => router.push(routes.person.summary({ id: person?.id || '' }))}>
+              <span className='mr-2'>Summary</span>
+              <ProfileCompleteness score={person?.completeness_score ?? 0} size={16} />
             </TabsTrigger>
           </TabsList>
         </Tabs>

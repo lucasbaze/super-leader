@@ -1,6 +1,7 @@
 'use client';
 
 import { CircleProgress } from '@/components/ui/circle-progress';
+import { PieProgress } from '@/components/ui/pie-progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type ProfileCompletenessProps = {
@@ -12,7 +13,7 @@ type ProfileCompletenessProps = {
 
 export function ProfileCompleteness({
   score,
-  size = 16,
+  size = 40,
   showTooltip = true,
   className
 }: ProfileCompletenessProps) {
@@ -20,7 +21,8 @@ export function ProfileCompleteness({
 
   const indicator = (
     <div className={`hover:cursor-pointer ${className}`}>
-      <CircleProgress value={completenessScore} size={size} />
+      {/* <CircleProgress value={completenessScore} size={size} /> */}
+      <PieProgress value={completenessScore} size={size} />
     </div>
   );
 

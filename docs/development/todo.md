@@ -134,20 +134,3 @@ This will be a quick search for people in the header. The question should then b
 - [x] ~~_Save Chat messages to the database._~~ [2025-02-25]
 
 The reason would be for further AI intelligence in the future. Could also re-load conversations if needed for the user. Can refresh the page and have the same conversation visible. Will "fetch" the messages from the database from previous conversations. Can "start" a new conversation with the same person. Can view previous conversations and load them into the history.
-
-- [ ] Add a "search" method that the AI can call automatically if needed to perform a particular action.
-
-Question: Does the returned ID need to be passed to the next request directly?
-
-- [ ] Add "companies" tables that can be stored alongside the people.
-
-This is helpful to see company history and company changes over time.
-
-- [ ] AI business card import
-
-Take a picture of a business card and upload it. The AI will be able to extract the information from the business card and add it to the person's profile.
-We could also suggest possible connections or intro's, groups to add them to, or even immediate content / connection suggestions, if there are any accompanying notes.
-
-- [ ] Add user Context
-
-An option is to just have a running log that the agent determines when to update. When updating, the system can then create the summaries and update them. Basically using the same concept as the activity log on individual people.

@@ -1,0 +1,21 @@
+{
+  "todo": [
+    {
+      "assignedTo": {
+        "name": "Lucas Bazemore"
+      },
+      "category": "custom-groups",
+      "creation_time": "2025-03-10T18:23:07.134Z",
+      "description": {
+        "content": "This should enable the user to do the following....",
+        "mime": "text/markdown"
+      },
+      "id": "1",
+      "references": [],
+      "title": "create-initial-groups"
+    }
+  ],
+  "in-progress": [],
+  "testing": [],
+  "done": []
+}

@@ -87,7 +87,7 @@ export function PeopleTableV2({
       size: 150,
       cell: ({ row }) => (
         <div className='flex items-center'>
-          <ProfileCompleteness score={row.original.completeness_score ?? 0} size={16} />
+          <ProfileCompleteness score={row.original.completeness_score ?? 0} size={18} />
         </div>
       )
     },

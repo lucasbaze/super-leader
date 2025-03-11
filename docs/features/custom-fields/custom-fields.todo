@@ -1,7 +1,10 @@
 Now:
 ☐ Update the bio-sidebar to look like Attio page, so that users can edit values in place
 (Need to double check and see how this might break the ai )
+
 ☐ Need to display all the fields of the person in the sidebar even if the there are no values for them.
+
+☐ Display the birthday field in the sidebar as a date picker.
 
 ☐ Need to simply show all the fields in the table layout for people & groups
 
@@ -15,6 +18,8 @@ Now:
 
 ☐ Need to add the following as default fields for people: Ecosystem (Multi), Stage (Single)
 Possible additions: Resources (i.e. Connections, Church, Access), Influence Score (Number) (wihtin their ecosystem / sphere), Role (Text) (like "Founder", "Investor", "Advisor", "Employee", "Customer", "Partner"),
+
+☐ Need to add a description field for the custom fields, so that the AI is able to use / interpret it.
 
 
 Later:

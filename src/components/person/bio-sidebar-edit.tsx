@@ -1,3 +1,4 @@
+/* Deprecated */
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,6 +27,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { personEditSchema, TPersonEditFormData } from '@/lib/schemas/person-edit';
 
 import type { BioSidebarData } from './bio-sidebar';
+
+/* Deprecated */
 
 interface BioSidebarEditProps {
   data: BioSidebarData;

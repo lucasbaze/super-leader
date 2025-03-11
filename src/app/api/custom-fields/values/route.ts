@@ -4,7 +4,7 @@ import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { createCustomFieldValue, getCustomFieldValues } from '@/services/custom-fields';
+import { createCustomFieldValue, EntityType, getCustomFieldValues } from '@/services/custom-fields';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
@@ -18,15 +18,21 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const entityId = searchParams.get('entityId');
+    const entityType = searchParams.get('entityType') as EntityType;
 
     if (!entityId) {
       return NextResponse.json({ error: 'Entity ID is required' }, { status: 400 });
     }
 
+    if (!entityType) {
+      return NextResponse.json({ error: 'Entity type is required' }, { status: 400 });
+    }
+
     const result = await getCustomFieldValues({
       db: supabase,
       userId: authResult.data.id,
-      entityId
+      entityId,
+      entityType
     });
 
     return apiResponse.success(result.data);

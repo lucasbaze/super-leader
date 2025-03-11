@@ -164,14 +164,16 @@ export function useCustomFields(entityType: EntityType, groupId?: string) {
   };
 }
 
-export function useCustomFieldValues(entityId: string) {
+export function useCustomFieldValues(entityId: string, entityType: EntityType) {
   const queryClient = useQueryClient();
-  const queryKey = ['custom-field-values', entityId];
+  const queryKey = ['custom-field-values', entityId, entityType];
 
   const { data, isLoading, error } = useQuery({
     queryKey,
     queryFn: async () => {
-      const response = await fetch(`/api/custom-fields/values?entityId=${entityId}`);
+      const response = await fetch(
+        `/api/custom-fields/values?entityId=${entityId}&entityType=${entityType}`
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch custom field values');
       }

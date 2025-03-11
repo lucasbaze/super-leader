@@ -85,7 +85,7 @@ export default function GroupCustomFieldsPage() {
 
       <div className='pt-4'>
         <CustomFieldsManager
-          entityType='person'
+          entityType='group'
           groupId={groupId}
           title={`Custom Fields for ${group.name}`}
         />

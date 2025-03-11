@@ -99,6 +99,7 @@ export interface GetCustomFieldValuesParams {
   db: SupabaseClient<Database>;
   userId: string;
   entityId: string;
+  entityType: EntityType;
 }
 
 // Service response types

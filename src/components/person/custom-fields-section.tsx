@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { format } from 'date-fns';
 
+import { EditableSelect } from '@/components/editable/editable-select';
 import { Edit, Save } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,13 +18,12 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useCustomFieldValues } from '@/hooks/use-custom-fields';
 
 interface CustomFieldsSectionProps {
+  sectionType: 'person' | 'group';
   personId: string;
   groupId?: string;
-  sectionType: 'person' | 'group';
   groupName?: string;
 }
 
@@ -33,43 +33,16 @@ export function CustomFieldsSection({
   sectionType,
   groupName
 }: CustomFieldsSectionProps) {
-  const { fields, values, isLoading, setValue, getValueByFieldId } = useCustomFieldValues(personId);
+  const { fields, values, isLoading, setValue, getValueByFieldId } = useCustomFieldValues(
+    groupId || personId!,
+    sectionType
+  );
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string | null>(null);
-  console.log('fields', fields);
 
-  // Filter fields based on section type and groupId
-  const filteredFields = fields;
-  // const filteredFields = fields.filter((field: any) => {
-  //   if (sectionType === 'person') {
-  //     return field.groupId === null && field.entityType === 'person';
-  //   } else {
-  //     return field.groupId === groupId && field.entityType === 'person';
-  //   }
-  // });
-
-  if (isLoading) {
-    return (
-      <div className='mt-5 space-y-3'>
-        <h3 className='flex items-center text-sm font-semibold text-muted-foreground'>
-          {sectionType === 'person' ? 'All People Fields' : `${groupName || 'Group'} Fields`}
-        </h3>
-        <div className='space-y-3'>
-          {[1, 2, 3].map((i) => (
-            <div key={i} className='space-y-1'>
-              <Skeleton className='h-4 w-20' />
-              <Skeleton className='h-8 w-full' />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  if (isLoading || !fields || fields.length === 0) {
+    return null;
   }
-  console.log('filteredFields', filteredFields);
-
-  // if (filteredFields.length === 0) {
-  //   return null;
-  // }
 
   const handleEdit = (fieldId: string) => {
     const value = getValueByFieldId(fieldId);
@@ -204,22 +177,24 @@ export function CustomFieldsSection({
           );
 
         case 'multi-select':
-          // For simplicity, we're handling multi-select similar to dropdown in this example
-          // In a real implementation, you might want to use a more appropriate component
           return (
             <div className='flex items-center gap-2'>
-              <Select value={editValue || ''} onValueChange={(value) => setEditValue(value)}>
-                <SelectTrigger className='flex-1'>
-                  <SelectValue placeholder='Select option' />
-                </SelectTrigger>
-                <SelectContent>
-                  {field.options?.map((option: any) => (
-                    <SelectItem key={option.id} value={option.value}>
-                      {option.value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <EditableSelect
+                value={editValue ? JSON.parse(editValue) : []}
+                options={
+                  field.options?.map((option: any) => ({
+                    value: option.value,
+                    label: option.value
+                  })) || []
+                }
+                onChange={async (value) => {
+                  setEditValue(JSON.stringify(value));
+                  return Promise.resolve();
+                }}
+                placeholder='Select options'
+                className='flex-1'
+                multiple={true}
+              />
               <Button size='icon' variant='ghost' onClick={() => handleSave(field.id)}>
                 <Save className='size-4' />
               </Button>
@@ -245,9 +220,13 @@ export function CustomFieldsSection({
       // Display mode
       if (!fieldValue) {
         return (
-          <div className='flex items-center justify-between'>
+          <div className='group flex items-center gap-2'>
             <span className='text-sm italic text-muted-foreground'>Not set</span>
-            <Button size='icon' variant='ghost' onClick={() => handleEdit(field.id)}>
+            <Button
+              size='icon'
+              variant='ghost'
+              className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+              onClick={() => handleEdit(field.id)}>
               <Edit className='size-4' />
             </Button>
           </div>
@@ -259,18 +238,26 @@ export function CustomFieldsSection({
           try {
             const date = new Date(fieldValue);
             return (
-              <div className='flex items-center justify-between'>
+              <div className='group flex items-center gap-2'>
                 <span className='text-sm'>{format(date, 'PP')}</span>
-                <Button size='icon' variant='ghost' onClick={() => handleEdit(field.id)}>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+                  onClick={() => handleEdit(field.id)}>
                   <Edit className='size-4' />
                 </Button>
               </div>
             );
           } catch (e) {
             return (
-              <div className='flex items-center justify-between'>
+              <div className='group flex items-center gap-2'>
                 <span className='text-sm'>{fieldValue}</span>
-                <Button size='icon' variant='ghost' onClick={() => handleEdit(field.id)}>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+                  onClick={() => handleEdit(field.id)}>
                   <Edit className='size-4' />
                 </Button>
               </div>
@@ -279,20 +266,47 @@ export function CustomFieldsSection({
 
         case 'checkbox':
           return (
-            <div className='flex items-center justify-between'>
+            <div className='group flex items-center gap-2'>
               <span className='text-sm'>{fieldValue === 'true' ? 'Yes' : 'No'}</span>
-              <Button size='icon' variant='ghost' onClick={() => handleEdit(field.id)}>
+              <Button
+                size='icon'
+                variant='ghost'
+                className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+                onClick={() => handleEdit(field.id)}>
                 <Edit className='size-4' />
               </Button>
             </div>
           );
 
         case 'dropdown':
+          return (
+            <div className='group flex items-center gap-2'>
+              <Badge key={value} variant='outline' className='rounded-full px-2 font-normal'>
+                {fieldValue}
+              </Badge>
+              <Button
+                size='icon'
+                variant='ghost'
+                className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+                onClick={() => handleEdit(field.id)}>
+                <Edit className='size-4' />
+              </Button>
+            </div>
+          );
+
         case 'multi-select':
           return (
-            <div className='flex items-center justify-between'>
-              <span className='text-sm'>{fieldValue}</span>
-              <Button size='icon' variant='ghost' onClick={() => handleEdit(field.id)}>
+            <div className='group flex items-center gap-2'>
+              {JSON.parse(fieldValue || '[]').map((value: any) => (
+                <Badge key={value} variant='outline' className='rounded-full px-2 font-normal'>
+                  {value}
+                </Badge>
+              ))}
+              <Button
+                size='icon'
+                variant='ghost'
+                className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+                onClick={() => handleEdit(field.id)}>
                 <Edit className='size-4' />
               </Button>
             </div>
@@ -300,9 +314,13 @@ export function CustomFieldsSection({
 
         default:
           return (
-            <div className='flex items-center justify-between'>
+            <div className='group flex items-center gap-2'>
               <span className='text-sm'>{fieldValue}</span>
-              <Button size='icon' variant='ghost' onClick={() => handleEdit(field.id)}>
+              <Button
+                size='icon'
+                variant='ghost'
+                className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
+                onClick={() => handleEdit(field.id)}>
                 <Edit className='size-4' />
               </Button>
             </div>
@@ -315,7 +333,7 @@ export function CustomFieldsSection({
     <section className='mt-5 space-y-3'>
       <h3 className='flex items-center text-sm font-semibold text-muted-foreground'>
         {sectionType === 'person' ? (
-          'Person Fields'
+          'Custom Person Fields'
         ) : (
           <div className='flex items-center gap-2'>
             <span>{groupName || 'Group'} Fields</span>
@@ -327,8 +345,8 @@ export function CustomFieldsSection({
       </h3>
 
       <div className='space-y-4'>
-        {filteredFields.map((field: any) => (
-          <div key={field.id} className='space-y-1'>
+        {fields.map((field: any) => (
+          <div key={field.id} className='group space-y-1'>
             <Label className='text-xs'>{field.name}</Label>
             {renderFieldValue(field)}
           </div>

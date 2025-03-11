@@ -81,14 +81,6 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
           </Button>
         </div>
 
-        {/* Bio Section */}
-        {data.person.bio && (
-          <section className='space-y-3'>
-            <h3 className='text-sm font-semibold text-muted-foreground'>Bio</h3>
-            <p className='text-sm'>{data.person.bio}</p>
-          </section>
-        )}
-
         {/* Contact Methods */}
         <section className='space-y-3'>
           <h3 className='text-sm font-semibold text-muted-foreground'>Contact Information</h3>

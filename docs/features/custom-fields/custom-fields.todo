@@ -1,0 +1,33 @@
+Now:
+☐ Update the bio-sidebar to look like Attio page, so that users can edit values in place
+(Need to double check and see how this might break the ai )
+☐ Need to display all the fields of the person in the sidebar even if the there are no values for them.
+
+☐ Need to simply show all the fields in the table layout for people & groups
+
+☐ Need the AI to be able to update the custom fields if necessary
+
+☐ Need to add a "color" option for any of the options for dropdowns and multi-selects
+
+☐ Need to make the custom fields a "sub-nav" of the entity type (i.e. people & groups)
+
+☐ Need to wire up AI to be able to update the values accordingly.
+
+☐ Need to add the following as default fields for people: Ecosystem (Multi), Stage (Single)
+Possible additions: Resources (i.e. Connections, Church, Access), Influence Score (Number) (wihtin their ecosystem / sphere), Role (Text) (like "Founder", "Investor", "Advisor", "Employee", "Customer", "Partner"),
+
+
+Later:
+☐ Move the edit attributes button on groups to the group header. (Upon further inspection, the dropdown also enables deleting the group... it might be better to move that into the "edit" functionality?)
+
+☐ Need to remove the "bio" as a default attribute. (Data migration to turn into a note for my account)
+
+
+☐ Can replace "Bio" with "Title" to make things easier.
+
+Done:
+
+✔ Need to link to the custom fields settings page from the editor @done(25-03-10 21:05)
+✔ Need to fix the drag and drop for the custom fields so they don't "jump" @done(25-03-10 21:33)
+✔ Display the available values for multi-select fields in the attributes editor @done(25-03-10 21:43)
+✔ Hide the "bio" field from the people list view and from the person details view for now @done(25-03-10 21:47)

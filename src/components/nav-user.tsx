@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { logout } from '@/app/login/actions';
@@ -21,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { routes } from '@/lib/routes';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
 import { CopyWithTooltip } from './ui/copy-with-tooltip';
@@ -37,7 +39,7 @@ export function NavUser({
 }) {
   const [isPending, startTransition] = useTransition();
   const clearAll = useRecentlyViewedStore((state) => state.clearAll);
-
+  const router = useRouter();
   const handleLogout = () => {
     startTransition(async () => {
       clearAll();
@@ -93,7 +95,7 @@ export function NavUser({
             <ComponentPlaceholderIcon />
             Billing
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push(routes.settings.customFields())}>
             <LifeBuoy />
             Settings
           </DropdownMenuItem>

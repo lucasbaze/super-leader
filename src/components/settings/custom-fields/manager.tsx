@@ -14,7 +14,19 @@ import {
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-import { GripVertical, Pencil, Plus, Trash, X } from '@/components/icons';
+import {
+  Calendar,
+  CheckSquare,
+  GripVertical,
+  Hash,
+  ListFilter,
+  Pencil,
+  Plus,
+  Tags,
+  TextCursorInput,
+  Trash,
+  X
+} from '@/components/icons';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -38,6 +50,16 @@ import {
 } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCustomFields } from '@/hooks/use-custom-fields';
+import { VALID_FIELD_TYPES } from '@/lib/custom-fields/constants';
+
+const FIELD_TYPE_ICONS = {
+  [VALID_FIELD_TYPES.TEXT]: TextCursorInput,
+  [VALID_FIELD_TYPES.NUMBER]: Hash,
+  [VALID_FIELD_TYPES.DATE]: Calendar,
+  [VALID_FIELD_TYPES.DROPDOWN]: ListFilter,
+  [VALID_FIELD_TYPES.CHECKBOX]: CheckSquare,
+  [VALID_FIELD_TYPES.MULTI_SELECT]: Tags
+} as const;
 
 interface CustomFieldsManagerProps {
   entityType: 'person' | 'group';
@@ -56,56 +78,62 @@ interface SortableItemProps {
 
 function SortableItem({ id, name, fieldType, options, onEdit, onDelete }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const FieldIcon = FIELD_TYPE_ICONS[fieldType as keyof typeof FIELD_TYPE_ICONS];
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition
   };
 
+  const isSelectType =
+    fieldType === VALID_FIELD_TYPES.DROPDOWN || fieldType === VALID_FIELD_TYPES.MULTI_SELECT;
+
   return (
     <div ref={setNodeRef} style={style} className='mb-2'>
-      <Card className='flex items-center justify-between p-3'>
-        <div className='flex flex-1 items-center'>
-          <div className='cursor-grab' {...attributes} {...listeners}>
-            <GripVertical className='mr-2 size-5 text-muted-foreground' />
-          </div>
-          <div className='flex-1'>
-            <div className='font-medium'>{name}</div>
-            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
-              <Badge variant='outline' className='capitalize'>
-                {fieldType}
-              </Badge>
-              {(fieldType === 'dropdown' || fieldType === 'multi-select') && options && (
-                <span className='text-xs'>
-                  {options.length} option{options.length !== 1 ? 's' : ''}
-                </span>
-              )}
+      <Card className='flex flex-col p-2'>
+        <div className='flex items-center justify-between'>
+          <div className='flex flex-1 items-center gap-2'>
+            <div className='cursor-grab' {...attributes} {...listeners}>
+              <GripVertical className='size-4 text-muted-foreground' />
+            </div>
+            <div className='flex items-center gap-2'>
+              <FieldIcon className='size-4 text-muted-foreground' />
+              <span className='font-medium'>{name}</span>
             </div>
           </div>
-        </div>
-        <div className='flex items-center space-x-1'>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant='ghost' size='icon' onClick={onEdit}>
-                <Pencil className='size-4' />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Edit Field</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className='flex items-center space-x-1'>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant='ghost' size='icon' onClick={onEdit}>
+                  <Pencil className='size-4' />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit Field</p>
+              </TooltipContent>
+            </Tooltip>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant='ghost' size='icon' onClick={onDelete}>
-                <Trash className='size-4' />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Delete Field</p>
-            </TooltipContent>
-          </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant='ghost' size='icon' onClick={onDelete}>
+                  <Trash className='size-4' />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete Field</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
+        {isSelectType && options && options.length > 0 && (
+          <div className='ml-12 mt-1 flex flex-wrap gap-1'>
+            {options.map((option) => (
+              <Badge key={option.id} variant='outline' className='text-xs'>
+                {option.value}
+              </Badge>
+            ))}
+          </div>
+        )}
       </Card>
     </div>
   );
@@ -196,7 +224,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
     let { options } = newFieldData;
 
     // Filter out empty options
-    if (fieldType === 'dropdown' || fieldType === 'multi-select') {
+    if (fieldType === VALID_FIELD_TYPES.DROPDOWN || fieldType === VALID_FIELD_TYPES.MULTI_SELECT) {
       options = options.filter((o) => o.trim() !== '');
       if (options.length === 0) {
         options = ['Option 1']; // Default option if all are empty
@@ -207,7 +235,10 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
       {
         name,
         fieldType,
-        options: fieldType === 'dropdown' || fieldType === 'multi-select' ? options : undefined
+        options:
+          fieldType === VALID_FIELD_TYPES.DROPDOWN || fieldType === VALID_FIELD_TYPES.MULTI_SELECT
+            ? options
+            : undefined
       },
       {
         onSuccess: () => {
@@ -224,7 +255,10 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
     let { options } = newFieldData;
 
     // Only include options for dropdown and multi-select fields
-    if (currentField.fieldType === 'dropdown' || currentField.fieldType === 'multi-select') {
+    if (
+      currentField.fieldType === VALID_FIELD_TYPES.DROPDOWN ||
+      currentField.fieldType === VALID_FIELD_TYPES.MULTI_SELECT
+    ) {
       options = options.filter((o) => o.trim() !== '');
       if (options.length === 0) {
         options = ['Option 1']; // Default option if all are empty
@@ -236,7 +270,8 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
         id: currentField.id,
         name,
         options:
-          currentField.fieldType === 'dropdown' || currentField.fieldType === 'multi-select'
+          currentField.fieldType === VALID_FIELD_TYPES.DROPDOWN ||
+          currentField.fieldType === VALID_FIELD_TYPES.MULTI_SELECT
             ? options
             : undefined
       },
@@ -336,8 +371,8 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
               </Select>
             </div>
 
-            {(newFieldData.fieldType === 'dropdown' ||
-              newFieldData.fieldType === 'multi-select') && (
+            {(newFieldData.fieldType === VALID_FIELD_TYPES.DROPDOWN ||
+              newFieldData.fieldType === VALID_FIELD_TYPES.MULTI_SELECT) && (
               <div className='space-y-2'>
                 <Label>Options</Label>
                 <ScrollArea className='max-h-[200px]'>

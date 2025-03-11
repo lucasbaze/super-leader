@@ -302,10 +302,10 @@ CREATE TABLE custom_fields (
     display_order INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    created_by UUID NOT NULL REFERENCES auth.users(id),
+    user_id UUID NOT NULL REFERENCES auth.users(id),
 
     -- Ensure unique names per context
-    UNIQUE (name, entity_type, group_id, created_by)
+    UNIQUE (name, entity_type, group_id, user_id)
 );
 
 -- Custom Field Options (for dropdowns and multi-select)
@@ -316,7 +316,7 @@ CREATE TABLE custom_field_options (
     display_order INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    created_by UUID NOT NULL REFERENCES auth.users(id),
+    user_id UUID NOT NULL REFERENCES auth.users(id),
 
     -- Ensure unique values per field
     UNIQUE (custom_field_id, value)
@@ -330,7 +330,7 @@ CREATE TABLE custom_field_values (
     value TEXT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    created_by UUID NOT NULL REFERENCES auth.users(id),
+    user_id UUID NOT NULL REFERENCES auth.users(id),
 
     -- Ensure one value per entity per field
     UNIQUE (custom_field_id, entity_id)
@@ -369,19 +369,19 @@ ALTER TABLE custom_fields ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own custom fields"
     ON custom_fields FOR SELECT
-    USING (auth.uid() = created_by);
+    USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can insert their own custom fields"
     ON custom_fields FOR INSERT
-    WITH CHECK (auth.uid() = created_by);
+    WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update their own custom fields"
     ON custom_fields FOR UPDATE
-    USING (auth.uid() = created_by);
+    USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their own custom fields"
     ON custom_fields FOR DELETE
-    USING (auth.uid() = created_by);
+    USING (auth.uid() = user_id);
 
 -- Similar policies for custom_field_options and custom_field_values
 ```

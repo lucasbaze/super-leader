@@ -16,6 +16,24 @@ export const createError = (
   return error;
 };
 
+type TCreateErrorV2Params = {
+  name: string;
+  type: ErrorType;
+  message: string;
+  displayMessage?: string;
+  details?: unknown;
+};
+
+export const createErrorV2 = ({
+  name,
+  type,
+  message,
+  displayMessage,
+  details
+}: TCreateErrorV2Params): TError => {
+  return createError(name, type, message, displayMessage, details);
+};
+
 export const toError = (error: unknown): TError => {
   if (error instanceof Error) {
     return createError(

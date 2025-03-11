@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { errorLogger } from '@/lib/errors';
 import { ApiResponse } from '@/types/api-response';
 import { ErrorType, TError } from '@/types/errors';
+import { ServiceResponse } from '@/types/service-response';
 
 const errorStatusMap: Record<ErrorType, number> = {
   [ErrorType.NOT_FOUND]: 404,
@@ -45,4 +46,12 @@ export const apiResponse = {
       { status: errorStatusMap[ErrorType.UNAUTHORIZED] }
     );
   }
+
+  // // Function to create API response from service response
+  // fromServiceResponse<T>(serviceResponse: ServiceResponse<T>): NextResponse {
+  //   if (serviceResponse.error) {
+  //     return this.error(serviceResponse.error);
+  //   }
+  //   return this.success(serviceResponse.data);
+  // }
 };

@@ -5,11 +5,14 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { Edit, Globe, Mail, MapPin, Phone } from '@/components/icons';
 import { BioSidebarEdit } from '@/components/person/bio-sidebar-edit';
+import { CustomFieldsSection } from '@/components/person/custom-fields-section';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CopyWithTooltip } from '@/components/ui/copy-with-tooltip';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useGroupMembers } from '@/hooks/use-group-members';
+import { useGroups } from '@/hooks/use-groups';
 import { TPersonEditFormData } from '@/lib/schemas/person-edit';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
@@ -29,6 +32,16 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
   const params = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
+  const { data: groups } = useGroups();
+  const personId = params.id as string;
+
+  // Get the list of groups this person belongs to
+  const personGroups =
+    groups?.data?.filter((group) => {
+      const { data: members } = useGroupMembers(group.id);
+      return members?.some((member) => member.person_id === personId);
+    }) || [];
+
   const handleEditSubmit = async (data: TPersonEditFormData) => {
     try {
       const response = await fetch(`/api/person/${params.id}/details`, {
@@ -156,6 +169,20 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
             </div>
           </section>
         )}
+
+        {/* Organization-wide Custom Fields */}
+        <CustomFieldsSection personId={personId} sectionType='person' />
+
+        {/* Group-specific Custom Fields */}
+        {personGroups.map((group: any) => (
+          <CustomFieldsSection
+            key={group.id}
+            personId={personId}
+            groupId={group.id}
+            sectionType='group'
+            groupName={group.name}
+          />
+        ))}
 
         {/* Record Details */}
         <section className='space-y-3'>

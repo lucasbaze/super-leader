@@ -53,6 +53,7 @@ describe('createCustomField', () => {
             name: fieldName,
             fieldType,
             entityType: VALID_ENTITY_TYPES.PERSON,
+            fieldDescription: 'Test Description',
             options: fieldType === 'dropdown' || fieldType === 'multi-select' ? options : undefined
           });
 

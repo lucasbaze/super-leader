@@ -111,6 +111,7 @@ export async function getCustomFields({
       id: field.id,
       name: field.name,
       fieldType: field.field_type as CustomFieldType,
+      fieldDescription: field.field_description,
       entityType: field.entity_type as EntityType,
       groupId: field.group_id || undefined,
       displayOrder: field.display_order,

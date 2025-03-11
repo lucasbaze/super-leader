@@ -27,10 +27,12 @@ export function useCustomFields(entityType: EntityType, groupId?: string) {
     mutationFn: async ({
       name,
       fieldType,
+      fieldDescription,
       options
     }: {
       name: string;
       fieldType: string;
+      fieldDescription: string;
       options?: string[];
     }) => {
       const response = await fetch('/api/custom-fields', {
@@ -41,6 +43,7 @@ export function useCustomFields(entityType: EntityType, groupId?: string) {
           fieldType,
           entityType,
           groupId,
+          fieldDescription,
           options
         })
       });
@@ -58,11 +61,21 @@ export function useCustomFields(entityType: EntityType, groupId?: string) {
   });
 
   const updateField = useMutation({
-    mutationFn: async ({ id, name, options }: { id: string; name: string; options?: string[] }) => {
+    mutationFn: async ({
+      id,
+      name,
+      options,
+      fieldDescription
+    }: {
+      id: string;
+      name: string;
+      options?: string[];
+      fieldDescription: string;
+    }) => {
       const response = await fetch(`/api/custom-fields/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, options })
+        body: JSON.stringify({ name, options, fieldDescription })
       });
 
       if (!response.ok) {

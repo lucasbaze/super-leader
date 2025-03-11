@@ -44,6 +44,7 @@ export interface CreateCustomFieldParams {
   fieldType: CustomFieldType;
   entityType: EntityType;
   groupId?: string;
+  fieldDescription?: string;
   options?: string[]; // For dropdown and multi-select fields
 }
 
@@ -52,6 +53,7 @@ export interface UpdateCustomFieldParams {
   userId: string;
   fieldId: string;
   name: string;
+  fieldDescription?: string;
   options?: string[]; // Can only update field name and options
 }
 

@@ -16,7 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return apiResponse.unauthorized(authResult.error!);
     }
 
-    const { name, options } = await req.json();
+    const { name, options, fieldDescription } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -27,7 +27,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       userId: authResult.data.id,
       fieldId: params.id,
       name,
-      options
+      options,
+      fieldDescription
     });
 
     return apiResponse.success(result.data);

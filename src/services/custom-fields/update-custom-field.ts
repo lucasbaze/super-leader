@@ -38,7 +38,8 @@ export async function updateCustomField({
   userId,
   fieldId,
   name,
-  options
+  options,
+  fieldDescription
 }: UpdateCustomFieldParams): Promise<UpdateCustomFieldResult> {
   try {
     // Get the current field
@@ -97,7 +98,7 @@ export async function updateCustomField({
     // Update the field name
     const { data: updatedField, error: updateError } = await db
       .from('custom_fields')
-      .update({ name })
+      .update({ name, field_description: fieldDescription })
       .eq('id', fieldId)
       .eq('user_id', userId)
       .select()

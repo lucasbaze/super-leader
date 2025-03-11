@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       return apiResponse.unauthorized(authResult.error!);
     }
 
-    const { name, fieldType, entityType, groupId, options } = await req.json();
+    const { name, fieldType, entityType, groupId, options, fieldDescription } = await req.json();
 
     if (!name || !fieldType || !entityType) {
       const error = createError(
@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
       userId: authResult.data.id,
       name,
       fieldType,
+      fieldDescription,
       entityType,
       groupId,
       options

@@ -150,6 +150,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
   const [newFieldData, setNewFieldData] = useState({
     name: '',
     fieldType: 'text',
+    fieldDescription: '',
     options: ['']
   });
 
@@ -176,6 +177,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
     setNewFieldData({
       name: '',
       fieldType: 'text',
+      fieldDescription: '',
       options: ['']
     });
     setIsAddDialogOpen(true);
@@ -186,6 +188,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
     setNewFieldData({
       name: field.name,
       fieldType: field.fieldType,
+      fieldDescription: field.fieldDescription,
       options: field.options?.map((opt: any) => opt.value) || ['']
     });
     setIsEditDialogOpen(true);
@@ -220,7 +223,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
   };
 
   const handleAddField = () => {
-    const { name, fieldType } = newFieldData;
+    const { name, fieldType, fieldDescription } = newFieldData;
     let { options } = newFieldData;
 
     // Filter out empty options
@@ -235,6 +238,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
       {
         name,
         fieldType,
+        fieldDescription,
         options:
           fieldType === VALID_FIELD_TYPES.DROPDOWN || fieldType === VALID_FIELD_TYPES.MULTI_SELECT
             ? options
@@ -251,7 +255,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
   const handleUpdateField = () => {
     if (!currentField) return;
 
-    const { name } = newFieldData;
+    const { name, fieldDescription } = newFieldData;
     let { options } = newFieldData;
 
     // Only include options for dropdown and multi-select fields
@@ -269,6 +273,7 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
       {
         id: currentField.id,
         name,
+        fieldDescription,
         options:
           currentField.fieldType === VALID_FIELD_TYPES.DROPDOWN ||
           currentField.fieldType === VALID_FIELD_TYPES.MULTI_SELECT
@@ -351,6 +356,18 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
             </div>
 
             <div className='space-y-2'>
+              <Label htmlFor='field-description'>Field Description</Label>
+              <Input
+                id='field-description'
+                placeholder='Enter field description'
+                value={newFieldData.fieldDescription}
+                onChange={(e) =>
+                  setNewFieldData((prev) => ({ ...prev, fieldDescription: e.target.value }))
+                }
+              />
+            </div>
+
+            <div className='space-y-2'>
               <Label htmlFor='field-type'>Field Type</Label>
               <Select
                 value={newFieldData.fieldType}
@@ -428,6 +445,18 @@ export function CustomFieldsManager({ entityType, groupId, title }: CustomFields
                 placeholder='Enter field name'
                 value={newFieldData.name}
                 onChange={(e) => setNewFieldData((prev) => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='edit-field-description'>Field Description</Label>
+              <Input
+                id='edit-field-description'
+                placeholder='Enter field description'
+                value={newFieldData.fieldDescription}
+                onChange={(e) =>
+                  setNewFieldData((prev) => ({ ...prev, fieldDescription: e.target.value }))
+                }
               />
             </div>
 

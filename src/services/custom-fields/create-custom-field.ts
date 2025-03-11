@@ -1,5 +1,4 @@
 import {
-  VALID_ENTITY_TYPES,
   VALID_ENTITY_TYPES_LIST,
   VALID_FIELD_TYPES,
   VALID_FIELD_TYPES_LIST
@@ -57,6 +56,7 @@ export async function createCustomField({
   fieldType,
   entityType,
   groupId,
+  fieldDescription,
   options = []
 }: CreateCustomFieldParams): Promise<CreateCustomFieldResult> {
   try {
@@ -125,6 +125,7 @@ export async function createCustomField({
         field_type: fieldType,
         entity_type: entityType,
         group_id: groupId,
+        field_description: fieldDescription,
         display_order: displayOrder,
         user_id: userId
       })

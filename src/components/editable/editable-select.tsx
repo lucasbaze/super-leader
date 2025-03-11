@@ -36,7 +36,6 @@ export function EditableSelect({
   multiple = false
 }: EditableSelectProps) {
   const [open, setOpen] = useState(false);
-  console.log(value);
 
   const selectedValues = multiple ? (value as string[]) : [value as string];
   const selectedOptions = options.filter((option) => selectedValues.includes(option.value));

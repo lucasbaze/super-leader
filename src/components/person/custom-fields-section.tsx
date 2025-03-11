@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { format } from 'date-fns';
 
+import { EditableDate } from '@/components/editable/editable-date';
 import { EditableSelect } from '@/components/editable/editable-select';
 import { Edit, Save } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
@@ -123,17 +124,14 @@ export function CustomFieldsSection({
 
         case 'date':
           return (
-            <div className='flex items-center gap-2'>
-              <Input
-                type='date'
-                value={editValue || ''}
-                onChange={(e) => setEditValue(e.target.value)}
-                className='flex-1'
-              />
-              <Button size='icon' variant='ghost' onClick={() => handleSave(field.id)}>
-                <Save className='size-4' />
-              </Button>
-            </div>
+            <EditableDate
+              value={editValue}
+              onChange={async (value) => {
+                await handleSave(field.id);
+                setEditValue(value);
+              }}
+              placeholder='Select date'
+            />
           );
 
         case 'dropdown':
@@ -220,7 +218,7 @@ export function CustomFieldsSection({
       // Display mode
       if (!fieldValue) {
         return (
-          <div className='group flex items-center gap-2'>
+          <div className='flex items-center gap-2'>
             <span className='text-sm italic text-muted-foreground'>Not set</span>
             <Button
               size='icon'
@@ -238,7 +236,7 @@ export function CustomFieldsSection({
           try {
             const date = new Date(fieldValue);
             return (
-              <div className='group flex items-center gap-2'>
+              <div className='flex items-center gap-2'>
                 <span className='text-sm'>{format(date, 'PP')}</span>
                 <Button
                   size='icon'
@@ -251,7 +249,7 @@ export function CustomFieldsSection({
             );
           } catch (e) {
             return (
-              <div className='group flex items-center gap-2'>
+              <div className='flex items-center gap-2'>
                 <span className='text-sm'>{fieldValue}</span>
                 <Button
                   size='icon'
@@ -266,7 +264,7 @@ export function CustomFieldsSection({
 
         case 'checkbox':
           return (
-            <div className='group flex items-center gap-2'>
+            <div className='flex items-center gap-2'>
               <span className='text-sm'>{fieldValue === 'true' ? 'Yes' : 'No'}</span>
               <Button
                 size='icon'
@@ -280,7 +278,7 @@ export function CustomFieldsSection({
 
         case 'dropdown':
           return (
-            <div className='group flex items-center gap-2'>
+            <div className='flex items-center gap-2'>
               <Badge key={value} variant='outline' className='rounded-full px-2 font-normal'>
                 {fieldValue}
               </Badge>
@@ -296,7 +294,7 @@ export function CustomFieldsSection({
 
         case 'multi-select':
           return (
-            <div className='group flex items-center gap-2'>
+            <div className='flex items-center gap-2'>
               {JSON.parse(fieldValue || '[]').map((value: any) => (
                 <Badge key={value} variant='outline' className='rounded-full px-2 font-normal'>
                   {value}
@@ -314,7 +312,7 @@ export function CustomFieldsSection({
 
         default:
           return (
-            <div className='group flex items-center gap-2'>
+            <div className='flex items-center gap-2'>
               <span className='text-sm'>{fieldValue}</span>
               <Button
                 size='icon'

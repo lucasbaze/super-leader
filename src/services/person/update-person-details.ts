@@ -28,6 +28,7 @@ export type UpdatePersonContactMethodParams = {
     value: string;
     label?: string;
     is_primary: boolean;
+    _delete?: boolean;
   };
 };
 
@@ -43,6 +44,7 @@ export type UpdatePersonAddressParams = {
     country: string;
     label?: string;
     is_primary: boolean;
+    _delete?: boolean;
   };
 };
 
@@ -127,7 +129,18 @@ export async function updatePersonContactMethod({
       return { data: null, error: ERRORS.PERSON.UPDATE_ERROR };
     }
 
-    if (methodId) {
+    if (methodId && data._delete) {
+      const { error: deleteError } = await db.from('contact_methods').delete().eq('id', methodId);
+
+      if (deleteError) {
+        const error = {
+          ...ERRORS.PERSON.UPDATE_ERROR,
+          details: deleteError
+        };
+        errorLogger.log(error);
+        return { data: null, error };
+      }
+    } else if (methodId) {
       const { error: updateError } = await db
         .from('contact_methods')
         .update(data)
@@ -184,7 +197,18 @@ export async function updatePersonAddress({
       return { data: null, error: ERRORS.PERSON.UPDATE_ERROR };
     }
 
-    if (addressId) {
+    if (addressId && data._delete) {
+      const { error: deleteError } = await db.from('addresses').delete().eq('id', addressId);
+
+      if (deleteError) {
+        const error = {
+          ...ERRORS.PERSON.UPDATE_ERROR,
+          details: deleteError
+        };
+        errorLogger.log(error);
+        return { data: null, error };
+      }
+    } else if (addressId) {
       const { error: updateError } = await db
         .from('addresses')
         .update(data)

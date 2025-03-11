@@ -12,6 +12,8 @@ export {
   Check,
   ChevronsUpDown,
   CircleUser,
+  SquareX,
+  Building2,
   Command,
   GripVertical,
   LetterText,

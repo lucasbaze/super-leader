@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
+import { ListFilter, Save, Send, Tag } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -29,22 +29,25 @@ interface ContactMethodPopoverProps {
     id?: string;
     type: string;
     value: string;
-    label?: string;
+    label: string | undefined;
     is_primary: boolean;
   };
   onSave: (data: Omit<ContactMethodPopoverProps['contactMethod'], 'id'>) => Promise<void>;
   onDelete?: () => Promise<void>;
   className?: string;
+  trigger?: React.ReactNode;
 }
 
 export function ContactMethodPopover({
   contactMethod,
   onSave,
   onDelete,
-  className
+  className,
+  trigger
 }: ContactMethodPopoverProps) {
   const [formData, setFormData] = useState(contactMethod);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +55,7 @@ export function ContactMethodPopover({
     try {
       const { id, ...data } = formData;
       await onSave(data);
+      setIsOpen(false);
     } catch (error) {
       console.error('Failed to save contact method:', error);
     } finally {
@@ -59,25 +63,30 @@ export function ContactMethodPopover({
     }
   };
 
+  const defaultTrigger = (
+    <div className={cn('space-y-1', className)}>
+      <div className='text-sm'>{formData.value}</div>
+      <div className='flex items-center gap-2'>
+        <span className='text-xs text-muted-foreground'>
+          {CONTACT_TYPES.find((t) => t.value === formData.type)?.label}
+        </span>
+        {formData.label && (
+          <span className='text-xs text-muted-foreground'>({formData.label})</span>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <EditablePopover
-      trigger={
-        <div className={cn('space-y-1', className)}>
-          <div className='text-sm'>{formData.value}</div>
-          <div className='flex items-center gap-2'>
-            <span className='text-xs text-muted-foreground'>
-              {CONTACT_TYPES.find((t) => t.value === formData.type)?.label}
-            </span>
-            {formData.label && (
-              <span className='text-xs text-muted-foreground'>({formData.label})</span>
-            )}
-          </div>
-        </div>
-      }
-      onDelete={onDelete}>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        <div className='space-y-2'>
-          <Label htmlFor='type'>Type</Label>
+      trigger={trigger || defaultTrigger}
+      onDelete={onDelete}
+      hideDefaultTrigger={!!trigger}
+      open={isOpen}
+      onOpenChange={setIsOpen}>
+      <form onSubmit={handleSubmit} className='relative space-y-4 pb-14'>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <ListFilter className='size-4 text-muted-foreground' />
           <Select
             value={formData.type}
             onValueChange={(value) => setFormData({ ...formData, type: value })}>
@@ -94,40 +103,50 @@ export function ContactMethodPopover({
           </Select>
         </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='value'>Value</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <Send className='size-4 text-muted-foreground' />
           <Input
-            id='value'
             value={formData.value}
             onChange={(e) => setFormData({ ...formData, value: e.target.value })}
             placeholder={`Enter ${formData.type}`}
           />
         </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='label'>Label (optional)</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <Tag className='size-4 text-muted-foreground' />
           <Input
-            id='label'
-            value={formData.label}
+            value={formData.label || ''}
             onChange={(e) => setFormData({ ...formData, label: e.target.value })}
             placeholder='e.g., Work, Personal'
           />
         </div>
 
-        <div className='flex items-center space-x-2'>
-          <Checkbox
-            id='is_primary'
-            checked={formData.is_primary}
-            onCheckedChange={(checked) =>
-              setFormData({ ...formData, is_primary: checked as boolean })
-            }
-          />
-          <Label htmlFor='is_primary'>Set as primary contact</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <div className='size-4' /> {/* Spacer for alignment */}
+          <div className='flex items-center space-x-2'>
+            <Checkbox
+              id='is_primary'
+              checked={formData.is_primary || false}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, is_primary: checked as boolean })
+              }
+            />
+            <label htmlFor='is_primary' className='text-sm'>
+              Set as primary contact
+            </label>
+          </div>
         </div>
 
-        <Button type='submit' className='w-full' disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : 'Save Contact'}
-        </Button>
+        <div className='absolute bottom-0 right-0 flex w-full items-center justify-end'>
+          <Button
+            type='submit'
+            size='icon'
+            variant='ghost'
+            className='size-8'
+            disabled={isSubmitting}>
+            <Save className={cn('size-4', isSubmitting && 'animate-spin')} />
+          </Button>
+        </div>
       </form>
     </EditablePopover>
   );

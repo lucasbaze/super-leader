@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
+import { Building2, MapPin, Save, Tag } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 import { EditablePopover } from './editable-popover';
@@ -22,11 +22,19 @@ interface AddressPopoverProps {
   onSave: (data: Omit<AddressPopoverProps['address'], 'id'>) => Promise<void>;
   onDelete?: () => Promise<void>;
   className?: string;
+  trigger?: React.ReactNode;
 }
 
-export function AddressPopover({ address, onSave, onDelete, className }: AddressPopoverProps) {
+export function AddressPopover({
+  address,
+  onSave,
+  onDelete,
+  className,
+  trigger
+}: AddressPopoverProps) {
   const [formData, setFormData] = useState(address);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +42,7 @@ export function AddressPopover({ address, onSave, onDelete, className }: Address
     try {
       const { id, ...data } = formData;
       await onSave(data);
+      setIsOpen(false);
     } catch (error) {
       console.error('Failed to save address:', error);
     } finally {
@@ -52,87 +61,97 @@ export function AddressPopover({ address, onSave, onDelete, className }: Address
     .filter(Boolean)
     .join(', ');
 
+  const defaultTrigger = (
+    <div className={cn('space-y-1', className)}>
+      <div className='text-sm'>{displayAddress}</div>
+      {formData.label && <div className='text-xs text-muted-foreground'>{formData.label}</div>}
+    </div>
+  );
+
   return (
     <EditablePopover
-      trigger={
-        <div className={cn('space-y-1', className)}>
-          <div className='text-sm'>{displayAddress}</div>
-          {formData.label && <div className='text-xs text-muted-foreground'>{formData.label}</div>}
-        </div>
-      }
-      onDelete={onDelete}>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        <div className='space-y-2'>
-          <Label htmlFor='street'>Street</Label>
+      trigger={trigger || defaultTrigger}
+      onDelete={onDelete}
+      hideDefaultTrigger={!!trigger}
+      open={isOpen}
+      onOpenChange={setIsOpen}>
+      <form onSubmit={handleSubmit} className='relative space-y-4 pb-14'>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <MapPin className='size-4 text-muted-foreground' />
           <Input
-            id='street'
             value={formData.street}
             onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+            placeholder='Street address'
           />
         </div>
 
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='space-y-2'>
-            <Label htmlFor='city'>City</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <Building2 className='size-4 text-muted-foreground' />
+          <div className='grid grid-cols-2 gap-2'>
             <Input
-              id='city'
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              placeholder='City'
             />
-          </div>
-          <div className='space-y-2'>
-            <Label htmlFor='state'>State</Label>
             <Input
-              id='state'
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+              placeholder='State'
             />
           </div>
         </div>
 
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='space-y-2'>
-            <Label htmlFor='postal_code'>Postal Code</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <div className='size-4' /> {/* Spacer for alignment */}
+          <div className='grid grid-cols-2 gap-2'>
             <Input
-              id='postal_code'
               value={formData.postal_code}
               onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
+              placeholder='Postal code'
             />
-          </div>
-          <div className='space-y-2'>
-            <Label htmlFor='country'>Country</Label>
             <Input
-              id='country'
               value={formData.country}
               onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              placeholder='Country'
             />
           </div>
         </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='label'>Label (optional)</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <Tag className='size-4 text-muted-foreground' />
           <Input
-            id='label'
-            value={formData.label}
+            value={formData.label || ''}
             onChange={(e) => setFormData({ ...formData, label: e.target.value })}
             placeholder='e.g., Home, Work'
           />
         </div>
 
-        <div className='flex items-center space-x-2'>
-          <Checkbox
-            id='is_primary'
-            checked={formData.is_primary}
-            onCheckedChange={(checked) =>
-              setFormData({ ...formData, is_primary: checked as boolean })
-            }
-          />
-          <Label htmlFor='is_primary'>Set as primary address</Label>
+        <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
+          <div className='size-4' /> {/* Spacer for alignment */}
+          <div className='flex items-center space-x-2'>
+            <Checkbox
+              id='is_primary'
+              checked={formData.is_primary}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, is_primary: checked as boolean })
+              }
+            />
+            <label htmlFor='is_primary' className='text-sm'>
+              Set as primary address
+            </label>
+          </div>
         </div>
 
-        <Button type='submit' className='w-full' disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : 'Save Address'}
-        </Button>
+        <div className='absolute bottom-0 right-0 flex w-full items-center justify-end'>
+          <Button
+            type='submit'
+            size='icon'
+            variant='ghost'
+            className='size-8'
+            disabled={isSubmitting}>
+            <Save className={cn('size-4', isSubmitting && 'animate-spin')} />
+          </Button>
+        </div>
       </form>
     </EditablePopover>
   );

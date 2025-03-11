@@ -22,6 +22,7 @@ interface WebsitePopoverProps {
 export function WebsitePopover({ website, onSave, onDelete, className }: WebsitePopoverProps) {
   const [formData, setFormData] = useState(website);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +30,7 @@ export function WebsitePopover({ website, onSave, onDelete, className }: Website
     try {
       const { id, ...data } = formData;
       await onSave(data);
+      setIsOpen(false);
     } catch (error) {
       console.error('Failed to save website:', error);
     } finally {
@@ -44,7 +46,9 @@ export function WebsitePopover({ website, onSave, onDelete, className }: Website
           {formData.label && <div className='text-xs text-muted-foreground'>{formData.label}</div>}
         </div>
       }
-      onDelete={onDelete}>
+      onDelete={onDelete}
+      open={isOpen}
+      onOpenChange={setIsOpen}>
       <form onSubmit={handleSubmit} className='relative space-y-4 pb-14'>
         <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
           <Link className='size-4 text-muted-foreground' />

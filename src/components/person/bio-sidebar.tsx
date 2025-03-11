@@ -2,6 +2,7 @@ import { useParams } from 'next/navigation';
 
 import { AddressPopover } from '@/components/editable/address-popover';
 import { ContactMethodPopover } from '@/components/editable/contact-method-popover';
+import { EditableDate } from '@/components/editable/editable-date';
 import { EditableField } from '@/components/editable/editable-field';
 import { WebsitePopover } from '@/components/editable/website-popover';
 import { Plus } from '@/components/icons';
@@ -34,25 +35,31 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
     <section className='space-y-3'>
       <div className='flex items-center justify-between'>
         <h3 className='text-sm font-semibold text-muted-foreground'>Contact Information</h3>
-        <Button
-          variant='ghost'
-          size='sm'
-          className='size-6 p-0'
-          onClick={() =>
-            updates.updateContactMethod(undefined, {
-              type: 'email',
-              value: '',
-              is_primary: false
-            })
-          }>
-          <Plus className='size-4' />
-        </Button>
+        <ContactMethodPopover
+          contactMethod={{
+            type: 'email',
+            value: '',
+            label: '',
+            is_primary: false
+          }}
+          onSave={(data) => updates.updateContactMethod(undefined, data)}
+          trigger={
+            <Button variant='ghost' size='sm' className='size-6 p-0'>
+              <Plus className='size-4' />
+            </Button>
+          }
+        />
       </div>
       <div className='space-y-2'>
         {data.contactMethods?.map((method) => (
           <ContactMethodPopover
             key={method.id}
-            contactMethod={method}
+            contactMethod={{
+              type: method.type,
+              value: method.value,
+              label: method.label || undefined,
+              is_primary: method.is_primary || false
+            }}
             onSave={(data) => updates.updateContactMethod(method.id, data)}
             onDelete={method.id ? () => updates.deleteContactMethod(method.id!) : undefined}
           />
@@ -66,28 +73,37 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
     <section className='space-y-3'>
       <div className='flex items-center justify-between'>
         <h3 className='text-sm font-semibold text-muted-foreground'>Addresses</h3>
-        <Button
-          variant='ghost'
-          size='sm'
-          className='size-6 p-0'
-          onClick={() =>
-            updates.updateAddress(undefined, {
-              street: '',
-              city: '',
-              state: '',
-              postal_code: '',
-              country: '',
-              is_primary: false
-            })
-          }>
-          <Plus className='size-4' />
-        </Button>
+        <AddressPopover
+          address={{
+            street: '',
+            city: '',
+            state: '',
+            postal_code: '',
+            country: '',
+            label: '',
+            is_primary: false
+          }}
+          onSave={(data) => updates.updateAddress(undefined, data)}
+          trigger={
+            <Button variant='ghost' size='sm' className='size-6 p-0'>
+              <Plus className='size-4' />
+            </Button>
+          }
+        />
       </div>
       <div className='space-y-2'>
         {data.addresses?.map((address) => (
           <AddressPopover
             key={address.id}
-            address={address}
+            address={{
+              street: address.street || '',
+              city: address.city || '',
+              state: address.state || '',
+              postal_code: address.postal_code || '',
+              country: address.country || '',
+              label: address.label || undefined,
+              is_primary: address.is_primary || false
+            }}
             onSave={(data) => updates.updateAddress(address.id, data)}
             onDelete={address.id ? () => updates.deleteAddress(address.id!) : undefined}
           />
@@ -101,24 +117,27 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
     <section className='space-y-3'>
       <div className='flex items-center justify-between'>
         <h3 className='text-sm font-semibold text-muted-foreground'>Websites & Social</h3>
-        <Button
-          variant='ghost'
-          size='sm'
-          className='size-6 p-0'
-          onClick={() =>
-            updates.updateWebsite(undefined, {
-              url: '',
-              label: ''
-            })
-          }>
-          <Plus className='size-4' />
-        </Button>
+        <WebsitePopover
+          website={{
+            url: '',
+            label: ''
+          }}
+          onSave={(data) => updates.updateWebsite(undefined, data)}
+          trigger={
+            <Button variant='ghost' size='sm' className='size-6 p-0'>
+              <Plus className='size-4' />
+            </Button>
+          }
+        />
       </div>
       <div className='space-y-2'>
         {data.websites?.map((website) => (
           <WebsitePopover
             key={website.id}
-            website={website}
+            website={{
+              url: website.url || '',
+              label: website.label || undefined
+            }}
             onSave={(data) => updates.updateWebsite(website.id, data)}
             onDelete={website.id ? () => updates.deleteWebsite(website.id!) : undefined}
           />
@@ -133,27 +152,19 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
       <h3 className='text-sm font-semibold text-muted-foreground'>Basic Information</h3>
       <div className='space-y-2'>
         <div className='space-y-1'>
-          <label className='text-xs text-muted-foreground'>First Name</label>
-          <EditableField
-            value={data.person.first_name}
-            onChange={(value) => updates.updateField('first_name', value)}
-            placeholder='Enter first name'
-          />
-        </div>
-        <div className='space-y-1'>
-          <label className='text-xs text-muted-foreground'>Last Name</label>
-          <EditableField
-            value={data.person.last_name || ''}
-            onChange={(value) => updates.updateField('last_name', value)}
-            placeholder='Enter last name'
-          />
-        </div>
-        <div className='space-y-1'>
           <label className='text-xs text-muted-foreground'>Birthday</label>
-          <EditableField
-            value={data.person.birthday || ''}
-            onChange={(value) => updates.updateField('last_name', value)}
-            placeholder='Enter last name'
+          <EditableDate
+            value={data.person.birthday}
+            onChange={(value) => updates.updateField('birthday', value)}
+            placeholder='Select birthday'
+          />
+        </div>
+        <div className='space-y-1'>
+          <label className='text-xs text-muted-foreground'>Date Met</label>
+          <EditableDate
+            value={data.person.date_met}
+            onChange={(value) => updates.updateField('date_met', value)}
+            placeholder='Select date met'
           />
         </div>
       </div>

@@ -164,29 +164,29 @@ export type Database = {
       custom_field_options: {
         Row: {
           created_at: string | null;
-          user_id: string;
           custom_field_id: string;
           display_order: number;
           id: string;
           updated_at: string | null;
+          user_id: string;
           value: string;
         };
         Insert: {
           created_at?: string | null;
-          user_id: string;
           custom_field_id: string;
           display_order: number;
           id?: string;
           updated_at?: string | null;
+          user_id: string;
           value: string;
         };
         Update: {
           created_at?: string | null;
-          user_id?: string;
           custom_field_id?: string;
           display_order?: number;
           id?: string;
           updated_at?: string | null;
+          user_id?: string;
           value?: string;
         };
         Relationships: [
@@ -202,29 +202,29 @@ export type Database = {
       custom_field_values: {
         Row: {
           created_at: string | null;
-          user_id: string;
           custom_field_id: string;
           entity_id: string;
           id: string;
           updated_at: string | null;
+          user_id: string;
           value: string | null;
         };
         Insert: {
           created_at?: string | null;
-          user_id: string;
           custom_field_id: string;
           entity_id: string;
           id?: string;
           updated_at?: string | null;
+          user_id: string;
           value?: string | null;
         };
         Update: {
           created_at?: string | null;
-          user_id?: string;
           custom_field_id?: string;
           entity_id?: string;
           id?: string;
           updated_at?: string | null;
+          user_id?: string;
           value?: string | null;
         };
         Relationships: [
@@ -240,36 +240,39 @@ export type Database = {
       custom_fields: {
         Row: {
           created_at: string | null;
-          user_id: string;
           display_order: number;
           entity_type: string;
+          field_description: string | null;
           field_type: string;
           group_id: string | null;
           id: string;
           name: string;
           updated_at: string | null;
+          user_id: string;
         };
         Insert: {
           created_at?: string | null;
-          user_id: string;
           display_order: number;
           entity_type: string;
+          field_description?: string | null;
           field_type: string;
           group_id?: string | null;
           id?: string;
           name: string;
           updated_at?: string | null;
+          user_id: string;
         };
         Update: {
           created_at?: string | null;
-          user_id?: string;
           display_order?: number;
           entity_type?: string;
+          field_description?: string | null;
           field_type?: string;
           group_id?: string | null;
           id?: string;
           name?: string;
           updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {

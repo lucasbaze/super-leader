@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { format } from 'date-fns';
-
 import { EditableDate } from '@/components/editable/editable-date';
 import { EditableSelect } from '@/components/editable/editable-select';
 import { Edit, Save } from '@/components/icons';
@@ -20,6 +18,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useCustomFieldValues } from '@/hooks/use-custom-fields';
+import { convertToUTC, dateHandler, getUserTimeZone } from '@/lib/dates/helpers';
 
 interface CustomFieldsSectionProps {
   sectionType: 'person' | 'group';
@@ -46,42 +45,42 @@ export function CustomFieldsSection({
   }
 
   const handleEdit = (fieldId: string) => {
+    const field = fields.find((f: any) => f.id === fieldId);
     const value = getValueByFieldId(fieldId);
+
+    if (field?.fieldType === 'date' && value?.value) {
+      // For dates, convert to YYYY-MM-DD format for the input
+      const userTimezone = getUserTimeZone();
+      const localDate = dateHandler(value.value).tz(userTimezone);
+      setEditValue(localDate.format('YYYY-MM-DD'));
+    } else {
+      setEditValue(value ? value.value : null);
+    }
     setEditingField(fieldId);
-    setEditValue(value ? value.value : null);
   };
 
   const handleSave = (fieldId: string) => {
     const field = fields.find((f: any) => f.id === fieldId);
     if (!field) return;
 
-    const value = getValueByFieldId(fieldId);
+    let valueToSave = editValue;
 
-    if (value) {
-      setValue.mutate(
-        {
-          customFieldId: fieldId,
-          value: editValue
-        },
-        {
-          onSuccess: () => {
-            setEditingField(null);
-          }
-        }
-      );
-    } else {
-      setValue.mutate(
-        {
-          customFieldId: fieldId,
-          value: editValue
-        },
-        {
-          onSuccess: () => {
-            setEditingField(null);
-          }
-        }
-      );
+    // Convert date to UTC before saving
+    if (field.fieldType === 'date' && editValue) {
+      valueToSave = convertToUTC(editValue);
     }
+
+    setValue.mutate(
+      {
+        customFieldId: fieldId,
+        value: valueToSave
+      },
+      {
+        onSuccess: () => {
+          setEditingField(null);
+        }
+      }
+    );
   };
 
   const renderFieldValue = (field: any) => {
@@ -124,14 +123,17 @@ export function CustomFieldsSection({
 
         case 'date':
           return (
-            <EditableDate
-              value={editValue}
-              onChange={async (value) => {
-                await handleSave(field.id);
-                setEditValue(value);
-              }}
-              placeholder='Select date'
-            />
+            <div className='flex items-center gap-2'>
+              <Input
+                type='date'
+                value={editValue || ''}
+                onChange={(e) => setEditValue(e.target.value)}
+                className='flex-1'
+              />
+              <Button size='icon' variant='ghost' onClick={() => handleSave(field.id)}>
+                <Save className='size-4' />
+              </Button>
+            </div>
           );
 
         case 'dropdown':
@@ -234,10 +236,11 @@ export function CustomFieldsSection({
       switch (field.fieldType) {
         case 'date':
           try {
-            const date = new Date(fieldValue);
+            const userTimezone = getUserTimeZone();
+            const localDate = dateHandler(fieldValue).tz(userTimezone);
             return (
               <div className='flex items-center gap-2'>
-                <span className='text-sm'>{format(date, 'PP')}</span>
+                <span className='text-sm'>{localDate.format('MMM D, YYYY')}</span>
                 <Button
                   size='icon'
                   variant='ghost'
@@ -248,6 +251,7 @@ export function CustomFieldsSection({
               </div>
             );
           } catch (e) {
+            console.error('Error formatting date:', e);
             return (
               <div className='flex items-center gap-2'>
                 <span className='text-sm'>{fieldValue}</span>

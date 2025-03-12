@@ -17,9 +17,16 @@ interface WebsitePopoverProps {
   onSave: (data: Omit<WebsitePopoverProps['website'], 'id'>) => Promise<void>;
   onDelete?: () => Promise<void>;
   className?: string;
+  trigger?: React.ReactNode;
 }
 
-export function WebsitePopover({ website, onSave, onDelete, className }: WebsitePopoverProps) {
+export function WebsitePopover({
+  website,
+  onSave,
+  onDelete,
+  className,
+  trigger
+}: WebsitePopoverProps) {
   const [formData, setFormData] = useState(website);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,14 +45,17 @@ export function WebsitePopover({ website, onSave, onDelete, className }: Website
     }
   };
 
+  const defaultTrigger = (
+    <div className={cn('space-y-1', className)}>
+      <div className='text-sm'>{formData.url}</div>
+      {formData.label && <div className='text-xs text-muted-foreground'>{formData.label}</div>}
+    </div>
+  );
+
   return (
     <EditablePopover
-      trigger={
-        <div className={cn('space-y-1', className)}>
-          <div className='text-sm'>{formData.url}</div>
-          {formData.label && <div className='text-xs text-muted-foreground'>{formData.label}</div>}
-        </div>
-      }
+      trigger={trigger || defaultTrigger}
+      hideDefaultTrigger={!!trigger}
       onDelete={onDelete}
       open={isOpen}
       onOpenChange={setIsOpen}>

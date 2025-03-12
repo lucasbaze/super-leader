@@ -1,29 +1,20 @@
 Now:
-☐ Update the bio-sidebar to look like Attio page, so that users can edit values in place
-(Need to double check and see how this might break the ai )
+  
+  ☐ Need to move the "edit name" to the person header.
 
-☐ Need to move the "edit name" to the person header.
+  ☐ Need to update the styles of an individual group custom fields manager (/groups/[id]/custom-fields) 
 
-☐ Need the AI to be able to update the custom fields if necessary
+  ☐ Need to make the custom fields a "sub-nav" of the entity type (i.e. people & groups)
 
-☐ Need to update the styles of an individual group custom fields manager (/groups/[id]/custom-fields) 
-
-☐ Need to make the custom fields a "sub-nav" of the entity type (i.e. people & groups)
-
-☐ Need to wire up AI to be able to update the values accordingly.
-
-☐ Need to ensure date fields are saving and displaying correctly.
-
-☐ Need to add the following as default fields for people: Ecosystem (Multi), Stage (Single)
-Possible additions: Resources (i.e. Connections, Church, Access), Influence Score (Number) (wihtin their ecosystem / sphere), Role (Text) (like "Founder", "Investor", "Advisor", "Employee", "Customer", "Partner"),
-
-☐ Need to add a description field for the custom fields, so that the AI is able to use / interpret it.
-
-☐ Need to simply show all the fields in the table layout for people & groups
-
+  ☐ Need to add the following as default fields for people: Ecosystem (Multi), Stage (Single)
+  
 Later:
+  ☐ Possible additions: Resources (i.e. Connections, Church, Access), Influence Score (Number) (wihtin their ecosystem / sphere), Role (Text) (like "Founder", "Investor", "Advisor", "Employee", "Customer", "Partner"),
+  
+  ☐ Need to simply show all the fields in the table layout for people & groups
+ 
   ☐ Need to add a "color" option for any of the options for dropdowns and multi-selects
-
+  
   ☐ Move the edit attributes button on groups to the group header. (Upon further inspection, the dropdown also enables deleting the group... it might be better to move that into the "edit" functionality?)
   
   ☐ Need to remove the "bio" as a default attribute. (Data migration to turn into a note for my account)
@@ -31,12 +22,16 @@ Later:
   ☐ Can replace "Bio" with "Title" to make things easier.
   
 Done:
-  
-✔ Need to fix the "add" & "edit" functionality for contact methods. @done(25-03-11 16:35)
-✔ Need to fix the "add" & "edit" functionality for websites. @done(25-03-11 16:35)
-✔ Display the birthday field in the sidebar as a date picker. @done(25-03-11 15:56)
-✔ Need to display all the fields of the person in the sidebar even if the there are no values for them. @done(25-03-11 15:56)
-✔ Need to link to the custom fields settings page from the editor @done(25-03-10 21:05)
-✔ Need to fix the drag and drop for the custom fields so they don't "jump" @done(25-03-10 21:33)
-✔ Display the available values for multi-select fields in the attributes editor @done(25-03-10 21:43)
-✔ Hide the "bio" field from the people list view and from the person details view for now @done(25-03-10 21:47)
+
+  ✔ Need to ensure date fields are saving and displaying correctly. @done(25-03-11 18:14)
+  ✔ Update the bio-sidebar to look like Attio page, so that users can edit values in place @done(25-03-11 16:53)
+  ✔ (Need to double check and see how this might break the ai ) @done(25-03-11 16:53)
+  ✔ Need to add a description field for the custom fields, so that the AI is able to use / interpret it. @done(25-03-11 16:51)
+  ✔ Need to fix the "add" & "edit" functionality for contact methods. @done(25-03-11 16:35)
+  ✔ Need to fix the "add" & "edit" functionality for websites. @done(25-03-11 16:35)
+  ✔ Display the birthday field in the sidebar as a date picker. @done(25-03-11 15:56)
+  ✔ Need to display all the fields of the person in the sidebar even if the there are no values for them. @done(25-03-11 15:56)
+  ✔ Need to link to the custom fields settings page from the editor @done(25-03-10 21:05)
+  ✔ Need to fix the drag and drop for the custom fields so they don't "jump" @done(25-03-10 21:33)
+  ✔ Display the available values for multi-select fields in the attributes editor @done(25-03-10 21:43)
+  ✔ Hide the "bio" field from the people list view and from the person details view for now @done(25-03-10 21:47)

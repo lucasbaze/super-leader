@@ -71,8 +71,8 @@ export function AddressPopover({
   return (
     <EditablePopover
       trigger={trigger || defaultTrigger}
-      onDelete={onDelete}
       hideDefaultTrigger={!!trigger}
+      onDelete={onDelete}
       open={isOpen}
       onOpenChange={setIsOpen}>
       <form onSubmit={handleSubmit} className='relative space-y-4 pb-14'>

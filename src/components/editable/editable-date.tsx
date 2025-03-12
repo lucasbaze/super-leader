@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
-import { format } from 'date-fns';
-
 import { Edit, Save } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { convertToUTC, dateHandler, getUserTimeZone } from '@/lib/dates/helpers';
 
 interface EditableDateProps {
   value: string | null;
@@ -20,11 +19,16 @@ export function EditableDate({
   className
 }: EditableDateProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value || '');
+  // When editing, we want to show the local date in the input
+  const [editValue, setEditValue] = useState(value ? dateHandler(value).format('YYYY-MM-DD') : '');
 
   const handleSave = async () => {
-    await onChange(editValue);
-    setIsEditing(false);
+    if (editValue) {
+      // Convert to UTC before saving
+      const utcDate = convertToUTC(editValue);
+      await onChange(utcDate);
+      setIsEditing(false);
+    }
   };
 
   if (isEditing) {
@@ -59,20 +63,28 @@ export function EditableDate({
   }
 
   try {
-    const date = new Date(value);
+    // Display in user's timezone
+    const userTimezone = getUserTimeZone();
+    const localDate = dateHandler(value).tz(userTimezone);
+
     return (
       <div className='group flex items-center gap-2'>
-        <span className='text-sm'>{format(date, 'PP')}</span>
+        <span className='text-sm'>{localDate.format('MMM D, YYYY')}</span>
         <Button
           size='icon'
           variant='ghost'
           className='invisible size-4 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100'
-          onClick={() => setIsEditing(true)}>
+          onClick={() => {
+            // When starting to edit, set the edit value to the local date
+            setEditValue(localDate.format('YYYY-MM-DD'));
+            setIsEditing(true);
+          }}>
           <Edit className='size-4' />
         </Button>
       </div>
     );
   } catch (e) {
+    console.error('Error formatting date:', e);
     return (
       <div className='group flex items-center gap-2'>
         <span className='text-sm'>{value}</span>

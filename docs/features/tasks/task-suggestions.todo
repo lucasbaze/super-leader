@@ -1,6 +1,18 @@
 
 Next:
-  ☐ Think about how to handle the AI based "Snooze" functionality 
+  ☐ Update the toggles on the home page
+  ☐ Need to invalidate the cache when a task is created
+  ☐ Need to invalidate the cache when a task is completed or updated
+  ☐ Need to create a "completed" variant for the task suggestion list item for display purposes
+  ☐ Need to create a "skipped" variant for the task suggestion
+  ☐ Adjust tabs to be "This week" and "All tasks" all tasks will "infinite scroll" ( Need to also think about groupings )
+  ☐ Get and display "tasks" that are associated with a person on the person page
+    ☐ Need to be able to check tasks off from there as well.
+    ☐ Think about how to handle the AI based "Snooze" functionality 
+    ☐ Need to think about the "gamification" in relation to the tasks / displaying metrics and "streaks". 
   
 Later: 
   ☐ Need to implement the "Bad suggestion" reason
+
+
+Done: 

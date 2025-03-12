@@ -80,42 +80,81 @@ export async function POST(req: NextRequest) {
     },
     ...messages
   ];
-  const result = streamText({
-    model: openai('gpt-4o'),
-    messages: contextualMessages,
-    maxSteps: 10,
-    tools: ChatTools.list().reduce<
-      Record<
-        string,
-        {
-          description: string;
-          parameters: unknown;
-          execute?: (params: any) => Promise<unknown>;
+  try {
+    const result = streamText({
+      model: openai('gpt-4o'),
+      messages: contextualMessages,
+      maxSteps: 10,
+      onError: ({ error }) => {
+        console.error(error);
+      },
+      tools: ChatTools.list().reduce<
+        Record<
+          string,
+          {
+            description: string;
+            parameters: unknown;
+            execute?: (params: any) => Promise<unknown>;
+          }
+        >
+      >((acc, toolName) => {
+        const tool = ChatTools.get(toolName);
+        if (tool) {
+          acc[toolName] = {
+            description: tool.description,
+            parameters: tool.parameters,
+            ...(tool.execute && {
+              execute: async (params: any) => {
+                console.log(`Executing tool: ${toolName} with params:`, params);
+                try {
+                  const response = await tool.execute?.(supabase, params, {
+                    userId: authResult.data!.id
+                  });
+                  console.log(`Tool execution success: ${toolName} ->`, response);
+                  return response;
+                } catch (toolError) {
+                  console.error(`Error executing tool: ${toolName}`, toolError);
+                  throw toolError;
+                }
+              }
+            })
+          };
         }
-      >
-    >((acc, toolName) => {
-      const tool = ChatTools.get(toolName);
-      if (tool) {
-        acc[toolName] = {
-          description: tool.description,
-          parameters: tool.parameters,
-          ...(tool.execute && {
-            execute: async (params: any) =>
-              tool.execute?.(supabase, params, { userId: authResult.data!.id })
-          })
-        };
-      }
-      return acc;
-    }, {}),
-    onStepFinish: (step) => {
-      // console.log('Step:', JSON.stringify(step, null, 2));
-    },
-    onFinish: (result) => {
-      // console.log('Result:', JSON.stringify(result, null, 2));
-    },
-    // TODO: test this out... can I "stream" the tool call results?
-    toolCallStreaming: true
-  });
+        return acc;
+      }, {})
+      // onStepFinish: (step) => {
+      //   console.log('Step:', {
+      //     type: step.type,
+      //     content: step.content,
+      //     toolName: step.tool?.name,
+      //     toolResult: step.toolResult,
+      //     error: step.error
+      //   });
+      // },
+      // onError: (error) => {
+      //   console.error('Error:', error);
+      // }
+      // onFinish: (result) => {
+      //   console.log('Stream finished:', {
+      //     finishReason: result.finishReason,
+      //     warnings: result.warnings,
+      //     usage: result.usage,
+      //     error: result.error
+      //   });
+      // }
 
-  return result.toDataStreamResponse();
+      // TODO: test this out... can I "stream" the tool call results?
+      // toolCallStreaming: true
+    });
+
+    try {
+      return result.toDataStreamResponse();
+    } catch (error) {
+      console.error('Error:', error);
+      return apiResponse.error(toError(error));
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return apiResponse.error(toError(error));
+  }
 }

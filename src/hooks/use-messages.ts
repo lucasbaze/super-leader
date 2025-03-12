@@ -39,7 +39,9 @@ export function useMessages({ conversationId, limit, enabled = true }: UseMessag
         hasNextPage: data.pages[data.pages.length - 1]?.hasMore || false
       };
     },
-    enabled // Only run the query if enabled is true
+    enabled, // Only run the query if enabled is true
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 }
 

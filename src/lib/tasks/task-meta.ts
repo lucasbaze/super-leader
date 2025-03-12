@@ -7,6 +7,10 @@ export const TASK_METADATA = {
     icon: Gift,
     accentColor: 'bg-orange-500'
   },
+  [TASK_TYPES.REQUESTED_REMINDER]: {
+    icon: History,
+    accentColor: 'bg-orange-500'
+  },
   [TASK_TYPES.SUGGESTED_REMINDER]: {
     icon: History,
     accentColor: 'bg-orange-500'

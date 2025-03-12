@@ -73,7 +73,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/unist": "^3.0.3",
     "@vercel/analytics": "^1.4.1",
-    "ai": "^4.1.10",
+    "ai": "4.1.22",
     "autoprefixer": "10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

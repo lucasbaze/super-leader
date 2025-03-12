@@ -1,10 +1,9 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { ServiceResponse } from '@/types/service-response';
 
 import { buildTaskSuggestion } from './build-task-suggestion';
-import { NewTaskParams, TaskUpdateResult } from './types';
+import { CreateTaskServiceResult, NewTaskParams } from './types';
 
 export const ERRORS = {
   TASKS: {
@@ -34,11 +33,9 @@ export interface CreateTaskParams {
   task: NewTaskParams;
 }
 
-export async function createTask({
-  db,
-  task
-}: CreateTaskParams): Promise<ServiceResponse<TaskUpdateResult>> {
+export async function createTask({ db, task }: CreateTaskParams): Promise<CreateTaskServiceResult> {
   try {
+    console.log('Creating task:', JSON.stringify(task, null, 2));
     // Validate task data
     const buildResult = buildTaskSuggestion({
       userId: task.userId,

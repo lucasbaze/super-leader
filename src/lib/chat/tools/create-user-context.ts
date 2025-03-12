@@ -11,7 +11,7 @@ export const createUserContextTool: ChatTool<
   CreateUserContextServiceResult['data'] | TToolError
 > = {
   name: 'createUserContext',
-  displayName: 'Create User Context',
+  displayName: 'Update Memory',
   description: 'Create a new user context record',
   rulesForAI: stripIndents`\
     ## createUserContext Guidelines

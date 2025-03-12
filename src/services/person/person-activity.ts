@@ -70,6 +70,7 @@ export async function getPersonActivity({
   }
 }
 
+// TODO: Remove these TInteractions
 export type CreateInteractionServiceResult = ServiceResponse<TInteraction>;
 
 export async function createInteraction({

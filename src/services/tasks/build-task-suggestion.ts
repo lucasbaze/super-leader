@@ -5,7 +5,7 @@ import { createError } from '@/lib/errors';
 import { TASK_TYPES, TaskType } from '@/lib/tasks/task-types';
 import { ErrorType } from '@/types/errors';
 
-import { TaskContent, taskContentSchema } from './types';
+import { TaskContent, taskContentSchema, taskSuggestionSchema } from './types';
 
 export const ERRORS = {
   TASK_SUGGESTION: {
@@ -36,14 +36,6 @@ export const ERRORS = {
   }
 };
 
-const taskSuggestionSchema = z.object({
-  user_id: z.string().min(1),
-  person_id: z.string().min(1),
-  type: z.enum(Object.values(TASK_TYPES) as [string, ...string[]]),
-  content: taskContentSchema,
-  end_at: z.string().datetime().optional()
-});
-
 export type TTaskSuggestionInput = z.infer<typeof taskSuggestionSchema>;
 
 export type TBuildTaskSuggestionResult = {
@@ -65,6 +57,7 @@ export function buildTaskSuggestion({
   content: TaskContent;
   endAt?: string;
 }): TBuildTaskSuggestionResult {
+  console.log('Building task suggestion:', { userId, personId, type, content, endAt });
   // Validate required fields
   if (!userId || !personId || !type || !content) {
     return {
@@ -123,6 +116,7 @@ export function buildTaskSuggestion({
       error: null
     };
   } catch (error) {
+    console.error('Error building task suggestion:', error);
     return {
       valid: false,
       data: null,

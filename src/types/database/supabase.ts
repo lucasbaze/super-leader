@@ -165,6 +165,7 @@ export type Database = {
         Row: {
           created_at: string | null;
           custom_field_id: string;
+          description: string | null;
           display_order: number;
           id: string;
           updated_at: string | null;
@@ -174,6 +175,7 @@ export type Database = {
         Insert: {
           created_at?: string | null;
           custom_field_id: string;
+          description?: string | null;
           display_order: number;
           id?: string;
           updated_at?: string | null;
@@ -183,6 +185,7 @@ export type Database = {
         Update: {
           created_at?: string | null;
           custom_field_id?: string;
+          description?: string | null;
           display_order?: number;
           id?: string;
           updated_at?: string | null;
@@ -247,6 +250,7 @@ export type Database = {
           group_id: string | null;
           id: string;
           name: string;
+          permanent: boolean;
           updated_at: string | null;
           user_id: string;
         };
@@ -259,6 +263,7 @@ export type Database = {
           group_id?: string | null;
           id?: string;
           name: string;
+          permanent?: boolean;
           updated_at?: string | null;
           user_id: string;
         };
@@ -271,6 +276,7 @@ export type Database = {
           group_id?: string | null;
           id?: string;
           name?: string;
+          permanent?: boolean;
           updated_at?: string | null;
           user_id?: string;
         };

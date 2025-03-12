@@ -10,6 +10,7 @@ import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
 import { Button } from '@/components/ui/button';
 import { usePerson } from '@/hooks/use-person';
+import { useTasks } from '@/hooks/use-tasks';
 import { useUpdateAISummary } from '@/hooks/use-update-ai-summary';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
@@ -22,9 +23,11 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     withContactMethods: true,
     withAddresses: true,
     withWebsites: true,
-    withGroups: true,
-    withTasks: true
+    withGroups: true
   });
+
+  const { data: tasks } = useTasks(params.id as string);
+
   const updateAISummary = useUpdateAISummary();
 
   // Add to recently viewed when data loads
@@ -89,7 +92,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
               person={data?.person}
               groups={data?.groups}
               segment={segment}
-              taskCount={data?.tasks?.length ?? 0}
+              taskCount={tasks?.length ?? 0}
             />
             <div className='flex h-full flex-col overflow-hidden'>
               <div className='no-scrollbar flex-1 overflow-y-auto px-4 pb-4'>

@@ -6,18 +6,22 @@ import { toError } from '@/lib/errors';
 import { getTasks } from '@/services/tasks/get-tasks';
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
+  const supabase = await createClient();
+  const authResult = await validateAuthentication(supabase);
+
+  if (authResult.error || !authResult.data) {
+    return apiResponse.unauthorized(toError(authResult.error));
+  }
+
+  const url = new URL(req.url);
+  const personId = url.searchParams.get('personId');
+
   try {
-    const supabase = await createClient();
-    const authResult = await validateAuthentication(supabase);
-
-    if (authResult.error || !authResult.data) {
-      return apiResponse.unauthorized(toError(authResult.error));
-    }
-
     const result = await getTasks({
       db: supabase,
-      userId: authResult.data.id
+      userId: authResult.data.id,
+      ...(personId && { personId })
     });
 
     if (result.error) {

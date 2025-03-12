@@ -118,10 +118,9 @@ export const createTaskTool: ChatTool<
       return handleToolError(error, 'create task');
     }
   },
-  onSuccessEach: false,
+  onSuccessEach: true,
   onSuccess: ({ queryClient, args }) => {
-    console.log('Invalidating queries for:', args);
-    // queryClient.invalidateQueries({ queryKey: ['person-activity', args.person_id] });
-    // queryClient.invalidateQueries({ queryKey: ['person', args.person_id] });
+    console.log('Create Tasks: Invalidating queries for:', args);
+    queryClient.invalidateQueries({ queryKey: ['tasks'] });
   }
 };

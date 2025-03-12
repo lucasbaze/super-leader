@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { HomeHeader } from '@/components/home/home-header';
 // import { TaskSuggestionCard } from '@/components/home/task-suggestion-card';
 import { TaskSuggestionListItem } from '@/components/home/task-suggestion-list-item';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTasks } from '@/hooks/use-tasks';
 import { filterAllTasks, filterTodayTasks, groupTasksByTimeframe } from '@/lib/tasks/task-groups';
+import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const { data: tasks, isLoading, error } = useTasks();
@@ -27,14 +27,32 @@ export default function HomePage() {
     <div className='absolute inset-0'>
       <HomeHeader />
       <div className='absolute inset-0 top-[48px] mt-[1px] overflow-auto'>
+        <div className='mb-4 border-b bg-background'>
+          <div className='flex items-center px-3 py-2'>
+            <button
+              onClick={() => setActiveTab('today')}
+              className={cn(
+                'rounded-md px-2 py-1 text-sm font-medium',
+                activeTab === 'today'
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:bg-muted'
+              )}>
+              Today
+            </button>
+            <div className='mx-2 h-4 w-px bg-border'></div>
+            <button
+              onClick={() => setActiveTab('all')}
+              className={cn(
+                'rounded-md px-2 py-1 text-sm font-medium',
+                activeTab === 'all'
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:bg-muted'
+              )}>
+              All Tasks
+            </button>
+          </div>
+        </div>
         <div className='p-4'>
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)} className='mb-4'>
-            <TabsList className='grid w-full max-w-[400px] grid-cols-2'>
-              <TabsTrigger value='today'>Today</TabsTrigger>
-              <TabsTrigger value='all'>All Tasks</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
           {isLoading ? (
             <div className='text-sm text-muted-foreground'>Loading tasks...</div>
           ) : error ? (

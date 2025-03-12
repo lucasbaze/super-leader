@@ -62,7 +62,10 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
                   size='sm'
                   variant='ghost'
                   className='h-8 hover:bg-green-50 hover:text-green-600'
-                  onClick={() => handleAction(() => completeTask(task.id), 'complete')}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAction(() => completeTask(task.id), 'complete');
+                  }}
                   disabled={isLoading || actionInProgress !== null}>
                   {isLoading ? (
                     <Loader className='size-4 animate-spin' />
@@ -92,7 +95,10 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
                   size='sm'
                   variant='ghost'
                   className='h-8 hover:bg-red-50 hover:text-red-600'
-                  onClick={() => handleAction(() => skipTask(task.id), 'skip')}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAction(() => skipTask(task.id), 'skip');
+                  }}
                   disabled={isLoading || actionInProgress !== null}>
                   {isLoading ? (
                     <Loader className='size-4 animate-spin' />

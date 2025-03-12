@@ -17,7 +17,8 @@ const APP_SEGMENTS = {
 
 // Define sub-segments
 const PERSON_SEGMENTS = {
-  SUMMARY: 'summary'
+  SUMMARY: 'summary',
+  TASKS: 'tasks'
 } as const;
 
 const SETTINGS_SEGMENTS = {
@@ -41,7 +42,8 @@ export const routes = {
   person: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.PERSON}`,
     byId: (params: PersonIdParam) => `${routes.person.root()}/${params.id}`,
-    summary: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.SUMMARY}`
+    summary: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.SUMMARY}`,
+    tasks: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.TASKS}`
   },
 
   // Group routes

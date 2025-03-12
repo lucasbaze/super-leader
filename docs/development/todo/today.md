@@ -1,3 +1,7 @@
+### Mar 10th
+
+- [ ] Bug: A user can multiple user-profile. This needs to be constrained to only 1.
+
 ### Mar 5th
 
 - [x] ~~_Remove someone from a group_~~ [2025-03-05]

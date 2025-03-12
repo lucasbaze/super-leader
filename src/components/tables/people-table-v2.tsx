@@ -111,14 +111,14 @@ export function PeopleTableV2({
         </div>
       )
     },
-    {
-      accessorKey: 'bio',
-      header: 'Bio',
-      size: 300,
-      cell: ({ row }) => (
-        <div className='max-w-[250px] truncate'>{row.original.bio || 'No bio'}</div>
-      )
-    },
+    // {
+    //   accessorKey: 'bio',
+    //   header: 'Bio',
+    //   size: 300,
+    //   cell: ({ row }) => (
+    //     <div className='max-w-[250px] truncate'>{row.original.bio || 'No bio'}</div>
+    //   )
+    // },
     {
       accessorKey: 'ai_summary',
       header: 'AI Summary',

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 
 import { EmojiPicker } from '@/components/emoji-picker';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import {
   SheetHeader,
   SheetTitle
 } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import { useUpdateGroup } from '@/hooks/use-groups';
 import { Group } from '@/types/database';
 
@@ -83,6 +85,28 @@ export function EditGroupSheet({ group, open, onOpenChange }: EditGroupSheetProp
                 onChange={(e) => setName(e.target.value)}
                 disabled={isSubmitting}
               />
+            </div>
+          </div>
+          
+          <Separator />
+          
+          <div className='space-y-2'>
+            <h3 className='text-sm font-medium'>Custom Fields</h3>
+            <p className='text-sm text-muted-foreground'>
+              Manage group-specific custom fields to track additional information
+            </p>
+            <div>
+              <Button 
+                variant='outline' 
+                size='sm'
+                asChild
+                className='mt-2'
+                onClick={() => onOpenChange(false)}
+              >
+                <Link href={`/app/groups/${group.id}/custom-fields`}>
+                  Manage Custom Fields
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

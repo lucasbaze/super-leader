@@ -1,3 +1,4 @@
+/* Deprecated */
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,6 +27,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { personEditSchema, TPersonEditFormData } from '@/lib/schemas/person-edit';
 
 import type { BioSidebarData } from './bio-sidebar';
+
+/* Deprecated */
 
 interface BioSidebarEditProps {
   data: BioSidebarData;
@@ -130,7 +133,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
     <Form {...form}>
       <form className='space-y-16 pb-40'>
         {/* Bio Section */}
-        <div>
+        {/* <div>
           <SectionHeader>Bio</SectionHeader>
           <FormField
             control={form.control}
@@ -144,7 +147,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
 
         {/* Contact Methods */}
         <div className='space-y-4'>

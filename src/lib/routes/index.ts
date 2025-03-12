@@ -11,12 +11,17 @@ const APP_SEGMENTS = {
   PEOPLE: 'people',
   BOOKMARKS: 'bookmarks',
   LOGIN: 'login',
-  CONTEXT: 'context'
+  CONTEXT: 'context',
+  SETTINGS: 'settings'
 } as const;
 
 // Define sub-segments
 const PERSON_SEGMENTS = {
   SUMMARY: 'summary'
+} as const;
+
+const SETTINGS_SEGMENTS = {
+  CUSTOM_FIELDS: 'custom-fields'
 } as const;
 
 // Base path
@@ -63,6 +68,12 @@ export const routes = {
   // Context routes
   context: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.CONTEXT}`
+  },
+
+  // Settings routes
+  settings: {
+    root: () => `${BASE_PATH}/${APP_SEGMENTS.SETTINGS}`,
+    customFields: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.CUSTOM_FIELDS}`
   }
 } as const;
 

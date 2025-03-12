@@ -1,7 +1,7 @@
 import { dateHandler, getCurrentUtcTime } from '@/lib/dates/helpers';
 import { TASK_TYPES } from '@/lib/tasks/task-types';
 import { buildTaskSuggestion } from '@/services/tasks/build-task-suggestion';
-import type { TTaskContent } from '@/services/tasks/types';
+import type { TaskContent } from '@/services/tasks/types';
 
 import { SeedContext } from './types';
 
@@ -17,19 +17,19 @@ const getRandomEndDate = () => {
   return dateHandler().add(daysToAdd, 'd').endOf('day').utc();
 };
 
-const generateBirthdayContent = (person: { first_name: string }): TTaskContent => ({
+const generateBirthdayContent = (person: { first_name: string }): TaskContent => ({
   action: 'Send birthday wishes',
   context: `${person.first_name}'s birthday is coming up!`,
   suggestion: `Don't forget to wish ${person.first_name} a happy birthday! Consider sending a thoughtful message or gift to strengthen your relationship.`
 });
 
-const generateProfileUpdateContent = (person: { first_name: string }): TTaskContent => ({
+const generateProfileUpdateContent = (person: { first_name: string }): TaskContent => ({
   action: 'Update contact details',
   context: 'Missing key information for potential investor',
   suggestion: `${person.first_name}'s profile needs updating. Add their current role, company, and preferred contact method to better maintain the relationship.`
 });
 
-const generateSuggestedReminderContent = (person: { first_name: string }): TTaskContent => ({
+const generateSuggestedReminderContent = (person: { first_name: string }): TaskContent => ({
   action: 'Send follow-up message',
   context: 'Recent interaction follow-up',
   suggestion: `It's been a while since you last caught up with ${person.first_name}. Consider scheduling a coffee chat to discuss their recent projects and maintain the connection.`

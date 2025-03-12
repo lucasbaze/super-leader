@@ -2,10 +2,10 @@ import { z } from 'zod';
 
 import { dateHandler, getCurrentUtcTime } from '@/lib/dates/helpers';
 import { createError } from '@/lib/errors';
-import { TASK_TYPES, TTaskType } from '@/lib/tasks/task-types';
+import { TASK_TYPES, TaskType } from '@/lib/tasks/task-types';
 import { ErrorType } from '@/types/errors';
 
-import { taskContentSchema, TTaskContent } from './types';
+import { TaskContent, taskContentSchema } from './types';
 
 export const ERRORS = {
   TASK_SUGGESTION: {
@@ -48,7 +48,7 @@ export type TTaskSuggestionInput = z.infer<typeof taskSuggestionSchema>;
 
 export type TBuildTaskSuggestionResult = {
   valid: boolean;
-  data: (Omit<TTaskSuggestionInput, 'type'> & { type: TTaskType }) | null;
+  data: (Omit<TTaskSuggestionInput, 'type'> & { type: TaskType }) | null;
   error: (typeof ERRORS.TASK_SUGGESTION)[keyof typeof ERRORS.TASK_SUGGESTION] | null;
 };
 
@@ -61,8 +61,8 @@ export function buildTaskSuggestion({
 }: {
   userId: string;
   personId: string;
-  type: TTaskType;
-  content: TTaskContent;
+  type: TaskType;
+  content: TaskContent;
   endAt?: string;
 }): TBuildTaskSuggestionResult {
   // Validate required fields

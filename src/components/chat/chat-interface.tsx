@@ -5,6 +5,10 @@ import { useRef } from 'react';
 import { useChatInterface } from '@/hooks/chat/use-chat-interface';
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
+import {
+  CONVERSATION_OWNER_TYPES,
+  ConversationOwnerType
+} from '@/services/conversations/constants';
 import { Conversation } from '@/types/database';
 
 import { ChatHeader } from './chat-header';
@@ -18,7 +22,18 @@ interface ChatInterfaceProps {
   handleCreateConversation: ({ title }: { title: string }) => Promise<Conversation>;
   handleStartNewConversation: () => void;
   onSelectConversation: (id: string) => void;
+  conversationType: ConversationOwnerType;
+  conversationIdentifier: string;
 }
+
+const getExtraBody = (conversationType: ConversationOwnerType, conversationIdentifier: string) => {
+  if (conversationType === CONVERSATION_OWNER_TYPES.PERSON) {
+    return {
+      personId: conversationIdentifier
+    };
+  }
+  return {};
+};
 
 export function ChatInterface({
   conversationId,
@@ -26,7 +41,9 @@ export function ChatInterface({
   isLoadingConversations,
   handleCreateConversation,
   handleStartNewConversation,
-  onSelectConversation
+  onSelectConversation,
+  conversationType,
+  conversationIdentifier
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -34,7 +51,8 @@ export function ChatInterface({
   // Set up chat interface
   const chatInterface = useChatInterface({
     conversationId,
-    handleCreateConversation
+    handleCreateConversation,
+    extraBody: getExtraBody(conversationType, conversationIdentifier)
   });
 
   // Get saved messages

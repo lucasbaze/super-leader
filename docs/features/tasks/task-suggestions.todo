@@ -1,6 +1,5 @@
 
 Next:
-  ☐ Need to invalidate the cache when a task is created for a specific person
   ☐ Need to create a "completed" variant for the task suggestion list item for display purposes
   ☐ Need to create a "skipped" variant for the task suggestion
   ☐ Adjust tabs to be "This week" and "All tasks" all tasks will "infinite scroll" ( Need to also think about groupings )
@@ -16,6 +15,7 @@ Later:
     
     
 Done: 
+  ✔ Need to invalidate the cache when a task is created for a specific person @done(25-03-12 22:31)
   ✔ Update the toggles on the home page @done(25-03-12 16:22)
   ✔ Need to invalidate the cache when a task is created @done(25-03-12 16:36)
   ✔ Need to invalidate the cache when a task is completed or updated @done(25-03-12 16:36)

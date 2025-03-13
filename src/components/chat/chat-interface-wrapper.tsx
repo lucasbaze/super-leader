@@ -61,6 +61,8 @@ export const ChatInterfaceWrapper = () => {
       conversationId={activeConversationId}
       conversations={conversations || []}
       isLoadingConversations={isLoadingConversations}
+      conversationType={type}
+      conversationIdentifier={identifier}
       handleCreateConversation={handleCreateConversation}
       handleStartNewConversation={handleStartNewConversation}
       onSelectConversation={setActiveConversationId}

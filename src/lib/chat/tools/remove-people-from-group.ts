@@ -7,14 +7,14 @@ import {
 } from '@/services/groups/remove-group-members';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 export const removePeopleFromGroupTool: ChatTool<
   {
     groupId: string;
     personIds: string[];
   },
-  RemoveGroupMembersServiceResult['data'] | TToolError
+  RemoveGroupMembersServiceResult['data'] | ToolError
 > = {
   name: 'removePeopleFromGroup',
   displayName: 'Remove People from Group',

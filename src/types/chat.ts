@@ -2,8 +2,8 @@ import { Message } from 'ai';
 
 import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
 import {
-  TGetContentSuggestionsForPersonResponse,
-  TMessageSuggestion
+  MessageSuggestion,
+  TGetContentSuggestionsForPersonResponse
 } from '@/services/suggestions/types';
 
 export type { CreateMessageInput } from '@/vendors/open-router/types';
@@ -44,7 +44,7 @@ export interface ToolResultMap {
   [CHAT_TOOLS.CREATE_PERSON]: null;
   [CHAT_TOOLS.CREATE_INTERACTION]: null;
   [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: TGetContentSuggestionsForPersonResponse;
-  [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: TMessageSuggestion[];
+  [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: MessageSuggestion[];
 }
 
 /*

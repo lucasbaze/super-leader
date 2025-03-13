@@ -4,11 +4,11 @@ import { z } from 'zod';
 import { createUserContext, CreateUserContextServiceResult } from '@/services/context';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 export const createUserContextTool: ChatTool<
   { content: string; reason: string },
-  CreateUserContextServiceResult['data'] | TToolError
+  CreateUserContextServiceResult['data'] | ToolError
 > = {
   name: 'createUserContext',
   displayName: 'Update Memory',

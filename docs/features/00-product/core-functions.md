@@ -4,21 +4,6 @@ This starts with our domains and
 "##" is for a sub domain feature
 "-" is a for a high level user story
 
-🌶️
-🥫
-🤖
-🐮
-🕸️
-🌰
-🥨
-🥃
-🧩
-🔥
-💧
-🪖
-⛑️
-👙
-
 # Tasks View: AI suggestions for users to take next actions (#2, #4, #5, #6)
 
 - People with birthday's today

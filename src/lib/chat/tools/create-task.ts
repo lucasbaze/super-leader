@@ -7,7 +7,7 @@ import { createTask } from '@/services/tasks/create-task';
 import { CreateTaskServiceResult, TaskContent, taskContentSchema } from '@/services/tasks/types';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 // TODO: Clean up this duplication with `taskSuggestionSchema`
 const createTaskParametersSchema = z.object({
@@ -26,7 +26,7 @@ export const createTaskTool: ChatTool<
     suggestion: string;
     end_at: string;
   },
-  CreateTaskServiceResult['data'] | TToolError
+  CreateTaskServiceResult['data'] | ToolError
 > = {
   name: 'createTask',
   displayName: 'Create Task',

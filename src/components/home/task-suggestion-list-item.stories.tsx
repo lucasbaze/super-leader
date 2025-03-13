@@ -36,6 +36,8 @@ export const Birthday: Story = {
       snoozed_at: null,
       completed_at: null,
       skipped_at: null,
+      bad_suggestion: false,
+      bad_suggestion_reason: null,
       updated_at: new Date().toISOString()
     }
   }
@@ -61,6 +63,8 @@ export const ProfileUpdate: Story = {
       snoozed_at: null,
       completed_at: null,
       skipped_at: null,
+      bad_suggestion: false,
+      bad_suggestion_reason: null,
       updated_at: new Date().toISOString()
     }
   }

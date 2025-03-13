@@ -1,11 +1,11 @@
-export type TToolError = {
+export type ToolError = {
   error: true;
   message: string;
   details: string;
 };
 
 // Helper function to handle tool errors
-export function handleToolError(error: unknown, context: string): TToolError {
+export function handleToolError(error: unknown, context: string): ToolError {
   // Return a user-friendly message that the AI can use
   console.error('handleToolError:', error);
   return {

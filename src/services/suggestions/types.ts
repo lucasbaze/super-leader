@@ -10,7 +10,7 @@ export const MessageSuggestionSchema = z.object({
   text: z.string().describe('The text of the message that the user can share'),
   tone: z.enum(['casual', 'professional', 'friendly']).describe('The tone of the message')
 });
-export type TMessageSuggestion = z.infer<typeof MessageSuggestionSchema>;
+export type MessageSuggestion = z.infer<typeof MessageSuggestionSchema>;
 
 export const MessageSuggestionsResponseSchema = z.object({
   suggestions: z.array(MessageSuggestionSchema)

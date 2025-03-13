@@ -10,14 +10,15 @@ import { CustomFieldsSection } from '@/components/person/custom-fields-section';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { usePersonUpdates } from '@/hooks/use-person-updates';
-import type { Address, ContactMethod, Group, Person, Website } from '@/types/database';
+import { PersonGroup } from '@/types/custom';
+import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 export interface BioSidebarData {
   person: Person;
   contactMethods?: ContactMethod[];
   addresses?: Address[];
   websites?: Website[];
-  groups?: Group[];
+  groups?: PersonGroup[];
 }
 
 export interface PersonBioSidebarProps {

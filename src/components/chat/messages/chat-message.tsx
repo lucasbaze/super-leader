@@ -5,7 +5,7 @@ import { CreateMessage, Message } from 'ai';
 import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { TContextMessage } from '@/services/context/generate-initial-context-message';
-import { TContentSuggestionWithId, TMessageSuggestion } from '@/services/suggestions/types';
+import { MessageSuggestion, TContentSuggestionWithId } from '@/services/suggestions/types';
 
 import { ActionCard } from '../cards/action-card';
 import { ContextMessageCard } from '../cards/context-message-card';
@@ -164,7 +164,7 @@ export function ChatMessage({
       ) {
         return (
           <>
-            {toolInvocation.result?.map((result: TMessageSuggestion, index: number) => (
+            {toolInvocation.result?.map((result: MessageSuggestion, index: number) => (
               <MessageCard key={index} message={result.text} tone={result.tone} />
             ))}
           </>

@@ -1,8 +1,8 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { TError } from '@/types/errors';
+import { SuperError } from '@/types/errors';
 
 interface ErrorDisplayProps {
-  error: TError;
+  error: SuperError;
   className?: string;
 }
 

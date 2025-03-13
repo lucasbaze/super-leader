@@ -1,7 +1,7 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { GetTaskSuggestionResult } from '@/services/tasks/types';
-import { TPersonGroup } from '@/types/custom';
+import { PersonGroup } from '@/types/custom';
 import { Address, ContactMethod, DBClient, Group, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -14,7 +14,7 @@ export interface GetPersonResult {
   addresses?: Address[];
   websites?: Website[];
   interactions?: TInteraction[];
-  groups?: TPersonGroup[];
+  groups?: PersonGroup[];
   tasks?: GetTaskSuggestionResult[];
 }
 
@@ -30,7 +30,7 @@ export interface GetPersonParams {
 }
 
 interface GroupMemberWithGroup {
-  group: TPersonGroup;
+  group: PersonGroup;
 }
 
 export const ERRORS = {

@@ -8,7 +8,7 @@ import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { routes } from '@/lib/routes';
-import type { TPersonGroup } from '@/types/custom';
+import type { PersonGroup } from '@/types/custom';
 import type { Person } from '@/types/database';
 
 import { ProfileCompleteness } from '../indicators/profile-completeness';
@@ -16,7 +16,7 @@ import { TaskCount } from '../indicators/task-count';
 
 interface PersonHeaderProps {
   person: Person | undefined;
-  groups?: TPersonGroup[];
+  groups?: PersonGroup[];
   segment: string | null;
   taskCount: number;
 }

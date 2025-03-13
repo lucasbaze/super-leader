@@ -4,11 +4,11 @@ import { z } from 'zod';
 import { createGroup, CreateGroupServiceResult } from '@/services/groups/create-group';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 export const createGroupTool: ChatTool<
   { name: string; icon: string; personIds?: string[] },
-  CreateGroupServiceResult['data'] | TToolError
+  CreateGroupServiceResult['data'] | ToolError
 > = {
   name: 'createGroup',
   displayName: 'Create Group',

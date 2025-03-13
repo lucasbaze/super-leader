@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { errorToast } from '@/components/errors/error-toast';
 import type { TInteraction } from '@/services/person/person-activity';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
-import type { TPersonGroup } from '@/types/custom';
+import type { PersonGroup } from '@/types/custom';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 interface PersonAboutData {
@@ -11,7 +11,7 @@ interface PersonAboutData {
   contactMethods?: ContactMethod[];
   addresses?: Address[];
   websites?: Website[];
-  groups?: TPersonGroup[];
+  groups?: PersonGroup[];
   interactions?: TInteraction[];
   tasks?: GetTaskSuggestionResult[];
 }

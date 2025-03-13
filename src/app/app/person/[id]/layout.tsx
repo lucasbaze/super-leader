@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter, useSelectedLayoutSegment } from 'next/navigation';
-import React from 'react';
+import { useEffect } from 'react';
 
 import { BaseHeader } from '@/components/headers/base-header';
 import { ChevronLeft, Loader, Sparkles } from '@/components/icons';
@@ -31,7 +31,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
   const updateAISummary = useUpdateAISummary();
 
   // Add to recently viewed when data loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (data?.person) {
       addRecentlyViewed({
         id: data.person.id,

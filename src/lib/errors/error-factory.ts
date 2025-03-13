@@ -1,4 +1,4 @@
-import { ErrorType, TError } from '@/types/errors';
+import { ErrorType, SuperError } from '@/types/errors';
 
 export const createError = (
   name: string,
@@ -6,8 +6,8 @@ export const createError = (
   message: string,
   displayMessage?: string,
   details?: unknown
-): TError => {
-  const error = new Error(message) as TError;
+): SuperError => {
+  const error = new Error(message) as SuperError;
   error.name = name;
   error.type = type;
   error.displayMessage = displayMessage;
@@ -30,11 +30,11 @@ export const createErrorV2 = ({
   message,
   displayMessage,
   details
-}: TCreateErrorV2Params): TError => {
+}: TCreateErrorV2Params): SuperError => {
   return createError(name, type, message, displayMessage, details);
 };
 
-export const toError = (error: unknown): TError => {
+export const toError = (error: unknown): SuperError => {
   if (error instanceof Error) {
     return createError(
       error.name || 'unknown_error',

@@ -7,7 +7,7 @@ import {
 } from '@/services/person/person-activity';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 const createInteractionSchema = z.object({
   type: z.string().min(1, 'Type is required'),
@@ -16,7 +16,7 @@ const createInteractionSchema = z.object({
 
 export const createInteractionTool: ChatTool<
   { person_id: string; type: string; note: string; person_name: string },
-  CreateInteractionServiceResult['data'] | TToolError
+  CreateInteractionServiceResult['data'] | ToolError
 > = {
   name: 'createInteraction',
   displayName: 'Create Interaction',

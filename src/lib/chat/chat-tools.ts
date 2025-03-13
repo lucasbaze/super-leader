@@ -4,6 +4,7 @@ import { addPeopleToGroupTool } from './tools/add-people-to-group';
 import { createGroupTool } from './tools/create-group';
 import { createInteractionTool } from './tools/create-interaction';
 import { createPersonTool } from './tools/create-person';
+import { createTaskTool } from './tools/create-task';
 import { createUserContextTool } from './tools/create-user-context';
 import { findPersonTool } from './tools/find-person';
 import { getGroupsTool } from './tools/get-groups';
@@ -15,6 +16,7 @@ import { removePeopleFromGroupTool } from './tools/remove-people-from-group';
 export const CHAT_TOOLS = {
   CREATE_PERSON: 'createPerson',
   CREATE_INTERACTION: 'createInteraction',
+  CREATE_TASK: 'createTask',
   GET_PERSON_SUGGESTIONS: 'getPersonSuggestions',
   CREATE_MESSAGE_SUGGESTIONS: 'createMessageSuggestionsFromArticleForUser',
   INITIAL_CONTEXT_MESSAGE: 'initialContextMessage',
@@ -28,6 +30,7 @@ ChatTools.register(findPersonTool);
 ChatTools.register(createInteractionTool);
 ChatTools.register(createGroupTool);
 ChatTools.register(createPersonTool);
+ChatTools.register(createTaskTool);
 ChatTools.register(addPeopleToGroupTool);
 ChatTools.register(removePeopleFromGroupTool);
 ChatTools.register(getGroupsTool);

@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { useState } from 'react';
 
-import { CalendarClock, CheckCircle, ThumbsDown, XCircle } from '@/components/icons';
+import { CalendarClock, CheckCircle, Loader, ThumbsDown, XCircle } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTaskActions } from '@/hooks/use-task-actions';
 import { getTaskDateDisplay } from '@/lib/dates/task-dates';
 import { routes } from '@/lib/routes';
 import { TASK_METADATA } from '@/lib/tasks/task-meta';
@@ -12,6 +14,17 @@ import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult }) => {
   const metadata = TASK_METADATA[task.type];
   const TaskIcon = metadata.icon;
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null);
+  const { completeTask, skipTask, isLoading } = useTaskActions();
+
+  const handleAction = async (action: () => Promise<any>, actionName: string) => {
+    try {
+      setActionInProgress(actionName);
+      await action();
+    } finally {
+      setActionInProgress(null);
+    }
+  };
 
   return (
     <Link
@@ -43,19 +56,28 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
         {/* Actions (visible on hover) */}
         <div className='flex translate-x-4 items-center gap-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100'>
           <TooltipProvider>
-            <Tooltip>
+            <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <Button
                   size='sm'
                   variant='ghost'
-                  className='h-8 hover:bg-green-50 hover:text-green-600'>
-                  <CheckCircle className='size-4' />
+                  className='h-8 hover:bg-green-50 hover:text-green-600'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAction(() => completeTask(task.id), 'complete');
+                  }}
+                  disabled={isLoading || actionInProgress !== null}>
+                  {isLoading ? (
+                    <Loader className='size-4 animate-spin' />
+                  ) : (
+                    <CheckCircle className='size-4' />
+                  )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Complete task</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
+            {/* <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <Button
                   size='sm'
@@ -65,21 +87,30 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Snooze task</TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
 
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size='sm'
                   variant='ghost'
-                  className='h-8 hover:bg-red-50 hover:text-red-600'>
-                  <XCircle className='size-4' />
+                  className='h-8 hover:bg-red-50 hover:text-red-600'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAction(() => skipTask(task.id), 'skip');
+                  }}
+                  disabled={isLoading || actionInProgress !== null}>
+                  {isLoading ? (
+                    <Loader className='size-4 animate-spin' />
+                  ) : (
+                    <XCircle className='size-4' />
+                  )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Skip task</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
+            {/* <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size='sm'
@@ -89,7 +120,7 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Bad suggestion</TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
           </TooltipProvider>
         </div>
 

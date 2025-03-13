@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { ArrowRight, CalendarClock, CheckCircle, ThumbsDown, XCircle } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -6,14 +7,27 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTaskActions } from '@/hooks/use-task-actions';
 import { getTaskDateDisplay } from '@/lib/dates/task-dates';
 import { routes } from '@/lib/routes';
 import { TASK_METADATA } from '@/lib/tasks/task-meta';
+import { TaskType } from '@/lib/tasks/task-types';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
 export const TaskSuggestionCard = ({ task }: { task: GetTaskSuggestionResult }) => {
-  const metadata = TASK_METADATA[task.type];
+  const metadata = TASK_METADATA[task.type as TaskType];
   const TaskIcon = metadata.icon;
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null);
+  const { completeTask, skipTask, isLoading } = useTaskActions();
+
+  const handleAction = async (action: () => Promise<any>, actionName: string) => {
+    try {
+      setActionInProgress(actionName);
+      await action();
+    } finally {
+      setActionInProgress(null);
+    }
+  };
 
   return (
     <Card className='group relative overflow-hidden shadow-none transition-all hover:shadow-md'>
@@ -64,30 +78,45 @@ export const TaskSuggestionCard = ({ task }: { task: GetTaskSuggestionResult }) 
 
       <CardFooter className='flex justify-between gap-2 pt-2'>
         <div>
-          <Button size='sm' className='bg-primary text-white hover:bg-blue-600'>
-            <CheckCircle className='mr-2 size-4' /> Complete
+          <Button
+            size='sm'
+            className='bg-primary text-white hover:bg-blue-600'
+            onClick={() => handleAction(() => completeTask(task.id), 'complete')}
+            disabled={isLoading || actionInProgress !== null}>
+            <CheckCircle className='mr-2 size-4' />
+            {actionInProgress === 'complete' ? 'Processing...' : 'Complete'}
           </Button>
           <Button
             size='sm'
             variant='ghost'
-            className='hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20'>
-            <XCircle className='mr-2 size-4' /> Skip
+            className='hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20'
+            onClick={() => handleAction(() => skipTask(task.id), 'skip')}
+            disabled={isLoading || actionInProgress !== null}>
+            <XCircle className='mr-2 size-4' />
+            {actionInProgress === 'skip' ? 'Processing...' : 'Skip'}
           </Button>
-          <Button
+          {/* <Button
             size='sm'
             variant='ghost'
-            className='hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20'>
-            <CalendarClock className='mr-2 size-4' /> Snooze
-          </Button>
+            className='hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20'
+            onClick={() => handleAction(() => snoozeTask(task.id), 'snooze')}
+            disabled={isLoading || actionInProgress !== null}
+          >
+            <CalendarClock className='mr-2 size-4' /> 
+            {actionInProgress === 'snooze' ? 'Processing...' : 'Snooze'}
+          </Button> */}
         </div>
-        <div className='flex items-center gap-2'>
+        {/* <div className='flex items-center gap-2'>
           <TooltipProvider>
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <Button
                   size='sm'
                   variant='ghost'
-                  className='hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20'>
+                  className='hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20'
+                  onClick={() => handleAction(() => markAsBadSuggestion(task.id), 'bad')}
+                  disabled={isLoading || actionInProgress !== null}
+                >
                   <ThumbsDown className='size-4' />
                 </Button>
               </TooltipTrigger>
@@ -96,7 +125,7 @@ export const TaskSuggestionCard = ({ task }: { task: GetTaskSuggestionResult }) 
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </div>
+        </div> */}
       </CardFooter>
     </Card>
   );

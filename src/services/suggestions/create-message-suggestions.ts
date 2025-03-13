@@ -9,10 +9,10 @@ import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
-import { MessageSuggestionsResponseSchema, TMessageSuggestion } from './types';
+import { MessageSuggestion, MessageSuggestionsResponseSchema } from './types';
 
 // Service params interface
-interface TCreateMessageSuggestionsParams {
+interface CreateMessageSuggestionsParams {
   db: DBClient;
   personId: string;
   contentUrl: string;
@@ -54,7 +54,7 @@ export async function createMessageSuggestions({
   personId,
   contentUrl,
   contentTitle
-}: TCreateMessageSuggestionsParams): Promise<ServiceResponse<TMessageSuggestion[]>> {
+}: CreateMessageSuggestionsParams): Promise<ServiceResponse<MessageSuggestion[]>> {
   try {
     if (!personId) {
       return { data: null, error: ERRORS.MESSAGE_SUGGESTIONS.PERSON_REQUIRED };
@@ -107,13 +107,13 @@ export async function createMessageSuggestions({
 }
 
 // Helper function to create the prompt
-interface TUserPrompt {
+interface UserPrompt {
   person: GetPersonResult | null;
   contentUrl: string;
   contentTitle: string;
 }
 
-const createUserPrompt = ({ person, contentUrl, contentTitle }: TUserPrompt) =>
+const createUserPrompt = ({ person, contentUrl, contentTitle }: UserPrompt) =>
   stripIndents`
     Person: ${person?.person.first_name}
     Recent Interactions: ${person?.interactions?.map((interaction) => interaction.note).join(', ')}

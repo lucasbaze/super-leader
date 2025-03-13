@@ -71,7 +71,7 @@ You can add multiple migrations at a time if needed or delete the migration file
 Local Database Changes: 
 
 1. Pull the schema from supabase local and add to a new migration file
-> npx supabase db diff --local --file my_migration.sql
+> npx supabase db diff --local --file my_migration
 
 2. Apply the migration to the test environment
 > npx supabase db reset

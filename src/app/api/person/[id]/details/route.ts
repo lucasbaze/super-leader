@@ -84,8 +84,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         break;
 
       case 'full':
-      default:
-        // Validate the incoming data for full updates
+      default: // Validate the incoming data for full updates
+      {
         const validated = personEditSchema.parse(data);
         ({ error } = await updatePersonDetails({
           db: supabase,
@@ -93,6 +93,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
           data: validated
         }));
         break;
+      }
     }
 
     if (error) throw error;

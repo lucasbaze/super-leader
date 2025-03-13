@@ -12,7 +12,7 @@ export enum ErrorType {
   API_ERROR = 'API_ERROR'
 }
 
-export interface TError extends Error {
+export interface SuperError extends Error {
   type: ErrorType;
   displayMessage?: string;
   details?: unknown;
@@ -20,5 +20,5 @@ export interface TError extends Error {
 
 // Base interface for all error responses
 export type TErrorResponse = {
-  error: TError;
+  error: SuperError;
 };

@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { routes } from '@/lib/routes';
 import { IconMap } from '@/lib/ui/icon-map';
 import { cn } from '@/lib/utils';
-import type { TPersonGroup } from '@/types/custom';
+import type { PersonGroup } from '@/types/custom';
 
 interface GroupBadgeProps {
-  group: TPersonGroup;
+  group: PersonGroup;
   className?: string;
   asLink?: boolean;
   size?: 'default' | 'sm';

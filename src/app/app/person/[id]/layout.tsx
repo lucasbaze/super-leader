@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter, useSelectedLayoutSegment } from 'next/navigation';
-import React from 'react';
+import { useEffect } from 'react';
 
 import { BaseHeader } from '@/components/headers/base-header';
 import { ChevronLeft, Loader, Sparkles } from '@/components/icons';
@@ -9,8 +9,8 @@ import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { usePerson } from '@/hooks/use-person';
+import { useTasks } from '@/hooks/use-tasks';
 import { useUpdateAISummary } from '@/hooks/use-update-ai-summary';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
@@ -25,10 +25,13 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     withWebsites: true,
     withGroups: true
   });
+
+  const { data: tasks } = useTasks(params.id as string);
+
   const updateAISummary = useUpdateAISummary();
 
   // Add to recently viewed when data loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (data?.person) {
       addRecentlyViewed({
         id: data.person.id,
@@ -85,7 +88,12 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
         <div className='grid h-full grid-cols-3 overflow-hidden'>
           {/* Main Content Area */}
           <div className='col-span-2 h-full overflow-hidden'>
-            <PersonHeader person={data?.person} groups={data?.groups} segment={segment} />
+            <PersonHeader
+              person={data?.person}
+              groups={data?.groups}
+              segment={segment}
+              taskCount={tasks?.length ?? 0}
+            />
             <div className='flex h-full flex-col overflow-hidden'>
               <div className='no-scrollbar flex-1 overflow-y-auto px-4 pb-4'>
                 <div className='pb-24 pt-2'>{children}</div>

@@ -7,11 +7,11 @@ import {
 } from '@/services/people/simple-search-people';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 export const findPersonTool: ChatTool<
   { searchTerm: string },
-  SimpleSearchPeopleServiceResult['data'] | TToolError
+  SimpleSearchPeopleServiceResult['data'] | ToolError
 > = {
   name: 'findPerson',
   displayName: 'Find Person',

@@ -13,6 +13,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const withWebsites = searchParams.get('withWebsites') === 'true';
   const withGroups = searchParams.get('withGroups') === 'true';
   const withInteractions = searchParams.get('withInteractions') === 'true';
+  const withTasks = searchParams.get('withTasks') === 'true';
 
   const supabase = await createClient();
   const { id } = await params;
@@ -30,7 +31,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       withAddresses: withAddresses,
       withWebsites: withWebsites,
       withGroups: withGroups,
-      withInteractions: withInteractions
+      withInteractions: withInteractions,
+      withTasks: withTasks
     });
 
     if (result.error) {

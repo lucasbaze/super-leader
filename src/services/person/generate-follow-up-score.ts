@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/messages';
-import { TPersonGroup } from '@/types/custom';
+import { PersonGroup } from '@/types/custom';
 import { Interaction, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -38,7 +38,7 @@ export const ERRORS = {
 type TGenerateFollowUpScoreParams = {
   person: Person;
   interactions: Interaction[];
-  groups: TPersonGroup[];
+  groups: PersonGroup[];
 };
 
 export async function generateFollowUpScore({

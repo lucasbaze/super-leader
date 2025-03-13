@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { createError } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { $system, $user } from '@/lib/llm/messages';
-import { TPersonGroup } from '@/types/custom';
+import { PersonGroup } from '@/types/custom';
 import { Address, ContactMethod, Interaction, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -35,7 +35,7 @@ export const ERRORS = {
 type TGenerateAISummaryParams = {
   person: Person;
   interactions: Interaction[];
-  groups: TPersonGroup[];
+  groups: PersonGroup[];
   contactMethods?: ContactMethod[];
   addresses?: Address[];
 };

@@ -1,0 +1,11 @@
+Now:
+  ☐ Need to add ability to transcribe audio into text using the chat interface
+  ☐ AI can support standard fields: updating name, birthday, date met, addresses, emails, contact methods, & websites.
+  ☐ Need the AI to be able to update the custom fields if necessary
+
+Bugs: 
+  ☐ See bugs in development/todo/today.md
+
+
+Done: 
+  ✔ Fix issue with messages not being saved when the user sends a message @done(25-03-12 11:41)

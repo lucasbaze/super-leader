@@ -25,18 +25,20 @@ export const ERRORS = {
 export interface GetTasksParams {
   db: DBClient;
   userId: string;
+  personId?: string;
 }
 
 export async function getTasks({
   db,
-  userId
+  userId,
+  personId
 }: GetTasksParams): Promise<ServiceResponse<GetTaskSuggestionResult[]>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.TASKS.MISSING_USER_ID };
     }
 
-    const { data: tasks, error } = await db
+    const query = db
       .from('task_suggestion')
       .select(
         `
@@ -60,8 +62,14 @@ export async function getTasks({
       .is('completed_at', null)
       .is('skipped_at', null)
       .is('snoozed_at', null)
-      .order('end_at', { ascending: true })
-      .returns<GetTaskSuggestionResult[]>();
+      .order('end_at', { ascending: true });
+
+    // Add person filter if personId is provided
+    if (personId) {
+      query.eq('person_id', personId);
+    }
+
+    const { data: tasks, error } = await query.returns<GetTaskSuggestionResult[]>();
 
     if (error) {
       const serviceError = ERRORS.TASKS.FETCH_ERROR;

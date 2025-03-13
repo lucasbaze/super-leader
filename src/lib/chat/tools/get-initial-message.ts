@@ -7,9 +7,9 @@ import {
 } from '@/services/context/get-initial-context-message';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
-export const getInitialMessageTool: ChatTool<{}, InitialContextMessageResult['data'] | TToolError> =
+export const getInitialMessageTool: ChatTool<{}, InitialContextMessageResult['data'] | ToolError> =
   {
     name: 'getInitialMessage',
     displayName: 'Get Initial Message',

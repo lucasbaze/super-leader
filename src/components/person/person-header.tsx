@@ -8,19 +8,21 @@ import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { routes } from '@/lib/routes';
-import type { TPersonGroup } from '@/types/custom';
+import type { PersonGroup } from '@/types/custom';
 import type { Person } from '@/types/database';
 
 import { ProfileCompleteness } from '../indicators/profile-completeness';
+import { TaskCount } from '../indicators/task-count';
 
 interface PersonHeaderProps {
   person: Person | undefined;
-  groups?: TPersonGroup[];
+  groups?: PersonGroup[];
   segment: string | null;
+  taskCount: number;
 }
 
 // TODO: Do something with thhe "contact Methods"
-export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps) {
+export function PersonHeader({ person, groups = [], segment, taskCount }: PersonHeaderProps) {
   const router = useRouter();
   const initials = `${person?.first_name[0]}${person?.last_name?.[0] || ''}`;
 
@@ -66,6 +68,13 @@ export function PersonHeader({ person, groups = [], segment }: PersonHeaderProps
               onClick={() => router.push(routes.person.summary({ id: person?.id || '' }))}>
               <span className='mr-2'>Summary</span>
               <ProfileCompleteness score={person?.completeness_score ?? 0} size={16} />
+            </TabsTrigger>
+            <TabsTrigger
+              value='tasks'
+              variant='underline'
+              onClick={() => router.push(routes.person.tasks({ id: person?.id || '' }))}>
+              <span className='mr-2'>Tasks</span>
+              <TaskCount count={taskCount} />
             </TabsTrigger>
           </TabsList>
         </Tabs>

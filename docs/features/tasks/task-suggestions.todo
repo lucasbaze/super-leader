@@ -1,0 +1,21 @@
+
+Next:
+  ☐ Need to create a "completed" variant for the task suggestion list item for display purposes
+  ☐ Need to create a "skipped" variant for the task suggestion
+  ☐ Adjust tabs to be "This week" and "All tasks" all tasks will "infinite scroll" ( Need to also think about groupings )
+  ☐ Need to somehow make it "magical" when the user has completed a task.
+  ☐ Need to make it magical when a user creates a task or really does anything in the chat, after the task is created successfully for example. 
+  ☐ Get and display "tasks" that are associated with a person on the person page
+  ☐ Need to be able to check tasks off from there as well.
+  ☐ Think about how to handle the AI based "Snooze" functionality 
+  ☐ Need to think about the "gamification" in relation to the tasks / displaying metrics and "streaks". 
+  
+Later: 
+  ☐ Need to implement the "Bad suggestion" reason
+    
+    
+Done: 
+  ✔ Need to invalidate the cache when a task is created for a specific person @done(25-03-12 22:31)
+  ✔ Update the toggles on the home page @done(25-03-12 16:22)
+  ✔ Need to invalidate the cache when a task is created @done(25-03-12 16:36)
+  ✔ Need to invalidate the cache when a task is completed or updated @done(25-03-12 16:36)

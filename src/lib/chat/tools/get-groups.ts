@@ -4,9 +4,9 @@ import { z } from 'zod';
 import { getGroups, GetGroupsServiceResult } from '@/services/groups/get-groups';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
-export const getGroupsTool: ChatTool<{}, GetGroupsServiceResult['data'] | TToolError> = {
+export const getGroupsTool: ChatTool<{}, GetGroupsServiceResult['data'] | ToolError> = {
   name: 'getGroups',
   displayName: 'Get Groups',
   description: 'Get all groups for a user',

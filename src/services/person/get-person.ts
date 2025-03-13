@@ -1,6 +1,7 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { TPersonGroup } from '@/types/custom';
+import { GetTaskSuggestionResult } from '@/services/tasks/types';
+import { PersonGroup } from '@/types/custom';
 import { Address, ContactMethod, DBClient, Group, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -13,7 +14,8 @@ export interface GetPersonResult {
   addresses?: Address[];
   websites?: Website[];
   interactions?: TInteraction[];
-  groups?: TPersonGroup[];
+  groups?: PersonGroup[];
+  tasks?: GetTaskSuggestionResult[];
 }
 
 export interface GetPersonParams {
@@ -24,10 +26,11 @@ export interface GetPersonParams {
   withWebsites?: boolean;
   withInteractions?: boolean;
   withGroups?: boolean;
+  withTasks?: boolean;
 }
 
 interface GroupMemberWithGroup {
-  group: TPersonGroup;
+  group: PersonGroup;
 }
 
 export const ERRORS = {
@@ -73,6 +76,12 @@ export const ERRORS = {
       ErrorType.DATABASE_ERROR,
       'Failed to fetch groups',
       'Unable to load group information'
+    ),
+    TASKS_ERROR: createError(
+      'tasks_error',
+      ErrorType.DATABASE_ERROR,
+      'Failed to fetch tasks',
+      'Unable to load task information'
     )
   }
 };
@@ -84,7 +93,8 @@ export async function getPerson({
   withAddresses = false,
   withWebsites = false,
   withInteractions = false,
-  withGroups = false
+  withGroups = false,
+  withTasks = false
 }: GetPersonParams): Promise<ServiceResponse<GetPersonResult>> {
   try {
     // Get person
@@ -196,6 +206,44 @@ export async function getPerson({
 
       // Transform the nested group data
       result.groups = groupMembers?.map((gm) => gm.group) || [];
+    }
+
+    if (withTasks) {
+      const { data: tasks, error: tasksError } = await db
+        .from('task_suggestion')
+        .select(
+          `
+        id,
+        type,
+        content,
+        end_at,
+        completed_at,
+        skipped_at,
+        snoozed_at,
+        created_at,
+        updated_at,
+        person:person!inner (
+          id,
+          first_name,
+          last_name
+        )
+      `
+        )
+        .eq('person_id', personId)
+        .is('completed_at', null)
+        .is('skipped_at', null)
+        .is('snoozed_at', null)
+        .order('end_at', { ascending: true })
+        .returns<GetTaskSuggestionResult[]>();
+
+      if (tasksError) {
+        const error = { ...ERRORS.PERSON.TASKS_ERROR, details: tasksError };
+        errorLogger.log(error);
+
+        return { data: null, error };
+      }
+
+      result.tasks = tasks;
     }
 
     return { data: result, error: null };

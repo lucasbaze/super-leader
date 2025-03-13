@@ -4,6 +4,7 @@ export {
   Bot,
   Orbit,
   LandPlot,
+  Mic,
   Eye,
   Copy,
   EyeOff,

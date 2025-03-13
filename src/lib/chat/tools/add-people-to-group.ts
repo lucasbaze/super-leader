@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { addGroupMembers, AddGroupMembersServiceResult } from '@/services/groups/add-group-members';
 
 import { ChatTool } from '../chat-tool-registry';
-import { handleToolError, TToolError } from '../utils';
+import { handleToolError, ToolError } from '../utils';
 
 export const addPeopleToGroupTool: ChatTool<
   {
@@ -12,7 +12,7 @@ export const addPeopleToGroupTool: ChatTool<
     groupSlug: string;
     personIds: string[];
   },
-  AddGroupMembersServiceResult['data'] | TToolError
+  AddGroupMembersServiceResult['data'] | ToolError
 > = {
   name: 'addPeopleToGroup',
   displayName: 'Add People to Group',

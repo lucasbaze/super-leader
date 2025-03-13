@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { errorLogger } from '@/lib/errors';
 import { ApiResponse } from '@/types/api-response';
-import { ErrorType, TError } from '@/types/errors';
+import { ErrorType, SuperError } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
 const errorStatusMap: Record<ErrorType, number> = {
@@ -24,7 +24,7 @@ export const apiResponse = {
     return NextResponse.json({ success: true, data, error: null });
   },
 
-  error(error: TError): NextResponse<ApiResponse<never>> {
+  error(error: SuperError): NextResponse<ApiResponse<never>> {
     errorLogger.log(error);
 
     return NextResponse.json(
@@ -33,14 +33,14 @@ export const apiResponse = {
     );
   },
 
-  validationError(error: TError): NextResponse<ApiResponse<never>> {
+  validationError(error: SuperError): NextResponse<ApiResponse<never>> {
     return NextResponse.json(
       { success: false, data: null, error },
       { status: errorStatusMap[ErrorType.VALIDATION_ERROR] }
     );
   },
 
-  unauthorized(error: TError): NextResponse<ApiResponse<never>> {
+  unauthorized(error: SuperError): NextResponse<ApiResponse<never>> {
     return NextResponse.json(
       { success: false, data: null, error },
       { status: errorStatusMap[ErrorType.UNAUTHORIZED] }

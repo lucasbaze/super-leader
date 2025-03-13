@@ -8,7 +8,7 @@ import { deleteCustomField, updateCustomField } from '@/services/custom-fields';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const authResult = await validateAuthentication(supabase);
@@ -22,10 +22,12 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
+    const { id } = await Promise.resolve(params);
+
     const result = await updateCustomField({
       db: supabase,
       userId: authResult.data.id,
-      fieldId: params.id,
+      fieldId: id,
       name,
       options,
       fieldDescription
@@ -44,7 +46,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const authResult = await validateAuthentication(supabase);
@@ -52,10 +54,12 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return apiResponse.unauthorized(authResult.error!);
     }
 
+    const { id } = await Promise.resolve(params);
+
     const result = await deleteCustomField({
       db: supabase,
       userId: authResult.data.id,
-      fieldId: params.id
+      fieldId: id
     });
 
     return apiResponse.success(result.data);

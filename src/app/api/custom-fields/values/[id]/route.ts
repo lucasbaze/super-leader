@@ -8,7 +8,7 @@ import { deleteCustomFieldValue, updateCustomFieldValue } from '@/services/custo
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const authResult = await validateAuthentication(supabase);
@@ -23,10 +23,12 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Value must be provided (can be null)' }, { status: 400 });
     }
 
+    const { id } = await Promise.resolve(params);
+
     const result = await updateCustomFieldValue({
       db: supabase,
       userId: authResult.data.id,
-      fieldValueId: params.id,
+      fieldValueId: id,
       value
     });
 
@@ -43,7 +45,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const authResult = await validateAuthentication(supabase);
@@ -51,10 +53,12 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return apiResponse.unauthorized(authResult.error!);
     }
 
+    const { id } = await Promise.resolve(params);
+
     const result = await deleteCustomFieldValue({
       db: supabase,
       userId: authResult.data.id,
-      fieldValueId: params.id
+      fieldValueId: id
     });
 
     return apiResponse.success(result.data);

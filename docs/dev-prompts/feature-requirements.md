@@ -303,3 +303,11 @@ Each section's questions should be:
 - Reviewed with relevant stakeholders
 - Updated as requirements evolve
 - USE LONG FORM PROSE AND FULL AND COMPLETE SENTENCES
+
+# Output Format Guidelines
+
+- Use markdown formatting
+- Default to more long form prose
+- Include technical components when provided
+- Emphasize the "User Experience"
+- Clearly articulate all of the user stories in a single section in the form of "As a [type of user], I want [some goal] so that [some reason]"

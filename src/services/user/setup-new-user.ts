@@ -4,6 +4,8 @@ import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
+import { buildNewOnboardingObject } from './build-new-onboarding';
+
 export const ERRORS = {
   SETUP_FAILED: createError(
     'setup_failed',
@@ -86,7 +88,8 @@ export async function setupNewUser({
       db.from('user_profile').insert({
         user_id: userId,
         first_name: 'New',
-        last_name: 'User'
+        last_name: 'User',
+        onboarding: buildNewOnboardingObject()
       })
     ]);
 

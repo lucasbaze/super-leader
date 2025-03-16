@@ -618,6 +618,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          onboarding: Json | null
           updated_at: string | null
           user_id: string
         }
@@ -628,6 +629,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding?: Json | null
           updated_at?: string | null
           user_id: string
         }
@@ -638,6 +640,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding?: Json | null
           updated_at?: string | null
           user_id?: string
         }

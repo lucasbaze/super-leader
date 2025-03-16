@@ -8,6 +8,7 @@ interface CreateTestUserProfileParams {
     last_name: string;
     context_summary?: any;
     context_summary_completeness_score?: number;
+    onboarding?: any;
   };
 }
 
@@ -19,7 +20,8 @@ export async function createTestUserProfile({ db, data }: CreateTestUserProfileP
       first_name: data.first_name,
       last_name: data.last_name,
       context_summary: data.context_summary || null,
-      context_summary_completeness_score: data.context_summary_completeness_score || 0
+      context_summary_completeness_score: data.context_summary_completeness_score || 0,
+      onboarding: data.onboarding
     })
     .select('*')
     .single();

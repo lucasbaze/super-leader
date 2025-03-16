@@ -1,46 +1,47 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { updateSession } from './src/utils/supabase/middleware'
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { updateSession } from './src/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-    console.log('Middleware user:')
-    // Create response and client
-    const response = await updateSession(request)
-    // const supabase = createClient(request, response)
+  console.log('Middleware user:');
+  // Create response and client
+  const response = await updateSession(request);
+  // const supabase = createClient(request, response)
 
-    // // Get current user
-    // const { data: { user }, error } = await supabase.auth.getUser()
+  // // Get current user
+  // const { data: { user }, error } = await supabase.auth.getUser()
 
-    // // Get the pathname from the URL
-    // const pathname = request.nextUrl.pathname
+  // // Get the pathname from the URL
+  // const pathname = request.nextUrl.pathname
 
-    // // If user is logged in and tries to access /login, redirect to /app
-    // if (pathname === '/login' && user) {
-    //     return NextResponse.redirect(new URL('/app', request.url))
-    // }
+  // // If user is logged in and tries to access /login, redirect to /app
+  // if (pathname === '/login' && user) {
+  //     return NextResponse.redirect(new URL('/app', request.url))
+  // }
 
-    // // If user is not logged in and tries to access /app/*, redirect to /login
-    // if (pathname.startsWith('/app')) {
-    //     if (!user || error) {
-    //         const redirectUrl = new URL('/login', request.url)
-    //         redirectUrl.searchParams.set('redirect_to', pathname)
-    //         return NextResponse.redirect(redirectUrl)
-    //     }
-    // }
+  // // If user is not logged in and tries to access /app/*, redirect to /login
+  // if (pathname.startsWith('/app')) {
+  //     if (!user || error) {
+  //         const redirectUrl = new URL('/login', request.url)
+  //         redirectUrl.searchParams.set('redirect_to', pathname)
+  //         return NextResponse.redirect(redirectUrl)
+  //     }
+  // }
 
-    return response
+  return response;
 }
 
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         */
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-    ],
-}
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+  ]
+};
 // From Clerk docs as example. Clerk is not used here.
 // export const config = {
 //     matcher: [

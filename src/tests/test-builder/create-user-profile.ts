@@ -1,3 +1,4 @@
+import { buildNewOnboardingObject } from '@/services/user/build-new-onboarding';
 import { DBClient } from '@/types/database';
 
 interface CreateTestUserProfileParams {
@@ -21,7 +22,7 @@ export async function createTestUserProfile({ db, data }: CreateTestUserProfileP
       last_name: data.last_name,
       context_summary: data.context_summary || null,
       context_summary_completeness_score: data.context_summary_completeness_score || 0,
-      onboarding: data.onboarding
+      onboarding: data.onboarding || buildNewOnboardingObject()
     })
     .select('*')
     .single();

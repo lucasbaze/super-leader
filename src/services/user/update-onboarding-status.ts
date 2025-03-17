@@ -11,7 +11,7 @@ import { Onboarding, OnboardingSteps } from './types';
 export interface UpdateOnboardingStatusParams {
   db: SupabaseClient;
   userId: string;
-  stepCompleted?: string;
+  stepsCompleted?: string[];
   onboardingCompleted?: boolean;
 }
 
@@ -27,7 +27,7 @@ export const ERRORS = {
 export async function updateOnboardingStatus({
   db,
   userId,
-  stepCompleted,
+  stepsCompleted,
   onboardingCompleted = false
 }: UpdateOnboardingStatusParams): Promise<ServiceResponse<boolean>> {
   try {
@@ -37,24 +37,23 @@ export async function updateOnboardingStatus({
       .eq('user_id', userId)
       .single();
 
-    // Partial update of the onboarding field
     let updates: Partial<Onboarding> = {};
 
-    // Update specific step if provided
-    if (stepCompleted) {
-      // updates.steps![stepCompleted].completed = true;
-      // updates[`onboarding:steps:${stepCompleted}:completed`] = true;
+    // Update multiple steps if provided
+    if (stepsCompleted?.length) {
+      const stepsUpdates = stepsCompleted.reduce(
+        (acc, step) => ({
+          ...acc,
+          [step]: { completed: true }
+        }),
+        {}
+      );
+      console.log('stepsUpdates', stepsUpdates);
 
       updates = deepMerge(currentProfile?.onboarding || {}, {
-        steps: stepCompleted
-          ? {
-              [stepCompleted]: { completed: true }
-            }
-          : undefined
+        steps: stepsUpdates
       });
-
-      // WARN: This is only because we have only 1 step right now
-      updates.completed = true;
+      console.log('updates', updates);
     }
 
     // Mark entire onboarding as completed if requested
@@ -62,10 +61,14 @@ export async function updateOnboardingStatus({
       updates.completed = true;
     }
 
-    const { error } = await db
+    const { data, error } = await db
       .from('user_profile')
       .update({ onboarding: updates })
-      .eq('user_id', userId);
+      .eq('user_id', userId)
+      .select('onboarding')
+      .single();
+
+    console.log('data', JSON.stringify(data, null, 2));
 
     if (error) {
       // Create a merged error object with details

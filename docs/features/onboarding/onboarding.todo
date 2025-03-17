@@ -1,0 +1,37 @@
+TODO:
+  ☐ Create a progress indicator of some sort
+  
+  ☐ Update the "update memory" tool to be more of an indicator.
+  
+  ☐ Figure out why the messages are not loading into the UI even when "loading"... They should be displayed even during the tool call is "happening"...
+
+  ☐ Need to add the voice input for the messages.
+  
+  ☐ Want to have a "Message Input" that allows the user to enter their message "in the chat"... will feel more "natural" 
+  
+  ☐ Need to figure out how to "start" the chat so that the system is able to "start" the onboarding process or "pick up" where it left off.
+  
+  ☐ Create the page for the "ShareValueAsk" build out
+
+
+  ☐ Need to actually create the follow up actions: Create the ShareValueAsk, RelationshipMap, and the Relationship Playbooks. They'll be "rudimentary" at first, but will set the stage for the future.
+
+  
+  ☐ Create a "skip" button that will allow the user to skip the onboarding process. This means the user will need to have some way to "come back" to this section. I could also substitute the chat in "context" for the "onboarding" section one? Maybe?
+
+Done: 
+  ✔ Create the onboarding questions @done(25-03-16 21:21)
+  ✔ Update the update-onboarding-status to accept multiple steps @done(25-03-16 21:21)
+  ✔ Need to create some way to "reset" or "restart" the onboarding process ( i.e. via a script) @done(25-03-17 12:32)
+
+- Can do an immediate return back to the user if we've just started... can be part of the prompt.
+- We can also "build the prompt" in natural language really... Let's start by building the prompt too...
+
+
+
+
+Development Thoughts
+- Chat messages are now tightly coupled to the response from the AI... 
+
+- Experience 2 calls every time? Updating Memory and Getting Next Question?
+- Updating memory is fine... then we just need to stream the response from the other sub-tool as text?

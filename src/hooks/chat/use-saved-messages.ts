@@ -14,7 +14,7 @@ interface UseSavedMessagesProps {
 export function useSavedMessages({
   conversationId,
   setMessages,
-  limit = 10
+  limit = 20
 }: UseSavedMessagesProps) {
   // Fetch messages for the conversation
   const {

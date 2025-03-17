@@ -147,12 +147,7 @@ export async function POST(req: NextRequest) {
       // toolCallStreaming: true
     });
 
-    try {
-      return result.toDataStreamResponse();
-    } catch (error) {
-      console.error('Error:', error);
-      return apiResponse.error(toError(error));
-    }
+    return result.toDataStreamResponse();
   } catch (error) {
     console.error('Error:', error);
     return apiResponse.error(toError(error));

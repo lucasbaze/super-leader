@@ -20,6 +20,20 @@ export default async function Page({ children }: { children: React.ReactNode }) 
     redirect('/login');
   }
 
+  const { data: userProfile, error: userProfileError } = await supabase
+    .from('user_profile')
+    .select('*')
+    .eq('user_id', data.user.id)
+    .single();
+
+  if (userProfileError) {
+    redirect('/onboarding');
+  }
+
+  if (!userProfile?.onboarding?.completed) {
+    redirect('/onboarding');
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar user={data.user} />

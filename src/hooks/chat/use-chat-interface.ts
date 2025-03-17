@@ -14,6 +14,7 @@ interface UseChatInterfaceProps {
   conversationId: string | null;
   handleCreateConversation: ({ title }: { title: string }) => Promise<Conversation>;
   extraBody?: Record<string, any>;
+  apiRoute?: string;
 }
 
 export type PendingAction = {
@@ -26,7 +27,8 @@ export type PendingAction = {
 export function useChatInterface({
   conversationId,
   handleCreateConversation,
-  extraBody = {}
+  extraBody = {},
+  apiRoute = '/api/chat'
 }: UseChatInterfaceProps) {
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
@@ -36,7 +38,7 @@ export function useChatInterface({
   const { saveAssistantMessages } = useSaveAssistantMessages();
 
   const chatInterface = useChat({
-    api: '/api/chat',
+    api: apiRoute,
     initialMessages: [],
     id: conversationId || undefined,
     body: extraBody,

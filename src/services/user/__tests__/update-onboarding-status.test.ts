@@ -34,7 +34,7 @@ describe('updateOnboardingStatus', () => {
         const result = await updateOnboardingStatus({
           db,
           userId,
-          stepCompleted: 'shareValueAsk'
+          stepsCompleted: ['welcome']
         });
 
         // Verify update
@@ -44,8 +44,43 @@ describe('updateOnboardingStatus', () => {
         // Verify updated state
         const updatedUserProfile = await getUserProfile({ db, userId });
         const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
+        expect(updatedOnboarding.steps.welcome.completed).toBe(true);
+        expect(updatedOnboarding.completed).toBe(false);
+      });
+    });
+
+    it('should update multiple steps status', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        // Create test user
+        const { id: userId } = await createTestUser({ db });
+        await createTestUserProfile({
+          db,
+          data: { user_id: userId, first_name: 'Test', last_name: 'User' }
+        });
+
+        // Initial state check
+        const userProfile = await getUserProfile({ db, userId });
+        const onboarding = userProfile.data?.onboarding as Onboarding;
+        expect(onboarding.steps.shareValueAsk.completed).toBe(false);
+        expect(onboarding.steps.valuesBeliefs.completed).toBe(false);
+
+        // Update multiple steps status
+        const result = await updateOnboardingStatus({
+          db,
+          userId,
+          stepsCompleted: ['shareValueAsk', 'valuesBeliefs']
+        });
+
+        // Verify update
+        expect(result.data).toBe(true);
+        expect(result.error).toBeNull();
+
+        // Verify updated state
+        const updatedUserProfile = await getUserProfile({ db, userId });
+        const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
+        expect(updatedOnboarding.steps.valuesBeliefs.completed).toBe(true);
         expect(updatedOnboarding.steps.shareValueAsk.completed).toBe(true);
-        expect(updatedOnboarding.completed).toBe(true);
+        expect(updatedOnboarding.completed).toBe(false);
       });
     });
 
@@ -77,33 +112,6 @@ describe('updateOnboardingStatus', () => {
         // Verify updated state
         const updatedUserProfile = await getUserProfile({ db, userId });
         const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
-        expect(updatedOnboarding.completed).toBe(true);
-      });
-    });
-
-    it('should update step data', async () => {
-      await withTestTransaction(supabase, async (db) => {
-        // Create test user
-        const { id: userId } = await createTestUser({ db });
-        await createTestUserProfile({
-          db,
-          data: { user_id: userId, first_name: 'Test', last_name: 'User' }
-        });
-
-        const result = await updateOnboardingStatus({
-          db,
-          userId,
-          stepCompleted: 'shareValueAsk'
-        });
-
-        // Verify update
-        expect(result.data).toBe(true);
-        expect(result.error).toBeNull();
-
-        // Verify updated state
-        const updatedUserProfile = await getUserProfile({ db, userId });
-        const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
-        expect(updatedOnboarding.steps.shareValueAsk.completed).toBe(true);
         expect(updatedOnboarding.completed).toBe(true);
       });
     });

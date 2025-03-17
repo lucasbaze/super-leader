@@ -45,6 +45,20 @@ export const apiResponse = {
       { success: false, data: null, error },
       { status: errorStatusMap[ErrorType.UNAUTHORIZED] }
     );
+  },
+  
+  badRequest(message: string): NextResponse<ApiResponse<never>> {
+    const error: SuperError = {
+      name: 'BadRequestError',
+      type: ErrorType.BAD_REQUEST,
+      message,
+      displayMessage: message
+    };
+    
+    return NextResponse.json(
+      { success: false, data: null, error },
+      { status: errorStatusMap[ErrorType.BAD_REQUEST] }
+    );
   }
 
   // // Function to create API response from service response

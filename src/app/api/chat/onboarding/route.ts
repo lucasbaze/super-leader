@@ -13,7 +13,6 @@ import { $system, $user } from '@/lib/llm/messages';
 import { onboardingStepsQuestionsAndCriteria } from '@/lib/onboarding/onboarding-steps';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
-import { chat } from '@/vendors/open-router';
 
 // System prompt for onboarding chat
 const systemPrompt = stripIndent`You are a relationship-building expert guiding a new user through the onboarding process. Your goal is to help ask the user questions to build out their profile. The onboarding flow will culminate in creating a "Share Value Ask", a "Relationship Map", and a "Superleader Playbook". 

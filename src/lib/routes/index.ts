@@ -3,7 +3,7 @@ type PersonIdParam = { id: string };
 type GroupIdParam = { id: string };
 
 // Define route segments
-const APP_SEGMENTS = {
+export const APP_SEGMENTS = {
   ROOT: 'app',
   PERSON: 'person',
   GROUPS: 'groups',
@@ -12,7 +12,8 @@ const APP_SEGMENTS = {
   BOOKMARKS: 'bookmarks',
   LOGIN: 'login',
   CONTEXT: 'context',
-  SETTINGS: 'settings'
+  SETTINGS: 'settings',
+  ONBOARDING: 'onboarding'
 } as const;
 
 // Define sub-segments
@@ -76,6 +77,11 @@ export const routes = {
   settings: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.SETTINGS}`,
     customFields: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.CUSTOM_FIELDS}`
+  },
+
+  // Onboarding routes
+  onboarding: {
+    root: () => `/${APP_SEGMENTS.ONBOARDING}`
   }
 } as const;
 
@@ -87,7 +93,9 @@ export const isPath = {
   network: (pathname: string) => pathname.startsWith(routes.network.root()),
   people: (pathname: string) => pathname.startsWith(routes.people.root()),
   bookmarks: (pathname: string) => pathname.startsWith(routes.bookmarks.root()),
-  context: (pathname: string) => pathname.startsWith(routes.context.root())
+  context: (pathname: string) => pathname.startsWith(routes.context.root()),
+  settings: (pathname: string) => pathname.startsWith(routes.settings.root()),
+  onboarding: (pathname: string) => pathname.startsWith(routes.onboarding.root())
 };
 
 // Static routes for direct use
@@ -99,5 +107,7 @@ export const ROUTES = {
   NETWORK: routes.network.root(),
   PEOPLE: routes.people.root(),
   BOOKMARKS: routes.bookmarks.root(),
-  CONTEXT: routes.context.root()
+  CONTEXT: routes.context.root(),
+  SETTINGS: routes.settings.root(),
+  ONBOARDING: routes.onboarding.root()
 } as const;

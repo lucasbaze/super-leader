@@ -11,6 +11,7 @@ import { OnboardingChat } from '@/components/onboarding/onboarding-chat';
 import { OnboardingHeader } from '@/components/onboarding/onboarding-header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useChatInterface } from '@/hooks/chat/use-chat-interface';
+import { useInitialMessages } from '@/hooks/chat/use-initial-message';
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useConversations, useCreateConversation } from '@/hooks/use-conversations';
 import { useUserOnboarding } from '@/hooks/use-onboarding';
@@ -79,7 +80,10 @@ export default function OnboardingPage() {
     isFetchingNextPage,
     hasNextPage
   } = useSavedMessages({
+    loadingConversations: isLoadingConversations,
     conversationId,
+    type,
+    identifier,
     setMessages: chatInterface.setMessages
   });
 
@@ -92,16 +96,6 @@ export default function OnboardingPage() {
   //   fetchNextPage
   // });
 
-  // const {
-  //   messages,
-  //   isLoading,
-  //   error,
-  //   onboardingStatus,
-  //   shareValueAskData,
-  //   sendMessage,
-  //   completeOnboarding
-  // } = useOnboarding();
-
   // Check if the user has already completed onboarding
   useEffect(() => {
     if (onboardingStatus?.completed) {
@@ -109,11 +103,11 @@ export default function OnboardingPage() {
     }
   }, [onboardingStatus, router]);
 
-  console.log('Messages: ', chatInterface.messages, chatInterface.isLoading);
+  console.log('Messages: ', chatInterface.messages, savedMessagesData);
 
   return (
     <div className='px-6'>
-      <div className='mx-auto flex max-w-[850px] flex-col gap-4'>
+      <div className='mx-auto flex max-w-[650px] flex-col gap-2'>
         {/* {error && (
         <Alert variant='destructive' className='z-50 mx-auto mb-4 mt-24 max-w-md'>
           <AlertTriangle className='size-4' />

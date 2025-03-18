@@ -1,0 +1,228 @@
+import { SupabaseClient } from '@supabase/supabase-js';
+import type { CoreMessage } from 'ai';
+import { v4 as uuidv4 } from 'uuid';
+
+import { CONVERSATION_OWNER_TYPES } from '@/services/conversations/constants';
+import { createConversation } from '@/services/conversations/create-conversation';
+import { createTestGroup } from '@/tests/test-builder/create-group';
+import { createTestPerson } from '@/tests/test-builder/create-person';
+import { createTestUser } from '@/tests/test-builder/create-user';
+import { withTestTransaction } from '@/tests/utils/test-setup';
+import { Message } from '@/types/database';
+import { createClient } from '@/utils/supabase/server';
+
+import {
+  createGroupMessages,
+  createPersonMessages,
+  ERRORS,
+  getInitialMessages,
+  INITIAL_MESSAGES
+} from '../get-initial-message';
+
+describe('get-initial-message-service', () => {
+  let supabase: SupabaseClient;
+
+  beforeAll(async () => {
+    supabase = await createClient();
+  });
+
+  describe('getInitialMessages', () => {
+    describe('success cases', () => {
+      it('should return initial messages for a person conversation', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+          const testPerson = await createTestPerson({
+            db,
+            data: { user_id: testUser.id, first_name: 'John', last_name: 'Doe' }
+          });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+            ownerIdentifier: testPerson.id
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(2); // Initial messages for person
+          const messages = result.data as Message[];
+          // @ts-ignore - Testing message content
+          const message0 = messages[0].message as CoreMessage;
+          const message1 = messages[1].message as CoreMessage;
+
+          const message0Content = createPersonMessages(testPerson.first_name)[0]
+            .message as CoreMessage;
+          const message1Content = createPersonMessages(testPerson.first_name)[1]
+            .message as CoreMessage;
+
+          expect(message0.content).toBe(message0Content.content);
+          expect(message1.content).toBe(message1Content.content);
+        });
+      });
+
+      it('should return initial messages for a group conversation', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const group = await createTestGroup({
+            db,
+            data: { user_id: testUser.id, name: 'Test Group', slug: 'test-group' }
+          });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.GROUP,
+            ownerIdentifier: group.id
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(2); // Initial messages for group
+          const messages = result.data as Message[];
+          const message0 = messages[0].message as CoreMessage;
+          const message1 = messages[1].message as CoreMessage;
+
+          const message0Content = createGroupMessages(group.name, group.icon)[0]
+            .message as CoreMessage;
+          const message1Content = createGroupMessages(group.name, group.icon)[1]
+            .message as CoreMessage;
+
+          expect(message0.content).toBe(message0Content.content);
+          expect(message1.content).toBe(message1Content.content);
+        });
+      });
+
+      it('should return initial messages for a route conversation', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'onboarding'
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(3); // Initial messages for onboarding route
+        });
+      });
+
+      it('should return initial messages for an app route conversation', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'network'
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(2); // Initial messages for network route
+        });
+      });
+
+      it('should return initial messages for inner5 group', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const group = await createTestGroup({
+            db,
+            data: { user_id: testUser.id, name: 'Inner 5', slug: 'inner5' }
+          });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.GROUP,
+            ownerIdentifier: group.id
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(2); // Initial messages for inner5
+          const messages = result.data as Message[];
+          expect((messages[0].message as CoreMessage).content).toContain('Inner 5');
+        });
+      });
+
+      it('should return initial messages for central50 group', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const group = await createTestGroup({
+            db,
+            data: { user_id: testUser.id, name: 'Central 50', slug: 'central50' }
+          });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.GROUP,
+            ownerIdentifier: group.id
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(2); // Initial messages for central50
+          const messages = result.data as Message[];
+          expect((messages[0].message as CoreMessage).content).toContain('Central 50');
+        });
+      });
+    });
+
+    describe('error cases', () => {
+      it('should return a default message if userId is missing', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const result = await getInitialMessages({
+            db,
+            userId: '',
+            ownerType: CONVERSATION_OWNER_TYPES.ROUTE,
+            ownerIdentifier: 'home'
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(1); // Default message for invalid owner type
+          const messages = result.data as Message[];
+          expect((messages[0].message as CoreMessage).content).toContain('How can I help you?');
+        });
+      });
+
+      it('should return a default message if ownerType is invalid', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            // @ts-ignore - Testing invalid input
+            ownerType: 'invalid-type',
+            ownerIdentifier: 'home'
+          });
+
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(1); // Default message for invalid owner type
+          const messages = result.data as Message[];
+          expect((messages[0].message as CoreMessage).content).toContain('How can I help you?');
+        });
+      });
+
+      it('should return an error if ownerIdentifier is missing for person type', async () => {
+        await withTestTransaction(supabase, async (db) => {
+          const testUser = await createTestUser({ db });
+
+          const result = await getInitialMessages({
+            db,
+            userId: testUser.id,
+            ownerType: CONVERSATION_OWNER_TYPES.PERSON,
+            ownerIdentifier: ''
+          });
+          expect(result.error).toBeNull();
+          expect(result.data).toHaveLength(1); // Default message for invalid owner type
+          const messages = result.data as Message[];
+          expect((messages[0].message as CoreMessage).content).toContain('How can I help you?');
+        });
+      });
+    });
+  });
+});

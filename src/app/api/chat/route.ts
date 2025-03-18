@@ -121,7 +121,8 @@ export async function POST(req: NextRequest) {
           };
         }
         return acc;
-      }, {})
+      }, {}),
+      toolCallStreaming: true
       // onStepFinish: (step) => {
       //   console.log('Step:', {
       //     type: step.type,

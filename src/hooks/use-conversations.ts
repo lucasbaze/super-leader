@@ -58,9 +58,9 @@ export function useCreateConversation({ onSuccess }: UseCreateConversationProps 
       return json.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ['conversations', data.owner_type, data.owner_identifier]
-      });
+      // queryClient.invalidateQueries({
+      //   queryKey: ['conversations', data.owner_type, data.owner_identifier]
+      // });
       if (onSuccess) onSuccess(data);
     }
   });

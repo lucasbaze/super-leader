@@ -2,7 +2,11 @@ import { dateHandler } from '@/lib/dates/helpers';
 import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { $assistant } from '@/lib/llm/messages';
-import { isPath } from '@/lib/routes';
+import { APP_SEGMENTS, BASE_PATH, isPath } from '@/lib/routes';
+import {
+  CONVERSATION_OWNER_TYPES,
+  ConversationOwnerType
+} from '@/services/conversations/constants';
 import { DBClient, Message } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -16,12 +20,11 @@ export const ERRORS = {
   )
 };
 
-type TGetInitialMessagesParams = {
+type GetInitialMessagesParams = {
   db: DBClient;
   userId: string;
-  path: string;
-  ownerType: string;
-  ownerId?: string;
+  ownerType: ConversationOwnerType;
+  ownerIdentifier: string;
 };
 
 // Helper to create a standard message structure
@@ -78,10 +81,21 @@ export const INITIAL_MESSAGES = {
       'Your Strategic 100 represents your broader network that you are actively & strategically nurturing.'
     ),
     createMessage('central100-2', 'You want to touch base with these folks monthly to quarterly. ')
+  ],
+  onboarding: [
+    createMessage('onboarding-1', "Hi! I'm Superleader, your strategic relationship manager."),
+    createMessage(
+      'onboarding-2',
+      "The first step to becoming a super leader is to understand yourself, what you offer, and where you're going."
+    ),
+    createMessage(
+      'onboarding-3',
+      'Can you tell me a little about yourself? Such as your name, where you live, and your family situation such as children, partner, pets, etc.'
+    )
   ]
 };
 
-const createGroupMessages = (groupName: string, icon: string) => [
+export const createGroupMessages = (groupName: string, icon: string) => [
   createMessage(
     'group-1',
     `Use this group ${icon} ${groupName} to help you organize your relationships in the ways that make sense to you.`
@@ -89,7 +103,7 @@ const createGroupMessages = (groupName: string, icon: string) => [
   createMessage('group-2', 'You can add folks through chat or via the UI.')
 ];
 
-const createPersonMessages = (firstName: string) => [
+export const createPersonMessages = (firstName: string) => [
   createMessage(
     'person-1',
     'Superleader keeps track of a separate conversation in context with each person.'
@@ -100,20 +114,21 @@ const createPersonMessages = (firstName: string) => [
   )
 ];
 
+export type GetInitialMessageServiceResult = ServiceResponse<Message[]>;
+
 export async function getInitialMessages({
   db,
   userId,
-  path,
   ownerType,
-  ownerId
-}: TGetInitialMessagesParams): Promise<ServiceResponse<Message[]>> {
+  ownerIdentifier
+}: GetInitialMessagesParams): Promise<GetInitialMessageServiceResult> {
   try {
     // Handle person-specific messages
-    if (ownerType === 'person' && ownerId) {
+    if (ownerType === CONVERSATION_OWNER_TYPES.PERSON && ownerIdentifier) {
       const { data: person, error: personError } = await db
         .from('person')
         .select('first_name')
-        .eq('id', ownerId)
+        .eq('id', ownerIdentifier)
         .eq('user_id', userId)
         .single();
 
@@ -126,11 +141,11 @@ export async function getInitialMessages({
     }
 
     // Handle group-specific messages (for backward compatibility)
-    if (isPath.group(path) && ownerId) {
+    if (ownerType === CONVERSATION_OWNER_TYPES.GROUP && ownerIdentifier) {
       const { data: group, error: groupError } = await db
         .from('group')
         .select('slug, name, icon')
-        .eq('id', ownerId)
+        .eq('id', ownerIdentifier)
         .eq('user_id', userId)
         .single();
 
@@ -152,18 +167,23 @@ export async function getInitialMessages({
       }
     }
 
-    // Handle other paths
-    if (isPath.home(path)) {
-      return { data: INITIAL_MESSAGES.home, error: null };
-    }
-    if (isPath.people(path)) {
-      return { data: INITIAL_MESSAGES.people, error: null };
-    }
-    if (isPath.network(path)) {
-      return { data: INITIAL_MESSAGES.network, error: null };
-    }
-    if (isPath.bookmarks(path)) {
-      return { data: INITIAL_MESSAGES.bookmarks, error: null };
+    if (ownerType === CONVERSATION_OWNER_TYPES.ROUTE) {
+      // Handle other paths
+      if (APP_SEGMENTS.ROOT === ownerIdentifier) {
+        return { data: INITIAL_MESSAGES.home, error: null };
+      }
+      if (APP_SEGMENTS.PEOPLE === ownerIdentifier) {
+        return { data: INITIAL_MESSAGES.people, error: null };
+      }
+      if (APP_SEGMENTS.NETWORK === ownerIdentifier) {
+        return { data: INITIAL_MESSAGES.network, error: null };
+      }
+      if (APP_SEGMENTS.BOOKMARKS === ownerIdentifier) {
+        return { data: INITIAL_MESSAGES.bookmarks, error: null };
+      }
+      if (APP_SEGMENTS.ONBOARDING === ownerIdentifier) {
+        return { data: INITIAL_MESSAGES.onboarding, error: null };
+      }
     }
 
     // Default fallback

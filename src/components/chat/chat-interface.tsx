@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 
 import { useChatInterface } from '@/hooks/chat/use-chat-interface';
+import { useInitialMessages } from '@/hooks/chat/use-initial-message';
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
 import {
@@ -52,14 +53,19 @@ export function ChatInterface({
   const chatInterface = useChatInterface({
     conversationId,
     handleCreateConversation,
-    extraBody: getExtraBody(conversationType, conversationIdentifier)
+    extraBody: getExtraBody(conversationType, conversationIdentifier),
+    conversationIdentifier
   });
 
   // Get saved messages
   const { savedMessagesData, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useSavedMessages({
       conversationId,
-      setMessages: chatInterface.setMessages
+      setMessages: chatInterface.setMessages,
+      loadingConversations: isLoadingConversations,
+      type: conversationType,
+      identifier: conversationIdentifier,
+      sendSystemMessage: chatInterface.sendSystemMessage
     });
 
   // Handle scrolling behavior

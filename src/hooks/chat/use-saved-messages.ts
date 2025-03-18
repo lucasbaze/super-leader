@@ -2,20 +2,29 @@ import { useEffect } from 'react';
 
 import { Message } from 'ai';
 
-import { useMessages } from '@/hooks/use-messages';
+import { useInitialMessage, useMessages } from '@/hooks/use-messages';
 import { dateHandler } from '@/lib/dates/helpers';
 
 interface UseSavedMessagesProps {
   setMessages: (updater: (messages: Message[]) => Message[]) => void;
   conversationId?: string | null;
+  type?: string;
+  identifier?: string;
   limit?: number;
+  loadingConversations?: boolean;
+  sendSystemMessage?: (message: Message) => void;
 }
 
 export function useSavedMessages({
   conversationId,
   setMessages,
-  limit = 20
+  type,
+  identifier,
+  limit = 20,
+  loadingConversations = true,
+  sendSystemMessage
 }: UseSavedMessagesProps) {
+  console.log('conversationId: ', conversationId);
   // Fetch messages for the conversation
   const {
     data: savedMessagesData,
@@ -30,10 +39,35 @@ export function useSavedMessages({
     enabled: !!conversationId // Only fetch when we have a conversationId
   });
 
+  // const { data: initialMessages, isLoading: isLoadingInitialMessages } = useInitialMessage({
+  //   conversationId: conversationId || '',
+  //   type: type || 'default',
+  //   identifier: identifier || '',
+  //   enabled: !conversationId && !loadingConversations // Only fetch when we DO NOT have a conversationId
+  // });
+
+  // useEffect(() => {
+  //   if (initialMessages && !isLoadingInitialMessages) {
+  //     setMessages((prevMessages) => [...prevMessages, ...initialMessages]);
+  //   }
+  // }, [initialMessages, setMessages, isLoadingInitialMessages]);
+
   // Update messages when new data is received
   useEffect(() => {
     // Skip if no conversation or no messages
+    if (!conversationId && !savedMessagesData?.messages) {
+      console.log('Sending system message');
+      sendSystemMessage?.({
+        id: 'system-message',
+        role: 'system',
+        content: `Call the getInitialMessage tool to get the initial message for this conversation. The initial message type is ${type} and the initial message owner identifier is ${identifier}. Use these values verbatim in the tool call.`,
+        createdAt: dateHandler().toDate()
+      });
+      return;
+    }
+
     if (!conversationId || !savedMessagesData?.messages) {
+      console.log('Conversation ID found, skipping system message');
       return;
     }
 

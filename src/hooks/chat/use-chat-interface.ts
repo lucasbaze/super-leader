@@ -15,6 +15,7 @@ interface UseChatInterfaceProps {
   handleCreateConversation: ({ title }: { title: string }) => Promise<Conversation>;
   extraBody?: Record<string, any>;
   apiRoute?: string;
+  conversationIdentifier?: string;
 }
 
 export type PendingAction = {
@@ -28,7 +29,8 @@ export function useChatInterface({
   conversationId,
   handleCreateConversation,
   extraBody = {},
-  apiRoute = '/api/chat'
+  apiRoute = '/api/chat',
+  conversationIdentifier
 }: UseChatInterfaceProps) {
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
@@ -90,7 +92,7 @@ export function useChatInterface({
   // Resets the chat interface when the conversationId changes
   useEffect(() => {
     chatInterface.setMessages([]);
-  }, [conversationId]);
+  }, [conversationIdentifier]);
 
   // This handles the saving of tool call messages after the chat is finished
   useEffect(() => {
@@ -103,12 +105,29 @@ export function useChatInterface({
     }
   }, [chatFinished, toolsCalled, resultingMessage, chatInterface, conversationId]);
 
+  const sendSystemMessage = useCallback(
+    async (message: Message) => {
+      chatInterface.append(message);
+    },
+    [chatInterface]
+  );
+
   // Handle submitting a message
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
       const messageContent = chatInterface.input;
       if (!messageContent.trim()) return;
+
+      // // Add the user message to the after the conversation has been created
+      // Add the user message to immediately to the conversation
+      chatInterface.append({
+        id: Date.now().toString(),
+        content: messageContent,
+        role: 'user',
+        createdAt: new Date()
+      });
 
       let newConversation;
       if (!conversationId) {
@@ -117,14 +136,6 @@ export function useChatInterface({
           title: messageContent.substring(0, 40)
         });
       }
-
-      // // Add the user message to the after the conversation has been created
-      chatInterface.append({
-        id: Date.now().toString(),
-        content: messageContent,
-        role: 'user',
-        createdAt: new Date()
-      });
 
       // Clear the input
       chatInterface.setInput('');
@@ -153,6 +164,7 @@ export function useChatInterface({
     handleSubmit,
     pendingAction,
     setPendingAction,
-    toolsCalled
+    toolsCalled,
+    sendSystemMessage
   };
 }

@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
 import { Message } from '@/types/database';
@@ -67,5 +67,44 @@ export function useCreateMessage({ onSuccess }: UseCreateMessageProps = {}) {
     onSuccess: (data) => {
       if (onSuccess) onSuccess(data);
     }
+  });
+}
+
+interface UseInitialMessageProps {
+  conversationId: string;
+  type: string;
+  identifier?: string;
+  enabled?: boolean;
+}
+
+export function useInitialMessage({
+  conversationId,
+  type,
+  identifier,
+  enabled = true
+}: UseInitialMessageProps) {
+  return useQuery({
+    queryKey: ['initial-message', conversationId, type, identifier],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append('conversationId', conversationId);
+      params.append('type', type);
+      if (identifier) params.append('identifier', identifier);
+
+      const response = await fetch(`/api/messages/initial?${params.toString()}`);
+      const json = await response.json();
+
+      if (!response.ok || !json.success) {
+        errorToast.show(json.error);
+      }
+
+      return json.data;
+    },
+    select: (data) => {
+      return data.map((message: Message) => message.message);
+    },
+    enabled,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 }

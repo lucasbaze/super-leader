@@ -82,3 +82,16 @@ Approach #1:
 ## Research
 
 - Agentic AI: https://github.com/transitive-bullshit/agentic Lots of cool possible features in here.
+
+## Mar 17th
+
+Thoughts on a new approach in order to enable injecting intitial messages, that also are streamed to the client, and also saved to the database:
+
+- Let's first attempt tool Streaming.
+- I want to create a new tool that will getInitialMessage as a tool
+- It will then make an AI call to generate a message and stream that result... let's see what happens.
+
+Another idea:
+
+- Use the savedMessages tool to determine if the user has any message.
+- If not, then handleSubmit on the client and force the client to create a message. We can "submit a system message"?

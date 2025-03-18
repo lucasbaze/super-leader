@@ -7,7 +7,7 @@ import { AlertTriangle } from 'lucide-react';
 
 import { ChatInput } from '@/components/chat/chat-input';
 import { ChatMessage } from '@/components/chat/messages/chat-message';
-import { OnboardingChat } from '@/components/onboarding/onboarding-chat';
+// import { OnboardingChat } from '@/components/onboarding/onboarding-chat';
 import { OnboardingHeader } from '@/components/onboarding/onboarding-header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useChatInterface } from '@/hooks/chat/use-chat-interface';
@@ -17,6 +17,7 @@ import { useConversations, useCreateConversation } from '@/hooks/use-conversatio
 import { useUserOnboarding } from '@/hooks/use-onboarding';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
 import { getConversationTypeIdentifier } from '@/lib/conversations/utils';
+import { Conversation } from '@/types/database';
 
 export default function OnboardingPage() {
   const pathname = usePathname();
@@ -24,7 +25,8 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [conversationId, setConversationId] = useState<string | null>(null);
   const { type, identifier } = getConversationTypeIdentifier(pathname);
-  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const createConversation = useCreateConversation();
 
   const { onboardingStatus, isLoading: isLoadingOnboarding } = useUserOnboarding();
 
@@ -37,21 +39,16 @@ export default function OnboardingPage() {
 
   // Update active conversation when route or conversations change
   useEffect(() => {
-    // Reset active conversation when route changes
-    setConversationId(null);
-
     // If conversations are loaded and not empty, set the active conversation to the most recent one
     if (!isLoadingConversations && conversations?.length > 0) {
       // Use the first conversation (assuming they're sorted by recency)
       setConversationId(conversations[0].id);
+    } else if (!isLoadingConversations && conversations?.length === 0) {
+      // If there is no active conversation and we're not loading, then we'll automatically create a new conversation...
+      //TODO: We'll need to "override" the conversation Name later
+      handleCreateConversation({ title: 'Onboarding Conversation' });
     }
   }, [pathname, conversations, isLoadingConversations]);
-
-  const createConversation = useCreateConversation({
-    onSuccess: (data) => {
-      setConversationId(data.id);
-    }
-  });
 
   // Create a new conversation if none exists
   const handleCreateConversation = useCallback(
@@ -61,10 +58,82 @@ export default function OnboardingPage() {
         ownerType: type,
         ownerIdentifier: identifier
       });
+      setConversationId(newConversation.id);
       return newConversation;
     },
     [createConversation, type, identifier]
   );
+
+  // const chatInterface = useChatInterface({
+  //   conversationId,
+  //   handleCreateConversation,
+  //   apiRoute: '/api/chat/onboarding'
+  // });
+
+  // // Get saved messages
+  // const {
+  //   savedMessagesData,
+  //   isLoading: isLoadingSavedMessages,
+  //   fetchNextPage,
+  //   isFetchingNextPage,
+  //   hasNextPage
+  // } = useSavedMessages({
+  //   loadingConversations: isLoadingConversations,
+  //   conversationId,
+  //   type,
+  //   identifier,
+  //   setMessages: chatInterface.setMessages,
+  //   sendSystemMessage: chatInterface.sendSystemMessage
+  // });
+
+  // Handle scrolling behavior
+  // const { handleScroll } = useScrollHandling({
+  //   containerRef: messagesContainerRef,
+  //   messagesData: savedMessagesData,
+  //   hasNextPage,
+  //   isFetchingNextPage,
+  //   fetchNextPage
+  // });
+
+  // Check if the user has already completed onboarding
+  useEffect(() => {
+    if (onboardingStatus?.completed) {
+      router.push('/app');
+    }
+  }, [onboardingStatus, router]);
+
+  // console.log('Messages: ', chatInterface.messages, savedMessagesData);
+
+  if (!conversationId) {
+    return null;
+  }
+
+  return (
+    <OnboardingChat
+      conversationId={conversationId}
+      handleCreateConversation={handleCreateConversation}
+      isLoadingConversations={isLoadingConversations}
+      type={type}
+      identifier={identifier}
+    />
+  );
+}
+
+interface OnboardingChatProps {
+  conversationId: string;
+  handleCreateConversation: ({ title }: { title: string }) => Promise<Conversation>;
+  isLoadingConversations: boolean;
+  type: string;
+  identifier: string;
+}
+const OnboardingChat = ({
+  conversationId,
+  handleCreateConversation,
+  isLoadingConversations,
+  type,
+  identifier
+}: OnboardingChatProps) => {
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   const chatInterface = useChatInterface({
     conversationId,
@@ -84,26 +153,9 @@ export default function OnboardingPage() {
     conversationId,
     type,
     identifier,
-    setMessages: chatInterface.setMessages
+    setMessages: chatInterface.setMessages,
+    sendSystemMessage: chatInterface.sendSystemMessage
   });
-
-  // Handle scrolling behavior
-  // const { handleScroll } = useScrollHandling({
-  //   containerRef: messagesContainerRef,
-  //   messagesData: savedMessagesData,
-  //   hasNextPage,
-  //   isFetchingNextPage,
-  //   fetchNextPage
-  // });
-
-  // Check if the user has already completed onboarding
-  useEffect(() => {
-    if (onboardingStatus?.completed) {
-      router.push('/app');
-    }
-  }, [onboardingStatus, router]);
-
-  console.log('Messages: ', chatInterface.messages, savedMessagesData);
 
   return (
     <div className='px-6'>
@@ -138,4 +190,4 @@ export default function OnboardingPage() {
       </div>
     </div>
   );
-}
+};

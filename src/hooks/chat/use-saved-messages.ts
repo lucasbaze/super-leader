@@ -66,7 +66,12 @@ export function useSavedMessages({
       sendSystemMessage?.({
         id: 'system-message',
         role: 'system',
-        content: `Call the getInitialMessage tool to get the initial message for this conversation. The initial message type is ${type} and the initial message owner identifier is ${identifier}. Use these values verbatim in the tool call.`,
+        content: `I am a system message NOT from the user. Call the getInitialMessage tool to get the initial message for this conversation.
+        
+        The initial message type is "${type}" and the initial message owner identifier is "${identifier}". Use these values verbatim in the tool call.
+        
+        DO NOT MAKE ANY OTHER TOOL CALLS IF YOU CALL THIS TOOL! !VERY IMPORTANT!
+        `,
         createdAt: dateHandler().toDate()
       });
       return;

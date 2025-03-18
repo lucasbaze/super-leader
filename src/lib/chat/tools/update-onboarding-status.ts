@@ -15,11 +15,14 @@ export const updateOnboardingStatusTool: ChatTool<
   displayName: 'Update Onboarding Status',
   description: 'Update the onboarding status for a user',
   rulesForAI: stripIndents`\
-    ## getOnboardingQuestion Guidelines
-    - Use updateOnobardingStatus to update the onboarding status for a user.
+    ## updateOnboardingStatus Guidelines
+
+    - Use updateOnobardingStatus to update the onboarding status for a user only when the user responds.
+    - This is meant to be called after the user shares information that sufficiently addresses a particular step in the onboarding process.
     - A user can complete multiple steps at once, if they provide the information.
     - The user can only complete steps that they have not yet completed.
     - The user can only complete steps that they have sufficiently addressed from their last message.
+    - Only call this tool when the user responds. NEVER call this tool from system or assistant messages.
   `,
   parameters: z.object({
     completedSteps: z

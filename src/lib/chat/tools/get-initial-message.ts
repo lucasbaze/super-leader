@@ -30,20 +30,19 @@ export const getInitialMessageTool: ChatTool<
   description: 'Get the initial message for a user',
   rulesForAI: stripIndents`\
     ## getInitialMessage Guidelines
+
     - Use getInitialMessage tool to get the initial message for a conversation. 
     - Respond back with the exact message returned from the getInitialMessage service.
     - If there are two messages, respond back with two messages separated by 2 newlines.
+    
+    - DO NOT MAKE ANY OTHER TOOL CALLS IF YOU CALL THIS TOOL! !VERY IMPORTANT!
   `,
   parameters: z.object({
     type: z.nativeEnum(CONVERSATION_OWNER_TYPES),
     identifier: z.string()
   }),
   execute: async (db, { type, identifier }, { userId }) => {
-    console.log('Getting initial message for user:', userId);
-
     try {
-      // const result = await getInitialContextMessage({ db, userId });
-
       const result = await getInitialMessages({
         db,
         userId,
@@ -54,8 +53,6 @@ export const getInitialMessageTool: ChatTool<
       if (result.error) {
         throw result.error;
       }
-
-      console.log('Initial messages:', result.data);
 
       return result.data;
     } catch (error) {

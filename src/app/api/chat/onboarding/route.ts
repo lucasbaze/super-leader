@@ -15,15 +15,18 @@ import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
 
 // System prompt for onboarding chat
-const systemPrompt = stripIndent`You are a relationship-building expert guiding a new user through the onboarding process. Your goal is to help ask the user questions to build out their profile. The onboarding flow will culminate in creating a "Share Value Ask", a "Relationship Map", and a "Superleader Playbook". 
+const buildSystemPrompt = (
+  onboardingStatus: string,
+  userContext: string
+) => stripIndent`You are a relationship-building expert guiding a new user through the onboarding process. Your goal is to help ask the user questions to build out their profile. The onboarding flow will culminate in creating a "Share Value Ask", a "Relationship Map", and a "Superleader Playbook". 
 
 You are not responsible for creating any of the above, but you are responsible for asking the user questions to build out their profile that will eventually lead to the creation of the "Share Value Ask", "Relationship Map", and "Superleader Playbook".
 
 ## Current User Memory
-{user_context}
+${JSON.stringify(userContext, null, 2)}
 
 ## Current Onboarding Status
-{onboarding_status}
+${JSON.stringify(onboardingStatus, null, 2)}
 
 Rules: 
 - Be warm, encouraging, and personable throughout the conversation
@@ -35,9 +38,14 @@ Rules:
 - If the user is giving brief answers, encourage them to open up and share more themselves, as it'll help you build a more complete profile and subsequently help them connect with their network on deeper levels.
 - Be respectful of their time; keep the process focused and efficient
 
-##Onboarding Steps, Questions, and Criteria**
+## Onboarding Steps, Questions, and Criteria**
 
 You job is not to ask the questions verbatim, but be a conversationalist and in a natural way ask the user questions to build out their profile, determine what steps they have sufficiently addressed from their messages, and then ask follow up questions until all steps are completed.
+
+Guidelines: 
+- You can use the conversational questions directly, but be creative and ask questions in a natural way that feels conversational.
+- Use the direct questions as inspiration, but be creative and ask questions in a natural way that feels conversational and contextually appropriate.
+- Use the sufficient criteria to determine if the user has sufficiently addressed the step.
 
 ${Object.entries(onboardingStepsQuestionsAndCriteria)
   .map(
@@ -49,23 +57,24 @@ ${Object.entries(onboardingStepsQuestionsAndCriteria)
     
   This section is generally ${generalOrder}th in the onboarding flow.
 
-  You can use these conversational questions directly, but be creative and ask questions in a natural way that feels conversational.
-  ${conversationalQuestions.map((question) => `- ${question}`).join('\n')}
+  Conversational Questions:
+  ${conversationalQuestions.map((question) => `- ${question}`).join('')}
 
-  Use these direct questions as inspiration, but be creative and ask questions in a natural way that feels conversational and contextually appropriate.
-  ${directQuestions.map((question) => `- ${question}`).join('\n')}
+  Direct Questions:
+  ${directQuestions.map((question) => `- ${question}`).join('')}
 
-  Use the criteria below to determine if the user has sufficiently addressed the step.
+  Sufficient Criteria:
   ${sufficientCriteria}
 
 `
   )
-  .join('\n')}
+  .join('')}
 
 
 ## Upon completion of all the steps
 
 **Available Tools & Guidelines**
+
   ${getAllRulesForAI()}
 `;
 
@@ -83,12 +92,6 @@ export async function POST(req: NextRequest) {
     return apiResponse.unauthorized(toError(authResult.error));
   }
 
-  // Fetch the user's onboarding status & context so far
-  // Build the system prompt with the onboarding status & provided context so far?
-  // Call the tools accordingly
-  // Determine what step was completed or answered from the user.
-  // Return the completedSteps and the next question to ask.
-
   // Parse request body
   let body;
   try {
@@ -99,9 +102,27 @@ export async function POST(req: NextRequest) {
 
   const { messages } = body;
 
+  console.log('Body', JSON.stringify(body, null, 2));
+
   if (!Array.isArray(messages)) {
     return apiResponse.badRequest('Messages must be an array');
   }
+
+  const { data: onboardingStatus } = await supabase
+    .from('user_profile')
+    .select('onboarding')
+    .eq('user_id', authResult.data!.id)
+    .single();
+
+  const { data: memory } = await supabase
+    .from('user_context')
+    .select('content')
+    .eq('user_id', authResult.data!.id);
+
+  const systemPrompt = buildSystemPrompt(
+    onboardingStatus?.onboarding,
+    memory?.reduce((acc, curr) => `${acc}\n${curr.content}`, '') || ''
+  );
 
   // Create full message array with system prompt
   const fullMessages = [$system(systemPrompt), ...messages];

@@ -24,7 +24,6 @@ export function useSavedMessages({
   loadingConversations = true,
   sendSystemMessage
 }: UseSavedMessagesProps) {
-  console.log('conversationId: ', conversationId);
   // Fetch messages for the conversation
   const {
     data: savedMessagesData,
@@ -39,24 +38,31 @@ export function useSavedMessages({
     enabled: !!conversationId // Only fetch when we have a conversationId
   });
 
-  // const { data: initialMessages, isLoading: isLoadingInitialMessages } = useInitialMessage({
-  //   conversationId: conversationId || '',
-  //   type: type || 'default',
-  //   identifier: identifier || '',
-  //   enabled: !conversationId && !loadingConversations // Only fetch when we DO NOT have a conversationId
-  // });
-
-  // useEffect(() => {
-  //   if (initialMessages && !isLoadingInitialMessages) {
-  //     setMessages((prevMessages) => [...prevMessages, ...initialMessages]);
-  //   }
-  // }, [initialMessages, setMessages, isLoadingInitialMessages]);
-
   // Update messages when new data is received
   useEffect(() => {
-    // Skip if no conversation or no messages
-    if (!conversationId && !savedMessagesData?.messages) {
-      console.log('Sending system message');
+    if (isLoading || isFetching) {
+      return;
+    }
+
+    if (savedMessagesData?.messages && savedMessagesData?.messages.length > 0) {
+      const newMessages = savedMessagesData.messages;
+
+      setMessages((prevMessages) => {
+        // Create a Map for O(1) lookups, using most recent version of each message
+        const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
+
+        // Update map with any new messages, automatically handling duplicates
+        // @ts-ignore
+        newMessages.forEach((msg: Message) => {
+          messageMap.set(msg.id, msg);
+        });
+
+        // Convert map values back to array and sort once
+        return Array.from(messageMap.values()).sort((a, b) =>
+          dateHandler(a.createdAt).isBefore(dateHandler(b.createdAt)) ? -1 : 1
+        );
+      });
+    } else if (!savedMessagesData?.messages || savedMessagesData?.messages.length === 0) {
       sendSystemMessage?.({
         id: 'system-message',
         role: 'system',
@@ -65,33 +71,7 @@ export function useSavedMessages({
       });
       return;
     }
-
-    if (!conversationId || !savedMessagesData?.messages) {
-      console.log('Conversation ID found, skipping system message');
-      return;
-    }
-
-    const newMessages = savedMessagesData.messages;
-    if (!newMessages?.length) {
-      return;
-    }
-
-    setMessages((prevMessages) => {
-      // Create a Map for O(1) lookups, using most recent version of each message
-      const messageMap = new Map(prevMessages.map((msg) => [msg.id, msg]));
-
-      // Update map with any new messages, automatically handling duplicates
-      // @ts-ignore
-      newMessages.forEach((msg: Message) => {
-        messageMap.set(msg.id, msg);
-      });
-
-      // Convert map values back to array and sort once
-      return Array.from(messageMap.values()).sort((a, b) =>
-        dateHandler(a.createdAt).isBefore(dateHandler(b.createdAt)) ? -1 : 1
-      );
-    });
-  }, [savedMessagesData?.messages, setMessages, conversationId]);
+  }, [savedMessagesData?.messages, setMessages, conversationId, isLoading, isFetching]);
 
   // Return the data and functions needed by the component
   return {

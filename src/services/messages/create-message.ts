@@ -37,7 +37,7 @@ export const ERRORS = {
   )
 };
 
-export type TCreateMessageParams = {
+export type CreateMessageParams = {
   db: DBClient;
   data: {
     message: ResponseMessage; // Now properly typed as AI Message
@@ -76,7 +76,7 @@ function transformToolInvocations(message: ResponseMessage) {
 export async function createMessage({
   db,
   data
-}: TCreateMessageParams): Promise<ServiceResponse<TChatMessage>> {
+}: CreateMessageParams): Promise<ServiceResponse<TChatMessage>> {
   try {
     if (!data.message) {
       return { data: null, error: ERRORS.INVALID_MESSAGE };

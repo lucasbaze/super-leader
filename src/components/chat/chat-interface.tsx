@@ -54,7 +54,8 @@ export function ChatInterface({
     conversationId,
     handleCreateConversation,
     extraBody: getExtraBody(conversationType, conversationIdentifier),
-    conversationIdentifier
+    conversationIdentifier,
+    conversationType
   });
 
   // Get saved messages

@@ -13,6 +13,8 @@ export const ChatInterfaceWrapper = () => {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const { type, identifier } = getConversationTypeIdentifier(pathname);
 
+  const createConversation = useCreateConversation();
+
   // Fetch conversations
   const { data: conversations, isLoading: isLoadingConversations } = useConversations({
     ownerType: type,
@@ -22,25 +24,19 @@ export const ChatInterfaceWrapper = () => {
 
   // Update active conversation when route or conversations change
   useEffect(() => {
-    // Reset active conversation when route changes
-    setActiveConversationId(null);
-
     // If conversations are loaded and not empty, set the active conversation to the most recent one
     if (!isLoadingConversations && conversations?.length > 0) {
       // Use the first conversation (assuming they're sorted by recency)
       setActiveConversationId(conversations[0].id);
+    } else if (!isLoadingConversations && conversations?.length === 0) {
+      // If there is no active conversation and we're not loading, then we'll automatically create a new conversation...
+      //TODO: We'll need to "override" the conversation Name later
+      handleCreateConversation({ title: 'New Conversation' });
     }
   }, [pathname, conversations, isLoadingConversations]);
 
-  // Create a new conversation if needed
-  const createConversation = useCreateConversation({
-    onSuccess: (data) => {
-      setActiveConversationId(data.id);
-    }
-  });
-
   const handleStartNewConversation = useCallback(() => {
-    setActiveConversationId(null);
+    handleCreateConversation({ title: 'New Conversation' });
   }, []);
 
   // Create a new conversation if none exists
@@ -51,10 +47,16 @@ export const ChatInterfaceWrapper = () => {
         ownerType: type,
         ownerIdentifier: identifier
       });
+      setActiveConversationId(newConversation.id);
       return newConversation;
     },
     [createConversation, type, identifier]
   );
+
+  // Temporary to reduce moving parts
+  if (!activeConversationId) {
+    return null;
+  }
 
   return (
     <ChatInterface
@@ -69,3 +71,5 @@ export const ChatInterfaceWrapper = () => {
     />
   );
 };
+
+// If there is no active conversation and we're not loading, then we'll automatically create a new conversation...

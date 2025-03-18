@@ -6,8 +6,10 @@ import { useChat } from 'ai/react';
 import { useCreateMessage } from '@/hooks/use-messages';
 import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
 import { $user } from '@/lib/llm/messages';
+import { ConversationOwnerType } from '@/services/conversations/constants';
 import { Conversation } from '@/types/database';
 
+import { useUpdateConversation } from '../use-conversations';
 import { useSaveAssistantMessages } from './use-save-assistant-messages';
 
 interface UseChatInterfaceProps {
@@ -16,6 +18,7 @@ interface UseChatInterfaceProps {
   extraBody?: Record<string, any>;
   apiRoute?: string;
   conversationIdentifier?: string;
+  conversationType?: ConversationOwnerType;
 }
 
 export type PendingAction = {
@@ -30,7 +33,8 @@ export function useChatInterface({
   handleCreateConversation,
   extraBody = {},
   apiRoute = '/api/chat',
-  conversationIdentifier
+  conversationIdentifier,
+  conversationType
 }: UseChatInterfaceProps) {
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const [toolsCalled, setToolsCalled] = useState<ToolCall<string, unknown>[]>([]);
@@ -38,6 +42,7 @@ export function useChatInterface({
   const [resultingMessage, setResultingMessage] = useState<Message | null>(null);
   const createMessage = useCreateMessage({});
   const { saveAssistantMessages } = useSaveAssistantMessages();
+  const updateConversation = useUpdateConversation({});
 
   const chatInterface = useChat({
     api: apiRoute,
@@ -129,25 +134,28 @@ export function useChatInterface({
         createdAt: new Date()
       });
 
-      let newConversation;
-      if (!conversationId) {
-        // Create a new conversation
-        newConversation = await handleCreateConversation({
-          title: messageContent.substring(0, 40)
+      // Clear the input
+      // Check if this is the first user message and update conversation name if it is
+      const isFirstUserMessage = () => {
+        return chatInterface.messages.filter((msg) => msg.role === 'user').length === 0;
+      };
+
+      // Update conversation name with first part of message if this is the first user message
+      if (isFirstUserMessage() && conversationId) {
+        const conversationName = messageContent.substring(0, 40);
+        updateConversation.mutateAsync({
+          conversationId,
+          name: conversationName,
+          ownerType: 'route',
+          ownerIdentifier: conversationIdentifier || ''
         });
       }
 
-      // Clear the input
       chatInterface.setInput('');
-
-      // Don't save the user message to the database if the conversation hasn't been created yet
-      if (!newConversation && !conversationId) {
-        return;
-      }
 
       await createMessage.mutateAsync({
         message: $user(messageContent),
-        conversationId: conversationId || newConversation?.id || ''
+        conversationId: conversationId || ''
       });
     },
     [

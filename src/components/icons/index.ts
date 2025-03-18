@@ -1,6 +1,7 @@
 // Re-export all icons from lucide-react
 export {
   BookOpen,
+  Brain,
   Bot,
   Orbit,
   LandPlot,

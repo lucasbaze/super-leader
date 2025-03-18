@@ -40,7 +40,7 @@ export function useSavedMessages({
 
   // Update messages when new data is received
   useEffect(() => {
-    if (isLoading || isFetching) {
+    if (!conversationId || isLoading || isFetching) {
       return;
     }
 

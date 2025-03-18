@@ -64,7 +64,6 @@ export const INITIAL_MESSAGES = {
     'You want to touch base with these folks monthly to quarterly. '
   ],
   onboarding: [
-    "Hi! I'm Superleader, your strategic relationship manager.",
     "The first step to becoming a super leader is to understand yourself, what you offer, and where you're going.",
     'Can you tell me a little about yourself? Such as your name, where you live, and your family situation such as children, partner, pets, etc.'
   ]

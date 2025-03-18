@@ -1,13 +1,6 @@
-import { stripIndent, stripIndents } from 'common-tags';
+import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
-import { validateAuthentication } from '@/lib/auth/validate-authentication';
-import { $system, $user } from '@/lib/llm/messages';
-import { APP_SEGMENTS } from '@/lib/routes';
-import {
-  getInitialContextMessage,
-  InitialContextMessageResult
-} from '@/services/context/get-initial-context-message';
 import {
   CONVERSATION_OWNER_TYPES,
   ConversationOwnerType
@@ -16,7 +9,6 @@ import {
   getInitialMessages,
   GetInitialMessageServiceResult
 } from '@/services/messages/get-initial-message';
-import { createClient } from '@/utils/supabase/server';
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
@@ -27,15 +19,14 @@ export const getInitialMessageTool: ChatTool<
 > = {
   name: 'getInitialMessage',
   displayName: 'Get Initial Message',
-  description: 'Get the initial message for a user',
+  description:
+    'This tools gets the initial message to start a conversation with the user. This tool call is only to get the initial message to start the conversation. Once the initial message is returned, do not make any other tool calls. Do not call this tool unless explicitly instructed to do so.',
   rulesForAI: stripIndents`\
     ## getInitialMessage Guidelines
 
     - Use getInitialMessage tool to get the initial message for a conversation. 
+    - Do not call this tool unless explicitly instructed to do so.
     - Respond back with the exact message returned from the getInitialMessage service.
-    - If there are two messages, respond back with two messages separated by 2 newlines.
-    
-    - DO NOT MAKE ANY OTHER TOOL CALLS IF YOU CALL THIS TOOL! !VERY IMPORTANT!
   `,
   parameters: z.object({
     type: z.nativeEnum(CONVERSATION_OWNER_TYPES),

@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 
 import { openai } from '@ai-sdk/openai';
-import { streamObject, streamText } from 'ai';
+import { Message, streamObject, streamText } from 'ai';
 import { stripIndent } from 'common-tags';
 
 import { apiResponse } from '@/lib/api-response';
@@ -13,6 +13,17 @@ import { $system, $user } from '@/lib/llm/messages';
 import { onboardingStepsQuestionsAndCriteria } from '@/lib/onboarding/onboarding-steps';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
+
+type ChatMessageData = {
+  toolChoice: { type: 'tool'; toolName: string };
+};
+
+const getDataFromMessage = (message: Message): ChatMessageData | null => {
+  if (message.annotations && typeof message.annotations === 'object') {
+    return message.annotations[0] as ChatMessageData;
+  }
+  return null;
+};
 
 // System prompt for onboarding chat
 const buildSystemPrompt = (
@@ -101,8 +112,12 @@ export async function POST(req: NextRequest) {
   }
 
   const { messages } = body;
+  console.log('Messages', JSON.stringify(messages, null, 2));
+  const lastMessage = messages.slice(-1)[0];
+  const messageData = getDataFromMessage(lastMessage);
 
   console.log('Body', JSON.stringify(body, null, 2));
+  console.log('Message Data', JSON.stringify(messageData, null, 2));
 
   if (!Array.isArray(messages)) {
     return apiResponse.badRequest('Messages must be an array');
@@ -134,10 +149,12 @@ export async function POST(req: NextRequest) {
     const result = streamText({
       model: openai('gpt-4o'),
       messages: fullMessages,
-      maxSteps: 10,
+      // maxSteps: 10,
+      maxSteps: messageData?.toolChoice?.toolName === 'getInitialMessage' ? 2 : 10,
       onError: ({ error }) => {
         console.error(error);
       },
+      toolChoice: messageData?.toolChoice || 'auto',
       tools: ChatTools.list().reduce<
         Record<
           string,

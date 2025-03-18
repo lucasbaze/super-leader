@@ -64,37 +64,6 @@ export default function OnboardingPage() {
     [createConversation, type, identifier]
   );
 
-  // const chatInterface = useChatInterface({
-  //   conversationId,
-  //   handleCreateConversation,
-  //   apiRoute: '/api/chat/onboarding'
-  // });
-
-  // // Get saved messages
-  // const {
-  //   savedMessagesData,
-  //   isLoading: isLoadingSavedMessages,
-  //   fetchNextPage,
-  //   isFetchingNextPage,
-  //   hasNextPage
-  // } = useSavedMessages({
-  //   loadingConversations: isLoadingConversations,
-  //   conversationId,
-  //   type,
-  //   identifier,
-  //   setMessages: chatInterface.setMessages,
-  //   sendSystemMessage: chatInterface.sendSystemMessage
-  // });
-
-  // Handle scrolling behavior
-  // const { handleScroll } = useScrollHandling({
-  //   containerRef: messagesContainerRef,
-  //   messagesData: savedMessagesData,
-  //   hasNextPage,
-  //   isFetchingNextPage,
-  //   fetchNextPage
-  // });
-
   // Check if the user has already completed onboarding
   useEffect(() => {
     if (onboardingStatus?.completed) {
@@ -102,11 +71,11 @@ export default function OnboardingPage() {
     }
   }, [onboardingStatus, router]);
 
-  // console.log('Messages: ', chatInterface.messages, savedMessagesData);
-
   if (!conversationId) {
     return null;
   }
+
+  console.log('Conversation ID', conversationId);
 
   return (
     <OnboardingChat

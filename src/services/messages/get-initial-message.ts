@@ -40,81 +40,47 @@ const createMessage = (id: string, content: string): Message => ({
 
 // Define initial messages for different paths
 export const INITIAL_MESSAGES = {
-  default: [createMessage('default', 'How can I help you?')],
+  default: ['How can I help you?'],
   home: [
-    createMessage('home-1', 'Welcome to Superleader!'),
-    createMessage(
-      'home-2',
-      "I'm your strategic relationship manager designed to help you become a super leader."
-    )
+    'Welcome to Superleader!',
+    "I'm your strategic relationship manager designed to help you become a super leader."
   ],
-  people: [
-    createMessage('people-1', 'This is where everyone Superleader is tracking can be found.')
-  ],
+  people: ['This is where everyone Superleader is tracking can be found.'],
   network: [
-    createMessage(
-      'network-1',
-      "What good is a goal if you don't track it and see your performance over time?"
-    ),
-    createMessage(
-      'network-2',
-      'Superleader will give you insight into the health of your network and your activity in context with your goals.'
-    )
+    "What good is a goal if you don't track it and see your performance over time?",
+    'Superleader will give you insight into the health of your network and your activity in context with your goals.'
   ],
-  bookmarks: [
-    createMessage('bookmarks-1', 'Sometimes you find stuff that you want to send to other folks.')
-  ],
+  bookmarks: ['Sometimes you find stuff that you want to send to other folks.'],
   inner5: [
-    createMessage('inner5-1', 'Your Inner 5 are the 5 closest people in your life.'),
-    createMessage('inner5-2', 'The people you trust the most go here. ( i.e. family, best friends)')
+    'Your Inner 5 are the 5 closest people in your life.',
+    'The people you trust the most go here. ( i.e. family, best friends)'
   ],
   central50: [
-    createMessage(
-      'central50-1',
-      'Your Central 50 group represents the 50 people that add the most significant value to your personal & professional life.'
-    ),
-    createMessage('central50-2', 'We want to really make sure we are adding value to them.')
+    'Your Central 50 group represents the 50 people that add the most significant value to your personal & professional life.',
+    'We want to really make sure we are adding value to them.'
   ],
   central100: [
-    createMessage(
-      'central100-1',
-      'Your Strategic 100 represents your broader network that you are actively & strategically nurturing.'
-    ),
-    createMessage('central100-2', 'You want to touch base with these folks monthly to quarterly. ')
+    'Your Strategic 100 represents your broader network that you are actively & strategically nurturing.',
+    'You want to touch base with these folks monthly to quarterly. '
   ],
   onboarding: [
-    createMessage('onboarding-1', "Hi! I'm Superleader, your strategic relationship manager."),
-    createMessage(
-      'onboarding-2',
-      "The first step to becoming a super leader is to understand yourself, what you offer, and where you're going."
-    ),
-    createMessage(
-      'onboarding-3',
-      'Can you tell me a little about yourself? Such as your name, where you live, and your family situation such as children, partner, pets, etc.'
-    )
+    "Hi! I'm Superleader, your strategic relationship manager.",
+    "The first step to becoming a super leader is to understand yourself, what you offer, and where you're going.",
+    'Can you tell me a little about yourself? Such as your name, where you live, and your family situation such as children, partner, pets, etc.'
   ]
 };
 
 export const createGroupMessages = (groupName: string, icon: string) => [
-  createMessage(
-    'group-1',
-    `Use this group ${icon} ${groupName} to help you organize your relationships in the ways that make sense to you.`
-  ),
-  createMessage('group-2', 'You can add folks through chat or via the UI.')
+  `Use this group ${icon} ${groupName} to help you organize your relationships in the ways that make sense to you.`,
+  'You can add folks through chat or via the UI.'
 ];
 
 export const createPersonMessages = (firstName: string) => [
-  createMessage(
-    'person-1',
-    'Superleader keeps track of a separate conversation in context with each person.'
-  ),
-  createMessage(
-    'person-2',
-    `In this chat for ${firstName}, you can take notes, ask for content suggestions, add to groups, etc...`
-  )
+  'Superleader keeps track of a separate conversation in context with each person.',
+  `In this chat for ${firstName}, you can take notes, ask for content suggestions, add to groups, etc...`
 ];
 
-export type GetInitialMessageServiceResult = ServiceResponse<Message[]>;
+export type GetInitialMessageServiceResult = ServiceResponse<string[]>;
 
 export async function getInitialMessages({
   db,

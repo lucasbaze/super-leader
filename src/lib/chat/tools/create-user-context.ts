@@ -5,12 +5,13 @@ import { createUserContext, CreateUserContextServiceResult } from '@/services/co
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const createUserContextTool: ChatTool<
   { content: string; reason: string },
   CreateUserContextServiceResult['data'] | ToolError
 > = {
-  name: 'createUserContext',
+  name: CHAT_TOOLS.CREATE_USER_CONTEXT,
   displayName: 'Update Memory',
   description: 'Create a new user context record',
   rulesForAI: stripIndents`\

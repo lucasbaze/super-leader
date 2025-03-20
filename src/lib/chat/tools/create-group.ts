@@ -5,12 +5,13 @@ import { createGroup, CreateGroupServiceResult } from '@/services/groups/create-
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const createGroupTool: ChatTool<
   { name: string; icon: string; personIds?: string[] },
   CreateGroupServiceResult['data'] | ToolError
 > = {
-  name: 'createGroup',
+  name: CHAT_TOOLS.CREATE_GROUP,
   displayName: 'Create Group',
   description: 'Create a new group and optionally add people / a person to it',
   rulesForAI: stripIndents`\
@@ -27,18 +28,6 @@ export const createGroupTool: ChatTool<
     console.log('Creating group:', name, icon, personIds);
 
     try {
-      // Redundant, but necessary to satisfy the type checker
-
-      // const validationResult = createInteractionSchema.safeParse({
-      //   type,
-      //   note
-      // });
-
-      // How do I get the system to "try a couple of times" if it generated the wrong data / values?
-      // if (validationResult.error) {
-      //   throw validationResult.error;
-      // }
-
       // Create the interaction
       const result = await createGroup({
         db,

@@ -1,3 +1,5 @@
+import { ChatToolRegistry } from './chat-tool-registry';
+
 export type ToolError = {
   error: true;
   message: string;
@@ -14,3 +16,17 @@ export function handleToolError(error: unknown, context: string): ToolError {
     details: JSON.stringify(error)
   };
 }
+
+// Get all the rules for the AI
+export const getAllRulesForAI = (ChatTools: ChatToolRegistry) => {
+  return ChatTools.list()
+    .reduce<string[]>((acc, toolName) => {
+      console.log('toolName', toolName);
+      const tool = ChatTools.get(toolName);
+      if (tool) {
+        return [...acc, tool.rulesForAI];
+      }
+      return acc;
+    }, [])
+    .join('\n');
+};

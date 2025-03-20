@@ -2,6 +2,7 @@ import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
 import { ChatTool } from '../chat-tool-registry';
+import { CHAT_TOOLS } from './constants';
 
 export const createPersonTool: ChatTool<
   {
@@ -12,7 +13,7 @@ export const createPersonTool: ChatTool<
   },
   undefined
 > = {
-  name: 'createPerson',
+  name: CHAT_TOOLS.CREATE_PERSON,
   displayName: 'Create Person',
   description: 'Create a new person record with an associated interaction note',
   rulesForAI: stripIndents`\

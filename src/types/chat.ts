@@ -1,6 +1,6 @@
 import { Message } from 'ai';
 
-import { CHAT_TOOLS } from '@/lib/chat/chat-tools';
+import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import {
   MessageSuggestion,
   TGetContentSuggestionsForPersonResponse
@@ -35,16 +35,16 @@ export interface CreateMessageSuggestionsArgs {
 export interface ToolArgsMap {
   [CHAT_TOOLS.CREATE_PERSON]: CreatePersonArgs;
   [CHAT_TOOLS.CREATE_INTERACTION]: CreateInteractionArgs;
-  [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: GetPersonSuggestionsArgs;
-  [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: CreateMessageSuggestionsArgs;
+  // [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: GetPersonSuggestionsArgs;
+  // [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: CreateMessageSuggestionsArgs;
 }
 
 // Map tool names to their result types
 export interface ToolResultMap {
   [CHAT_TOOLS.CREATE_PERSON]: null;
   [CHAT_TOOLS.CREATE_INTERACTION]: null;
-  [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: TGetContentSuggestionsForPersonResponse;
-  [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: MessageSuggestion[];
+  // [CHAT_TOOLS.GET_PERSON_SUGGESTIONS]: TGetContentSuggestionsForPersonResponse;
+  // [CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS]: MessageSuggestion[];
 }
 
 /*

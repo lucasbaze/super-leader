@@ -3,12 +3,13 @@ import { Message, ToolCall } from 'ai';
 
 import { useCreateMessage } from '@/hooks/use-messages';
 import { ChatTools } from '@/lib/chat/chat-tools';
+import { ChatConfig } from '@/lib/chat/types/chat-config';
 
-// interface UseSaveAssistantMessagesProps {
-//   conversationId: string | null;
-// }
+interface UseSaveAssistantMessagesProps {
+  chatConfig?: ChatConfig;
+}
 
-export function useSaveAssistantMessages() {
+export function useSaveAssistantMessages({ chatConfig }: UseSaveAssistantMessagesProps) {
   // export function useSaveAssistantMessages({ conversationId }: UseSaveAssistantMessagesProps) {
   const queryClient = useQueryClient();
   const createMessage = useCreateMessage({});
@@ -29,7 +30,7 @@ export function useSaveAssistantMessages() {
       // 1. Process tool calls and trigger their success handlers
       if (toolsCalled.length > 0) {
         toolsCalled.forEach((toolCall) => {
-          const tool = ChatTools.get(toolCall.toolName);
+          const tool = chatConfig?.toolRegistry.get(toolCall.toolName);
           if (tool?.onSuccess) {
             tool.onSuccess({ queryClient, args: toolCall.args });
           }

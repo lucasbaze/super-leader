@@ -13,7 +13,6 @@ TODO:
   
   ☐ Create the page for the "ShareValueAsk" build out
 
-
   ☐ Need to actually create the follow up actions: Create the ShareValueAsk, RelationshipMap, and the Relationship Playbooks. They'll be "rudimentary" at first, but will set the stage for the future.
 
   
@@ -35,3 +34,7 @@ Development Thoughts
 
 - Experience 2 calls every time? Updating Memory and Getting Next Question?
 - Updating memory is fine... then we just need to stream the response from the other sub-tool as text?
+
+- I'm wondering if / how we should handle the "long running" tasks that might be happening in the background... I'll need to do some research on this one. 
+  - For example, "Search for a person", or "Find a gift suggestion", or "Find an article to share"
+  - I'll also probably run these in the background on "startup" of the application as well. 

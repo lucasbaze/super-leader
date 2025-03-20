@@ -8,12 +8,13 @@ import {
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const findPersonTool: ChatTool<
   { searchTerm: string },
   SimpleSearchPeopleServiceResult['data'] | ToolError
 > = {
-  name: 'findPerson',
+  name: CHAT_TOOLS.FIND_PERSON,
   displayName: 'Find Person',
   description: 'Find a person by first name, last name or bio',
   rulesForAI: stripIndents`\

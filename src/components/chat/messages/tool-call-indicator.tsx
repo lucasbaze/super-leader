@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
 import { Brain, CheckIcon, ChevronDown, ChevronUp, Loader } from '@/components/icons';
-import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { cn } from '@/lib/utils';
 
 interface ToolCallIndicatorProps {
@@ -14,19 +16,81 @@ interface ToolCallIndicatorProps {
 export function ToolCallIndicator({ displayName, toolName, state, args }: ToolCallIndicatorProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  console.log('toolName', toolName);
-
   if (toolName === CHAT_TOOLS.CREATE_USER_CONTEXT) {
+    // Option 1: Using Tooltip with custom styling
     return (
-      <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-        {state === 'call' || state === 'partial-call' ? (
-          <Loader className='size-3.5 shrink-0 animate-spin text-muted-foreground' />
-        ) : (
-          <Brain className='size-3.5' />
-        )}
-        <span>Update Memory</span>
-      </div>
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className='flex w-fit cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground'>
+              {state === 'call' || state === 'partial-call' ? (
+                <Loader className='size-3.5 shrink-0 animate-spin text-muted-foreground' />
+              ) : (
+                <Brain className='size-3.5' />
+              )}
+              <span>Update Memory</span>
+            </div>
+          </TooltipTrigger>
+          {args && (
+            <TooltipContent
+              className='max-h-24 w-80 overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md'
+              sideOffset={10}>
+              <div className='space-y-2'>
+                <h4 className='mb-1 font-medium'>Memory Update Details</h4>
+                {args.content}
+                {/* <pre className='whitespace-pre text-xs text-muted-foreground'>
+                  <code>{JSON.stringify(args.content, null, 2)}</code>
+                </pre> */}
+              </div>
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
     );
+
+    // Option 2: Using Popover with hover trigger
+    /*
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <div 
+            className='flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground'
+            onMouseEnter={(e) => {
+              const target = e.currentTarget;
+              const popoverTrigger = target.closest('[data-radix-popper-trigger]');
+              if (popoverTrigger) {
+                popoverTrigger.click();
+              }
+            }}
+            onMouseLeave={(e) => {
+              const target = e.currentTarget;
+              const popoverTrigger = target.closest('[data-radix-popper-trigger]');
+              if (popoverTrigger) {
+                popoverTrigger.click();
+              }
+            }}
+          >
+            {state === 'call' || state === 'partial-call' ? (
+              <Loader className='size-3.5 shrink-0 animate-spin text-muted-foreground' />
+            ) : (
+              <Brain className='size-3.5' />
+            )}
+            <span>Update Memory</span>
+          </div>
+        </PopoverTrigger>
+        {args && (
+          <PopoverContent className='w-80'>
+            <div className='space-y-2'>
+              <h4 className='font-medium'>Memory Update Details</h4>
+              <pre className='whitespace-pre text-xs text-muted-foreground'>
+                <code>{JSON.stringify(args, null, 2)}</code>
+              </pre>
+            </div>
+          </PopoverContent>
+        )}
+      </Popover>
+    );
+    */
   }
 
   return (

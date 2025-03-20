@@ -2,6 +2,9 @@
 
 import { Message } from 'ai';
 
+import { MarkdownMessage } from '@/components/chat/messages/markdown-message';
+import { Loader } from '@/components/icons';
+// import RingsFadeLoader from '@/components/animated/sl-loader';
 import { useChatConfig } from '@/lib/chat/chat-context';
 import { cn } from '@/lib/utils';
 
@@ -9,10 +12,11 @@ import { OnboardingToolCallIndicator } from './onboarding-tool-indicator';
 
 interface OnboardingMessageProps {
   message: Message;
+  isLoading: boolean;
   isLastMessage: boolean;
 }
 
-export function OnboardingMessage({ message, isLastMessage }: OnboardingMessageProps) {
+export function OnboardingMessage({ message, isLastMessage, isLoading }: OnboardingMessageProps) {
   const { config } = useChatConfig();
 
   const isAssistant = message.role === 'assistant';
@@ -38,7 +42,11 @@ export function OnboardingMessage({ message, isLastMessage }: OnboardingMessageP
         {message.parts?.map((part, index) => {
           switch (part.type) {
             case 'text':
-              return <div key={index}>{part.text}</div>;
+              return (
+                <div key={index}>
+                  <MarkdownMessage content={part.text} />
+                </div>
+              );
             case 'tool-invocation':
               return (
                 <OnboardingToolCallIndicator
@@ -50,15 +58,6 @@ export function OnboardingMessage({ message, isLastMessage }: OnboardingMessageP
               );
           }
         })}
-        {/* Handle function calls differently in onboarding */}
-        {/* {message.function_call ? (
-          <OnboardingToolCallIndicator
-            toolName={message.function_call.name}
-            args={JSON.parse(message.function_call.arguments)}
-          />
-        ) : (
-          <div className='whitespace-pre-wrap'>{message.content}</div>
-        )} */}
       </div>
     </div>
   );

@@ -81,7 +81,8 @@ export function BaseChatInterface({
     conversationType,
     conversationIdentifier,
     extraBody: getExtraBody(conversationType, conversationIdentifier),
-    apiRoute
+    apiRoute,
+    chatConfig: config
   });
 
   // Get saved messages

@@ -6,12 +6,13 @@ import { updateOnboardingStatus } from '@/services/user/update-onboarding-status
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const updateOnboardingStatusTool: ChatTool<
   { completedSteps: string[] },
   boolean | ToolError
 > = {
-  name: 'updateOnboardingStatus',
+  name: CHAT_TOOLS.UPDATE_ONBOARDING_STATUS,
   displayName: 'Update Onboarding Status',
   description: 'Update the onboarding status for a user',
   rulesForAI: stripIndents`\
@@ -48,5 +49,9 @@ export const updateOnboardingStatusTool: ChatTool<
       console.error('Getting groups API error: Error catcher:', error);
       return handleToolError(error, 'get groups');
     }
+  },
+  onSuccessEach: false,
+  onSuccess: ({ queryClient, args }) => {
+    queryClient.invalidateQueries({ queryKey: ['user-profile'] });
   }
 };

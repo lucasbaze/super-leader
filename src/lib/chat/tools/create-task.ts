@@ -8,6 +8,7 @@ import { CreateTaskServiceResult, TaskContent, taskContentSchema } from '@/servi
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 // TODO: Clean up this duplication with `taskSuggestionSchema`
 const createTaskParametersSchema = z.object({
@@ -28,7 +29,7 @@ export const createTaskTool: ChatTool<
   },
   CreateTaskServiceResult['data'] | ToolError
 > = {
-  name: 'createTask',
+  name: CHAT_TOOLS.CREATE_TASK,
   displayName: 'Create Task',
   description: 'Create a new task or reminder',
   rulesForAI: stripIndents`\

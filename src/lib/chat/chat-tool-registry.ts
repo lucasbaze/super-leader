@@ -29,3 +29,5 @@ export function createChatToolRegistry() {
     }
   };
 }
+
+export type ChatToolRegistry = ReturnType<typeof createChatToolRegistry>;

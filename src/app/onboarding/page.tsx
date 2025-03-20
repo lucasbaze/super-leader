@@ -19,5 +19,9 @@ export default function OnboardingPage() {
     return router.push('/app');
   }
 
-  return <OnboardingChat />;
+  return (
+    <div className='relative h-full overflow-hidden rounded-lg bg-background p-3'>
+      <OnboardingChat />
+    </div>
+  );
 }

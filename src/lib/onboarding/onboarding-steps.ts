@@ -1,7 +1,7 @@
 export const onboardingStepsQuestionsAndCriteria = {
   personal: {
     generalOrder: 1,
-    label: 'Personal Information',
+    label: 'Personal',
     conversationalQuestions: [
       'Can you tell me a little about yourself? Such as your name, where you live, and your family situation such as children, partner, pets, etc.'
     ],
@@ -14,7 +14,7 @@ export const onboardingStepsQuestionsAndCriteria = {
   },
   professional: {
     generalOrder: 2,
-    label: 'Professional Information',
+    label: 'Professional',
     conversationalQuestions: [
       'Can you tell me a little about your professional background? Such as your industry, current role, and how you got into your current role.'
     ],
@@ -28,7 +28,7 @@ export const onboardingStepsQuestionsAndCriteria = {
   },
   goals: {
     generalOrder: 4,
-    label: 'Goals and Ambitions',
+    label: 'Goals',
     conversationalQuestions: [
       "What personal and professional goals do you have over the next 5 years? If you're not sure, what skills do you want to develop over the next 5 years?"
     ],
@@ -42,7 +42,7 @@ export const onboardingStepsQuestionsAndCriteria = {
   },
   valuesBeliefs: {
     generalOrder: 3,
-    label: 'Values and Beliefs',
+    label: 'Values',
     conversationalQuestions: [
       'What do you believe that leads you to the goals you have?',
       'What do you believe the worlds needs more of today?'
@@ -57,7 +57,7 @@ export const onboardingStepsQuestionsAndCriteria = {
   },
   strengthsSuccesses: {
     generalOrder: 5,
-    label: 'Strengths and Successes',
+    label: 'Strengths',
     conversationalQuestions: ['What skills (both hard and soft) do you feel like you excel at?'],
     directQuestions: [
       'What are you most proud of?',
@@ -78,7 +78,7 @@ export const onboardingStepsQuestionsAndCriteria = {
   },
   hobbiesEcosystems: {
     generalOrder: 7,
-    label: 'Hobbies and Ecosystems',
+    label: 'Ecosystems',
     conversationalQuestions: [
       'Where do you spend your time outside of work? Such as hobbies, organizations, volunteering or groups? Feel free to share all of them.'
     ],

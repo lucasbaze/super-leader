@@ -31,9 +31,14 @@ export function OnboardingChatInput({
           className={cn(
             'w-full rounded-lg border p-4 pr-12',
             'bg-background text-foreground',
-            'focus:outline-none focus:ring-2 focus:ring-primary',
-            config.messageStyles.user
+            'focus:shadow-md focus:outline-none'
           )}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e as any);
+            }
+          }}
           disabled={isLoading}
         />
         <button

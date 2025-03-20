@@ -5,9 +5,10 @@ import { getGroups, GetGroupsServiceResult } from '@/services/groups/get-groups'
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const getGroupsTool: ChatTool<{}, GetGroupsServiceResult['data'] | ToolError> = {
-  name: 'getGroups',
+  name: CHAT_TOOLS.GET_GROUPS,
   displayName: 'Get Groups',
   description: 'Get all groups for a user',
   rulesForAI: stripIndents`\

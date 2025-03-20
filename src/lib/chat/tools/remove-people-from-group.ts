@@ -8,6 +8,7 @@ import {
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const removePeopleFromGroupTool: ChatTool<
   {
@@ -16,7 +17,7 @@ export const removePeopleFromGroupTool: ChatTool<
   },
   RemoveGroupMembersServiceResult['data'] | ToolError
 > = {
-  name: 'removePeopleFromGroup',
+  name: CHAT_TOOLS.REMOVE_PEOPLE_FROM_GROUP,
   displayName: 'Remove People from Group',
   description: 'Remove people from a group',
   rulesForAI: stripIndents`\

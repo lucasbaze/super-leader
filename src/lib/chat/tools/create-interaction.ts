@@ -8,6 +8,7 @@ import {
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 const createInteractionSchema = z.object({
   type: z.string().min(1, 'Type is required'),
@@ -18,7 +19,7 @@ export const createInteractionTool: ChatTool<
   { person_id: string; type: string; note: string; person_name: string },
   CreateInteractionServiceResult['data'] | ToolError
 > = {
-  name: 'createInteraction',
+  name: CHAT_TOOLS.CREATE_INTERACTION,
   displayName: 'Create Interaction',
   description: 'Create a new activity, interaction or note record for a person',
   rulesForAI: stripIndents`\

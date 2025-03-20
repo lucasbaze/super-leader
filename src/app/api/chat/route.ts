@@ -5,7 +5,8 @@ import { Message, streamText } from 'ai';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
-import { ChatTools, getAllRulesForAI } from '@/lib/chat/chat-tools';
+import { ChatTools } from '@/lib/chat/chat-tools';
+import { getAllRulesForAI } from '@/lib/chat/utils';
 import { toError } from '@/lib/errors';
 import { MESSAGE_TYPE } from '@/lib/messages/constants';
 import { createClient } from '@/utils/supabase/server';
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
   Before calling any tools, think like an expert in relationship management about the user's message and see if the user mentions anything about themselves.
   
   **Available Tools & Guidelines**
-  ${getAllRulesForAI()}
+  ${getAllRulesForAI(ChatTools)}
   
   ${personId || messageData?.personId ? ` The user is currently viewing the profile of ${personName || messageData?.personName} (ID: ${personId || messageData?.personId}). When creating interactions, use this person's ID and name by default unless explicitly specified otherwise. When asked to create suggestions default to making a tool call unless specified otherwise.` : ''}
   

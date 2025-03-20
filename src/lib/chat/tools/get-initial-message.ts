@@ -12,12 +12,13 @@ import {
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
+import { CHAT_TOOLS } from './constants';
 
 export const getInitialMessageTool: ChatTool<
   { type: ConversationOwnerType; identifier: string },
   GetInitialMessageServiceResult['data'] | ToolError
 > = {
-  name: 'getInitialMessage',
+  name: CHAT_TOOLS.GET_INITIAL_MESSAGE,
   displayName: 'Get Initial Message',
   description:
     'This tools gets the initial message to start a conversation with the user. This tool call is only to get the initial message to start the conversation. Once the initial message is returned, do not make any other tool calls. Do not call this tool unless explicitly instructed to do so.',

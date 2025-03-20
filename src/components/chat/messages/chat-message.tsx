@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { CreateMessage, Message } from 'ai';
 
 import { PendingAction } from '@/hooks/chat/use-chat-interface';
-import { CHAT_TOOLS, ChatTools } from '@/lib/chat/chat-tools';
+import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { TContextMessage } from '@/services/context/generate-initial-context-message';
 import { MessageSuggestion, TContentSuggestionWithId } from '@/services/suggestions/types';
 
@@ -88,6 +88,7 @@ export function ChatMessage({
     const toolCallIndicators = message.toolInvocations?.map((toolInvocation) => (
       <ToolCallIndicator
         key={toolInvocation.toolCallId}
+        displayName={toolInvocation.toolName}
         toolName={toolInvocation.toolName}
         state={toolInvocation.state}
         args={toolInvocation.args}

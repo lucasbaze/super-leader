@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { Check } from '@/components/icons';
 import {
   Accordion,
@@ -10,13 +12,6 @@ import {
 import { useUserOnboarding } from '@/hooks/use-onboarding';
 import { onboardingStepsQuestionsAndCriteria } from '@/lib/onboarding/onboarding-steps';
 import { cn } from '@/lib/utils';
-
-const ONBOARDING_STEPS = [
-  { key: 'personal', label: 'Personal Information' },
-  { key: 'professional', label: 'Professional Details' }
-
-  // Add other steps as needed
-] as const;
 
 const getStepLabel = (step: string) => {
   return onboardingStepsQuestionsAndCriteria[
@@ -29,6 +24,9 @@ export function OnboardingProgress() {
 
   const steps = Object.entries(onboardingStatus?.steps || []);
   const allSteps = Object.entries(onboardingStepsQuestionsAndCriteria);
+  const allStepsCompleted = Object.entries(onboardingStepsQuestionsAndCriteria).every(
+    ([key]) => onboardingStatus?.steps?.[key]?.completed
+  );
 
   return (
     <div className='no-scrollbar mx-auto flex w-full max-w-3xl justify-center gap-8 overflow-y-auto p-10'>
@@ -57,6 +55,14 @@ export function OnboardingProgress() {
             );
           })}
         </div>
+
+        {allStepsCompleted && (
+          <div className='mt-4'>
+            <p className='text-muted-foreground'>
+              <Link href='/app'>Complete Onboarding</Link>
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Bottom Section - Generated Content */}

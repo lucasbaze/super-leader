@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { Check } from '@/components/icons';
 import {
@@ -9,7 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { useUserOnboarding } from '@/hooks/use-onboarding';
+import { Button } from '@/components/ui/button';
+import { useCompleteOnboarding, useUserOnboarding } from '@/hooks/use-onboarding';
 import { onboardingStepsQuestionsAndCriteria } from '@/lib/onboarding/onboarding-steps';
 import { cn } from '@/lib/utils';
 
@@ -20,13 +22,23 @@ const getStepLabel = (step: string) => {
 };
 
 export function OnboardingProgress() {
+  const router = useRouter();
   const { onboardingStatus } = useUserOnboarding();
+  const { mutate: completeOnboarding, isPending } = useCompleteOnboarding();
 
   const steps = Object.entries(onboardingStatus?.steps || []);
   const allSteps = Object.entries(onboardingStepsQuestionsAndCriteria);
   const allStepsCompleted = Object.entries(onboardingStepsQuestionsAndCriteria).every(
     ([key]) => onboardingStatus?.steps?.[key]?.completed
   );
+
+  const handleCompleteOnboarding = () => {
+    completeOnboarding(undefined, {
+      onSuccess: () => {
+        router.push('/app');
+      }
+    });
+  };
 
   return (
     <div className='no-scrollbar mx-auto flex w-full max-w-3xl justify-center gap-8 overflow-y-auto p-10'>
@@ -58,9 +70,9 @@ export function OnboardingProgress() {
 
         {allStepsCompleted && (
           <div className='mt-4'>
-            <p className='text-muted-foreground'>
-              <Link href='/app'>Complete Onboarding</Link>
-            </p>
+            <Button onClick={handleCompleteOnboarding} disabled={isPending} className='w-full'>
+              {isPending ? 'Completing...' : 'Complete Onboarding'}
+            </Button>
           </div>
         )}
       </section>

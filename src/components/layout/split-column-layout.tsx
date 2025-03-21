@@ -11,7 +11,7 @@ export function SplitLayout({ leftContent, children }: SplitLayoutProps) {
   return (
     <div className='flex min-h-screen'>
       {/* Left column - Fixed */}
-      <div className='reltaive bg-primary-900 fixed inset-y-0 left-0 flex w-1/4 flex-col'>
+      <div className='reltaive bg-primary-900 fixed inset-y-0 left-0 flex w-1/4 flex-col justify-center'>
         {leftContent}
       </div>
 

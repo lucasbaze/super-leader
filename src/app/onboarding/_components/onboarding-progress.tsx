@@ -31,7 +31,7 @@ export function OnboardingProgress() {
   const allSteps = Object.entries(onboardingStepsQuestionsAndCriteria);
 
   return (
-    <div className='no-scrollbar mx-auto flex w-full max-w-3xl flex-col gap-8 overflow-y-auto p-10'>
+    <div className='no-scrollbar mx-auto flex w-full max-w-3xl justify-center gap-8 overflow-y-auto p-10'>
       {/* Top Section - Build Profile */}
       <section className='space-y-6'>
         <div className='space-y-2'>

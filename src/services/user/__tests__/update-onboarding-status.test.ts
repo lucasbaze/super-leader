@@ -34,7 +34,7 @@ describe('updateOnboardingStatus', () => {
         const result = await updateOnboardingStatus({
           db,
           userId,
-          stepsCompleted: ['welcome']
+          stepsCompleted: ['personal']
         });
 
         // Verify update
@@ -44,7 +44,7 @@ describe('updateOnboardingStatus', () => {
         // Verify updated state
         const updatedUserProfile = await getUserProfile({ db, userId });
         const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
-        expect(updatedOnboarding.steps.welcome.completed).toBe(true);
+        expect(updatedOnboarding.steps.personal.completed).toBe(true);
         expect(updatedOnboarding.completed).toBe(false);
       });
     });
@@ -112,6 +112,7 @@ describe('updateOnboardingStatus', () => {
         // Verify updated state
         const updatedUserProfile = await getUserProfile({ db, userId });
         const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
+        expect(updatedOnboarding.steps).toBeDefined();
         expect(updatedOnboarding.completed).toBe(true);
       });
     });

@@ -45,18 +45,10 @@ describe('get-initial-message-service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(2); // Initial messages for person
-          const messages = result.data as Message[];
-          // @ts-ignore - Testing message content
-          const message0 = messages[0].message as CoreMessage;
-          const message1 = messages[1].message as CoreMessage;
+          const messages = result.data;
 
-          const message0Content = createPersonMessages(testPerson.first_name)[0]
-            .message as CoreMessage;
-          const message1Content = createPersonMessages(testPerson.first_name)[1]
-            .message as CoreMessage;
-
-          expect(message0.content).toBe(message0Content.content);
-          expect(message1.content).toBe(message1Content.content);
+          expect(messages?.[0]).toBe(createPersonMessages('test_John')[0]);
+          expect(messages?.[1]).toBe(createPersonMessages('test_John')[1]);
         });
       });
 
@@ -78,17 +70,10 @@ describe('get-initial-message-service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(2); // Initial messages for group
-          const messages = result.data as Message[];
-          const message0 = messages[0].message as CoreMessage;
-          const message1 = messages[1].message as CoreMessage;
+          const messages = result.data;
 
-          const message0Content = createGroupMessages(group.name, group.icon)[0]
-            .message as CoreMessage;
-          const message1Content = createGroupMessages(group.name, group.icon)[1]
-            .message as CoreMessage;
-
-          expect(message0.content).toBe(message0Content.content);
-          expect(message1.content).toBe(message1Content.content);
+          expect(messages?.[0]).toBe(createGroupMessages('Test Group', 'default-icon')[0]);
+          expect(messages?.[1]).toBe(createGroupMessages('Test Group', 'default-icon')[1]);
         });
       });
 
@@ -104,7 +89,9 @@ describe('get-initial-message-service', () => {
           });
 
           expect(result.error).toBeNull();
-          expect(result.data).toHaveLength(3); // Initial messages for onboarding route
+          expect(result.data).toHaveLength(2);
+          expect(result.data?.[0]).toBe(INITIAL_MESSAGES.onboarding[0]);
+          expect(result.data?.[1]).toBe(INITIAL_MESSAGES.onboarding[1]);
         });
       });
 
@@ -130,7 +117,7 @@ describe('get-initial-message-service', () => {
 
           const group = await createTestGroup({
             db,
-            data: { user_id: testUser.id, name: 'Inner 5', slug: 'inner5' }
+            data: { user_id: testUser.id, name: 'Inner 5', slug: 'inner-5' }
           });
 
           const result = await getInitialMessages({
@@ -142,8 +129,9 @@ describe('get-initial-message-service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(2); // Initial messages for inner5
-          const messages = result.data as Message[];
-          expect((messages[0].message as CoreMessage).content).toContain('Inner 5');
+          const messages = result.data;
+          expect(messages?.[0]).toBe(INITIAL_MESSAGES.inner5[0]);
+          expect(messages?.[1]).toBe(INITIAL_MESSAGES.inner5[1]);
         });
       });
 
@@ -153,7 +141,7 @@ describe('get-initial-message-service', () => {
 
           const group = await createTestGroup({
             db,
-            data: { user_id: testUser.id, name: 'Central 50', slug: 'central50' }
+            data: { user_id: testUser.id, name: 'Central 50', slug: 'central-50' }
           });
 
           const result = await getInitialMessages({
@@ -165,8 +153,9 @@ describe('get-initial-message-service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(2); // Initial messages for central50
-          const messages = result.data as Message[];
-          expect((messages[0].message as CoreMessage).content).toContain('Central 50');
+          const messages = result.data;
+          expect(messages?.[0]).toBe(INITIAL_MESSAGES.central50[0]);
+          expect(messages?.[1]).toBe(INITIAL_MESSAGES.central50[1]);
         });
       });
     });
@@ -183,8 +172,8 @@ describe('get-initial-message-service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(1); // Default message for invalid owner type
-          const messages = result.data as Message[];
-          expect((messages[0].message as CoreMessage).content).toContain('How can I help you?');
+          const messages = result.data;
+          expect(messages?.[0]).toBe(INITIAL_MESSAGES.default[0]);
         });
       });
 
@@ -202,8 +191,8 @@ describe('get-initial-message-service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(1); // Default message for invalid owner type
-          const messages = result.data as Message[];
-          expect((messages[0].message as CoreMessage).content).toContain('How can I help you?');
+          const messages = result.data;
+          expect(messages?.[0]).toBe(INITIAL_MESSAGES.default[0]);
         });
       });
 
@@ -219,8 +208,8 @@ describe('get-initial-message-service', () => {
           });
           expect(result.error).toBeNull();
           expect(result.data).toHaveLength(1); // Default message for invalid owner type
-          const messages = result.data as Message[];
-          expect((messages[0].message as CoreMessage).content).toContain('How can I help you?');
+          const messages = result.data;
+          expect(messages?.[0]).toBe(INITIAL_MESSAGES.default[0]);
         });
       });
     });

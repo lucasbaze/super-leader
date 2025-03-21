@@ -126,51 +126,51 @@ export function ChatMessage({
       }
       // Handle auto execute tool invocations (state === 'result' is required for type inference)
 
-      if (
-        toolInvocation.state === 'result' &&
-        toolInvocation.toolName === CHAT_TOOLS.INITIAL_CONTEXT_MESSAGE
-      ) {
-        const results = toolInvocation.result?.data as TContextMessage;
-        if (!results) return null;
-        return (
-          <div key={toolInvocation.toolCallId} className='flex flex-col items-start gap-2'>
-            <ContextMessageCard
-              initialQuestion={results.initialQuestion}
-              followUpQuestions={results.followUpQuestions}
-              priority={results.priority}
-              reasoning={results.reasoning}
-            />
-          </div>
-        );
-      }
+      // if (
+      //   toolInvocation.state === 'result' &&
+      //   toolInvocation.toolName === CHAT_TOOLS.INITIAL_CONTEXT_MESSAGE
+      // ) {
+      //   const results = toolInvocation.result?.data as TContextMessage;
+      //   if (!results) return null;
+      //   return (
+      //     <div key={toolInvocation.toolCallId} className='flex flex-col items-start gap-2'>
+      //       <ContextMessageCard
+      //         initialQuestion={results.initialQuestion}
+      //         followUpQuestions={results.followUpQuestions}
+      //         priority={results.priority}
+      //         reasoning={results.reasoning}
+      //       />
+      //     </div>
+      //   );
+      // }
 
-      if (
-        toolInvocation.state === 'result' &&
-        toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS
-      ) {
-        const suggestions = toolInvocation.result?.suggestions;
-        if (!suggestions) return null;
-        return (
-          <>
-            {suggestions.map((suggestion: TContentSuggestionWithId) => (
-              <SuggestionCard key={suggestion.id} suggestion={suggestion} append={append} />
-            ))}
-          </>
-        );
-      }
+      // if (
+      //   toolInvocation.state === 'result' &&
+      //   toolInvocation.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS
+      // ) {
+      //   const suggestions = toolInvocation.result?.suggestions;
+      //   if (!suggestions) return null;
+      //   return (
+      //     <>
+      //       {suggestions.map((suggestion: TContentSuggestionWithId) => (
+      //         <SuggestionCard key={suggestion.id} suggestion={suggestion} append={append} />
+      //       ))}
+      //     </>
+      //   );
+      // }
 
-      if (
-        toolInvocation.state === 'result' &&
-        toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS
-      ) {
-        return (
-          <>
-            {toolInvocation.result?.map((result: MessageSuggestion, index: number) => (
-              <MessageCard key={index} message={result.text} tone={result.tone} />
-            ))}
-          </>
-        );
-      }
+      // if (
+      //   toolInvocation.state === 'result' &&
+      //   toolInvocation.toolName === CHAT_TOOLS.CREATE_MESSAGE_SUGGESTIONS
+      // ) {
+      //   return (
+      //     <>
+      //       {toolInvocation.result?.map((result: MessageSuggestion, index: number) => (
+      //         <MessageCard key={index} message={result.text} tone={result.tone} />
+      //       ))}
+      //     </>
+      //   );
+      // }
     });
 
     return (

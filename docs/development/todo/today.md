@@ -1,9 +1,14 @@
 ### Mar 20th
 
 - [ ] This prompt fails when adding multiple people: "Create Matt and Trisha as new people. They're a married couple and they're both originally from Scotland. He's apparently just a middle manager from corporate, though I didn't go further into it. Then if you can, add them to the Dance group"
+
 - [ ] Adding a task to a person I've already viewed doesn't show up in the task list on the person. Cache invalidation is required for this or refetching the person on view... maybe in the background?
 
 - [ ] Need to display the "note" of the task in the task list.
+
+- [x] Bug: When marking onboarding as "complete" the entire onboarding object is overwritten.
+
+- [x] Fix: The onboarding object default value needs to be updated.
 
 ### Mar 10th
 

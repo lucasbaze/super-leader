@@ -58,7 +58,9 @@ export async function updateOnboardingStatus({
 
     // Mark entire onboarding as completed if requested
     if (onboardingCompleted) {
-      updates.completed = true;
+      updates = deepMerge(currentProfile?.onboarding || {}, {
+        completed: true
+      });
     }
 
     const { data, error } = await db

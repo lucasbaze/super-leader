@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 
 import { randomString } from '@/lib/utils';
+import { buildNewOnboardingObject } from '@/services/user/build-new-onboarding';
 
 import { seedGroups } from './groups';
 import { seedPeople } from './people';
@@ -54,7 +55,8 @@ async function main() {
     const { error: profileError } = await supabase.from('user_profile').insert({
       user_id: userId,
       first_name: 'Test',
-      last_name: 'User'
+      last_name: 'User',
+      onboarding: buildNewOnboardingObject()
     });
 
     if (profileError) throw profileError;

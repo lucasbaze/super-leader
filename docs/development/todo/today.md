@@ -6,9 +6,9 @@
 
 - [ ] Need to display the "note" of the task in the task list.
 
-- [x] Bug: When marking onboarding as "complete" the entire onboarding object is overwritten.
+- [x] ~~_Bug: When marking onboarding as "complete" the entire onboarding object is overwritten._~~ [2025-03-21]
 
-- [x] Fix: The onboarding object default value needs to be updated.
+- [x] ~~_Fix: The onboarding object default value needs to be updated._~~ [2025-03-21]
 
 ### Mar 10th
 
@@ -42,7 +42,7 @@
 - [x] ~~_Swap Activity to be first?_~~ [2025-02-26]
 - [x] ~~_Remove "follow up" button_~~ [2025-02-26]
 - [x] ~~_Swap breadcrumsb for back button_~~ [2025-02-26]
-- [ ] Fix update details actions so I can add the birthday attribute.
+- [x] ~~Fix update details actions so I can add the birthday attribute.~~ [2025-02-27]
 - [x] ~~_Get the first phase of the network stats showing for people. Using the completeness score._~~ [2025-02-27]
 
 ### Feb 25th
@@ -120,7 +120,7 @@ There are MANY thing to consider on the home page that I need to consider / thin
 - Need to be able to update the name of people / profile's
 - [ ] Need to save the gravatar color scheme for the user, so that it doesn't re-render all of the time.
 
-- [ ] I'm looking at my Strategic 100 group, and I'm wondering "WHY" is this person in my Strategic 100 group? I don't get that immediate sense of "why" from the group / person. That's on me for sure, but I'm wondering if there's a way to "hint" at that...
+- [ ] I'm looking at my Strategic 100 group, and I'm wondering "WHY" is this person in my Strategic 100 group? I don't get that immediate sense of "why" from the group / person. That's on me for sure, but I'm wondering if there's a way to "hint" at that... ( This could be solved with the "ecosystem" attribute and custom fields? )
 
 This single action needs to do several things:
 

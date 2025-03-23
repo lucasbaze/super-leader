@@ -14,10 +14,11 @@ import {
 } from './types';
 
 // Service params interface
-export interface TGetSuggestionsForPersonParams {
+export interface GetSuggestionsForPersonParams {
   db: DBClient;
   personId: string;
   type?: 'content' | 'gift';
+  requestedContent?: string;
 }
 
 // Define errors
@@ -65,8 +66,9 @@ export const ERRORS = {
 export async function getContentSuggestionsForPerson({
   db,
   personId,
-  type = 'content'
-}: TGetSuggestionsForPersonParams): Promise<
+  type = 'content',
+  requestedContent
+}: GetSuggestionsForPersonParams): Promise<
   ServiceResponse<GetContentSuggestionsForPersonResponse>
 > {
   try {
@@ -110,7 +112,8 @@ export async function getContentSuggestionsForPerson({
     const promptResult = await createContentSuggestionPrompt({
       personResult: personResult.data,
       suggestions: previousSuggestions || [],
-      type
+      type,
+      requestedContent
     });
     console.log('Suggestions::GetContentSuggestionsForPerson::promptResult', promptResult);
 

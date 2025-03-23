@@ -11,6 +11,7 @@ export const getContentSuggestionsTool: ChatTool<
   {
     personId: string;
     type?: 'content' | 'gift';
+    requestedContent?: string;
   },
   Awaited<ReturnType<typeof getContentSuggestionsForPerson>>['data'] | ToolError
 > = {
@@ -24,19 +25,26 @@ export const getContentSuggestionsTool: ChatTool<
     - The suggestions are based on the person's interests, interactions, and previous suggestions
     - You can specify either 'content' or 'gift' as the type of suggestions
     - Content suggestions are refreshed every 30 days, while gift suggestions are refreshed every 60 days
+
+    - Only call this tool once per user message. Calling it multiple times will result in too many suggestions being generated.
   `,
   parameters: z.object({
     personId: z.string().describe('The ID of the person to get suggestions for'),
-    type: z.enum(['content', 'gift']).optional().describe('The type of suggestions to get')
+    type: z.enum(['content', 'gift']).optional().describe('The type of suggestions to get'),
+    requestedContent: z
+      .string()
+      .optional()
+      .describe('The context of the suggestions to get requested by the user if applicable.')
   }),
-  execute: async (db, { personId, type }, { userId }) => {
-    console.log('Getting content suggestions for person:', personId, type);
+  execute: async (db, { personId, type, requestedContent }, { userId }) => {
+    console.log('Getting content suggestions for person:', personId, type, requestedContent);
 
     try {
       const result = await getContentSuggestionsForPerson({
         db,
         personId,
-        type
+        type,
+        requestedContent
       });
 
       if (result.error) {

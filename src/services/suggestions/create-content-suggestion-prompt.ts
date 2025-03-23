@@ -44,12 +44,14 @@ export interface CreateSuggestionPromptParams {
   personResult: GetPersonResult;
   suggestions: Suggestion[];
   type: 'content' | 'gift';
+  requestedContent?: string;
 }
 
 export async function createContentSuggestionPrompt({
   personResult,
   suggestions,
-  type
+  type,
+  requestedContent
 }: CreateSuggestionPromptParams): Promise<ServiceResponse<SuggestionPromptResponse>> {
   try {
     const promptMessages = [
@@ -61,7 +63,8 @@ export async function createContentSuggestionPrompt({
       $user(
         buildContentSuggestionAugmentationUserPrompt({
           personResult,
-          suggestions
+          suggestions,
+          requestedContent
         }).prompt
       )
     ];
@@ -170,11 +173,13 @@ const buildGiftSuggestionPrompt = () => ({
 export interface TBuildContentSuggestionAugmentationUserPromptParams {
   personResult: GetPersonResult;
   suggestions: Suggestion[];
+  requestedContent?: string;
 }
 
 export const buildContentSuggestionAugmentationUserPrompt = ({
   personResult,
-  suggestions
+  suggestions,
+  requestedContent
 }: TBuildContentSuggestionAugmentationUserPromptParams) => {
   const { person, interactions } = personResult;
   const { first_name } = person;
@@ -194,7 +199,9 @@ export const buildContentSuggestionAugmentationUserPrompt = ({
       : [];
 
   const prompt = stripIndents`
-  This is what I know about ${first_name}.
+  Please generate a prompt that will help generate content suggestions that are relevant to ${first_name}.
+
+  ${requestedContent ? `I want to get content suggestions explicitly for the following content: ${requestedContent}. You can deprioritize previous suggestions or previous notes about the person as I want to focus on the aforementioned specific content.` : ''}
   
   Previous Interactions & Notes:
   ${previousInteractionsNotes && wrapTicks(previousInteractionsNotes)}

@@ -1,7 +1,10 @@
 import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
+import { createPerson, CreatePersonServiceResult } from '@/services/person/create-person';
+
 import { ChatTool } from '../chat-tool-registry';
+import { handleToolError, ToolError } from '../utils';
 import { CHAT_TOOLS } from './constants';
 
 export const createPersonTool: ChatTool<
@@ -11,7 +14,7 @@ export const createPersonTool: ChatTool<
     note: string;
     date_met?: string;
   },
-  undefined
+  CreatePersonServiceResult['data'] | ToolError
 > = {
   name: CHAT_TOOLS.CREATE_PERSON,
   displayName: 'Create Person',
@@ -29,5 +32,34 @@ export const createPersonTool: ChatTool<
       .string()
       .optional()
       .describe('Date when the person was met (ISO format) otherwise the current date today')
-  })
+  }),
+  execute: async (db, { first_name, last_name, note, date_met }, { userId }) => {
+    console.log('Creating person:', first_name, last_name, note, date_met);
+
+    try {
+      const result = await createPerson({
+        db,
+        data: {
+          first_name,
+          last_name,
+          note,
+          date_met,
+          user_id: userId
+        }
+      });
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      return result.data;
+    } catch (error) {
+      console.error('Creating person API error: Error catcher:', error);
+      return handleToolError(error, 'create person');
+    }
+  },
+  onSuccessEach: true,
+  onSuccess: ({ queryClient }) => {
+    queryClient.invalidateQueries({ queryKey: ['people'] });
+  }
 };

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { clearQueryCache } from '@/lib/react-query';
 import { ROUTES } from '@/lib/routes';
 import { createClient } from '@/utils/supabase/server';
 
@@ -31,6 +32,9 @@ export async function logout() {
 
   // Sign out the user
   await supabase.auth.signOut();
+
+  // Clear the query cache
+  clearQueryCache();
 
   // Revalidate all protected routes
   revalidatePath(ROUTES.HOME, 'layout');

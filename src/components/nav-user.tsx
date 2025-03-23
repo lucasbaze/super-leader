@@ -22,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { clearQueryCache } from '@/lib/react-query';
 import { routes } from '@/lib/routes';
 import { useRecentlyViewedStore } from '@/stores/use-recently-viewed-store';
 
@@ -43,6 +44,7 @@ export function NavUser({
   const handleLogout = () => {
     startTransition(async () => {
       clearAll();
+      clearQueryCache();
       await logout();
     });
   };

@@ -1,3 +1,8 @@
+### Mar 22nd
+
+- [x] ~~_Fix the issue with the create person tool._~~ [2025-03-22]
+- [ ] Dump production database and use for local development.
+
 ### Mar 21st
 
 - [ ] Remove the "Initial Message tool" from the chat.

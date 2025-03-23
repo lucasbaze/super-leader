@@ -97,3 +97,9 @@ Link to the test database for testing purposes
 2. Run `yarn install`
 3. Start Supabase with Docker running locally
 4. Run `yarn dev`
+
+
+### Production Data dump for development
+
+1. Download the latest production database dump from Supabase
+2. Run `psql -h localhost -p 54322 -U postgres -d postgres -f "/path/to/data.backup`

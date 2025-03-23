@@ -19,7 +19,9 @@ const GroupedSectionSchema = z.object({
 });
 
 const SinglePersonSummarySchema = z.object({
-  completeness: z.number().min(0).max(100),
+  completeness: z
+    .number()
+    .describe('A score between 0 and 100 indicating the completeness of the summary'),
   highlights: z
     .string()
     .describe('The personalized 2 - 3 brief of most important facts about the person.'),

@@ -5,7 +5,6 @@ import { CreateMessage, Message } from 'ai';
 import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { TContextMessage } from '@/services/context/generate-initial-context-message';
-import { MessageSuggestion, TContentSuggestionWithId } from '@/services/suggestions/types';
 
 import { ActionCard } from '../cards/action-card';
 import { ContextMessageCard } from '../cards/context-message-card';

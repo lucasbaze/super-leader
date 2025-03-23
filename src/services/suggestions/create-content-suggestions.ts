@@ -1,13 +1,15 @@
 import { stripIndents } from 'common-tags';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { createError } from '@/lib/errors';
-import { $system, $user } from '@/lib/llm/messages';
+import { $system, $user } from '@/lib/llm/open-ai-messages';
 import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
+import { generateSearchObject } from '@/vendors/openai/generate-search-object';
 
-import { ContentSuggestionsResponseSchema, SuggestionSchema, TSuggestion } from './types';
+import { ContentSuggestion, ContentSuggestionsResponseSchema, SuggestionSchema } from './types';
 
 // Define errors
 export const ERRORS = {
@@ -33,7 +35,7 @@ export const ERRORS = {
   }
 };
 
-export interface TCreateContentSuggestionsParams {
+export interface CreateContentSuggestionsParams {
   userContent: string;
   suggestions: Suggestion[];
   type: 'content' | 'gift';
@@ -43,7 +45,7 @@ export async function createContentSuggestions({
   userContent,
   suggestions,
   type
-}: TCreateContentSuggestionsParams): Promise<ServiceResponse<TSuggestion[]>> {
+}: CreateContentSuggestionsParams): Promise<ServiceResponse<ContentSuggestion[]>> {
   try {
     const messages = [
       $system(
@@ -52,11 +54,19 @@ export async function createContentSuggestions({
       $user(buildContentSuggestionUserPrompt(userContent, suggestions).prompt)
     ];
 
-    const response = await generateObject({
+    const response = await generateSearchObject({
       messages,
       schema: ContentSuggestionsResponseSchema,
-      model: 'gpt-4o-search-preview'
+      schemaName: 'content_suggestions'
+      // model: 'gpt-4o-search-preview'
     });
+    // const response = await generateObject({
+    //   messages,
+    //   schema: ContentSuggestionsResponseSchema,
+    //   model: 'gpt-4o-search-preview'
+    // });
+
+    console.log('response', response);
 
     if (!response) {
       return {
@@ -65,7 +75,7 @@ export async function createContentSuggestions({
       };
     }
 
-    const parsedContent = ContentSuggestionsResponseSchema.safeParse(response);
+    const parsedContent = ContentSuggestionsResponseSchema.safeParse(response.data);
 
     if (!parsedContent.success) {
       return {

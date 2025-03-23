@@ -11,9 +11,9 @@ import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
 import {
+  SuggestionPromptResponse,
   SuggestionPromptResponseSchema,
-  SuggestionSchema,
-  TSuggestionPromptResponse
+  SuggestionSchema
 } from './types';
 
 // Define errors
@@ -40,7 +40,7 @@ export const ERRORS = {
   }
 };
 
-export interface TCreateSuggestionPromptParams {
+export interface CreateSuggestionPromptParams {
   personResult: GetPersonResult;
   suggestions: Suggestion[];
   type: 'content' | 'gift';
@@ -50,7 +50,7 @@ export async function createContentSuggestionPrompt({
   personResult,
   suggestions,
   type
-}: TCreateSuggestionPromptParams): Promise<ServiceResponse<TSuggestionPromptResponse>> {
+}: CreateSuggestionPromptParams): Promise<ServiceResponse<SuggestionPromptResponse>> {
   try {
     const promptMessages = [
       $system(

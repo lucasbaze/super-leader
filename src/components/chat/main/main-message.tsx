@@ -12,7 +12,6 @@ import { PendingAction } from '@/hooks/chat/use-chat-interface';
 import { useChatConfig } from '@/lib/chat/chat-context';
 import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { cn } from '@/lib/utils';
-import { TContentSuggestionWithId } from '@/services/suggestions/types';
 
 import { SuggestionCard } from '../cards/suggestion-card';
 

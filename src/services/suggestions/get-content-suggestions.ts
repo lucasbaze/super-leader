@@ -8,9 +8,9 @@ import { ServiceResponse } from '@/types/service-response';
 import { createContentSuggestionPrompt } from './create-content-suggestion-prompt';
 import { createContentSuggestions } from './create-content-suggestions';
 import {
-  SuggestionType,
-  TContentSuggestionWithId,
-  TGetContentSuggestionsForPersonResponse
+  ContentSuggestionWithId,
+  GetContentSuggestionsForPersonResponse,
+  SuggestionType
 } from './types';
 
 // Service params interface
@@ -67,7 +67,7 @@ export async function getContentSuggestionsForPerson({
   personId,
   type = 'content'
 }: TGetSuggestionsForPersonParams): Promise<
-  ServiceResponse<TGetContentSuggestionsForPersonResponse>
+  ServiceResponse<GetContentSuggestionsForPersonResponse>
 > {
   try {
     if (!personId) {
@@ -140,7 +140,7 @@ export async function getContentSuggestionsForPerson({
     // Save the suggestions to the database
     // TODO: Move this to a separate service
 
-    let savedSuggestions: TContentSuggestionWithId[] = [];
+    let savedSuggestions: ContentSuggestionWithId[] = [];
     try {
       const { data: dbSuggestions, error } = await db
         .from('suggestions')

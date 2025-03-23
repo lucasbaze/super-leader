@@ -25,7 +25,7 @@ export const SuggestionPromptResponseSchema = z.object({
   prompt: z.string().describe('A prompt to find the content')
 });
 
-export type TSuggestionPromptResponse = z.infer<typeof SuggestionPromptResponseSchema>;
+export type SuggestionPromptResponse = z.infer<typeof SuggestionPromptResponseSchema>;
 
 /*
  * Suggestions
@@ -36,19 +36,19 @@ export const SuggestionSchema = z.object({
   title: z.string().describe('The title of the content'),
   reason: z.string().describe('A 1 sentence reason for the suggestion')
 });
-export type TSuggestion = z.infer<typeof SuggestionSchema>;
+export type ContentSuggestion = z.infer<typeof SuggestionSchema>;
 
 // Extend TSuggestion to include the database id
-export type TContentSuggestionWithId = TSuggestion & Pick<Suggestion, 'id'>;
+export type ContentSuggestionWithId = ContentSuggestion & Pick<Suggestion, 'id'>;
 
 // Content Suggestions Response Schema
 export const ContentSuggestionsResponseSchema = z.object({
   suggestions: z.array(SuggestionSchema)
 });
 
-export type TGetContentSuggestionsForPersonResponse = {
-  suggestions: TContentSuggestionWithId[];
-  topics: TSuggestionPromptResponse['topics'];
+export type GetContentSuggestionsForPersonResponse = {
+  suggestions: ContentSuggestionWithId[];
+  topics: SuggestionPromptResponse['topics'];
 };
 
 export const SuggestionType = z.enum(['content', 'message', 'gift']);

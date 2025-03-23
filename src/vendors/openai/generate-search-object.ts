@@ -1,25 +1,14 @@
 import OpenAI from 'openai';
 import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { toError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 
-export type TWebArticle = {
-  title: string;
-  description: string;
-  url: string;
-  message: string;
-};
-
-export const webArticleSchema = z.object({
-  title: z.string().describe('The title of the web article.'),
-  description: z.string().describe('A brief description of the content of the article.'),
-  url: z.string().describe('The URL to access the content of the article.'),
-  message: z.string().describe('A brief message to accompany the article.')
-});
-
-export type TGenerateSearchObjectOptions = {
+export type GenerateSearchObjectOptions<T extends z.ZodSchema> = {
   messages: OpenAI.Chat.ChatCompletionMessageParam[];
+  schema: T;
+  schemaName: string;
   webResults?: number;
   userLocation?: {
     country: string;
@@ -29,8 +18,8 @@ export type TGenerateSearchObjectOptions = {
   store?: boolean;
 };
 
-export type TGenerateSearchObjectResponse = {
-  data: TWebArticle | null;
+export type GenerateSearchObjectResponse<T extends z.ZodSchema> = {
+  data: z.infer<T> | null;
   error: Error | null;
 };
 
@@ -45,40 +34,21 @@ const ERRORS = {
   }
 } as const;
 
-const jsonSchema = {
-  type: 'object',
-  properties: {
-    title: {
-      type: 'string',
-      description: 'The title of the web article.'
-    },
-    description: {
-      type: 'string',
-      description: 'A brief description of the content of the article.'
-    },
-    url: {
-      type: 'string',
-      description: 'The URL to access the content of the article.'
-    },
-    message: {
-      type: 'string',
-      description: 'A brief message to accompany the article.'
-    }
-  },
-  required: ['title', 'description', 'url', 'message'],
-  additionalProperties: false
-};
-
-export async function generateSearchObject({
+export async function generateSearchObject<T extends z.ZodSchema>({
   messages,
+  schema,
+  schemaName,
   webResults = 3,
   userLocation,
   store = true
-}: TGenerateSearchObjectOptions): Promise<TGenerateSearchObjectResponse> {
+}: GenerateSearchObjectOptions<T>): Promise<GenerateSearchObjectResponse<T>> {
   try {
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
+
+    const fullSchema = zodToJsonSchema(schema, schemaName);
+    const jsonSchema = fullSchema.definitions?.[schemaName];
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-search-preview',
@@ -86,7 +56,7 @@ export async function generateSearchObject({
       response_format: {
         type: 'json_schema',
         json_schema: {
-          name: 'web_article',
+          name: schemaName,
           strict: true,
           schema: jsonSchema
         }
@@ -99,11 +69,17 @@ export async function generateSearchObject({
       throw new Error('No content in response');
     }
 
-    const parsedContent = JSON.parse(content);
-    const validatedContent = webArticleSchema.parse(parsedContent);
+    // Clean the content string before parsing
+    const cleanContent = content.trim();
+    const parsedContent = JSON.parse(cleanContent);
+    const validatedContent = schema.safeParse(parsedContent);
+
+    if (!validatedContent.success) {
+      throw new Error('Invalid content in response');
+    }
 
     return {
-      data: validatedContent,
+      data: validatedContent.data,
       error: null
     };
   } catch (err) {

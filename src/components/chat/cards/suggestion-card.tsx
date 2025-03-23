@@ -9,12 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { TContentSuggestionWithId } from '@/services/suggestions/types';
+import { ContentSuggestionWithId } from '@/services/suggestions/types';
 
 import { useSuggestionActions } from './use-suggestion-actions';
 
 interface SuggestionCardProps {
-  suggestion: TContentSuggestionWithId;
+  suggestion: ContentSuggestionWithId;
   append: (message: CreateMessage) => void;
 }
 

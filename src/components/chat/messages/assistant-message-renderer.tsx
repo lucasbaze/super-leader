@@ -2,7 +2,7 @@ import { CreateMessage, Message } from 'ai';
 
 import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { cn } from '@/lib/utils';
-import { TContentSuggestionWithId } from '@/services/suggestions/types';
+import { ContentSuggestionWithId } from '@/services/suggestions/types';
 
 import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
@@ -73,7 +73,7 @@ export function AssistantMessageRenderer({
             : []
         )
         .flat()
-        .filter((suggestion): suggestion is TContentSuggestionWithId => !!suggestion);
+        .filter((suggestion): suggestion is ContentSuggestionWithId => !!suggestion);
 
       if (!suggestions?.length) return null;
 
@@ -89,13 +89,17 @@ export function AssistantMessageRenderer({
     case 'default':
     default: {
       return (
-        <div className={cn('flex max-w-[90%] flex-col gap-2', messageStyles)}>
-          {textParts?.map((part, index) => (
-            <div key={index}>
-              <MarkdownMessage content={part.text} />
+        <>
+          {!!textParts?.length && (
+            <div className={cn('flex max-w-[90%] flex-col gap-2', messageStyles)}>
+              {textParts?.map((part, index) => (
+                <div key={index}>
+                  <MarkdownMessage content={part.text} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       );
     }
   }

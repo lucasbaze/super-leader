@@ -73,6 +73,7 @@ export const MainMessagesList = forwardRef<HTMLDivElement, ChatMessagesProps>(
                   pendingAction={pendingAction}
                   setPendingAction={setPendingAction}
                   addToolResult={addToolResult}
+                  append={append}
                   // containerRef={ref}
                   // pendingAction={pendingAction}
                 />

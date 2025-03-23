@@ -5,6 +5,7 @@ export { createPersonTool } from './create-person';
 export { createTaskTool } from './create-task';
 export { createUserContextTool } from './create-user-context';
 export { findPersonTool } from './find-person';
+export { getContentSuggestionsTool } from './get-content-suggestions';
 export { getGroupsTool } from './get-groups';
 export { getInitialMessageTool } from './get-initial-message';
 export { removePeopleFromGroupTool } from './remove-people-from-group';

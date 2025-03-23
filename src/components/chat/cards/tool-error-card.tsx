@@ -25,7 +25,7 @@ export function ToolErrorCard({ message, errorDetails, toolName }: ToolErrorCard
                 <span>View error details</span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className='w-80'>
+            <PopoverContent className='max-h-[400px] w-80 overflow-y-auto'>
               <div className='space-y-2'>
                 <h4 className='font-medium'>Error Details: {toolName}</h4>
                 <p className='text-sm text-muted-foreground'>{errorDetails}</p>

@@ -55,7 +55,7 @@ export async function createContentSuggestions({
     const response = await generateObject({
       messages,
       schema: ContentSuggestionsResponseSchema,
-      webResults: 3
+      model: 'gpt-4o-search-preview'
     });
 
     if (!response) {

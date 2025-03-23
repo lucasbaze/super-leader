@@ -79,7 +79,7 @@ export function ChatHeader({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className='flex items-center gap-2'>{getHeader()}</div>
+      <div className='flex flex-1 items-center justify-between gap-2'>{getHeader()}</div>
     </div>
   );
 }

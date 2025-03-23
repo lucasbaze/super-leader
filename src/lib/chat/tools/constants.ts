@@ -9,5 +9,6 @@ export const CHAT_TOOLS = {
   REMOVE_PEOPLE_FROM_GROUP: 'removePeopleFromGroup',
   GET_GROUPS: 'getGroups',
   GET_INITIAL_MESSAGE: 'getInitialMessage',
-  UPDATE_ONBOARDING_STATUS: 'updateOnboardingStatus'
+  UPDATE_ONBOARDING_STATUS: 'updateOnboardingStatus',
+  GET_CONTENT_SUGGESTIONS: 'getContentSuggestions'
 } as const;

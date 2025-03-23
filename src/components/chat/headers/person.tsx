@@ -29,7 +29,6 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
   const { data, isLoading } = usePerson(params.id as string, {
     withInteractions: true
   });
-  // console.log('Person Chat Header data', data);
 
   if (isLoading) return <DefaultChatHeader />;
 
@@ -57,15 +56,19 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
 
   const handleSuggestions = async () => {
     const message = `Get content suggestions for ${data?.person?.first_name}`;
-    append({
-      role: 'user',
-      content: message,
-      id: randomString(12),
-      data: {
-        personId: data?.person?.id ?? null,
-        personName: `${data?.person?.first_name} ${data?.person?.last_name}`
-      } as const
-    });
+    append(
+      {
+        role: 'user',
+        content: message,
+        id: randomString(12)
+      },
+      {
+        data: {
+          personId: data?.person?.id ?? null,
+          personName: `${data?.person?.first_name} ${data?.person?.last_name}`
+        } as const
+      }
+    );
 
     if (conversationId) {
       await createMessage.mutateAsync({

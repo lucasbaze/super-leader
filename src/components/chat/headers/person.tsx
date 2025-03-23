@@ -20,7 +20,7 @@ interface ChatHeaderProps {
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
-  conversationId: string;
+  conversationId: string | null;
 }
 
 export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
@@ -47,10 +47,12 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
       } as const
     });
 
-    await createMessage.mutateAsync({
-      conversationId,
-      message: $user(message)
-    });
+    if (conversationId) {
+      await createMessage.mutateAsync({
+        conversationId,
+        message: $user(message)
+      });
+    }
   };
 
   const handleSuggestions = async () => {
@@ -65,10 +67,12 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
       } as const
     });
 
-    await createMessage.mutateAsync({
-      conversationId,
-      message: $user(message)
-    });
+    if (conversationId) {
+      await createMessage.mutateAsync({
+        conversationId,
+        message: $user(message)
+      });
+    }
   };
 
   return (

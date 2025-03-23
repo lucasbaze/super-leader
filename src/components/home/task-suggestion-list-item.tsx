@@ -49,6 +49,8 @@ export const TaskSuggestionListItem = ({ task }: { task: GetTaskSuggestionResult
             {task.content.action}
           </span>
         </div>
+        {task.content.context} <br />
+        {task.content.suggestion}
       </div>
 
       {/* Right section with date and actions */}

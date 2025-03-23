@@ -3,12 +3,11 @@
 import { Message } from 'ai';
 
 import { MarkdownMessage } from '@/components/chat/messages/markdown-message';
+import { ToolCallIndicator } from '@/components/chat/messages/tool-call-indicator';
 import { Loader } from '@/components/icons';
 // import RingsFadeLoader from '@/components/animated/sl-loader';
 import { useChatConfig } from '@/lib/chat/chat-context';
 import { cn } from '@/lib/utils';
-
-import { OnboardingToolCallIndicator } from './onboarding-tool-indicator';
 
 interface OnboardingMessageProps {
   message: Message;
@@ -49,7 +48,7 @@ export function OnboardingMessage({ message, isLastMessage, isLoading }: Onboard
               );
             case 'tool-invocation':
               return (
-                <OnboardingToolCallIndicator
+                <ToolCallIndicator
                   key={index}
                   toolName={part.toolInvocation.toolName}
                   state={part.toolInvocation.state}

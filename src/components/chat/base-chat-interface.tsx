@@ -1,12 +1,12 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { ForwardRefExoticComponent, RefAttributes, useRef, useState } from 'react';
 
-import { Message } from 'ai';
+import { Message as AIMessage, ChatRequestOptions, CreateMessage } from 'ai';
 
 import { useChatConversations } from '@/hooks/chat/use-chat-conversations';
-import { useChatInterface } from '@/hooks/chat/use-chat-interface';
+import { PendingAction, useChatInterface } from '@/hooks/chat/use-chat-interface';
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
 import { useChatConfig } from '@/lib/chat/chat-context';
@@ -18,16 +18,30 @@ import {
 import { Conversation } from '@/types/database';
 
 interface HeaderProps {
-  conversations: Conversation[];
-  conversationId: string | null;
+  conversations: Conversation[] | undefined;
+  activeConversationId: string | null;
   onSelectConversation: (id: string) => void;
+  append: (
+    message: AIMessage | CreateMessage,
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
+  isLoadingConversations: boolean;
+  onNewConversation: () => void;
 }
 
-interface MessagesListProps {
-  messages: Message[];
+export interface MessagesListProps {
+  messages: AIMessage[];
   isLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  isLoadingConversations: boolean;
+  pendingAction: PendingAction;
+  setPendingAction: (action: PendingAction) => void;
+  append: (message: CreateMessage) => void;
+  addToolResult: (result: { toolCallId: string; result: string }) => void;
+  onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+  hasMore: boolean;
 }
 
 interface InputProps {
@@ -39,7 +53,7 @@ interface InputProps {
 
 interface RenderComponents {
   Header?: React.ComponentType<HeaderProps>;
-  MessagesList?: React.ComponentType<MessagesListProps>;
+  MessagesList?: ForwardRefExoticComponent<MessagesListProps & RefAttributes<HTMLDivElement>>;
   Input?: React.ComponentType<InputProps>;
 }
 
@@ -101,42 +115,66 @@ export function BaseChatInterface({
     sendSystemMessage: chatInterface.sendSystemMessage
   });
 
-  // const { handleScroll } = useScrollHandling({
-  //   containerRef,
-  //   messagesData: [], // This needs to be handled properly
-  //   hasNextPage: false,
-  //   isFetchingNextPage: false,
-  //   fetchNextPage: () => Promise.resolve()
-  // });
+  const { handleScroll } = useScrollHandling({
+    containerRef,
+    messagesData: savedMessagesData,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage
+  });
 
   return (
-    <div className='absolute inset-0 flex flex-col overflow-y-auto'>
-      <div className={config.chatContainerStyles?.container}>
-        {Header && (
-          <Header
-            conversations={conversations}
-            conversationId={conversationId}
-            onSelectConversation={setConversationId}
-          />
-        )}
+    <div
+      className={cn('absolute inset-0 flex flex-col', config.chatContainerStyles?.outerContainer)}>
+      <div className={cn(config.chatContainerStyles?.midContainer)}>
+        <div className={cn(config.chatContainerStyles?.innerContainer)}>
+          {Header && (
+            <Header
+              conversations={conversations}
+              activeConversationId={conversationId}
+              onSelectConversation={setConversationId}
+              append={chatInterface.append}
+              isLoadingConversations={isLoadingConversations}
+              onNewConversation={handleStartNewConversation}
+            />
+          )}
+          <div className={cn('relative flex-1', config.messagesListStyles?.container)}>
+            {MessagesList && (
+              <MessagesList
+                ref={containerRef}
+                messages={chatInterface.messages}
+                isLoading={chatInterface.isLoading}
+                isLoadingConversations={isLoadingConversations}
+                append={chatInterface.append}
+                onScroll={handleScroll}
+                messagesEndRef={messagesEndRef}
+                fetchNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                hasMore={hasNextPage}
+                pendingAction={chatInterface.pendingAction}
+                setPendingAction={chatInterface.setPendingAction}
+                addToolResult={chatInterface.addToolResult}
+              />
+            )}
+            {config.inputStyle === 'inline' && Input && (
+              <Input
+                input={chatInterface.input}
+                handleInputChange={chatInterface.handleInputChange}
+                handleSubmit={chatInterface.handleSubmit}
+                isLoading={chatInterface.isLoading}
+              />
+            )}
+          </div>
 
-        {MessagesList && (
-          <MessagesList
-            messages={chatInterface.messages}
-            isLoading={chatInterface.isLoading}
-            messagesEndRef={messagesEndRef}
-            containerRef={containerRef}
-          />
-        )}
-
-        {Input && (
-          <Input
-            input={chatInterface.input}
-            handleInputChange={chatInterface.handleInputChange}
-            handleSubmit={chatInterface.handleSubmit}
-            isLoading={chatInterface.isLoading}
-          />
-        )}
+          {config.inputStyle === 'bottom' && Input && (
+            <Input
+              input={chatInterface.input}
+              handleInputChange={chatInterface.handleInputChange}
+              handleSubmit={chatInterface.handleSubmit}
+              isLoading={chatInterface.isLoading}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

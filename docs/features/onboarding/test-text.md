@@ -2,9 +2,9 @@ My name is Lucas. I'm living in Houston Texas, and my fiance's name is Kendall. 
 
 I'm currently between careers actually. I spent the past 7 years as a software engineer and engineering manager, and I've recently "retired" from working because I can live off my Bitcoin stack. I'm looking to build a software tool called superleader that will help entrepreneurs build their network in a meaningful and deep way. Unlocking their network analytics. Additionally, I have some friends that are working on building an investment firm to invest in Bitcoin.
 
-I look up to folks like Steve Jobs & Elon Musk from the perspective of the designing systems. I look to Warren Buffet for long term investment thinking. I admire folks like Osho, Sadhguru, and Ram Dass, The yoga Sutras for Spiritual inspiration. I believe the world needs more human centric design, slowing down, and more Bitcoin to fix the things that fiat broke.
-
 I'd like to build the systems that will allow me to scale to the next level and take care of my family. I intend to have at least 1 to 2 kids. I hope to have at least 1 or 2 vehicles that will allow cash flows to support my family and by extension my mother. I may move to College Station in the near future to be closer to my mom, but still up in the air. I really want to deepen my skills in interpersonal communication, pitching, and becoming a power connector bringing people together. I also hope to finish the entire series on the Light on Yoga.... maybe.
+
+I look up to folks like Steve Jobs & Elon Musk from the perspective of the designing systems. I look to Warren Buffet for long term investment thinking. I admire folks like Osho, Sadhguru, and Ram Dass, The yoga Sutras for Spiritual inspiration. I believe the world needs more human centric design, slowing down, and more Bitcoin to fix the things that fiat broke.
 
 I am most proud of the startup that I built back in the day, the Bitcoin I've stacked, my wife, and family life. I'm grateful for my body, and the life that I have. I know that I excel at building relationships, connecting with people, designing human centric systems and knowing what's good feng shui in a design. I'm good at math science, and physics. There's probably more, but we'll go with that for now.
 

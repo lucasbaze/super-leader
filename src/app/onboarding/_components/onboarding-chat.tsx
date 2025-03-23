@@ -14,7 +14,12 @@ const onboardingConfig: ChatConfig = {
   type: 'onboarding',
   toolRegistry: ChatTools,
   chatContainerStyles: {
-    container: 'min-w-2xl max-w-2xl mx-auto py-12'
+    outerContainer: 'overflow-y-auto',
+    midContainer: '',
+    innerContainer: 'min-w-2xl max-w-2xl mx-auto py-12'
+  },
+  messagesListStyles: {
+    container: 'py-4'
   },
   messageStyles: {
     assistant: 'font-medium text-foreground leading-relaxed',

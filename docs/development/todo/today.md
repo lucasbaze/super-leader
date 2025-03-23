@@ -1,3 +1,7 @@
+### Mar 21st
+
+- [ ] Remove the "Initial Message tool" from the chat.
+
 ### Mar 20th
 
 - [ ] This prompt fails when adding multiple people: "Create Matt and Trisha as new people. They're a married couple and they're both originally from Scotland. He's apparently just a middle manager from corporate, though I didn't go further into it. Then if you can, add them to the Dance group"

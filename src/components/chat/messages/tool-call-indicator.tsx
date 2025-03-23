@@ -3,17 +3,45 @@ import { useState } from 'react';
 import { Brain, CheckIcon, ChevronDown, ChevronUp, Loader } from '@/components/icons';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useChatConfig } from '@/lib/chat/chat-context';
 import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { cn } from '@/lib/utils';
 
 interface ToolCallIndicatorProps {
-  displayName: string;
   toolName: string;
   state: 'call' | 'result' | 'partial-call';
   args?: Record<string, any>;
 }
 
-export function ToolCallIndicator({ displayName, toolName, state, args }: ToolCallIndicatorProps) {
+export function ToolCallIndicator({ toolName, state, args }: ToolCallIndicatorProps) {
+  const { config } = useChatConfig();
+
+  // Don't render if tool is in hidden list
+  if (config.hiddenTools?.includes(toolName)) {
+    return null;
+  }
+
+  // Get display name from tools config, fallback to toolName if not found
+  const displayName = config.toolRegistry.get(toolName)?.displayName || toolName;
+
+  return (
+    <div className={config.messageStyles.toolCall}>
+      <ToolCallIndicatorDisplay
+        displayName={displayName}
+        toolName={toolName}
+        state={state}
+        args={args}
+      />
+    </div>
+  );
+}
+
+export function ToolCallIndicatorDisplay({
+  displayName,
+  toolName,
+  state,
+  args
+}: ToolCallIndicatorProps & { displayName: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (toolName === CHAT_TOOLS.CREATE_USER_CONTEXT) {

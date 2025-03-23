@@ -20,7 +20,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className='relative h-full overflow-hidden rounded-lg bg-background p-3'>
+    <div className='relative h-full rounded-lg bg-background p-3'>
       <OnboardingChat />
     </div>
   );

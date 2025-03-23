@@ -62,7 +62,7 @@ export function useSavedMessages({
           dateHandler(a.createdAt).isBefore(dateHandler(b.createdAt)) ? -1 : 1
         );
       });
-    } else if (!savedMessagesData?.messages || savedMessagesData?.messages.length === 0) {
+    } else if (savedMessagesData?.messages.length === 0) {
       sendSystemMessage?.({
         id: 'system-message',
         role: 'system',

@@ -4,14 +4,14 @@ import { TypingText } from '@/components/animated/typing-text';
 import { Conversation } from '@/types/database';
 
 interface OnboardingHeaderProps {
-  conversations: Conversation[];
-  conversationId: string | null;
+  conversations: Conversation[] | undefined;
+  activeConversationId: string | null;
   onSelectConversation: (id: string) => void;
 }
 
 export function OnboardingHeader({
   conversations,
-  conversationId,
+  activeConversationId,
   onSelectConversation
 }: OnboardingHeaderProps) {
   // For onboarding, we might want a simpler header or no header at all

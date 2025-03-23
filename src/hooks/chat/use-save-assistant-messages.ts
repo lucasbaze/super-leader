@@ -23,7 +23,6 @@ export function useSaveAssistantMessages({ chatConfig }: UseSaveAssistantMessage
     messages: Message[],
     conversationId: string
   ) => {
-    console.log(finalMessage, toolsCalled, messages, conversationId);
     if (!conversationId) return;
 
     try {

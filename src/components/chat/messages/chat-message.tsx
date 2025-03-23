@@ -38,14 +38,6 @@ const getMessageContent = (message: Message) => {
   }
 };
 
-// TODO: Update loading message to show the type of activity taking place.
-// TODO: Add some type of animation to the loading message...
-const LoadingMessage = () => (
-  <div className='flex max-w-[90%] flex-col gap-2 rounded-lg bg-muted px-3 py-2 text-sm'>
-    Thinking...
-  </div>
-);
-
 export function ChatMessage({
   message,
   isLoading,
@@ -88,7 +80,6 @@ export function ChatMessage({
     const toolCallIndicators = message.toolInvocations?.map((toolInvocation) => (
       <ToolCallIndicator
         key={toolInvocation.toolCallId}
-        displayName={toolInvocation.toolName}
         toolName={toolInvocation.toolName}
         state={toolInvocation.state}
         args={toolInvocation.args}
@@ -113,7 +104,7 @@ export function ChatMessage({
         return (
           <div
             key={toolInvocation.toolCallId}
-            className={'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm'}>
+            className={'ro unded-sm max-w-[90%] break-words bg-muted px-3 py-2 text-sm'}>
             <ActionCard
               person={toolInvocation.args}
               completed={toolInvocation.state === 'result'}
@@ -182,7 +173,6 @@ export function ChatMessage({
         {toolCallIndicators}
         {content}
         {toolInvocations}
-        {isLastMessage && message.role === 'assistant' && isLoading && <LoadingMessage />}
       </div>
     );
   }

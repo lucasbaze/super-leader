@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { redirect } from 'next/navigation';
 
-import { ChatInterfaceWrapper } from '@/components/chat/chat-interface-wrapper';
+import { MainChat } from '@/components/chat/main/main-chat';
 import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
@@ -48,7 +48,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
                 </div>
               </div>
               <MainContentLayout>
-                <ChatInterfaceWrapper />
+                <MainChat />
               </MainContentLayout>
             </>
           }

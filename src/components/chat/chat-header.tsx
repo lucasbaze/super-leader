@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { isPath } from '@/lib/routes';
+import { Conversation } from '@/types/database';
 
 import { DefaultChatHeader } from './headers/default';
 import { PersonChatHeader } from './headers/person';
@@ -23,8 +24,8 @@ interface ChatHeaderProps {
     message: AIMessage | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
-  conversations: any[];
-  activeConversationId: string;
+  conversations: Conversation[] | undefined;
+  activeConversationId: string | null;
   isLoadingConversations: boolean;
   onSelectConversation: (id: string) => void;
   onNewConversation: () => void;
@@ -61,7 +62,7 @@ export function ChatHeader({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start' className='w-56'>
-          {conversations.map((conversation) => (
+          {conversations?.map((conversation) => (
             <DropdownMenuItem
               key={conversation.id}
               className={`${conversation.id === activeConversationId ? 'bg-muted' : ''}`}

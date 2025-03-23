@@ -83,15 +83,15 @@ export function useChatInterface({
       //   return;
       // }
 
-      setPendingAction({
-        type: 'function',
-        name: toolCall.toolName,
-        toolCallId: toolCall.toolCallId,
-        arguments: toolCall.args
-      });
+      // setPendingAction({
+      //   type: 'function',
+      //   name: toolCall.toolName,
+      //   toolCallId: toolCall.toolCallId,
+      //   arguments: toolCall.args
+      // });
     },
     onFinish: async (result) => {
-      // console.log('onFinish', JSON.stringify(result, null, 2));
+      console.log('onFinish', JSON.stringify(result, null, 2));
       // Call "saveMessages" method and pass in this last
       setChatFinished(true);
       setResultingMessage(result);

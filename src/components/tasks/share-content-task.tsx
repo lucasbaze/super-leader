@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useCopyToClipboard } from '@/hooks/utils/use-copy-to-clipboard';
 import { cn } from '@/lib/utils';
 import { GetTaskSuggestionResult, shareContentActionSchema } from '@/services/tasks/types';
 
@@ -47,6 +48,7 @@ type ContentSectionState = {
 };
 
 const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionBodyProps) => {
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
   // Track state for each content variant separately
   const [contentStates, setContentStates] = useState<ContentSectionState[]>(
     contentVariants.map((content) => ({
@@ -59,6 +61,10 @@ const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionB
     setContentStates((prev) =>
       prev.map((state, i) => (i === index ? { ...state, ...updates } : state))
     );
+  };
+
+  const handleCopy = async (message: string) => {
+    await copyToClipboard(message);
   };
 
   return (
@@ -106,7 +112,7 @@ const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionB
                         editedMessage: variant.message
                       });
                     }}>
-                    {variant.tone}
+                    {variant.tone.charAt(0).toUpperCase() + variant.tone.slice(1)}
                   </Button>
                 ))}
               </div>
@@ -125,10 +131,15 @@ const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionB
               {/* Action Buttons */}
               <div className='flex flex-wrap justify-end gap-2'>
                 <Button size='sm' variant='outline'>
-                  <Clipboard className='mr-1 size-3.5' /> Copy
-                </Button>
-                <Button size='sm'>
                   <Edit className='mr-1 size-3.5' /> Edit in Chat
+                </Button>
+                <Button
+                  size='sm'
+                  onClick={() => handleCopy(contentStates[contentIndex].editedMessage)}>
+                  <Clipboard className='mr-1 size-3.5' />
+                  <span className='transition-opacity duration-200 ease-in-out'>
+                    {isCopied ? 'Copied!' : 'Copy'}
+                  </span>
                 </Button>
               </div>
             </div>

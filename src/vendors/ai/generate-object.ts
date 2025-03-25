@@ -7,15 +7,25 @@ import { errorLogger } from '@/lib/errors/error-logger';
 
 import { createOpenRouterClient } from './client';
 
-export type TGenerateObjectOptions = {
-  messages: CoreMessage[];
-  schema: z.Schema<any>;
-  webResults?: number;
-  model?: string;
-};
+export type TGenerateObjectOptions =
+  | {
+      messages: CoreMessage[];
+      prompt?: never;
+      schema: z.Schema<any>;
+      webResults?: number;
+      model?: string;
+    }
+  | {
+      messages?: never;
+      prompt: string;
+      schema: z.Schema<any>;
+      webResults?: number;
+      model?: string;
+    };
 
 export async function generateObject({
   messages,
+  prompt,
   schema,
   webResults,
   model = 'openai/gpt-4'
@@ -32,6 +42,7 @@ export async function generateObject({
       }),
       // model: openRouterClient.chat(model),
       messages,
+      prompt,
       schema
     });
 

@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { TaskSuggestionListItem } from '@/components/home/task-suggestion-list-item';
+import { TaskRenderer } from '@/components/tasks/task-renderer';
 import { useTasks } from '@/hooks/use-tasks';
 import { filterAllTasks, groupTasksByTimeframe } from '@/lib/tasks/task-groups';
 
@@ -30,7 +30,7 @@ export default function PersonTasksPage() {
                 <h3 className='mb-3 text-lg font-semibold'>{group.title}</h3>
                 <div className='space-y-4'>
                   {group.tasks.map((task) => (
-                    <TaskSuggestionListItem key={task.id} task={task} />
+                    <TaskRenderer key={task.id} task={task} />
                   ))}
                 </div>
               </div>

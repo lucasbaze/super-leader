@@ -17,12 +17,12 @@ export const SUGGESTED_ACTION_TYPES = {
   SEND_MESSAGE: 'send-message',
   SHARE_CONTENT: 'share-content',
   ADD_NOTE: 'add-note',
-  BUY_GIFT: 'buy-gift',
-  MAKE_INTRO: 'make-intro',
-  PLAN_EVENT: 'plan-event',
-  SCHEDULE_MEETING: 'schedule-meeting',
-  ATTEND_EVENT: 'attend-event',
-  MAIL_LETTER: 'mail-letter'
+  BUY_GIFT: 'buy-gift'
+  // MAKE_INTRO: 'make-intro',
+  // PLAN_EVENT: 'plan-event',
+  // SCHEDULE_MEETING: 'schedule-meeting',
+  // ATTEND_EVENT: 'attend-event',
+  // MAIL_LETTER: 'mail-letter'
 } as const;
 
 export type SuggestedActionType =

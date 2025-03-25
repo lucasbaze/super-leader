@@ -1,3 +1,16 @@
+Now: 
+  ✔ Create the send-message suggestion task @done(25-03-25 12:53)
+  ☐ Create the get-content-suggestions prompt in a way that it can be used for task generation
+  ☐ Create the get-gift-suggestions prompt
+    ☐ Refactor the current get-content-suggestions prompt to be more "modular" and reusable for the task generation
+  ☐ Add "People to follow up with" to the task fetching step of task generation
+  ☐ Add "People to improve data about" to the task fetching step of task generation
+  ☐ Create the add-note suggestion task
+    ☐ I'll need to later think about how this updates the person's summary profile summary score... maybe this should be fetched alongside the person?
+  ☐ Update the chat-tools task creation mechanism
+  ☐ Create the "edit in chat" functionality for any messages
+  ☐ Allow clicking on a task to navigate to the person's chat page.
+  ☐ Get and display "tasks" that are associated with a person on the person page
 
 Next:
   ☐ Need to create a "completed" variant for the task suggestion list item for display purposes
@@ -5,7 +18,6 @@ Next:
   ☐ Adjust tabs to be "This week" and "All tasks" all tasks will "infinite scroll" ( Need to also think about groupings )
   ☐ Need to somehow make it "magical" when the user has completed a task.
   ☐ Need to make it magical when a user creates a task or really does anything in the chat, after the task is created successfully for example. 
-  ☐ Get and display "tasks" that are associated with a person on the person page
   ☐ Need to be able to check tasks off from there as well.
   ☐ Think about how to handle the AI based "Snooze" functionality 
   ☐ Need to think about the "gamification" in relation to the tasks / displaying metrics and "streaks". 

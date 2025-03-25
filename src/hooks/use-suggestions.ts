@@ -2,12 +2,12 @@ import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { TUpdateSuggestionRequest } from '@/app/api/suggestions/[suggestionId]/route';
 import { errorToast } from '@/components/errors/error-toast';
-import { TContentSuggestionWithId } from '@/services/suggestions/types';
+import { ContentSuggestionWithId } from '@/services/suggestions/types';
 
 export async function fetchSuggestions(
   queryClient: QueryClient,
   id: string
-): Promise<TContentSuggestionWithId[]> {
+): Promise<ContentSuggestionWithId[]> {
   return queryClient.fetchQuery({
     queryKey: ['suggestions', id],
     queryFn: async () => {

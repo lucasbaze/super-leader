@@ -1,10 +1,11 @@
+// TODO: Refactor this to use the new taskContextSchema & taskSuggestionSchema
 import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
 import { dateHandler } from '@/lib/dates/helpers';
-import { TASK_TYPES, TaskType } from '@/lib/tasks/task-types';
+import { TASK_TRIGGERS, TaskTrigger } from '@/lib/tasks/constants';
 import { createTask } from '@/services/tasks/create-task';
-import { CreateTaskServiceResult, TaskContent, taskContentSchema } from '@/services/tasks/types';
+import { CreateTaskServiceResult, taskContextSchema } from '@/services/tasks/types';
 
 import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
@@ -13,15 +14,17 @@ import { CHAT_TOOLS } from './constants';
 // TODO: Clean up this duplication with `taskSuggestionSchema`
 const createTaskParametersSchema = z.object({
   person_id: z.string().min(1).describe('The ID of the person the task is associated with'),
-  type: z.enum(Object.values(TASK_TYPES) as [TaskType, ...TaskType[]]).describe('The type of task'),
-  content: taskContentSchema,
+  trigger: z
+    .enum(Object.values(TASK_TRIGGERS) as [TaskTrigger, ...TaskTrigger[]])
+    .describe('The type of task'),
+  content: taskContextSchema,
   end_at: z.string().describe('The ISO date-time string when the task should be completed')
 });
 
 export const createTaskTool: ChatTool<
   {
     person_id: string;
-    type: TaskType;
+    trigger: TaskTrigger;
     action: string;
     context: string;
     suggestion: string;
@@ -67,21 +70,21 @@ export const createTaskTool: ChatTool<
   `,
   parameters: z.object({
     person_id: z.string().min(1).describe('The ID of the person the task is associated with'),
-    type: z
-      .enum(Object.values(TASK_TYPES) as [TaskType, ...TaskType[]])
+    trigger: z
+      .enum(Object.values(TASK_TRIGGERS) as [TaskTrigger, ...TaskTrigger[]])
       .describe('The type of task'),
     action: z.string().describe('A brief action label for the task (2-5 words)'),
     context: z.string().describe('Context about the task (1 sentence max)'),
     suggestion: z.string().describe('Specific suggestion for completing the task (1 sentence max)'),
     end_at: z.string().describe('The date-time string when the task should be completed')
   }),
-  execute: async (db, { person_id, type, action, context, suggestion, end_at }, { userId }) => {
-    console.log('Creating task for:', person_id, type, action, context, suggestion, end_at);
+  execute: async (db, { person_id, trigger, action, context, suggestion, end_at }, { userId }) => {
+    console.log('Creating task for:', person_id, trigger, action, context, suggestion, end_at);
 
     try {
       const validationResult = createTaskParametersSchema.safeParse({
         person_id,
-        type,
+        trigger,
         content: {
           action,
           context,
@@ -99,11 +102,14 @@ export const createTaskTool: ChatTool<
         task: {
           userId,
           personId: person_id,
-          type,
-          content: {
-            action,
+          trigger,
+          context: {
             context,
-            suggestion
+            callToAction: suggestion
+          },
+          suggestedActionType: action,
+          suggestedAction: {
+            messageVariants: []
           },
           endAt: end_at
         }

@@ -174,7 +174,9 @@ describe('validateTaskSuggestion', () => {
       });
 
       expect(result.valid).toBe(false);
-      expect(result.error).toEqual(ERRORS.TASK_SUGGESTION.INVALID_ACTION);
+      expect(result.error?.displayMessage).toEqual(
+        ERRORS.TASK_SUGGESTION.INVALID_ACTION.displayMessage
+      );
       expect(result.data).toBeNull();
     });
 

@@ -151,7 +151,7 @@ describe('createMessageSuggestions', () => {
       });
 
       const params = mockOpenAI.mock.calls[0][0];
-      const userMessage = params.messages[1].content;
+      const userMessage = params.messages?.[1].content;
 
       expect(userMessage).toContain('John');
       expect(userMessage).toContain('Interested in technology');
@@ -168,7 +168,7 @@ describe('createMessageSuggestions', () => {
       });
 
       const params = mockOpenAI.mock.calls[0][0];
-      const systemMessage = params.messages[0].content;
+      const systemMessage = params.messages?.[0].content;
 
       expect(systemMessage).toContain('ALWAYS RETURN JSON CONTENT');
       expect(systemMessage).toContain('"suggestions": [');

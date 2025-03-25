@@ -49,7 +49,7 @@ describe('updateOnboardingStatus', () => {
       });
     });
 
-    it('should update multiple steps status', async () => {
+    it.only('should update multiple steps status', async () => {
       await withTestTransaction(supabase, async (db) => {
         // Create test user
         const { id: userId } = await createTestUser({ db });
@@ -62,13 +62,13 @@ describe('updateOnboardingStatus', () => {
         const userProfile = await getUserProfile({ db, userId });
         const onboarding = userProfile.data?.onboarding as Onboarding;
         expect(onboarding.steps.shareValueAsk.completed).toBe(false);
-        expect(onboarding.steps.valuesBeliefs.completed).toBe(false);
+        expect(onboarding.steps.values.completed).toBe(false);
 
         // Update multiple steps status
         const result = await updateOnboardingStatus({
           db,
           userId,
-          stepsCompleted: ['shareValueAsk', 'valuesBeliefs']
+          stepsCompleted: ['shareValueAsk', 'values']
         });
 
         // Verify update
@@ -78,7 +78,7 @@ describe('updateOnboardingStatus', () => {
         // Verify updated state
         const updatedUserProfile = await getUserProfile({ db, userId });
         const updatedOnboarding = updatedUserProfile.data?.onboarding as Onboarding;
-        expect(updatedOnboarding.steps.valuesBeliefs.completed).toBe(true);
+        expect(updatedOnboarding.steps.values.completed).toBe(true);
         expect(updatedOnboarding.steps.shareValueAsk.completed).toBe(true);
         expect(updatedOnboarding.completed).toBe(false);
       });

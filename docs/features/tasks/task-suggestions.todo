@@ -33,6 +33,7 @@ Next:
   
 Later: 
   ☐ Need to implement the "Bad suggestion" reason
+  ☐ Update getTasks to have additional filters for limit, offset, ordering, etc... e.g. for birthday tasks when we check if previous tasks exist... this might go "too far" into the past...
     
     
 Done: 

@@ -5,6 +5,7 @@ import { withTestTransaction } from '@/tests/utils/test-setup';
 import { AuthUser, Person } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 import { generateObject } from '@/vendors/ai';
+import { generateSearchObject } from '@/vendors/openai/generate-search-object';
 
 import { createContentSuggestions, ERRORS } from '../create-content-suggestions';
 
@@ -27,6 +28,30 @@ jest.mock('@/vendors/ai', () => {
 
   return {
     generateObject: mockGenerateObject
+  };
+});
+
+jest.mock('@/vendors/openai/generate-search-object', () => {
+  const mockGenerateSearchObject = jest.fn().mockResolvedValue({
+    data: {
+      suggestions: [
+        {
+          title: 'Latest AI Developments',
+          contentUrl: 'https://example.com/ai-2024',
+          reason: 'Based on interest in AI and technology'
+        },
+        {
+          title: 'Startup Funding Trends',
+          contentUrl: 'https://example.com/startup-trends',
+          reason: 'Relevant to startup interests'
+        }
+      ]
+    },
+    error: null
+  });
+
+  return {
+    generateSearchObject: mockGenerateSearchObject
   };
 });
 
@@ -57,14 +82,17 @@ describe('createContentSuggestions', () => {
   describe('success cases', () => {
     it('should create content suggestions with no previous suggestions', async () => {
       // Setup mock response
-      jest.mocked(generateObject).mockResolvedValueOnce({
-        suggestions: [
-          {
-            title: 'Latest AI Developments',
-            contentUrl: 'https://example.com/ai-2024',
-            reason: 'Based on interest in AI and technology'
-          }
-        ]
+      jest.mocked(generateSearchObject).mockResolvedValueOnce({
+        data: {
+          suggestions: [
+            {
+              title: 'Latest AI Developments',
+              contentUrl: 'https://example.com/ai-2024',
+              reason: 'Based on interest in AI and technology'
+            }
+          ]
+        },
+        error: null
       });
 
       const result = await createContentSuggestions({
@@ -99,14 +127,17 @@ describe('createContentSuggestions', () => {
         });
 
         // Setup mock response
-        jest.mocked(generateObject).mockResolvedValueOnce({
-          suggestions: [
-            {
-              title: 'Startup Funding Trends',
-              contentUrl: 'https://example.com/startup-trends',
-              reason: 'New direction based on previous content'
-            }
-          ]
+        jest.mocked(generateSearchObject).mockResolvedValueOnce({
+          data: {
+            suggestions: [
+              {
+                title: 'Startup Funding Trends',
+                contentUrl: 'https://example.com/startup-trends',
+                reason: 'New direction based on previous content'
+              }
+            ]
+          },
+          error: null
         });
 
         const result = await createContentSuggestions({
@@ -125,8 +156,13 @@ describe('createContentSuggestions', () => {
   describe('error cases', () => {
     it('should handle invalid AI response format', async () => {
       // Mock invalid response format
-      jest.mocked(generateObject).mockResolvedValueOnce({
-        wrong: 'response'
+      jest.mocked(generateSearchObject).mockResolvedValueOnce({
+        data: null,
+        error: {
+          name: 'Error',
+          message: 'Invalid response format',
+          stack: 'Error stack trace'
+        }
       });
 
       const result = await createContentSuggestions({
@@ -142,7 +178,7 @@ describe('createContentSuggestions', () => {
 
     it('should handle AI service errors', async () => {
       // Mock API error
-      jest.mocked(generateObject).mockRejectedValueOnce(new Error('API Error'));
+      jest.mocked(generateSearchObject).mockRejectedValueOnce(new Error('API Error'));
 
       const result = await createContentSuggestions({
         userContent: 'Find content',
@@ -158,14 +194,17 @@ describe('createContentSuggestions', () => {
 
   describe('gift suggestions', () => {
     it('should create gift suggestions with no previous suggestions', async () => {
-      jest.mocked(generateObject).mockResolvedValueOnce({
-        suggestions: [
-          {
-            title: 'Premium Coffee Subscription',
-            contentUrl: 'https://example.com/coffee-sub',
-            reason: 'Perfect for their interest in specialty coffee'
-          }
-        ]
+      jest.mocked(generateSearchObject).mockResolvedValueOnce({
+        data: {
+          suggestions: [
+            {
+              title: 'Premium Coffee Subscription',
+              contentUrl: 'https://example.com/coffee-sub',
+              reason: 'Perfect for their interest in specialty coffee'
+            }
+          ]
+        },
+        error: null
       });
 
       const result = await createContentSuggestions({

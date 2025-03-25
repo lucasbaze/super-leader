@@ -45,7 +45,7 @@ export type ContentSuggestionWithId = ContentSuggestion & Pick<Suggestion, 'id'>
 export const ContentSuggestionsResponseSchema = z.object({
   suggestions: z.array(SuggestionSchema)
 });
-
+export type ContentSuggestionsResponse = z.infer<typeof ContentSuggestionsResponseSchema>;
 export type GetContentSuggestionsForPersonResponse = {
   suggestions: ContentSuggestionWithId[];
   topics: SuggestionPromptResponse['topics'];

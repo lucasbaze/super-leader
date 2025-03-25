@@ -33,6 +33,8 @@ export type GetTasksQueryResult = TaskSuggestion & {
   person: Pick<Person, 'id' | 'first_name' | 'last_name'>;
 };
 
+// TODO: Add additional filters for limit, offset, ordering, etc...
+// e.g. getTasks to check for birthday's need to be scoped down within the next 30 days... don't want to miss a birthday from being in the past as a past task.
 export async function getTasks({
   db,
   userId,

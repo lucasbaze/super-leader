@@ -2,8 +2,8 @@ import { createError, errorLogger } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 
-import { buildTaskSuggestion } from './build-task-suggestion';
-import { CreateTaskServiceResult, NewTaskParams } from './types';
+import { CreateTaskServiceResult, CreateTaskSuggestion } from './types';
+import { validateTaskSuggestion } from './validate-task-suggestion';
 
 export const ERRORS = {
   TASKS: {
@@ -30,18 +30,20 @@ export const ERRORS = {
 
 export interface CreateTaskParams {
   db: DBClient;
-  task: NewTaskParams;
+  task: CreateTaskSuggestion;
 }
 
 export async function createTask({ db, task }: CreateTaskParams): Promise<CreateTaskServiceResult> {
   try {
     console.log('Creating task:', JSON.stringify(task, null, 2));
-    // Validate task data
-    const buildResult = buildTaskSuggestion({
+
+    const buildResult = validateTaskSuggestion({
       userId: task.userId,
       personId: task.personId,
-      type: task.type,
-      content: task.content,
+      trigger: task.trigger,
+      context: task.context,
+      suggestedActionType: task.suggestedActionType,
+      suggestedAction: task.suggestedAction,
       endAt: task.endAt
     });
 
@@ -70,7 +72,7 @@ export async function createTask({ db, task }: CreateTaskParams): Promise<Create
     const { data: newTask, error: insertError } = await db
       .from('task_suggestion')
       .insert(buildResult.data)
-      .select('id')
+      .select('*')
       .single();
 
     if (insertError || !newTask) {
@@ -82,6 +84,7 @@ export async function createTask({ db, task }: CreateTaskParams): Promise<Create
     return {
       data: {
         id: newTask.id,
+        task: newTask,
         success: true
       },
       error: null

@@ -23,7 +23,7 @@ const isShareContentAction = (action: any): action is z.infer<typeof shareConten
 };
 
 export const ShareContentTask = ({ task }: { task: GetTaskSuggestionResult }) => {
-  if (!isShareContentAction(task.suggested_action)) {
+  if (!isShareContentAction(task.suggestedAction)) {
     return null;
   }
 
@@ -31,7 +31,7 @@ export const ShareContentTask = ({ task }: { task: GetTaskSuggestionResult }) =>
     <BaseTaskCard
       task={task}
       actionBody={
-        <ShareContentCardActionBody contentVariants={task.suggested_action.contentVariants} />
+        <ShareContentCardActionBody contentVariants={task.suggestedAction.contentVariants} />
       }
     />
   );

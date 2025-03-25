@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { z } from 'zod';
 
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
-import { GetTaskSuggestionResult, shareContentActionSchema } from '@/services/tasks/types';
 
 import { ShareContentTask } from './share-content-task';
 
@@ -41,8 +39,8 @@ export const Default: Story = {
         callToAction:
           "Share an interesting article about the Himalaya's in reference to his upcoming trip."
       },
-      suggested_action_type: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
-      suggested_action: {
+      suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+      suggestedAction: {
         contentVariants: [
           {
             suggestedContent: {
@@ -89,62 +87,3 @@ export const Default: Story = {
     }
   }
 };
-
-// export const WithLongContent: Story = {
-//   args: {
-//     task: {
-//       ...mockTask,
-//       suggested_action: {
-//         contentVariants: [
-//           {
-//             suggestedContent: {
-//               title: 'The Ultimate Guide to Himalayan Trekking: Everything You Need to Know Before Your Adventure',
-//               description: 'A comprehensive guide covering all aspects of Himalayan trekking, from physical preparation and altitude acclimatization to choosing the right routes and understanding local customs. This in-depth resource includes expert advice, detailed itineraries, and essential safety tips for both beginner and experienced trekkers.',
-//               url: 'https://example.com/ultimate-himalaya-guide'
-//             },
-//             messageVariants: [
-//               {
-//                 tone: 'Professional',
-//                 message: 'Michael, I came across this extensive guide about trekking in the Himalayas. Given your upcoming adventure, I thought you might find this particularly valuable. It covers everything from physical preparation to cultural considerations. The section about altitude acclimatization is especially relevant for first-time Himalayan trekkers.'
-//               },
-//               {
-//                 tone: 'Casual',
-//                 message: 'Hey Michael! Found this super detailed guide about Himalayan trekking - it's basically everything you need to know in one place! The tips about dealing with altitude and local customs are really helpful. Thought you'd want to check it out before your big adventure!'
-//               }
-//             ]
-//           }
-//         ]
-//       }
-//     }
-//   }
-// };
-
-// export const WithMultipleContentOptions: Story = {
-//   args: {
-//     task: {
-//       ...mockTask,
-//       suggested_action: {
-//         contentVariants: [
-//           ...mockTask.suggested_action.contentVariants,
-//           {
-//             suggestedContent: {
-//               title: 'Best Photography Spots in the Himalayas',
-//               description: 'A photographer's guide to capturing the most stunning views and moments in the Himalayan range.',
-//               url: 'https://example.com/himalaya-photography'
-//             },
-//             messageVariants: [
-//               {
-//                 tone: 'Professional',
-//                 message: 'Michael, knowing your interest in photography, I thought you'd appreciate this guide about the best photography locations in the Himalayas. It includes detailed information about timing and equipment recommendations.'
-//               },
-//               {
-//                 tone: 'Casual',
-//                 message: 'Hey Michael! Since you're into photography, check out this awesome guide about photo spots in the Himalayas! Some really epic locations in here - perfect for getting those Instagram-worthy shots! 📸'
-//               }
-//             ]
-//           }
-//         ]
-//       }
-//     }
-//   }
-// };

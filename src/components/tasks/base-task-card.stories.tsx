@@ -14,14 +14,6 @@ const meta: Meta<typeof BaseTaskCard> = {
 export default meta;
 type Story = StoryObj<typeof BaseTaskCard>;
 
-// Mock handlers
-const mockHandlers = {
-  onCopy: (content: string) => console.log('Copy clicked:', content),
-  onOpenChat: (person: any, content: string) =>
-    console.log('Open chat clicked:', { person, content }),
-  onTaskAction: (action: string) => console.log('Task action clicked:', action)
-};
-
 // Base story with default props
 export const Default: Story = {
   args: {
@@ -44,29 +36,12 @@ export const Default: Story = {
       context: {
         context: "It's Alex's birthday!",
         callToAction: 'Send a birthday message'
+      },
+      suggestedActionType: 'send-message',
+      suggestedAction: {
+        messageVariants: [{ tone: 'Professional', message: 'Happy birthday, Alex! 🎂' }]
       }
     },
     actionBody: <div>Action Body</div>
   }
 };
-
-// suggested_action_type: 'send_message',
-//       suggested_action: {
-//         messageVariants: [
-//           {
-//             tone: 'Professional',
-//             message:
-//               'Dear Alex, wishing you a very happy birthday! May your day be filled with joy and success. Best regards.'
-//           },
-//           {
-//             tone: 'Casual',
-//             message:
-//               'Happy birthday, Alex! Hope you have a fantastic day filled with joy and celebration. Looking forward to catching up soon!'
-//           },
-//           {
-//             tone: 'Celebratory',
-//             message:
-//               'Happy birthday to you, Alex! 🎂🎈 Wishing you all the happiness in the world on your special day!'
-//           }
-//         ]
-//       }

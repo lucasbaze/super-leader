@@ -48,30 +48,6 @@ export function useTaskActions() {
     }
   });
 
-  // Mutation for creating a new task
-  const createTask = useMutation({
-    mutationFn: async (data: TaskCreateData) => {
-      const response = await fetch('/api/tasks/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      const result = await response.json();
-      if (result.error) {
-        throw result.error;
-      }
-      return result.data;
-    },
-    onSuccess: () => {
-      // Invalidate the tasks query to refresh the data
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-    },
-    onError: (error: any) => {
-      errorToast.show(error);
-    }
-  });
-
   // Function to handle snoozing with AI-determined new date
   // const snoozeTask = async (taskId: string) => {
   //   try {
@@ -118,7 +94,6 @@ export function useTaskActions() {
     // snoozeTask,
     // markAsBadSuggestion: (taskId: string) =>
     //   updateTask.mutateAsync({ taskId, action: TaskActionType.BAD_SUGGESTION }),
-    createTask: (data: TaskCreateData) => createTask.mutateAsync(data),
-    isLoading: updateTask.isPending || createTask.isPending
+    isLoading: updateTask.isPending
   };
 }

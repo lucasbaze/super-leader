@@ -18,6 +18,8 @@ export type Interaction = Database['public']['Tables']['interactions']['Row'];
 export type Suggestion = Database['public']['Tables']['suggestions']['Row'];
 export type Message = Database['public']['Tables']['messages']['Row'];
 export type TaskSuggestion = Database['public']['Tables']['task_suggestion']['Row'];
+export type TaskSuggestionInsert = Database['public']['Tables']['task_suggestion']['Insert'];
+
 export type UserProfile = Database['public']['Tables']['user_profile']['Row'] & {
   onboarding: Onboarding;
 };

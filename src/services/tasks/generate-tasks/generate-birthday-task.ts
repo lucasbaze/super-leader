@@ -1,14 +1,14 @@
 import { dateHandler } from '@/lib/dates/helpers';
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { TASK_TYPES } from '@/lib/tasks/task-types';
+import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { DBClient, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
 import { createTask } from '../create-task';
 import { getTasks } from '../get-tasks';
-import { TaskContent } from '../types';
+import { TaskContext } from '../types';
 
 // Service params interface
 export interface GenerateTasksParams {
@@ -73,8 +73,6 @@ export async function generateBirthdayTasks(
       }
     );
 
-    console.log('peopleWithBirthdays', peopleWithBirthdays);
-
     if (fetchBirthdayError) {
       return {
         data: null,
@@ -92,7 +90,7 @@ export async function generateBirthdayTasks(
       });
 
       const hasExistingBirthdayTask = existingTasksResult.data?.some(
-        (task) => task.type === TASK_TYPES.BIRTHDAY_REMINDER
+        (task) => task.trigger === TASK_TRIGGERS.BIRTHDAY_REMINDER
       );
 
       if (hasExistingBirthdayTask) {
@@ -105,10 +103,9 @@ export async function generateBirthdayTasks(
       // This is where I want to replace the action with an AI generated action
       // It's able to get the person's details, determine the action to take, such as send a message, get a gift, suggest an event, or something else...
       // Generate the requisite task output based on the AI's response
-      const taskContent: TaskContent = {
-        action: `Plan for ${person.first_name}'s Birthday`,
+      const taskContent: TaskContext = {
         context: `${person.first_name}'s birthday is coming up on ${birthdayDate}`,
-        suggestion: `Take some time to plan something special for their birthday`
+        callToAction: `Take some time to plan something special for their birthday`
       };
 
       // Create the task
@@ -117,8 +114,17 @@ export async function generateBirthdayTasks(
         task: {
           userId,
           personId: person.id,
-          type: TASK_TYPES.BIRTHDAY_REMINDER,
-          content: taskContent,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          context: taskContent,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedAction: {
+            messageVariants: [
+              {
+                tone: 'friendly',
+                message: 'Happy birthday! Hope you have a fantastic day!'
+              }
+            ]
+          },
           endAt: createBirthdayReminderDate(person.birthday)
         }
       });
@@ -126,7 +132,6 @@ export async function generateBirthdayTasks(
 
     // Wait for all task creation promises to complete
     const results = await Promise.all(taskPromises);
-    console.log('results', results);
 
     // Count successful task creations
     const tasksCreated = results.filter((result) => result?.data).length;

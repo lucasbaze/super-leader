@@ -39,8 +39,8 @@ export const Default: Story = {
         context: "It's Alex's birthday!",
         callToAction: 'Send a birthday message'
       },
-      suggested_action_type: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
-      suggested_action: {
+      suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+      suggestedAction: {
         messageVariants: [
           {
             tone: 'Professional',

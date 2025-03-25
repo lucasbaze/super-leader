@@ -39,8 +39,8 @@ export const Default: Story = {
         context: "Rodrigo's birthday is coming up in a few days",
         callToAction: 'I found a few gift ideas you could consider buying.'
       },
-      suggested_action_type: SUGGESTED_ACTION_TYPES.BUY_GIFT,
-      suggested_action: {
+      suggestedActionType: SUGGESTED_ACTION_TYPES.BUY_GIFT,
+      suggestedAction: {
         suggestedGifts: [
           {
             title: 'Vintage Camera Collection Print',

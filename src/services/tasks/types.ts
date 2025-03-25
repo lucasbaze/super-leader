@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 import { CONTEXT_GATHERING_TYPES } from '@/lib/people/context-gathering';
-import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
-import { TASK_TYPES } from '@/lib/tasks/task-types';
+import { SUGGESTED_ACTION_TYPES, SuggestedActionType, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { Person, TaskSuggestion } from '@/types/database';
 import { ServiceResponse } from '@/types/service-response';
 
@@ -73,27 +72,27 @@ export const buyGiftActionSchema = z.object({
 });
 
 export const taskSuggestionSchema = z.object({
-  user_id: z.string().min(1).describe('The ID of the user the task is associated with'),
-  person_id: z.string().min(1).describe('The ID of the person the task is associated with'),
+  userId: z.string().min(1).describe('The ID of the user the task is associated with'),
+  personId: z.string().min(1).describe('The ID of the person the task is associated with'),
   trigger: z
     .enum(Object.values(TASK_TRIGGERS) as [string, ...string[]])
     .describe('The trigger for the creation of this task'),
   context: taskContextSchema,
-  suggested_action_type: z
+  suggestedActionType: z
     .enum(Object.values(SUGGESTED_ACTION_TYPES) as [string, ...string[]])
     .describe('The type of action to take'),
-  suggested_action: z.union([
+  suggestedAction: z.union([
     sendMessageActionSchema,
     shareContentActionSchema,
     addNoteActionSchema,
     buyGiftActionSchema
   ]),
-  end_at: z
+  endAt: z
     .string()
     .datetime()
-    .optional()
     .describe('The ISO date-time string when the task should be completed')
 });
+export type CreateTaskSuggestion = z.infer<typeof taskSuggestionSchema>;
 
 export type TaskContext = z.infer<typeof taskContextSchema>;
 
@@ -103,8 +102,8 @@ export type GetTaskSuggestionResult = Omit<
 > & {
   trigger: (typeof TASK_TRIGGERS)[keyof typeof TASK_TRIGGERS];
   context: TaskContext;
-  suggested_action_type: z.infer<typeof taskSuggestionSchema>['suggested_action_type'];
-  suggested_action: z.infer<typeof taskSuggestionSchema>['suggested_action'];
+  suggestedActionType: SuggestedActionType;
+  suggestedAction: CreateTaskSuggestion['suggestedAction'];
   person: Pick<Person, 'id' | 'first_name' | 'last_name'>;
 };
 
@@ -119,13 +118,12 @@ export interface TaskUpdateResult {
   id: string;
   success: boolean;
 }
+export type UpdateTaskServiceResult = ServiceResponse<TaskUpdateResult>;
 
-export interface NewTaskParams {
-  userId: string;
-  personId: string;
-  type: (typeof TASK_TYPES)[keyof typeof TASK_TYPES];
-  content: TaskContext;
-  endAt: string;
-}
+export type CreateTaskResult = {
+  id: string;
+  task: TaskSuggestion;
+  success: boolean;
+};
 
-export type CreateTaskServiceResult = ServiceResponse<TaskUpdateResult>;
+export type CreateTaskServiceResult = ServiceResponse<CreateTaskResult>;

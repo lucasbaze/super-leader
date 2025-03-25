@@ -1,9 +1,10 @@
 import { createError, errorLogger } from '@/lib/errors';
-import { DBClient } from '@/types/database';
+import { SuggestedActionType, TaskTrigger } from '@/lib/tasks/constants';
+import { DBClient, Person, TaskSuggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-import type { GetTaskSuggestionResult } from './types';
+import type { CreateTaskSuggestion, GetTaskSuggestionResult, TaskContext } from './types';
 
 export const ERRORS = {
   TASKS: {
@@ -28,6 +29,10 @@ export interface GetTasksParams {
   personId?: string;
 }
 
+export type GetTasksQueryResult = TaskSuggestion & {
+  person: Pick<Person, 'id' | 'first_name' | 'last_name'>;
+};
+
 export async function getTasks({
   db,
   userId,
@@ -43,8 +48,10 @@ export async function getTasks({
       .select(
         `
         id,
-        type,
-        content,
+        trigger,
+        context,
+        suggested_action_type,
+        suggested_action,
         end_at,
         completed_at,
         skipped_at,
@@ -69,7 +76,7 @@ export async function getTasks({
       query.eq('person_id', personId);
     }
 
-    const { data: tasks, error } = await query.returns<GetTaskSuggestionResult[]>();
+    const { data: tasks, error } = await query.returns<GetTasksQueryResult[]>();
 
     if (error) {
       const serviceError = ERRORS.TASKS.FETCH_ERROR;
@@ -77,7 +84,21 @@ export async function getTasks({
       return { data: null, error: serviceError };
     }
 
-    return { data: tasks, error: null };
+    const formattedTasks: GetTaskSuggestionResult[] = tasks.map((task) => ({
+      ...task,
+      trigger: task.trigger as TaskTrigger,
+      context: task.context as TaskContext,
+      suggestedActionType: task.suggested_action_type as SuggestedActionType,
+      suggestedAction: task.suggested_action as CreateTaskSuggestion['suggestedAction'],
+      endAt: task.end_at,
+      completedAt: task.completed_at,
+      skippedAt: task.skipped_at,
+      snoozedAt: task.snoozed_at,
+      createdAt: task.created_at,
+      updatedAt: task.updated_at
+    }));
+
+    return { data: formattedTasks, error: null };
   } catch (error) {
     const serviceError = {
       ...ERRORS.TASKS.FETCH_ERROR,

@@ -18,7 +18,7 @@ const isAddNoteAction = (action: any): action is z.infer<typeof addNoteActionSch
 };
 
 export const AddNoteTask = ({ task }: { task: GetTaskSuggestionResult }) => {
-  if (!isAddNoteAction(task.suggested_action)) {
+  if (!isAddNoteAction(task.suggestedAction)) {
     return null;
   }
 
@@ -26,7 +26,7 @@ export const AddNoteTask = ({ task }: { task: GetTaskSuggestionResult }) => {
     <BaseTaskCard
       task={task}
       actionBody={
-        <AddNoteCardActionBody questionVariants={task.suggested_action.questionVariants} />
+        <AddNoteCardActionBody questionVariants={task.suggestedAction.questionVariants} />
       }
     />
   );

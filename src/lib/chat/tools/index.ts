@@ -2,7 +2,7 @@ export { addPeopleToGroupTool } from './add-people-to-group';
 export { createGroupTool } from './create-group';
 export { createInteractionTool } from './create-interaction';
 export { createPersonTool } from './create-person';
-export { createTaskTool } from './create-task';
+// export { createTaskTool } from './create-task';
 export { createUserContextTool } from './create-user-context';
 export { findPersonTool } from './find-person';
 export { getContentSuggestionsTool } from './get-content-suggestions';

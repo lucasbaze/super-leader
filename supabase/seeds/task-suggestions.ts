@@ -1,7 +1,6 @@
-import { dateHandler, getCurrentUtcTime } from '@/lib/dates/helpers';
-import { TASK_TYPES } from '@/lib/tasks/task-types';
-import { buildTaskSuggestion } from '@/services/tasks/build-task-suggestion';
-import type { TaskContent } from '@/services/tasks/types';
+import { dateHandler } from '@/lib/dates/helpers';
+import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { validateTaskSuggestion } from '@/services/tasks/validate-task-suggestion';
 
 import { SeedContext } from './types';
 
@@ -17,22 +16,67 @@ const getRandomEndDate = () => {
   return dateHandler().add(daysToAdd, 'd').endOf('day').utc();
 };
 
-const generateBirthdayContent = (person: { first_name: string }): TaskContent => ({
-  action: 'Send birthday wishes',
-  context: `${person.first_name}'s birthday is coming up!`,
-  suggestion: `Don't forget to wish ${person.first_name} a happy birthday! Consider sending a thoughtful message or gift to strengthen your relationship.`
+const generateBirthdayTask = (person: { first_name: string }) => ({
+  trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+  context: {
+    context: `${person.first_name}'s birthday is coming up!`,
+    callToAction: `Send birthday wishes to ${person.first_name}`
+  },
+  suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+  suggestedAction: {
+    messageVariants: [
+      {
+        tone: 'friendly',
+        message: `Happy birthday ${person.first_name}! 🎉 Hope you have a fantastic day filled with joy and celebration!`
+      },
+      {
+        tone: 'professional',
+        message: `Happy birthday ${person.first_name}! Wishing you a wonderful day and a great year ahead.`
+      }
+    ]
+  }
 });
 
-const generateProfileUpdateContent = (person: { first_name: string }): TaskContent => ({
-  action: 'Update contact details',
-  context: 'Missing key information for potential investor',
-  suggestion: `${person.first_name}'s profile needs updating. Add their current role, company, and preferred contact method to better maintain the relationship.`
+const generateProfileUpdateTask = (person: { first_name: string }) => ({
+  trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+  context: {
+    context: 'Missing key information for potential investor',
+    callToAction: `Gather more information about ${person.first_name}'s current role and interests`
+  },
+  suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+  suggestedAction: {
+    questionVariants: [
+      {
+        type: 'professional',
+        question: 'What is your current role and company?'
+      },
+      {
+        type: 'contact',
+        question: 'What is your preferred method of contact?'
+      }
+    ]
+  }
 });
 
-const generateSuggestedReminderContent = (person: { first_name: string }): TaskContent => ({
-  action: 'Send follow-up message',
-  context: 'Recent interaction follow-up',
-  suggestion: `It's been a while since you last caught up with ${person.first_name}. Consider scheduling a coffee chat to discuss their recent projects and maintain the connection.`
+const generateFollowUpTask = (person: { first_name: string }) => ({
+  trigger: TASK_TRIGGERS.FOLLOW_UP,
+  context: {
+    context: `It's been a while since your last interaction with ${person.first_name}`,
+    callToAction: 'Schedule a catch-up meeting to maintain the connection'
+  },
+  suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+  suggestedAction: {
+    messageVariants: [
+      {
+        tone: 'friendly',
+        message: `Hi ${person.first_name}! It's been a while since we caught up. Would you be interested in grabbing coffee sometime soon?`
+      },
+      {
+        tone: 'professional',
+        message: `Hi ${person.first_name}, I hope you're doing well. I'd love to schedule some time to catch up and hear about your recent projects.`
+      }
+    ]
+  }
 });
 
 export async function seedTaskSuggestions({ supabase, userId }: SeedContext) {
@@ -54,11 +98,14 @@ export async function seedTaskSuggestions({ supabase, userId }: SeedContext) {
   const taskSuggestions = [
     // Birthday reminders - only for people with birthdays
     ...peopleWithBirthdays.map((person) => {
-      const task = buildTaskSuggestion({
+      const birthdayTask = generateBirthdayTask(person);
+      const task = validateTaskSuggestion({
         userId,
         personId: person.id,
-        type: TASK_TYPES.BIRTHDAY_REMINDER,
-        content: generateBirthdayContent(person),
+        trigger: birthdayTask.trigger,
+        context: birthdayTask.context,
+        suggestedActionType: birthdayTask.suggestedActionType,
+        suggestedAction: birthdayTask.suggestedAction,
         endAt: dateHandler().add(6, 'hours').toISOString() // For birthday reminders, we'll set it to now
       });
       if (!task.valid || !task.data) throw new Error('Invalid birthday task data');
@@ -67,24 +114,30 @@ export async function seedTaskSuggestions({ supabase, userId }: SeedContext) {
 
     // Profile updates
     ...people.slice(0, 3).map((person) => {
-      const task = buildTaskSuggestion({
+      const profileTask = generateProfileUpdateTask(person);
+      const task = validateTaskSuggestion({
         userId,
         personId: person.id,
-        type: TASK_TYPES.PROFILE_UPDATE,
-        content: generateProfileUpdateContent(person),
+        trigger: profileTask.trigger,
+        context: profileTask.context,
+        suggestedActionType: profileTask.suggestedActionType,
+        suggestedAction: profileTask.suggestedAction,
         endAt: getRandomEndDate().toISOString()
       });
       if (!task.valid || !task.data) throw new Error('Invalid profile update task data');
       return task.data;
     }),
 
-    // Suggested reminders
+    // Follow-up reminders
     ...people.map((person) => {
-      const task = buildTaskSuggestion({
+      const followUpTask = generateFollowUpTask(person);
+      const task = validateTaskSuggestion({
         userId,
         personId: person.id,
-        type: TASK_TYPES.SUGGESTED_REMINDER,
-        content: generateSuggestedReminderContent(person),
+        trigger: followUpTask.trigger,
+        context: followUpTask.context,
+        suggestedActionType: followUpTask.suggestedActionType,
+        suggestedAction: followUpTask.suggestedAction,
         endAt: getRandomEndDate().toISOString()
       });
       if (!task.valid || !task.data) throw new Error('Invalid reminder task data');

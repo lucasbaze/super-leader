@@ -2,20 +2,7 @@
 
 import { useState } from 'react';
 
-import {
-  AlarmClock,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  Gift,
-  Info,
-  Loader,
-  MessageSquare,
-  Share,
-  User,
-  X
-} from '@/components/icons';
+import { AlarmClock, Check, ChevronDown, Gift, Info, Loader, User, X } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -58,11 +45,11 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
   };
 
   return (
-    <Card className='relative w-full min-w-[500px] overflow-hidden'>
+    <Card className='relative w-full min-w-[500px] overflow-hidden shadow-sm'>
       {/* Card Header - Always visible */}
       <div className='group p-4'>
         <div className='flex items-start'>
-          <Avatar className='mr-4 h-10 w-10 flex-shrink-0'>
+          <Avatar className='mr-4 size-10 flex-shrink-0'>
             <AvatarImage
               src={`https://i.pravatar.cc/150?u=${task.person.id}`}
               alt={`${task.person.first_name} ${task.person.last_name}`}

@@ -2,8 +2,9 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { addDays, subDays } from 'date-fns';
 
 import { dateHandler } from '@/lib/dates/helpers';
-import { TASK_TYPES } from '@/lib/tasks/task-types';
-import { createTestPerson, createTestTask, createTestUser } from '@/tests/test-builder';
+import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { createTask } from '@/services/tasks/create-task';
+import { createTestPerson, createTestUser } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
@@ -61,17 +62,25 @@ describe('generateBirthdayTasks', () => {
           .from('task_suggestion')
           .select('*')
           .eq('user_id', testUser.id)
-          .eq('type', TASK_TYPES.BIRTHDAY_REMINDER);
+          .eq('trigger', TASK_TRIGGERS.BIRTHDAY_REMINDER);
 
         expect(tasks).toHaveLength(2);
 
         // Verify task content and timing
         tasks?.forEach((task) => {
-          expect(task.type).toBe(TASK_TYPES.BIRTHDAY_REMINDER);
-          expect(task.content).toMatchObject({
-            action: expect.stringContaining('Plan for'),
+          expect(task.trigger).toBe(TASK_TRIGGERS.BIRTHDAY_REMINDER);
+          expect(task.context).toMatchObject({
             context: expect.stringContaining('birthday is coming up'),
-            suggestion: expect.stringContaining('plan something special')
+            callToAction: expect.stringContaining('plan something special')
+          });
+          expect(task.suggested_action_type).toBe(SUGGESTED_ACTION_TYPES.SEND_MESSAGE);
+          expect(task.suggested_action).toMatchObject({
+            messageVariants: expect.arrayContaining([
+              expect.objectContaining({
+                tone: expect.any(String),
+                message: expect.stringContaining('birthday')
+              })
+            ])
           });
           // Task should be scheduled 7 days before birthday
           const taskDate = dateHandler(task.end_at);
@@ -109,7 +118,7 @@ describe('generateBirthdayTasks', () => {
           .from('task_suggestion')
           .select('*')
           .eq('user_id', testUser.id)
-          .eq('type', TASK_TYPES.BIRTHDAY_REMINDER);
+          .eq('trigger', TASK_TRIGGERS.BIRTHDAY_REMINDER);
 
         expect(tasks).toHaveLength(0);
       });
@@ -132,18 +141,26 @@ describe('generateBirthdayTasks', () => {
         });
 
         // Create existing birthday task
-        await createTestTask({
+        await createTask({
           db,
-          data: {
-            user_id: testUser.id,
-            person_id: person.id,
-            type: TASK_TYPES.BIRTHDAY_REMINDER,
-            content: {
-              action: "Plan for Alice's Birthday",
+          task: {
+            userId: testUser.id,
+            personId: person.id,
+            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+            context: {
               context: "Alice's birthday is coming up",
-              suggestion: 'Take some time to plan something special'
+              callToAction: "Send birthday wishes for Alice's special day"
             },
-            end_at: dateHandler(birthdayInTwoWeeks).subtract(7, 'days').toISOString()
+            suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+            suggestedAction: {
+              messageVariants: [
+                {
+                  tone: 'friendly',
+                  message: 'Happy birthday! Hope you have a fantastic day!'
+                }
+              ]
+            },
+            endAt: dateHandler(birthdayInTwoWeeks).subtract(7, 'days').toISOString()
           }
         });
 
@@ -158,7 +175,7 @@ describe('generateBirthdayTasks', () => {
           .from('task_suggestion')
           .select('*')
           .eq('user_id', testUser.id)
-          .eq('type', TASK_TYPES.BIRTHDAY_REMINDER);
+          .eq('trigger', TASK_TRIGGERS.BIRTHDAY_REMINDER);
 
         expect(tasks).toHaveLength(1);
       });

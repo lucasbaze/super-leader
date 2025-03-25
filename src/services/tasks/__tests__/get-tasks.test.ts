@@ -1,14 +1,14 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { addDays } from 'date-fns';
 
-import { TASK_TYPES } from '@/lib/tasks/task-types';
-import { createTestPerson, createTestTask, createTestUser } from '@/tests/test-builder';
+import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { createTestPerson, createTestUser } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
-import { buildTaskSuggestion } from '../build-task-suggestion';
+import { createTask } from '../create-task';
 import { ERRORS, getTasks } from '../get-tasks';
-import { taskContentSchema } from '../types';
+import { validateTaskSuggestion } from '../validate-task-suggestion';
 
 describe('getTasks service', () => {
   let supabase: SupabaseClient;
@@ -40,26 +40,29 @@ describe('getTasks service', () => {
           }
         });
 
-        const taskContent = {
-          action: 'Send birthday wishes',
-          context: 'Birthday coming up',
-          suggestion: 'Send a thoughtful message'
-        };
-
-        const taskBuild = buildTaskSuggestion({
+        const taskData = {
           userId: testUser.id,
           personId: testPerson.id,
-          type: TASK_TYPES.BIRTHDAY_REMINDER,
-          content: taskContent,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          context: {
+            context: 'Birthday coming up next week',
+            callToAction: 'Send a thoughtful birthday message'
+          },
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedAction: {
+            messageVariants: [
+              {
+                tone: 'friendly',
+                message: 'Happy birthday! Hope you have a fantastic day!'
+              }
+            ]
+          },
           endAt: addDays(new Date(), 1).toISOString()
-        });
+        };
 
-        expect(taskBuild.valid).toBe(true);
-        expect(taskBuild.error).toBeNull();
-
-        const testTask = await createTestTask({
+        const testTask = await createTask({
           db,
-          data: taskBuild.data!
+          task: taskData
         });
 
         const result = await getTasks({ db, userId: testUser.id });
@@ -67,18 +70,17 @@ describe('getTasks service', () => {
         expect(result.error).toBeNull();
         expect(result.data).toHaveLength(1);
         expect(result.data![0]).toMatchObject({
-          id: testTask.id,
-          type: TASK_TYPES.BIRTHDAY_REMINDER,
-          content: taskContent,
+          id: testTask.data!.id,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          context: taskData.context,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedAction: taskData.suggestedAction,
           person: {
             id: testPerson.id,
             first_name: 'test_John',
             last_name: 'test_Doe'
           }
         });
-
-        // Validate task content schema
-        expect(() => taskContentSchema.parse(result.data![0].content)).not.toThrow();
       });
     });
 
@@ -94,24 +96,30 @@ describe('getTasks service', () => {
           }
         });
 
-        const taskBuild = buildTaskSuggestion({
+        const taskData = {
           userId: testUser.id,
           personId: testPerson.id,
-          type: TASK_TYPES.PROFILE_UPDATE,
-          content: {
-            action: 'Update profile',
-            context: 'Missing information',
-            suggestion: 'Add more details'
-          }
-        });
-
-        expect(taskBuild.valid).toBe(true);
-        expect(taskBuild.error).toBeNull();
+          trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+          context: {
+            context: 'Need to gather more information',
+            callToAction: 'Ask about their interests'
+          },
+          suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+          suggestedAction: {
+            questionVariants: [
+              {
+                type: 'interests',
+                question: 'What are your hobbies?'
+              }
+            ]
+          },
+          endAt: addDays(new Date(), 1).toISOString()
+        };
 
         // Create active task
-        await createTestTask({
+        await createTask({
           db,
-          data: taskBuild.data!
+          task: taskData
         });
 
         // Mark task as completed
@@ -150,38 +158,78 @@ describe('getTasks service', () => {
           }
         });
 
-        const taskContent = {
-          action: 'Follow up',
-          context: 'Recent meeting',
-          suggestion: 'Schedule next meeting'
-        };
-
         // Create task for first user
-        const taskBuild1 = buildTaskSuggestion({
+        const taskData1 = {
           userId: testUser1.id,
           personId: testPerson1.id,
-          type: TASK_TYPES.SUGGESTED_REMINDER,
-          content: taskContent
-        });
+          trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+          context: {
+            context: 'Found an interesting article',
+            callToAction: 'Share the article about AI'
+          },
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+          suggestedAction: {
+            contentVariants: [
+              {
+                suggestedContent: {
+                  title: 'Latest AI Developments',
+                  description: 'An article about recent breakthroughs in AI',
+                  url: 'https://example.com/ai-article'
+                },
+                messageVariants: [
+                  {
+                    tone: 'professional',
+                    message: 'Thought you might find this interesting given your work in AI'
+                  }
+                ]
+              }
+            ]
+          },
+          endAt: addDays(new Date(), 1).toISOString()
+        };
 
-        expect(taskBuild1.valid).toBe(true);
-        await createTestTask({
+        const taskValidation1 = validateTaskSuggestion(taskData1);
+        expect(taskValidation1.valid).toBe(true);
+        await createTask({
           db,
-          data: taskBuild1.data!
+          task: taskData1
         });
 
         // Create task for second user
-        const taskBuild2 = buildTaskSuggestion({
+        const taskData2 = {
           userId: testUser2.id,
           personId: testPerson2.id,
-          type: TASK_TYPES.SUGGESTED_REMINDER,
-          content: taskContent
-        });
+          trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+          context: {
+            context: 'Found an interesting article',
+            callToAction: 'Share the article about AI'
+          },
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+          suggestedAction: {
+            contentVariants: [
+              {
+                suggestedContent: {
+                  title: 'Latest AI Developments',
+                  description: 'An article about recent breakthroughs in AI',
+                  url: 'https://example.com/ai-article'
+                },
+                messageVariants: [
+                  {
+                    tone: 'professional',
+                    message: 'Thought you might find this interesting given your work in AI'
+                  }
+                ]
+              }
+            ]
+          },
+          endAt: addDays(new Date(), 1).toISOString()
+        };
 
-        expect(taskBuild2.valid).toBe(true);
-        await createTestTask({
+        const taskValidation2 = validateTaskSuggestion(taskData2);
+        expect(taskValidation2.valid).toBe(true);
+        await createTask({
           db,
-          data: taskBuild2.data!
+          task: taskData2
         });
 
         const result = await getTasks({ db, userId: testUser1.id });

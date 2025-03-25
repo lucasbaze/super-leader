@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { z } from 'zod';
 
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
-import { addNoteActionSchema, GetTaskSuggestionResult } from '@/services/tasks/types';
 
 import { AddNoteTask } from './add-note-task';
 
@@ -39,8 +37,8 @@ export const Default: Story = {
         context: 'You recently had a lunch meeting with Michael',
         callToAction: 'Add a note recapping the meeting with any important details'
       },
-      suggested_action_type: SUGGESTED_ACTION_TYPES.ADD_NOTE,
-      suggested_action: {
+      suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+      suggestedAction: {
         questionVariants: [
           {
             type: 'Personal',

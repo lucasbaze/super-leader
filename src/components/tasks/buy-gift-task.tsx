@@ -14,14 +14,14 @@ const isBuyGiftAction = (action: any): action is z.infer<typeof buyGiftActionSch
 };
 
 export const BuyGiftTask = ({ task }: { task: GetTaskSuggestionResult }) => {
-  if (!isBuyGiftAction(task.suggested_action)) {
+  if (!isBuyGiftAction(task.suggestedAction)) {
     return null;
   }
 
   return (
     <BaseTaskCard
       task={task}
-      actionBody={<BuyGiftCardActionBody suggestedGifts={task.suggested_action.suggestedGifts} />}
+      actionBody={<BuyGiftCardActionBody suggestedGifts={task.suggestedAction.suggestedGifts} />}
     />
   );
 };

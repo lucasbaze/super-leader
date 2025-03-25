@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { dateHandler, getCurrentUtcTime } from '@/lib/dates/helpers';
+import { dateHandler } from '@/lib/dates/helpers';
 import { createTestPerson, createTestTaskSuggestion, createTestUser } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
@@ -24,7 +24,10 @@ describe('updateTaskStatus', () => {
           db,
           data: { user_id: user.id, first_name: 'John', last_name: 'Doe' }
         });
-        const task = await createTestTaskSuggestion(db, { userId: user.id, personId: person.id });
+        const task = await createTestTaskSuggestion(db, {
+          userId: user.id,
+          personId: person.id
+        });
 
         // Execute the function
         const result = await updateTaskStatus({

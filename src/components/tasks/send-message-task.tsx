@@ -15,7 +15,7 @@ const isSendMessageAction = (action: any): action is SendMessageAction => {
 };
 
 export const SendMessageTask = ({ task }: { task: GetTaskSuggestionResult }) => {
-  if (!isSendMessageAction(task.suggested_action)) {
+  if (!isSendMessageAction(task.suggestedAction)) {
     return null;
   }
 
@@ -23,7 +23,7 @@ export const SendMessageTask = ({ task }: { task: GetTaskSuggestionResult }) => 
     <BaseTaskCard
       task={task}
       actionBody={
-        <SendMessageCardActionBody messageVariants={task.suggested_action.messageVariants} />
+        <SendMessageCardActionBody messageVariants={task.suggestedAction.messageVariants} />
       }
     />
   );

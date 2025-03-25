@@ -1,7 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { dateHandler } from '@/lib/dates/helpers';
-import { TASK_TYPES } from '@/lib/tasks/task-types';
+import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { createTestPerson, createTestUser } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
@@ -29,11 +29,19 @@ describe('createTask', () => {
         const taskData = {
           userId: user.id,
           personId: person.id,
-          type: TASK_TYPES.REQUESTED_REMINDER,
-          content: {
-            action: 'Follow up call',
-            context: 'Discuss project progress',
-            suggestion: 'Schedule a call to review current project status'
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          context: {
+            context: 'Birthday coming up next week',
+            callToAction: 'Send a thoughtful birthday message'
+          },
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedAction: {
+            messageVariants: [
+              {
+                tone: 'friendly',
+                message: 'Happy birthday! Hope you have a fantastic day!'
+              }
+            ]
           },
           endAt: dateHandler().add(1, 'day').toISOString() // Tomorrow
         };
@@ -59,8 +67,10 @@ describe('createTask', () => {
         expect(tasksResult.data).toHaveLength(1);
 
         const createdTask = tasksResult.data![0];
-        expect(createdTask.type).toBe(TASK_TYPES.REQUESTED_REMINDER);
-        expect(createdTask.content).toEqual(taskData.content);
+        expect(createdTask.trigger).toBe(TASK_TRIGGERS.BIRTHDAY_REMINDER);
+        expect(createdTask.context).toEqual(taskData.context);
+        expect(createdTask.suggestedActionType).toBe(SUGGESTED_ACTION_TYPES.SEND_MESSAGE);
+        expect(createdTask.suggestedAction).toEqual(taskData.suggestedAction);
         expect(dateHandler(createdTask.end_at).isSame(dateHandler(taskData.endAt))).toBe(true);
         expect(createdTask.person.id).toBe(person.id);
         expect(createdTask.person.first_name).toBe('test_John');
@@ -68,7 +78,7 @@ describe('createTask', () => {
       });
     });
 
-    it('should create tasks with different types', async () => {
+    it('should create tasks with different action types', async () => {
       await withTestTransaction(supabase, async (db) => {
         // Setup test data
         const user = await createTestUser({ db });
@@ -77,18 +87,94 @@ describe('createTask', () => {
           data: { user_id: user.id, first_name: 'John', last_name: 'Doe' }
         });
 
-        // Test with different task types
-        for (const type of Object.values(TASK_TYPES)) {
+        // Test different action types
+        const actionTypes = [
+          {
+            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+            context: {
+              context: 'Birthday coming up',
+              callToAction: 'Send birthday wishes'
+            },
+            actionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+            action: {
+              messageVariants: [
+                {
+                  tone: 'friendly',
+                  message: 'Happy birthday!'
+                }
+              ]
+            }
+          },
+          {
+            trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+            context: {
+              context: 'Found relevant article',
+              callToAction: 'Share the article'
+            },
+            actionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+            action: {
+              contentVariants: [
+                {
+                  suggestedContent: {
+                    title: 'Article Title',
+                    description: 'Article Description',
+                    url: 'https://example.com/article'
+                  },
+                  messageVariants: [
+                    {
+                      tone: 'professional',
+                      message: 'Thought you might find this interesting'
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+            context: {
+              context: 'Need to gather more information about their interests',
+              callToAction: 'Ask about their favorite hobbies'
+            },
+            actionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+            action: {
+              questionVariants: [
+                {
+                  type: 'personal',
+                  question: 'What are your favorite hobbies?'
+                }
+              ]
+            }
+          },
+          {
+            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+            context: {
+              context: 'Birthday gift needed',
+              callToAction: 'Buy a birthday gift'
+            },
+            actionType: SUGGESTED_ACTION_TYPES.BUY_GIFT,
+            action: {
+              suggestedGifts: [
+                {
+                  title: 'Gift Item',
+                  reason: 'They would love this',
+                  url: 'https://example.com/gift',
+                  type: 'nice'
+                }
+              ]
+            }
+          }
+        ];
+
+        for (const actionConfig of actionTypes) {
           const taskData = {
             userId: user.id,
             personId: person.id,
-            type,
-            content: {
-              action: `Test ${type}`,
-              context: `Context for ${type}`,
-              suggestion: `Suggestion for ${type}`
-            },
-            endAt: dateHandler().add(1, 'day').toISOString() // Tomorrow
+            trigger: actionConfig.trigger,
+            context: actionConfig.context,
+            suggestedActionType: actionConfig.actionType,
+            suggestedAction: actionConfig.action,
+            endAt: dateHandler().add(1, 'day').toISOString()
           };
 
           // Execute the function
@@ -97,24 +183,29 @@ describe('createTask', () => {
             task: taskData
           });
 
+          console.log('result', JSON.stringify(result, null, 2));
           // Verify the result
           expect(result.error).toBeNull();
           expect(result.data).not.toBeNull();
           expect(result.data?.success).toBe(true);
         }
 
-        // Verify all task types were created
+        // Verify all tasks were created
         const { data: tasks } = await db
           .from('task_suggestion')
           .select('*')
           .eq('user_id', user.id)
           .eq('person_id', person.id);
 
-        expect(tasks).toHaveLength(Object.values(TASK_TYPES).length);
+        expect(tasks).toHaveLength(actionTypes.length);
 
-        // Verify each task type exists
-        for (const type of Object.values(TASK_TYPES)) {
-          const typeExists = tasks!.some((task) => task.type === type);
+        // Verify each action type exists
+        for (const actionConfig of actionTypes) {
+          const typeExists = tasks!.some(
+            (task) =>
+              task.trigger === actionConfig.trigger &&
+              task.suggested_action_type === actionConfig.actionType
+          );
           expect(typeExists).toBe(true);
         }
       });
@@ -128,12 +219,14 @@ describe('createTask', () => {
         const taskData = {
           userId: 'user-id',
           personId: 'person-id',
-          type: TASK_TYPES.SUGGESTED_REMINDER,
-          content: {
-            // Missing required fields
-            action: '',
-            context: '',
-            suggestion: ''
+          trigger: 'invalid-trigger',
+          context: {
+            // Invalid context structure
+            invalid: 'field'
+          },
+          suggestedActionType: 'invalid-action',
+          suggestedAction: {
+            invalid: 'action'
           },
           endAt: 'invalid-date'
         };
@@ -141,7 +234,7 @@ describe('createTask', () => {
         // Execute the function
         const result = await createTask({
           db,
-          task: taskData
+          task: taskData as any
         });
 
         // Verify the error
@@ -159,13 +252,21 @@ describe('createTask', () => {
         const taskData = {
           userId: user.id,
           personId: nonExistentPersonId,
-          type: TASK_TYPES.SUGGESTED_REMINDER,
-          content: {
-            action: 'Follow up call',
-            context: 'Discuss project progress',
-            suggestion: 'Schedule a call to review current project status'
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          context: {
+            context: 'Birthday coming up',
+            callToAction: 'Send birthday wishes'
           },
-          endAt: dateHandler().add(1, 'day').toISOString() // Tomorrow
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedAction: {
+            messageVariants: [
+              {
+                tone: 'friendly',
+                message: 'Happy birthday!'
+              }
+            ]
+          },
+          endAt: dateHandler().add(1, 'day').toISOString()
         };
 
         // Execute the function
@@ -193,13 +294,21 @@ describe('createTask', () => {
         const taskData = {
           userId: user2.id, // Different user
           personId: person.id,
-          type: TASK_TYPES.SUGGESTED_REMINDER,
-          content: {
-            action: 'Follow up call',
-            context: 'Discuss project progress',
-            suggestion: 'Schedule a call to review current project status'
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          context: {
+            context: 'Birthday coming up',
+            callToAction: 'Send birthday wishes'
           },
-          endAt: dateHandler().add(1, 'day').toISOString() // Tomorrow
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedAction: {
+            messageVariants: [
+              {
+                tone: 'friendly',
+                message: 'Happy birthday!'
+              }
+            ]
+          },
+          endAt: dateHandler().add(1, 'day').toISOString()
         };
 
         // Execute the function

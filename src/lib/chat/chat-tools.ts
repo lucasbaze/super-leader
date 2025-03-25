@@ -5,7 +5,7 @@ import {
   createGroupTool,
   createInteractionTool,
   createPersonTool,
-  createTaskTool,
+  // createTaskTool,
   createUserContextTool,
   findPersonTool,
   getContentSuggestionsTool,
@@ -21,7 +21,7 @@ ChatTools.register(findPersonTool);
 ChatTools.register(createInteractionTool);
 ChatTools.register(createGroupTool);
 ChatTools.register(createPersonTool);
-ChatTools.register(createTaskTool);
+// ChatTools.register(createTaskTool);
 ChatTools.register(addPeopleToGroupTool);
 ChatTools.register(removePeopleFromGroupTool);
 ChatTools.register(getGroupsTool);

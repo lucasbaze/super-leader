@@ -57,7 +57,6 @@ export function buildTaskSuggestion({
   content: TaskContent;
   endAt?: string;
 }): TBuildTaskSuggestionResult {
-  console.log('Building task suggestion:', { userId, personId, type, content, endAt });
   // Validate required fields
   if (!userId || !personId || !type || !content) {
     return {

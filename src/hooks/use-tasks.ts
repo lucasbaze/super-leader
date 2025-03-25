@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
@@ -19,5 +19,33 @@ export function useTasks(personId?: string) {
     staleTime: 1000 * 60 * 5, // Serve cached data for 5 minutes
     refetchOnMount: false, // Avoid refetch on remount
     refetchOnWindowFocus: false // No refetch on tab focus
+  });
+}
+
+export function useGenerateTasks() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      // mutationFn: async (personId: string) => {
+      const response = await fetch('/api/tasks/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+        // body: JSON.stringify({ personId })
+      });
+
+      const result = await response.json();
+      if (result.error) {
+        throw result.error;
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      // Invalidate tasks queries to refresh the data
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+    onError: (error: any) => {
+      errorToast.show(error);
+    }
   });
 }

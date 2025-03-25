@@ -529,14 +529,16 @@ export type Database = {
           bad_suggestion: boolean | null
           bad_suggestion_reason: string | null
           completed_at: string | null
-          content: Json
+          context: Json
           created_at: string
           end_at: string | null
           id: string
-          person_id: string
+          person_id: string | null
           skipped_at: string | null
           snoozed_at: string | null
-          type: string
+          suggested_action: Json
+          suggested_action_type: string
+          trigger: string
           updated_at: string
           user_id: string
         }
@@ -544,14 +546,16 @@ export type Database = {
           bad_suggestion?: boolean | null
           bad_suggestion_reason?: string | null
           completed_at?: string | null
-          content: Json
+          context: Json
           created_at?: string
           end_at?: string | null
           id?: string
-          person_id: string
+          person_id?: string | null
           skipped_at?: string | null
           snoozed_at?: string | null
-          type: string
+          suggested_action: Json
+          suggested_action_type: string
+          trigger: string
           updated_at?: string
           user_id: string
         }
@@ -559,14 +563,16 @@ export type Database = {
           bad_suggestion?: boolean | null
           bad_suggestion_reason?: string | null
           completed_at?: string | null
-          content?: Json
+          context?: Json
           created_at?: string
           end_at?: string | null
           id?: string
-          person_id?: string
+          person_id?: string | null
           skipped_at?: string | null
           snoozed_at?: string | null
-          type?: string
+          suggested_action?: Json
+          suggested_action_type?: string
+          trigger?: string
           updated_at?: string
           user_id?: string
         }
@@ -704,6 +710,19 @@ export type Database = {
         Returns: {
           avg_completeness: number
           count: number
+        }[]
+      }
+      get_people_with_upcoming_birthdays: {
+        Args: {
+          p_user_id: string
+          p_start_date: string
+          p_end_date: string
+        }
+        Returns: {
+          id: string
+          first_name: string
+          last_name: string
+          birthday: string
         }[]
       }
       rollback_test_transaction: {

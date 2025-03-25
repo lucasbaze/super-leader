@@ -1,5 +1,6 @@
 // Re-export all icons from lucide-react
 export {
+  AlarmClock,
   BookOpen,
   Brain,
   Bot,
@@ -10,8 +11,14 @@ export {
   Copy,
   EyeOff,
   Tag,
+  ListChecks,
   Link,
   Check,
+  ChevronRight,
+  Clipboard,
+  Clock,
+  Info,
+  User,
   ChevronsUpDown,
   CircleUser,
   SquareX,

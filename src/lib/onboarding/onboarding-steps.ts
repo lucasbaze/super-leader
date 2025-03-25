@@ -1,5 +1,7 @@
+import { CONTEXT_GATHERING_TYPES } from '@/lib/people/context-gathering';
+
 export const onboardingStepsQuestionsAndCriteria = {
-  personal: {
+  [CONTEXT_GATHERING_TYPES.PERSONAL]: {
     generalOrder: 1,
     label: 'Personal',
     conversationalQuestions: [
@@ -12,7 +14,7 @@ export const onboardingStepsQuestionsAndCriteria = {
     ],
     sufficientCriteria: `User clearly states their city/state and provides basic family information (e.g., "I live in Seattle, WA, with my partner and two kids.")`
   },
-  professional: {
+  [CONTEXT_GATHERING_TYPES.PROFESSIONAL]: {
     generalOrder: 2,
     label: 'Professional',
     conversationalQuestions: [
@@ -26,7 +28,7 @@ export const onboardingStepsQuestionsAndCriteria = {
     ],
     sufficientCriteria: `User identifies their current role and briefly explains their path or motivation (e.g., "I'm a real estate broker, and I started because I've always loved connecting people with homes.", "I'm a software engineer, and I started because I'm passionate about building products that help people connect with each other.", "I'm a Venture Capitalist, and I started because I'm passionate about space exploration.", "I'm an entrepreneur, and I started because I'm passionate about solving cervical cancer.")`
   },
-  goals: {
+  [CONTEXT_GATHERING_TYPES.GOALS]: {
     generalOrder: 4,
     label: 'Goals',
     conversationalQuestions: [
@@ -40,7 +42,7 @@ export const onboardingStepsQuestionsAndCriteria = {
     ],
     sufficientCriteria: `User identifies their career goals and skills goals (e.g., "I want to be a real estate broker, and I want to develop my skills in negotiation and communication.")`
   },
-  valuesBeliefs: {
+  [CONTEXT_GATHERING_TYPES.VALUES]: {
     generalOrder: 3,
     label: 'Values',
     conversationalQuestions: [
@@ -55,7 +57,7 @@ export const onboardingStepsQuestionsAndCriteria = {
     ],
     sufficientCriteria: `User explicitly mentions at least one core value or role model that influences their life or decisions (e.g., "Integrity is central to me, and I admire leaders like Oprah Winfrey.")`
   },
-  strengthsSuccesses: {
+  [CONTEXT_GATHERING_TYPES.STRENGTHS]: {
     generalOrder: 5,
     label: 'Strengths',
     conversationalQuestions: ['What skills (both hard and soft) do you feel like you excel at?'],
@@ -66,7 +68,7 @@ export const onboardingStepsQuestionsAndCriteria = {
     ],
     sufficientCriteria: `User highlights at least one clear strength or achievement (e.g., "I'm really good at organizing events and I'm proud of the community workshops I've led.", "I'm really good at fundraising and I'm proud of the non-profit I've started.", "I'm really good at building excel models and 3D models, and I recently built a 3D printed lamp for a friend's birthday.")`
   },
-  challenges: {
+  [CONTEXT_GATHERING_TYPES.CHALLENGES]: {
     generalOrder: 6,
     label: 'Challenges',
     conversationalQuestions: ['What challenges do you face in your life or work?'],
@@ -76,7 +78,7 @@ export const onboardingStepsQuestionsAndCriteria = {
     ],
     sufficientCriteria: `User identifies at least one challenge they're facing (e.g., "I'm struggling to find time to network.", "I'm trying to figure out how to get more clients.", "I'm trying to fundraise for my non-profit.", "I'm trying to meet folks in a new city, and I do not know anyone in this city." )`
   },
-  hobbiesEcosystems: {
+  [CONTEXT_GATHERING_TYPES.ECOSYSTEMS]: {
     generalOrder: 7,
     label: 'Ecosystems',
     conversationalQuestions: [

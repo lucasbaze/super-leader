@@ -1,3 +1,12 @@
+Detour: 
+  ☐ Update the summary output to be a little cleaner / easier to read
+  ☐ Trigger update-summary generation when a new note or interaction is created
+    ☐ Determine if the note warrants an update to the summary
+    ☐ Generate the update-summary
+    ☐ Ping the client and notify the user that the summary has been updated somehow?
+    ☐ Build a small event-bus implementation to "trigger" the update-summary generation in a naive way for the client to listen to and get notified when it's complete.
+  ☐ 
+
 Now: 
   ✔ Create the send-message suggestion task @done(25-03-25 12:53)
   ☐ Create the get-content-suggestions prompt in a way that it can be used for task generation

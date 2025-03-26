@@ -13,7 +13,6 @@ import { generateObject } from '@/vendors/ai';
 import { SinglePersonSummarySchema } from './schemas';
 
 export type SinglePersonSummary = z.infer<typeof SinglePersonSummarySchema>;
-
 // Define errors
 export const ERRORS = {
   GENERATION: {
@@ -112,14 +111,15 @@ const buildSystemPrompt = () => ({
   - 6-8 points: Good understanding with some specifics
   - 9-10 points: Comprehensive, detailed knowledge
 
-  The overall score is the sum of all dimension scores, creating a 0-100 scale.
+  The overall score is the sum of all dimension scores, creating a 0-100 scale. It doesn't need to be 100% accurate, but should be a fair estimate.
 
   ## SECTION ORGANIZATION
-  Organize information into these section groups (use only what has sufficient information. If there is not enough information, do not include the section. Missing information can be used to suggest additional questions for further relationship building):
+  Organize & Summarize the information into these high level section groups (use only what has sufficient information. If there is not enough information, do not include the section. Missing information can be used to suggest additional questions for further relationship building):
 
   1. PERSONAL INFORMATION GROUP
     - Sections might include: "Background", "Family", "Personal Interests"
     - Suggestion: Focus on personal connection opportunities
+    - You can disregard information like birthday, address, email, phone, etc. is already easily accessible to the user.
 
   2. PROFESSIONAL INFORMATION GROUP
     - Sections might include: "Career Journey", "Expertise", "Professional Achievements"
@@ -158,6 +158,14 @@ const buildSystemPrompt = () => ({
   - Be natural to ask in conversation
   - Yield the most valuable information
 
+  ## INSIGHT SUGGESTIONS
+  Generate 3-5 highly specific insights or recommendations that would be valuable to the user. For example: 
+  - Possible gift or experience ideas that really use your creativity from stereotypes or assocation
+  - A "way to communicate" with this person.
+  - Other adjacent ideas that would be valuable to the user based on the information available.
+  - A "perspective" or "way to understand" this person such as a word to the wise. 
+  - A "try this next time" or "something to consider" to improve the relationship.
+  - Anything that could improve the relationship.
 
   ## FORMAT REQUIREMENTS
   1. Keep all content concise and specific
@@ -167,8 +175,10 @@ const buildSystemPrompt = () => ({
   5. Structure response exactly according to the required schema
   6. Do not include contact, address, or email information in the response as the user will already have this information readily available.
 
-
-  Be extremely focused and return only the exact schema requested. 
+  ## FINAL NOTES
+  - If there is an ai summary already available, you should use it to inform the generation of the new summary.
+  
+  Be focused and return only the exact schema requested. 
   `
 });
 
@@ -209,7 +219,7 @@ const buildUserPrompt = ({
     - Bio: ${person.bio || 'None'}
     - Groups: ${groups.map((g) => g.name).join(', ')}
 
-    3-10. OTHER DIMENSIONS
+    3-10. OTHER DIMENSIONS ( THE CURRENT AI SUMMARY )
     ${person.ai_summary || 'No additional information available'}
 
     Recent Interactions:
@@ -225,118 +235,4 @@ const buildUserPrompt = ({
     Generate a comprehensive summary using the Power Connector framework to evaluate the completeness of this relationship.
     `
   };
-
-  // return {
-  //   prompt: stripIndents`
-  //     Person Information:
-  //     Name: ${person.first_name} ${person.last_name || ''}
-  //     Groups: ${groups.map((g) => g.name).join(', ')}
-  //     Birthday: ${person.birthday || 'Unknown'}
-  //     Previous Summary:
-
-  //     ${person.ai_summary || 'None available'}
-
-  //     Recent Interactions (Last 20):
-  //     ${interactions
-  //       .slice(0, 20)
-  //       .map((i) => `- ${i.created_at}: ${i.type} - ${i.note}`)
-  //       .join('\n')}
-
-  //     Contact Information:
-  //     Email: ${primaryEmail ? primaryEmail.value : 'Unknown'}
-  //     Phone: ${primaryPhone ? primaryPhone.value : 'Unknown'}
-  //     Address: ${
-  //       primaryAddress
-  //         ? `${primaryAddress.street}, ${primaryAddress.city}, ${primaryAddress.state} ${primaryAddress.postal_code}`
-  //         : 'Unknown'
-  //     }
-
-  //     Additional Contact Methods:
-  //     ${contactMethods
-  //       .filter((c) => !c.is_primary)
-  //       .map((c) => `- ${c.type}: ${c.value}${c.label ? ` (${c.label})` : ''}`)
-  //       .join('\n')}
-
-  //     Additional Addresses:
-  //     ${addresses
-  //       .filter((a) => !a.is_primary)
-  //       .map((a) => `- ${a.label || 'Other'}: ${a.street}, ${a.city}, ${a.state} ${a.postal_code}`)
-  //       .join('\n')}
-
-  //     Additional Context:
-  //     Created: ${person.created_at}
-  //     Updated: ${person.updated_at}
-  //     Bio: ${person.bio || 'None'}
-  //   `
-  // };
 };
-
-/* Full Prompt
-
-I need to analyze the completeness of my relationship with ${person.first_name} ${person.last_name}. 
-
-    PERSON CONTEXT:
-    - Power Circle: {{powerCircle}} (Top 5, Key 50, or Vital 100)
-    - Relationship Duration: {{relationshipDuration}} (New, Established, Long-term)
-    - Interaction Frequency: {{interactionFrequency}} (Weekly, Monthly, Quarterly+)
-
-    AVAILABLE INFORMATION:
-
-    Basic Information:
-    - Name: ${person.first_name} ${person.last_name}
-    - Birthday: ${person.birthday || 'Unknown'}
-    - Address: ${primaryAddress ? primaryAddressString : 'Unknown'}
-    - Bio: ${person.bio || 'None'}
-    - Current Role: ${person.company_role || 'Unknown'}
-    - Company: ${person.company || 'Unknown'}
-    - Email: ${primaryEmail ? primaryEmail.value : 'Unknown'}
-    - Phone: {{primaryPhone ? primaryPhone.value : 'Unknown'}}
-    - Groups: {{groups.map(g => g.name).join(', ')}}
-
-    Previous AI Summary:
-    {{person.ai_summary || 'No additional information available'}}
-
-    Recent Interactions:
-    ${interactions.slice(0, 10).map(i => `- ${new Date(i.created_at).toLocaleDateString()}: ${i.type} - ${i.note}`).join('\n')}
-
-    Generate a comprehensive summary using the Power Connector framework to evaluate the completeness of this relationship.
-*/
-
-/* Full Prompt alt 2
-
-I need to analyze the completeness of my relationship with {{person.first_name}} {{person.last_name}}. 
-
-PERSON CONTEXT:
-- Power Circle: {{powerCircle}} (Top 5, Key 50, or Vital 100)
-- Relationship Duration: {{relationshipDuration}} (New, Established, Long-term)
-- Interaction Frequency: {{interactionFrequency}} (Weekly, Monthly, Quarterly+)
-
-AVAILABLE INFORMATION:
-
-1. PERSONAL FOUNDATION
-Name: {{person.first_name}} {{person.last_name}}
-Birthday: {{person.birthday || 'Unknown'}}
-Address: {{primaryAddress ? primaryAddressString : 'Unknown'}}
-Bio: {{person.bio || 'None'}}
-
-2. PROFESSIONAL PROFILE
-Current Role: {{person.company_role || 'Unknown'}}
-Company: {{person.company || 'Unknown'}}
-
-3-10. OTHER DIMENSIONS
-{{person.ai_summary || 'No additional information available'}}
-
-RECENT INTERACTIONS:
-{{interactions.slice(0, 10).map(i => `- ${new Date(i.created_at).toLocaleDateString()}: ${i.type} - ${i.note}`).join('\n')}}
-
-CONTACT INFORMATION:
-Email: {{primaryEmail ? primaryEmail.value : 'Unknown'}}
-Phone: {{primaryPhone ? primaryPhone.value : 'Unknown'}}
-
-GROUPS:
-{{groups.map(g => g.name).join(', ')}}
-
-Generate a completeness analysis with specific dimension scores and targeted follow-up questions.
-
-
-*/

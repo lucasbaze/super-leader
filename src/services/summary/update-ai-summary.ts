@@ -7,7 +7,7 @@ import { buildAISummary } from './build-ai-summary';
 import { SinglePersonSummary } from './generate-summary-content';
 
 // Service params interface
-export interface TUpdateAISummaryParams {
+export interface UpdateAISummaryParams {
   db: DBClient;
   personId: string;
 }
@@ -33,7 +33,7 @@ export const ERRORS = {
 export async function updateAISummary({
   db,
   personId
-}: TUpdateAISummaryParams): Promise<ServiceResponse<SinglePersonSummary>> {
+}: UpdateAISummaryParams): Promise<ServiceResponse<SinglePersonSummary>> {
   try {
     console.log('Person::UpdateAISummary::Starting', { personId });
 

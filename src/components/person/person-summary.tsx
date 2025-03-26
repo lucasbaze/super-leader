@@ -2,33 +2,32 @@
 
 import { SinglePersonSummary } from '@/services/summary/generate-summary-content';
 
-import { Highlights } from './highlights';
 import { ProfileCompleteness } from './profile-completeness';
 import { SectionGroup } from './section-group';
 import { Suggestion } from './suggestion';
 
-type TPersonSummaryProps = {
+type PersonSummaryProps = {
   data: SinglePersonSummary;
 };
 
-export function PersonSummary({ data }: TPersonSummaryProps) {
+export function PersonSummary({ data }: PersonSummaryProps) {
   return (
-    <div className='flex flex-col space-y-8 p-0'>
+    <div className='flex flex-col space-y-8 p-0 pb-8'>
       <div className='flex flex-col space-y-4'>
-        <ProfileCompleteness
-          value={data.completeness}
-          questions={[
-            "What is Darian's current job or career focus?",
-            'What specific skills or expertise does Darian have?',
-            'Has Darian achieved any notable professional accomplishments?',
-            "What are Darian's long-term goals or aspirations?"
-          ]}
-        />
-        {/* <Highlights text={data.highlights} /> */}
+        <ProfileCompleteness value={data.completeness} questions={data.followUpQuestions} />
       </div>
 
-      <div className='px-6'>
-        <h3 className='font-semibold'>Summary</h3>
+      <div className='space-y-3 px-6'>
+        <h3 className='-mb-2 font-semibold'>Insights</h3>
+        <p className='mb-4 text-gray-700'>Generated insights from the summary.</p>
+
+        <div className='relative -mt-2'>
+          <Suggestion suggestions={data.insightRecommendations} />
+        </div>
+      </div>
+
+      <div className='space-y-3 px-6'>
+        <h3 className='-mb-2 font-semibold'>Summary</h3>
         <p className='mb-4 text-gray-700'>
           A summary from all your notes, intereactions, and activity.
         </p>
@@ -36,7 +35,6 @@ export function PersonSummary({ data }: TPersonSummaryProps) {
         {data.groupedSections.map((group, index) => (
           <div key={index} className='flex flex-col'>
             <SectionGroup sections={group.sections} />
-            <Suggestion {...group.suggestion} />
           </div>
         ))}
       </div>

@@ -6,29 +6,35 @@ const SectionSchema = z.object({
   content: z.string().describe('The summarized content of the section in markdown format')
 });
 
-const SuggestionSchema = z.object({
-  content: z
-    .string()
-    .describe('The content of the suggestion for the user about the person in markdown format'),
-  reason: z.string().describe('The reason for the suggestion in markdown format')
+const SummarySectionSchema = z.object({
+  sections: z
+    .array(SectionSchema)
+    .describe(
+      'A group of sections that are generally related to each other such as "Personal", "Professional", "Goals", etc... This is not explicitly labeled, it is inferred from the content of the sections.'
+    )
 });
 
-const GroupedSectionSchema = z.object({
-  sections: z.array(SectionSchema),
-  suggestion: SuggestionSchema
+const InsightRecommendationSchema = z.object({
+  title: z.string().describe('The brief title of the insight or recommendation'),
+  icon: z.string().describe('An icon to match the title'),
+  insightRecommendation: z
+    .string()
+    .describe(
+      'A single insight or recommendation about the person with context embedded in the response'
+    )
 });
 
 const SinglePersonSummarySchema = z.object({
   completeness: z
     .number()
     .describe('A score between 0 and 100 indicating the completeness of the summary'),
-  highlights: z
-    .string()
-    .describe('The personalized 2 - 3 brief of most important facts about the person.'),
-  groupedSections: z.array(GroupedSectionSchema)
+  groupedSections: z.array(SummarySectionSchema),
+  insightRecommendations: z.array(InsightRecommendationSchema),
+  followUpQuestions: z
+    .array(z.string())
+    .describe(
+      'A list of follow up questions to ask the user about the person to improve the summary'
+    )
 });
-
-// Example usage:
-// const parsedData = SinglePersonSummarySchema.parse(yourJsonData);
 
 export { SinglePersonSummarySchema };

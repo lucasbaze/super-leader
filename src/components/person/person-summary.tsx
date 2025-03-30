@@ -29,7 +29,7 @@ export function PersonSummary({ data }: PersonSummaryProps) {
       <div className='space-y-3 px-6'>
         <h3 className='-mb-2 font-semibold'>Summary</h3>
         <p className='mb-4 text-gray-700'>
-          A summary from all your notes, intereactions, and activity.
+          A summary from all your notes, interactions, and activity.
         </p>
 
         {data.groupedSections.map((group, index) => (

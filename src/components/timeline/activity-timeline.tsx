@@ -29,7 +29,7 @@ export function ActivityTimeline({ interactions }: ActivityTimelineProps) {
               </span>
             </div>
             {interaction.note && (
-              <p className='mt-1 rounded-md bg-muted/30 p-2 text-muted-foreground'>
+              <p className='bg-muted/30 mt-1 rounded-md p-2 text-muted-foreground'>
                 {interaction.note}
               </p>
             )}

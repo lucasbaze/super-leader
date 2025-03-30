@@ -1,3 +1,7 @@
+### Mar 28th
+
+- [ ] Need to be able to delete a note that's not relevant. This will need to trigger an update to the summary to remove any contents that were mentioned in the note.
+
 ### Mar 22nd
 
 - [x] ~~_Fix the issue with the create person tool._~~ [2025-03-22]

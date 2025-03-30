@@ -9,4 +9,5 @@ export type EventNames =
   | 'Group.Deleted'
   | 'GroupMember.Added'
   | 'GroupMember.Removed'
-  | 'GroupMember.Updated';
+  | 'GroupMember.Updated'
+  | 'Person.Summary.Updated';

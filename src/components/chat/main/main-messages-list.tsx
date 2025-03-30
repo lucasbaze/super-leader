@@ -37,7 +37,7 @@ export const MainMessagesList = forwardRef<HTMLDivElement, ChatMessagesProps>(
     },
     ref
   ) => {
-    console.log('messages', messages);
+    // console.log('messages', messages);
     return (
       <div ref={ref} className='absolute inset-0 overflow-y-auto p-4' onScroll={props.onScroll}>
         <div className='flex flex-col gap-2'>

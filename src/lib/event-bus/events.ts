@@ -7,11 +7,24 @@ export type InteractionCreatedEvent = BuildEvent<
   'Interaction.Created',
   { personId: string; timestamp: string }
 >;
-type CreateInteractionCreatedEvent = Pick<InteractionCreatedEvent['data'], 'personId'>;
+type CreateInteractionCreatedEvent = Pick<InteractionCreatedEvent['payload'], 'personId'>;
 export const createInteractionCreatedEvent = ({
   personId
 }: CreateInteractionCreatedEvent): EmitData<InteractionCreatedEvent> => ({
   eventName: 'Interaction.Created',
-  data: { personId, timestamp: getTimestamp() },
+  payload: { personId, timestamp: getTimestamp() },
+  options: {}
+});
+
+export type PersonSummaryUpdatedEvent = BuildEvent<
+  'Person.Summary.Updated',
+  { personId: string; timestamp: string }
+>;
+type CreatePersonSummaryUpdatedEvent = Pick<PersonSummaryUpdatedEvent['payload'], 'personId'>;
+export const createPersonSummaryUpdatedEvent = ({
+  personId
+}: CreatePersonSummaryUpdatedEvent): EmitData<PersonSummaryUpdatedEvent> => ({
+  eventName: 'Person.Summary.Updated',
+  payload: { personId, timestamp: getTimestamp() },
   options: {}
 });

@@ -17,8 +17,16 @@ export default function PersonActivityPage() {
     return <div className='text-destructive'>Failed to load activity</div>;
   }
 
+  if (!interactions || interactions.length === 0) {
+    return (
+      <div className='p-4 text-sm text-muted-foreground'>
+        No activity recorded yet. Add some notes, interactions, or activity to get started.
+      </div>
+    );
+  }
+
   return (
-    <div className='space-y-4'>
+    <div className='space-y-4 px-6'>
       <h2 className='text-xl font-semibold'>Recent Activity</h2>
       <ActivityTimeline interactions={interactions || []} />
     </div>

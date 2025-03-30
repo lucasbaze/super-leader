@@ -1,6 +1,8 @@
 import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
+import { clientEventBus } from '@/lib/event-bus/client-event-bus';
+import { createInteractionCreatedEvent } from '@/lib/event-bus/events';
 import {
   createInteraction,
   CreateInteractionServiceResult
@@ -73,10 +75,12 @@ export const createInteractionTool: ChatTool<
       return handleToolError(error, 'create interaction');
     }
   },
-  onSuccessEach: true,
+  onSuccessEach: false,
   onSuccess: ({ queryClient, args }) => {
     console.log('Invalidating queries for:', args);
     queryClient.invalidateQueries({ queryKey: ['person-activity', args.person_id] });
     queryClient.invalidateQueries({ queryKey: ['person', args.person_id] });
+
+    clientEventBus.emit(createInteractionCreatedEvent({ personId: args.person_id }));
   }
 };

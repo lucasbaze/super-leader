@@ -1,4 +1,6 @@
 import { createError, errorLogger } from '@/lib/errors';
+import { createInteractionCreatedEvent } from '@/lib/event-bus/events';
+import { handleEvent } from '@/trigger/handle-event';
 import { Database, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -70,7 +72,6 @@ export async function getPersonActivity({
   }
 }
 
-// TODO: Remove these TInteractions
 export type CreateInteractionServiceResult = ServiceResponse<TInteraction>;
 
 export async function createInteraction({
@@ -94,10 +95,14 @@ export async function createInteraction({
         type: data.type,
         note: data.note
       })
-      .select('*')
+      .select()
       .single();
 
     if (error) throw error;
+
+    // Emit the event using Trigger.dev
+    await handleEvent.trigger(createInteractionCreatedEvent({ personId: interaction.person_id }));
+    console.log('Interaction created:', interaction);
 
     return { data: interaction, error: null };
   } catch (error) {

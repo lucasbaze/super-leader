@@ -5,7 +5,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Toaster } from '@/components/ui/toast';
-import { EventBusSubscribers } from '@/lib/event-bus/subscribers';
 import { cn } from '@/lib/utils';
 import { QueryProvider } from '@/providers/query-provider';
 
@@ -28,7 +27,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <QueryProvider>
             {children}
             <ReactQueryDevtools initialIsOpen={true} />
-            <EventBusSubscribers />
           </QueryProvider>
           <Toaster />
         </ThemeProvider>

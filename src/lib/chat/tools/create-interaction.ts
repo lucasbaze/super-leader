@@ -1,7 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
-import { clientEventBus } from '@/lib/event-bus/client-event-bus';
 import { createInteractionCreatedEvent } from '@/lib/event-bus/events';
 import {
   createInteraction,
@@ -80,7 +79,5 @@ export const createInteractionTool: ChatTool<
     console.log('Invalidating queries for:', args);
     queryClient.invalidateQueries({ queryKey: ['person-activity', args.person_id] });
     queryClient.invalidateQueries({ queryKey: ['person', args.person_id] });
-
-    clientEventBus.emit(createInteractionCreatedEvent({ personId: args.person_id }));
   }
 };

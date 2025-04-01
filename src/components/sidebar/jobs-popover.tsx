@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeRunsWithTag } from '@trigger.dev/react-hooks';
 import { toast } from 'sonner';
 
@@ -23,6 +24,7 @@ type Run = {
 };
 
 export function JobsPopover({ userId }: { userId: string }) {
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
   const executingRuns = useRef(new Set<string>());
@@ -82,6 +84,14 @@ export function JobsPopover({ userId }: { userId: string }) {
             label: 'View Update',
             onClick: () => handleRunClick(run)
           }
+        });
+        queryClient.invalidateQueries({
+          queryKey: [
+            'person',
+            run.payload.personId,
+            'about',
+            { withContactMethods: true, withAddresses: true, withWebsites: true, withGroups: true }
+          ]
         });
       }
       // Clean up failed or other status runs

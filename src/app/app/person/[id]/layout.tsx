@@ -19,6 +19,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
   const router = useRouter();
   const segment = useSelectedLayoutSegment() || 'activity';
   const addRecentlyViewed = useRecentlyViewedStore((state) => state.addPerson);
+
   const { data, isLoading } = usePerson(params.id as string, {
     withContactMethods: true,
     withAddresses: true,

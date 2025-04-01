@@ -13,7 +13,8 @@ export const createUserContextTool: ChatTool<
 > = {
   name: CHAT_TOOLS.CREATE_USER_CONTEXT,
   displayName: 'Update Memory',
-  description: 'Create a new user context record',
+  description:
+    "Create a new user context record whenever the user mentions something about themselves or activities they're involved in. NOT to be used for notes or interactions about other people, unless the note hints at information specific to the user.",
   rulesForAI: stripIndents`\
     ## createUserContext Guidelines
     - Use createUserContext whenever the user mentions something about themselves or activities they're involved in, such as their hobbies, preferences, goals, or their plans, family, hopes, fears, previous history, previous successes, aspirations, favorite books, relationship status, or anything else that is relevant to their life.
@@ -21,7 +22,7 @@ export const createUserContextTool: ChatTool<
     - Always provide a clear reason for why this information is being saved. i.e. The user mentioned it directly, or it's inferred from the conversation. e.g. "User donated to a children's charity thus they may philanthropic tendencies."
     - Format the content as a third-person statement about the user (e.g., "User mentioned they enjoy hiking on weekends").
 
-    - Activity Participation: Always create a user context record when the user mentions participation in any activities, classes, or hobbies, such as pilates, yoga, sports, or any other regular engagements. This includes both direct mentions and inferred participation from interactions with others.
+    - Activity Participation: Always create a user context record when the user mentions the user participates in any activities, classes, or hobbies, such as pilates, yoga, sports, or any other regular engagements. This includes both direct mentions and inferred participation from interactions with others.
     - Social Interactions: Capture details about social interactions that reveal new activities or interests, even if they are mentioned in passing or as part of another note.
     - Contextual Awareness: Pay attention to context clues that suggest new or ongoing interests, hobbies, or activities, and create user context records accordingly.
 

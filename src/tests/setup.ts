@@ -1,9 +1,18 @@
 import { config } from 'dotenv';
 
+import { mockHandleEventTrigger } from './utils/event-mock';
+
 // Load test environment variables
 if (process.env.NODE_ENV === 'test') {
   config({ path: '.env.test' });
 }
+
+// Mock handleEvent.trigger globally
+jest.mock('@/trigger/handle-event', () => ({
+  handleEvent: {
+    trigger: mockHandleEventTrigger
+  }
+}));
 
 beforeAll(() => {
   if (process.env.NODE_ENV !== 'test') {

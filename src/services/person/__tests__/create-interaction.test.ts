@@ -2,6 +2,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
+import { clearEventTriggerMocks, verifyEventTrigger } from '@/tests/utils/event-mock';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
@@ -14,9 +15,13 @@ describe('person-activity service', () => {
     supabase = await createClient();
   });
 
+  beforeEach(() => {
+    clearEventTriggerMocks();
+  });
+
   describe('createInteraction', () => {
     describe('success cases', () => {
-      it('should create a new interaction', async () => {
+      it('should create a new interaction and trigger event', async () => {
         await withTestTransaction(supabase, async (db) => {
           // Setup test data
           const testUser = await createTestUser({ db });
@@ -48,6 +53,17 @@ describe('person-activity service', () => {
             user_id: testUser.id,
             type: 'meeting',
             note: 'Had coffee'
+          });
+
+          // Verify event was triggered with correct data
+          verifyEventTrigger({
+            eventName: 'Interaction.Created',
+            payload: {
+              personId: testPerson.id,
+              userId: testUser.id,
+              personName: 'test_John test_Doe'
+            },
+            options: {}
           });
 
           // Verify it appears in activity list
@@ -92,6 +108,17 @@ describe('person-activity service', () => {
             user_id: testUser.id,
             type: 'call',
             note: null
+          });
+
+          // Verify event was triggered with correct data
+          verifyEventTrigger({
+            eventName: 'Interaction.Created',
+            payload: {
+              personId: testPerson.id,
+              userId: testUser.id,
+              personName: 'test_John test_Doe'
+            },
+            options: {}
           });
         });
       });

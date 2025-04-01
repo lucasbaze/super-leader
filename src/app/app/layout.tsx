@@ -2,10 +2,10 @@ import * as React from 'react';
 import { redirect } from 'next/navigation';
 
 import { MainChat } from '@/components/chat/main/main-chat';
-import { OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
 import { NavUser } from '@/components/nav-user';
+import { NetworkRings } from '@/components/network/animated-rings';
 import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { JobsPopover } from '@/components/sidebar/jobs-popover';
@@ -57,10 +57,8 @@ export default async function Page({ children }: { children: React.ReactNode }) 
             <>
               <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
                 <div className='ml-auto flex items-center gap-2'>
-                  <div className='mr-6 flex items-center gap-2'>
-                    <OneRing />
-                    <TwoRing />
-                    <ThreeRing />
+                  <div className='mr-6'>
+                    <NetworkRings />
                   </div>
                   <JobsPopover userId={data.user.id} />
                   <ThemeToggle />

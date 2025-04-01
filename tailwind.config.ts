@@ -97,12 +97,27 @@ module.exports = {
           '100%': {
             'background-position': '200%'
           }
+        },
+        glow: {
+          '0%, 100%': { boxShadow: '0 0 0 rgba(59, 130, 246, 0)' },
+          '50%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }
+        },
+        'glow-green': {
+          '0%, 100%': { boxShadow: '0 0 0 rgba(34, 197, 94, 0)' },
+          '50%': { boxShadow: '0 0 30px rgba(34, 197, 94, 0.6)' }
+        },
+        'glow-red': {
+          '0%, 100%': { boxShadow: '0 0 0 rgba(239, 68, 68, 0)' },
+          '50%': { boxShadow: '0 0 30px rgba(239, 68, 68, 0.6)' }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        rainbow: 'rainbow var(--speed, 2s) infinite linear'
+        rainbow: 'rainbow var(--speed, 2s) infinite linear',
+        glow: 'glow 1s ease-in-out',
+        'glow-green': 'glow-green 2s ease-in-out',
+        'glow-red': 'glow-red 2s ease-in-out'
       },
       transitionProperty: {
         height: 'height'

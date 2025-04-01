@@ -93,6 +93,9 @@ export function JobsPopover({ userId }: { userId: string }) {
             { withContactMethods: true, withAddresses: true, withWebsites: true, withGroups: true }
           ]
         });
+        queryClient.invalidateQueries({
+          queryKey: ['network-completeness']
+        });
       }
       // Clean up failed or other status runs
       else {

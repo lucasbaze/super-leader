@@ -1,11 +1,11 @@
 Detour: 
   ✔ Update the summary output to be a little cleaner / easier to read @done(25-03-26 00:16)
-  ☐ Trigger update-summary generation when a new note or interaction is created
+  ✔ Trigger update-summary generation when a new note or interaction is created @done(25-04-01 00:33)
     ☐ Determine if the note warrants an update to the summary[']
-    ☐ Generate the update-summary
+    ✔ Generate the update-summary @done(25-04-01 00:32)
     ☐ Update the summary if a note gets deleted
-    ☐ Ping the client and notify the user that the summary has been updated somehow?
-    ☐ Build a small event-bus implementation to "trigger" the update-summary generation in a naive way for the client to listen to and get notified when it's complete.
+    ✔ Ping the client and notify the user that the summary has been updated somehow? @done(25-04-01 00:32)
+    ✔ Build a small event-bus implementation to "trigger" the update-summary generation in a naive way for the client to listen to and get notified when it's complete. @done(25-04-01 00:32)
   ☐ Update get-initial-messsage to be contextually aware & to fire off if the last message is > 1 day old. 
   ☐ Get the "result" of a tool-invocation into the onSuccess callback of a tool.
 

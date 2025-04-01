@@ -34,6 +34,7 @@ export function useUpdateAISummary() {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       queryClient.invalidateQueries({ queryKey: ['people'] });
+      queryClient.invalidateQueries({ queryKey: ['network-completeness'] });
     }
   });
 }

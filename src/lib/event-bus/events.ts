@@ -1,30 +1,37 @@
-import { dateHandler } from '../dates/helpers';
 import { BuildEvent, EmitData } from './types';
-
-const getTimestamp = () => dateHandler().toISOString();
 
 export type InteractionCreatedEvent = BuildEvent<
   'Interaction.Created',
-  { personId: string; timestamp: string }
+  { personId: string; userId: string; personName: string }
 >;
-type CreateInteractionCreatedEvent = Pick<InteractionCreatedEvent['payload'], 'personId'>;
+type CreateInteractionCreatedEvent = Pick<
+  InteractionCreatedEvent['payload'],
+  'personId' | 'userId' | 'personName'
+>;
 export const createInteractionCreatedEvent = ({
-  personId
+  personId,
+  personName,
+  userId
 }: CreateInteractionCreatedEvent): EmitData<InteractionCreatedEvent> => ({
   eventName: 'Interaction.Created',
-  payload: { personId, timestamp: getTimestamp() },
+  payload: { personId, personName, userId },
   options: {}
 });
 
 export type PersonSummaryUpdatedEvent = BuildEvent<
   'Person.Summary.Updated',
-  { personId: string; timestamp: string }
+  { personId: string; userId: string; personName: string }
 >;
-type CreatePersonSummaryUpdatedEvent = Pick<PersonSummaryUpdatedEvent['payload'], 'personId'>;
+type CreatePersonSummaryUpdatedEvent = Pick<
+  PersonSummaryUpdatedEvent['payload'],
+  'personId' | 'userId' | 'personName'
+>;
 export const createPersonSummaryUpdatedEvent = ({
-  personId
+  personId,
+  personName,
+  userId
 }: CreatePersonSummaryUpdatedEvent): EmitData<PersonSummaryUpdatedEvent> => ({
   eventName: 'Person.Summary.Updated',
-  payload: { personId, timestamp: getTimestamp() },
+  payload: { personId, personName, userId },
   options: {}
 });

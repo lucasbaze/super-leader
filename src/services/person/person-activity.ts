@@ -95,14 +95,24 @@ export async function createInteraction({
         type: data.type,
         note: data.note
       })
-      .select()
+      .select(
+        `
+        *,
+        person:person_id(first_name, last_name)
+        `
+      )
       .single();
 
     if (error) throw error;
 
-    // Emit the event using Trigger.dev
-    await handleEvent.trigger(createInteractionCreatedEvent({ personId: interaction.person_id }));
-    console.log('Interaction created:', interaction);
+    // Emit the event using Trigger.dev with userId
+    await handleEvent.trigger(
+      createInteractionCreatedEvent({
+        personId: data.person_id,
+        userId: data.user_id,
+        personName: `${interaction.person.first_name} ${interaction.person.last_name || ''}`
+      })
+    );
 
     return { data: interaction, error: null };
   } catch (error) {

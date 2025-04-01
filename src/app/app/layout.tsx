@@ -8,6 +8,7 @@ import { ResizablePanels } from '@/components/layout/resizable-panels';
 import { NavUser } from '@/components/nav-user';
 import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
+import { JobsPopover } from '@/components/sidebar/jobs-popover';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { createClient } from '@/utils/supabase/server';
@@ -61,6 +62,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
                     <TwoRing />
                     <ThreeRing />
                   </div>
+                  <JobsPopover userId={data.user.id} />
                   <ThemeToggle />
                   <NavUser
                     user={{

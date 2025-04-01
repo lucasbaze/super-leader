@@ -103,3 +103,13 @@ Link to the test database for testing purposes
 
 1. Download the latest production database dump from Supabase
 2. Run `psql -h localhost -p 54322 -U postgres -d postgres -f "/path/to/data.backup`
+
+### Trigger.dev
+
+All async tasks are handled by Trigger.dev in the src/trigger folder.
+
+1. Run `npx trigger.dev dev` to run the tasks locally
+2. Run `npx trigger.dev deploy` to deploy the changes to production
+
+Make sure that you have the TRIGGER_SECRET_KEY environment variable set in your .env.local file.
+

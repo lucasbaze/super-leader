@@ -531,7 +531,7 @@ export type Database = {
           completed_at: string | null
           context: Json
           created_at: string
-          end_at: string | null
+          end_at: string
           id: string
           person_id: string | null
           skipped_at: string | null
@@ -548,7 +548,7 @@ export type Database = {
           completed_at?: string | null
           context: Json
           created_at?: string
-          end_at?: string | null
+          end_at: string
           id?: string
           person_id?: string | null
           skipped_at?: string | null
@@ -565,7 +565,7 @@ export type Database = {
           completed_at?: string | null
           context?: Json
           created_at?: string
-          end_at?: string | null
+          end_at?: string
           id?: string
           person_id?: string | null
           skipped_at?: string | null
@@ -649,6 +649,24 @@ export type Database = {
           onboarding?: Json | null
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: number
         }
         Relationships: []
       }

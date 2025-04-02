@@ -2,10 +2,10 @@ import { forwardRef } from 'react';
 
 import { CreateMessage, Message } from 'ai';
 
+import { PulseLoader } from '@/components/animated/pulse-loader';
 import { Loader } from '@/components/icons';
 import type { PendingAction } from '@/hooks/chat/use-chat-interface';
 
-import { ChatMessage } from '../messages/chat-message';
 import { MainMessage } from './main-message';
 
 interface ChatMessagesProps {
@@ -53,17 +53,6 @@ export const MainMessagesList = forwardRef<HTMLDivElement, ChatMessagesProps>(
             const isLastMessage = index === messages.length - 1;
             return (
               <>
-                {/* <ChatMessage
-                  key={message.id || index}
-                  message={message}
-                  isLastMessage={isLastMessage}
-                  containerRef={ref}
-                  pendingAction={pendingAction}
-                  setPendingAction={setPendingAction}
-                  addToolResult={addToolResult}
-                  append={append}
-                  isLoading={isLoading}
-                /> */}
                 <MainMessage
                   key={message.id || index}
                   message={message}
@@ -73,10 +62,8 @@ export const MainMessagesList = forwardRef<HTMLDivElement, ChatMessagesProps>(
                   setPendingAction={setPendingAction}
                   addToolResult={addToolResult}
                   append={append}
-                  // containerRef={ref}
-                  // pendingAction={pendingAction}
                 />
-                {isLastMessage && isLoading && <Loader className='size-4 animate-spin' />}
+                {isLastMessage && isLoading && <PulseLoader size={20} />}
               </>
             );
           })}

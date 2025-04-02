@@ -28,3 +28,5 @@ export type UserContext = Database['public']['Tables']['user_context']['Row'];
 export type Conversation = Database['public']['Tables']['conversations']['Row'];
 export type ConversationInsert = Database['public']['Tables']['conversations']['Insert'];
 export type CustomField = Database['public']['Tables']['custom_fields']['Row'];
+
+export type Waitlist = Database['public']['Tables']['waitlist']['Row'];

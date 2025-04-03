@@ -49,7 +49,7 @@ export function WaitlistForm() {
         setStatus({
           type: 'success',
           message:
-            "Thank you for your interest. If you'd like to skip the line, email me at lucas@superleader.ai"
+            "Thank you for your interest. If you'd like to skip the line, email lucas@superleader.ai"
         });
         setEmail('');
       }

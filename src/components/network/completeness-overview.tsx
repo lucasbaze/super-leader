@@ -52,9 +52,9 @@ export function CompletenessOverview({ data, className }: CompletionOverviewProp
       <div className='mb-4'>
         <h1 className='text-lg font-semibold'>Completeness Overview</h1>
         <p className='mb-4 text-sm text-muted-foreground'>
-          This measures how much information you have collected about your network within
-          Superleader. Generally, the more diverse information you have, the more you're able to
-          connect and add value with people.
+          This measures how much information you and Superleader have collected about your network.
+          The more diverse information you have, the more you're able to connect and add value with
+          people.
         </p>
       </div>
 

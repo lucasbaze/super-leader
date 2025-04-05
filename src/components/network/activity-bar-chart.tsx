@@ -2,15 +2,7 @@
 
 import { useState } from 'react';
 
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { PulseLoader } from '@/components/animated/pulse-loader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +13,7 @@ import { useNetworkActivity } from '@/hooks/use-network-activity';
 import { IconMap } from '@/lib/ui/icon-map';
 import { NetworkActivityData } from '@/services/network/get-network-activity';
 
-type ActivityChartRendererProps = {
+type ActivityBarChartRendererProps = {
   data?: NetworkActivityData;
   isLoading?: boolean;
   className?: string;
@@ -68,12 +60,12 @@ const generateMockData = () => {
   }));
 };
 
-export function ActivityChartRenderer({
+export function ActivityBarChartRenderer({
   data,
   isLoading,
   className,
   onTimeFrameChange
-}: ActivityChartRendererProps) {
+}: ActivityBarChartRendererProps) {
   const [showPreviousPeriod, setShowPreviousPeriod] = useState(false);
   const [timeFrame, setTimeFrame] = useState<string>('7');
   const [visibleSeries, setVisibleSeries] = useState<Set<string>>(
@@ -109,8 +101,6 @@ export function ActivityChartRenderer({
         })
       }))
     : mockData;
-
-  console.log('Network::ActivityChart::ChartData', chartData);
 
   return (
     <div className={className}>
@@ -152,7 +142,7 @@ export function ActivityChartRenderer({
         <CardContent>
           <div className='relative h-[300px] w-full'>
             <ResponsiveContainer width='100%' height='100%'>
-              <AreaChart
+              <BarChart
                 data={chartData}
                 margin={{
                   top: 10,
@@ -160,14 +150,6 @@ export function ActivityChartRenderer({
                   left: 0,
                   bottom: 0
                 }}>
-                <defs>
-                  {Object.entries(chartConfig).map(([key, { color }]) => (
-                    <linearGradient key={key} id={`gradient-${key}`} x1='0' y1='0' x2='0' y2='1'>
-                      <stop offset='5%' stopColor={color} stopOpacity={0.8} />
-                      <stop offset='95%' stopColor={color} stopOpacity={0.1} />
-                    </linearGradient>
-                  ))}
-                </defs>
                 <CartesianGrid
                   strokeDasharray='3 3'
                   vertical={false}
@@ -196,15 +178,11 @@ export function ActivityChartRenderer({
                   />
                 )}
                 {Object.entries(chartConfig).map(([key, { color }]) => (
-                  <Area
+                  <Bar
                     key={key}
-                    type='natural'
                     dataKey={key}
-                    stackId='1'
-                    stroke={color}
-                    fill={`url(#gradient-${key})`}
-                    fillOpacity={0.4}
-                    strokeWidth={1.5}
+                    stackId='current'
+                    fill={color}
                     className={
                       !visibleSeries.has(key) ? 'opacity-0' : !hasRealData ? 'opacity-30' : ''
                     }
@@ -213,19 +191,16 @@ export function ActivityChartRenderer({
                 {showPreviousPeriod &&
                   hasRealData &&
                   Object.entries(chartConfig).map(([key, { color }]) => (
-                    <Area
+                    <Bar
                       key={`${key}Previous`}
-                      type='natural'
                       dataKey={`${key}Previous`}
-                      stackId='2'
-                      stroke={color}
-                      fill='none'
-                      strokeDasharray='3 3'
-                      strokeWidth={1.5}
+                      stackId='previous'
+                      fill={color}
+                      fillOpacity={0.3}
                       className={!visibleSeries.has(key) ? 'opacity-0' : ''}
                     />
                   ))}
-              </AreaChart>
+              </BarChart>
             </ResponsiveContainer>
             {!hasRealData && (
               <div className='pointer-events-none absolute inset-0 flex items-center justify-center'>
@@ -271,7 +246,7 @@ export function ActivityChartRenderer({
   );
 }
 
-export function ActivityChart() {
+export function ActivityBarChart() {
   const [timeFrame, setTimeFrame] = useState(7);
   const {
     data: activityData,
@@ -280,7 +255,7 @@ export function ActivityChart() {
   } = useNetworkActivity(timeFrame);
 
   return (
-    <ActivityChartRenderer
+    <ActivityBarChartRenderer
       data={activityData}
       isLoading={isLoadingActivity}
       onTimeFrameChange={setTimeFrame}

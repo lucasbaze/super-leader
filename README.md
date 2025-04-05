@@ -66,6 +66,13 @@ You can add multiple migrations at a time if needed or delete the migration file
 > npx supabase migration up
 ```
 
+## Database Stuff
+
+Get a dump of the schema from the local database
+> docker exec -t supabase_db_supabase pg_dump -s -U postgres -d postgres > schema.sql
+
+
+
 ### Prod Migration Flow: 
 
 Local Database Changes: 
@@ -89,6 +96,8 @@ or if you just want to apply the last migration that was added
 > npx supabase link 
 Link to the test database for testing purposes
 > npx supabase db push 
+
+
 
 
 ## Development

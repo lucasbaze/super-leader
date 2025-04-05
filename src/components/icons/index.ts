@@ -53,6 +53,8 @@ export {
   MessageSquare,
   Share2,
   TrendingUp,
+  TrendingDown,
+  MoveRight,
   ChevronDown,
   ChevronUp,
   UserCog,

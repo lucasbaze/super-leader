@@ -2,7 +2,13 @@
 
 import { TooltipProps } from 'recharts';
 
-export type ChartConfig = Record<string, { label: string; color: string }>;
+export type ChartConfig = {
+  [key: string]: {
+    label: string;
+    color: string;
+    icon?: string;
+  };
+};
 
 type ChartContainerProps = {
   children: React.ReactNode;
@@ -39,7 +45,7 @@ export function ChartTooltipContent({
   if (!active || !payload || !chartConfig) return null;
 
   return (
-    <div className='rounded-lg border bg-background p-2 shadow-sm'>
+    <div className='relative z-50 rounded-lg border bg-background p-2 shadow-sm'>
       <div className='grid gap-2'>
         {payload.map((entry: any) => {
           const configKey = entry.dataKey.replace('Previous', '');

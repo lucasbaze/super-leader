@@ -5,7 +5,7 @@ import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { SendMessageTask } from './send-message-task';
 
 const meta: Meta<typeof SendMessageTask> = {
-  title: 'Components/Tasks/SendMessageTask',
+  title: 'Tasks/SendMessageTask',
   component: SendMessageTask,
   parameters: {
     layout: 'centered'

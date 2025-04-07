@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { TaskCount } from './task-count';
 
 const meta: Meta<typeof TaskCount> = {
-  title: 'Components/Indicators/TaskCount',
+  title: 'Person/Indicators/TaskCount',
   component: TaskCount,
   tags: ['autodocs'],
   args: {

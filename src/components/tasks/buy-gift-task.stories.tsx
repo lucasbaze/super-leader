@@ -7,7 +7,7 @@ import { buyGiftActionSchema, GetTaskSuggestionResult } from '@/services/tasks/t
 import { BuyGiftTask } from './buy-gift-task';
 
 const meta = {
-  title: 'Components/Tasks/BuyGiftTask',
+  title: 'Tasks/BuyGiftTask',
   component: BuyGiftTask,
   parameters: {
     layout: 'centered'

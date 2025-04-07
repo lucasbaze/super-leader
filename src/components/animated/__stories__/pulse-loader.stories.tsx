@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PulseLoader } from '../pulse-loader';
 
 const meta: Meta<typeof PulseLoader> = {
-  title: 'Components/Animated/Pulse Loader',
+  title: 'Animated/Pulse Loader',
   component: PulseLoader,
   parameters: {
     layout: 'centered'

@@ -5,7 +5,7 @@ import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { AddNoteTask } from './add-note-task';
 
 const meta = {
-  title: 'Components/Tasks/AddNoteTask',
+  title: 'Tasks/AddNoteTask',
   component: AddNoteTask,
   parameters: {
     layout: 'centered'

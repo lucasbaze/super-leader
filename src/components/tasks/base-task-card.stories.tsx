@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BaseTaskCard } from './base-task-card';
 
 const meta: Meta<typeof BaseTaskCard> = {
-  title: 'Components/Tasks/BaseTaskCard',
+  title: 'Tasks/BaseTaskCard',
   component: BaseTaskCard,
   parameters: {
     layout: 'centered'

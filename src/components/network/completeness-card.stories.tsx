@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CompletionCard } from './completeness-card';
 
 const meta: Meta<typeof CompletionCard> = {
-  title: 'Components/Network/CompletionCard',
+  title: 'Network/CompletionCard',
   component: CompletionCard,
   parameters: {
     layout: 'centered'

@@ -5,7 +5,7 @@ import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { ShareContentTask } from './share-content-task';
 
 const meta = {
-  title: 'Components/Tasks/ShareContentTask',
+  title: 'Tasks/ShareContentTask',
   component: ShareContentTask,
   parameters: {
     layout: 'centered'

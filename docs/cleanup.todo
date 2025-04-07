@@ -1,17 +1,17 @@
 
 Next: 
-  ☐ Add a "crop" viewed on the notes, for example with Jeff T's notes in production
-  ☐ Clean up organization of the stories in storybook
+  ☐ Update the "initial-message" to include the summary
   ☐ Move the "recent people" to the bottom of the search list and make it longer
   ☐ Fix the duplicate of "interactions" in the top bar ( this means dupe in the function as well )
-  ☐ Update the "initial-message" to include the summary
   ☐ Fix the Summary Profile view within "Goals"
-  ☐ Update icon of "Network" to something more analytical? (Swap Network icon to "people", move "person" to the "goals" and rename to "Profile")
   ☐ Add better loading layout for the list views
   ☐ Move the "Update summary" button into the "summary" section
   ☐ Fix the loading & styling of the "notes" / interactions section
   ☐ Fix loading of the "profile" section to look more skeleton like
   
+  ✔ Update icon of "Network" to something more analytical? (Swap Network icon to "people", move "person" to the "goals" and rename to "Profile") @done(25-04-07 13:22)
+  ✔ Clean up organization of the stories in storybook @done(25-04-07 13:22)
+  ✔ Add a "crop" viewed on the notes, for example with Jeff T's notes in production @done(25-04-07 13:11)
   ✔ Do not "display" null for the lastname if it's null @done(25-04-07 12:20)
   ✔ Call the "Stop" function when changing routes @done(25-04-07 12:11)
   ✔ Remove the "chat" icon in search for now @done(25-04-07 12:05)

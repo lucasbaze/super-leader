@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FollowUpIndicator } from './follow-up-indicator';
 
 const meta: Meta<typeof FollowUpIndicator> = {
-  title: 'Components/Indicators/FollowUpIndicator',
+  title: 'Person/Indicators/FollowUpIndicator',
   component: FollowUpIndicator,
   parameters: {
     layout: 'centered'

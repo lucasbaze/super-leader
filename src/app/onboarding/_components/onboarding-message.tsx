@@ -4,8 +4,6 @@ import { Message } from 'ai';
 
 import { MarkdownMessage } from '@/components/chat/messages/markdown-message';
 import { ToolCallIndicator } from '@/components/chat/messages/tool-call-indicator';
-import { Loader } from '@/components/icons';
-// import RingsFadeLoader from '@/components/animated/sl-loader';
 import { useChatConfig } from '@/lib/chat/chat-context';
 import { cn } from '@/lib/utils';
 

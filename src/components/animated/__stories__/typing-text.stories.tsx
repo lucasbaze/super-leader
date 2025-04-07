@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { TypingText } from '../typing-text';
 
 const meta: Meta<typeof TypingText> = {
-  title: 'Components/Animated/Typing Text',
+  title: 'Animated/Typing Text',
   component: TypingText,
   parameters: {
     layout: 'centered'

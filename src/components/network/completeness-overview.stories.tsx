@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CompletenessOverview } from './completeness-overview';
 
 const meta: Meta<typeof CompletenessOverview> = {
-  title: 'Components/Network/CompletenessOverview',
+  title: 'Network/CompletenessOverview',
   component: CompletenessOverview,
   parameters: {
     layout: 'centered'

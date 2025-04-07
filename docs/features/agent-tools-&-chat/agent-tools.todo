@@ -2,7 +2,7 @@ Now:
   ☐ Need to add ability to transcribe audio into text using the chat interface
   ☐ AI can support standard fields: updating name, birthday, date met, addresses, emails, contact methods, & websites.
   ☐ Need the AI to be able to update the custom fields if necessary
-  ☐ Call the "Stop" function when changing routes
+  ☐ Call the "initial-message" tool when the user first opens the chat if it's been more than 1 day since the last interaction.
 
 Bugs: 
   ☐ See bugs in development/todo/today.md

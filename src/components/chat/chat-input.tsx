@@ -47,7 +47,7 @@ export function ChatInput({ input, handleInputChange, handleSubmit, isLoading }:
   }, [error]);
 
   return (
-    <form onSubmit={handleSubmit} className='flex items-start space-x-2 p-4'>
+    <form onSubmit={handleSubmit} className='flex items-end space-x-2 p-4'>
       {isRecording ? (
         <div className='h-10 w-full rounded-sm border'>
           <VoiceVisualizer
@@ -73,17 +73,17 @@ export function ChatInput({ input, handleInputChange, handleSubmit, isLoading }:
             }
           }}
           rows={1}
-          className='w-full'
+          className='min-h-[40px] w-full'
         />
       )}
 
-      <Button type='button' size='icon' onClick={toggleRecording} disabled={isProcessing}>
+      {/* <Button type='button' size='icon' onClick={toggleRecording} disabled={isProcessing}>
         <Mic className={isRecording ? 'text-red-500' : 'text-white'} />
-      </Button>
+      </Button> */}
 
       {/* Waveform Visualization */}
 
-      <Button type='submit' size='icon' disabled={isLoading || !input.trim()}>
+      <Button type='submit' size='icon' className='size-10' disabled={isLoading || !input.trim()}>
         <SendHorizontal className='size-4' />
         <span className='sr-only'>Send message</span>
       </Button>

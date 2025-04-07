@@ -2,18 +2,12 @@
 
 import { CreateMessage, Message } from 'ai';
 
-import { ActionCard } from '@/components/chat/cards/action-card';
 import { AssistantMessageRenderer } from '@/components/chat/messages/assistant-message-renderer';
 import { MarkdownMessage } from '@/components/chat/messages/markdown-message';
 import { ToolCallIndicator } from '@/components/chat/messages/tool-call-indicator';
-import { Loader } from '@/components/icons';
 import { PendingAction } from '@/hooks/chat/use-chat-interface';
-// import RingsFadeLoader from '@/components/animated/sl-loader';
 import { useChatConfig } from '@/lib/chat/chat-context';
-import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { cn } from '@/lib/utils';
-
-import { SuggestionCard } from '../cards/suggestion-card';
 
 interface MessageProps {
   message: Message;
@@ -25,18 +19,9 @@ interface MessageProps {
   append: (message: CreateMessage) => void;
 }
 
-export function MainMessage({
-  message,
-  append,
-  isLastMessage,
-  isLoading,
-  pendingAction,
-  setPendingAction,
-  addToolResult
-}: MessageProps) {
+export function MainMessage({ message, append }: MessageProps) {
   const { config } = useChatConfig();
 
-  const isAssistant = message.role === 'assistant';
   const isUser = message.role === 'user';
 
   if (message.role === 'system') {
@@ -52,7 +37,7 @@ export function MainMessage({
               case 'text':
                 return (
                   <div key={index}>
-                    <MarkdownMessage content={part.text} />
+                    <MarkdownMessage content={part.text} isUserMessage={true} />
                   </div>
                 );
             }

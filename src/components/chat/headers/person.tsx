@@ -81,7 +81,7 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
   return (
     <>
       <div className='font-semibold'>
-        {`${data?.person?.first_name} ${data?.person?.last_name}`}
+        {data?.person?.first_name} {data?.person?.last_name}
       </div>
 
       <div className='flex items-center gap-1'>
@@ -99,7 +99,7 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              {hasInteractions ? 'Get Gift Suggestions' : 'Must have at least 1 interaction'}
+              {hasInteractions ? 'Ask for gift suggestions' : 'Must have at least 1 interaction'}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -117,7 +117,7 @@ export function PersonChatHeader({ append, conversationId }: ChatHeaderProps) {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              {hasInteractions ? 'Get Content Suggestions' : 'Must have at least 1 interaction'}
+              {hasInteractions ? 'Ask for content suggestions' : 'Must have at least 1 interaction'}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

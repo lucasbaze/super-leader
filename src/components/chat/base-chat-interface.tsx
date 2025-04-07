@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { ForwardRefExoticComponent, RefAttributes, useRef, useState } from 'react';
+import { ForwardRefExoticComponent, RefAttributes, useEffect, useRef, useState } from 'react';
 
 import { Message as AIMessage, ChatRequestOptions, CreateMessage } from 'ai';
 
@@ -122,6 +122,10 @@ export function BaseChatInterface({
     isFetchingNextPage,
     fetchNextPage
   });
+
+  useEffect(() => {
+    chatInterface.stop();
+  }, [pathname]);
 
   return (
     <div

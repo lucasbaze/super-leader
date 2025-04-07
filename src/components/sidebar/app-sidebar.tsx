@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { User } from '@supabase/supabase-js';
 
-import { Bookmark, CircleUser, Command, Home, LandPlot, Orbit } from '@/components/icons';
+import { Bookmark, CircleUser, Command, Home, LandPlot, Orbit, Users } from '@/components/icons';
 import { CoreGroupsNav } from '@/components/sidebar/core-groups-nav';
 import { MainNav } from '@/components/sidebar/main-nav';
 import { UserGroupsNav } from '@/components/sidebar/user-groups-nav';
@@ -30,7 +30,7 @@ const mainNavItems = [
   {
     title: 'People',
     url: ROUTES.PEOPLE,
-    icon: CircleUser,
+    icon: Users,
     isActive: false
   },
   {
@@ -39,16 +39,16 @@ const mainNavItems = [
     icon: Orbit,
     isActive: false
   },
+  // {
+  //   title: 'Saved',
+  //   url: ROUTES.BOOKMARKS,
+  //   icon: Bookmark,
+  //   isActive: false
+  // },
   {
-    title: 'Saved',
-    url: ROUTES.BOOKMARKS,
-    icon: Bookmark,
-    isActive: false
-  },
-  {
-    title: 'Goals',
+    title: 'Profile',
     url: ROUTES.CONTEXT,
-    icon: LandPlot,
+    icon: CircleUser,
     isActive: false
   }
 ];

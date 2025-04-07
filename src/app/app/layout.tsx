@@ -5,6 +5,7 @@ import { MainChat } from '@/components/chat/main/main-chat';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { ResizablePanels } from '@/components/layout/resizable-panels';
 import { NavUser } from '@/components/nav-user';
+import { AnimatedActivity } from '@/components/network/animated-activity';
 import { NetworkRings } from '@/components/network/animated-rings';
 import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
@@ -56,20 +57,23 @@ export default async function Page({ children }: { children: React.ReactNode }) 
           rightPanel={
             <>
               <div className='flex h-12 shrink-0 items-center gap-4 px-2'>
-                <div className='ml-auto flex items-center gap-2'>
-                  <div className='mr-6'>
+                <div className='flex w-full items-center justify-end gap-2'>
+                  <div className='ml-auto flex items-center gap-2'>
+                    <AnimatedActivity />
                     <NetworkRings />
                   </div>
-                  <JobsPopover userId={data.user.id} />
-                  <ThemeToggle />
-                  <NavUser
-                    user={{
-                      id: data.user.id,
-                      name: 'John Doe',
-                      email: 'john.doe@example.com',
-                      avatar: 'https://github.com/shadcn.png'
-                    }}
-                  />
+                  <div className='flex items-center gap-2'>
+                    <JobsPopover userId={data.user.id} />
+                    <ThemeToggle />
+                    <NavUser
+                      user={{
+                        id: data.user.id,
+                        name: 'John Doe',
+                        email: 'john.doe@example.com',
+                        avatar: 'https://github.com/shadcn.png'
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <MainContentLayout>{children}</MainContentLayout>

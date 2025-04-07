@@ -26,6 +26,7 @@ export type GetNetworkActivityParams = {
   db: DBClient;
   userId: string;
   days: number;
+  timezone?: string;
 };
 
 export const ERRORS = {
@@ -48,7 +49,8 @@ export type GetNetworkActivityServiceResult = ServiceResponse<NetworkActivityDat
 export async function getNetworkActivity({
   db,
   userId,
-  days
+  days,
+  timezone = 'UTC'
 }: GetNetworkActivityParams): Promise<GetNetworkActivityServiceResult> {
   try {
     if (!userId) {
@@ -56,10 +58,10 @@ export async function getNetworkActivity({
     }
 
     // Get current period data
-    const currentPeriodResult = await getPeriodData(db, userId, days, 0);
+    const currentPeriodResult = await getPeriodData(db, userId, days, 0, timezone);
 
     // Get previous period data
-    const previousPeriodResult = await getPeriodData(db, userId, days, days);
+    const previousPeriodResult = await getPeriodData(db, userId, days, days, timezone);
 
     // Calculate total activities
     const totalActivities = currentPeriodResult.reduce(
@@ -105,7 +107,8 @@ async function getPeriodData(
   db: DBClient,
   userId: string,
   days: number,
-  offset: number
+  offset: number,
+  timezone: string
 ): Promise<PeriodData[]> {
   const { data, error } = await db.rpc('get_network_activity_by_period', {
     p_user_id: userId,
@@ -115,10 +118,9 @@ async function getPeriodData(
       RESERVED_GROUP_SLUGS.INNER_5,
       RESERVED_GROUP_SLUGS.CENTRAL_50,
       RESERVED_GROUP_SLUGS.STRATEGIC_100
-    ]
+    ],
+    p_timezone: timezone
   });
-
-  console.log('Network::getPeriodData', data);
 
   if (error) {
     console.error('Error fetching period data:', error);

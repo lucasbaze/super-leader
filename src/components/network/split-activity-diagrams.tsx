@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { PulseLoader } from '@/components/animated/pulse-loader';
-import { MoveRight, TrendingDown, TrendingUp } from '@/components/icons';
+import { Activity, MoveRight, TrendingDown, TrendingUp } from '@/components/icons';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChartConfig, ChartTooltipContent } from '@/components/ui/chart';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -311,21 +310,19 @@ export function SplitActivityDiagramsRenderer({
     <div ref={containerRef} className={className}>
       <div className='mb-6 flex items-center justify-between'>
         <div>
-          <h2 className='text-lg font-semibold'>Activity Overview</h2>
+          <h2 className='mb-2 flex items-center text-lg font-semibold'>
+            <Activity className='mr-2 size-4 text-muted-foreground' />
+            Activity Overview
+          </h2>
           <p className='text-sm text-muted-foreground'>
-            This is pulling all interactions across your network
+            This is an operational metric, pulling all interactions recorded over the time period.
+            Emphasis on engagement and activity with our core groups of individuals.
           </p>
         </div>
+      </div>
+      <div className='mb-6 flex items-center justify-between'>
         <div className='flex items-center gap-4'>
-          <div className='flex items-center gap-2'>
-            <span className='text-sm text-muted-foreground'>Compare to last period</span>
-            <Switch
-              checked={showPreviousPeriod}
-              onCheckedChange={setShowPreviousPeriod}
-              disabled={!hasRealData}
-            />
-          </div>
-          <div className='border-l pl-4'>
+          <div className='border-r pr-4'>
             <Tabs
               value={timeFrame}
               onValueChange={(value) => {
@@ -338,6 +335,14 @@ export function SplitActivityDiagramsRenderer({
                 <TabsTrigger value='30'>30 Days</TabsTrigger>
               </TabsList>
             </Tabs>
+          </div>
+          <div className='flex items-center gap-2'>
+            <Switch
+              checked={showPreviousPeriod}
+              onCheckedChange={setShowPreviousPeriod}
+              disabled={!hasRealData}
+            />
+            <span className='text-sm text-muted-foreground'>Compare to last period</span>
           </div>
         </div>
       </div>

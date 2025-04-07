@@ -5,67 +5,67 @@ import { useEffect, useRef, useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { BookUser, OneRing, ThreeRing, TwoRing } from '@/components/icons';
+import { Activity, OneRing, ThreeRing, TwoRing } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useNetworkCompleteness } from '@/hooks/use-network-completeness';
+import { useTodaysActivity } from '@/hooks/use-todays-activity';
 import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
-type RingData = {
+type ActivityData = {
   icon: React.ReactNode;
   value: number;
   oldValue: number;
-  peopleCount: number;
+  people: { name: string }[];
 };
 
-type AnimatedRingsProps = {
+type AnimatedActivityRendererProps = {
   router: ReturnType<typeof useRouter>;
-  inner5Score: number;
   inner5Count: number;
-  central50Score: number;
+  inner5People: { name: string }[];
   central50Count: number;
-  strategic100Score: number;
+  central50People: { name: string }[];
   strategic100Count: number;
+  strategic100People: { name: string }[];
 };
 
-export function AnimatedRings({
+export function AnimatedActivityRenderer({
   router,
-  inner5Score,
   inner5Count,
-  central50Score,
+  inner5People,
   central50Count,
-  strategic100Score,
-  strategic100Count
-}: AnimatedRingsProps) {
+  central50People,
+  strategic100Count,
+  strategic100People
+}: AnimatedActivityRendererProps) {
   // Keep track of the old values for difference calculation
   const oldValues = useRef<{ [key: string]: number }>({
-    inner5: inner5Score,
-    central50: central50Score,
-    strategic100: strategic100Score
+    inner5: inner5Count,
+    central50: central50Count,
+    strategic100: strategic100Count
   });
 
-  // Track which rings are currently showing their difference
+  // Track which counts are currently showing their difference
   const [showingDifference, setShowingDifference] = useState<{ [key: string]: boolean }>({
     inner5: false,
     central50: false,
     strategic100: false
   });
 
-  // Update animations when scores change
+  // Update animations when counts change
   useEffect(() => {
     const newShowingDifference = { ...showingDifference };
     let hasChanges = false;
 
-    // Check each ring for changes
-    if (inner5Score !== oldValues.current.inner5) {
+    // Check each count for changes
+    if (inner5Count !== oldValues.current.inner5) {
       newShowingDifference.inner5 = true;
       hasChanges = true;
     }
-    if (central50Score !== oldValues.current.central50) {
+    if (central50Count !== oldValues.current.central50) {
       newShowingDifference.central50 = true;
       hasChanges = true;
     }
-    if (strategic100Score !== oldValues.current.strategic100) {
+    if (strategic100Count !== oldValues.current.strategic100) {
       newShowingDifference.strategic100 = true;
       hasChanges = true;
     }
@@ -83,36 +83,36 @@ export function AnimatedRings({
         });
         // Update old values after animation completes
         oldValues.current = {
-          inner5: inner5Score,
-          central50: central50Score,
-          strategic100: strategic100Score
+          inner5: inner5Count,
+          central50: central50Count,
+          strategic100: strategic100Count
         };
       }, 5000);
     }
-  }, [inner5Score, central50Score, strategic100Score]);
+  }, [inner5Count, central50Count, strategic100Count]);
 
-  const rings: RingData[] = [
+  const activities: ActivityData[] = [
     {
       icon: <OneRing className='size-6' />,
-      value: inner5Score,
+      value: inner5Count,
       oldValue: oldValues.current.inner5,
-      peopleCount: inner5Count
+      people: inner5People
     },
     {
       icon: <TwoRing className='size-6' />,
-      value: central50Score,
+      value: central50Count,
       oldValue: oldValues.current.central50,
-      peopleCount: central50Count
+      people: central50People
     },
     {
       icon: <ThreeRing className='size-6' />,
-      value: strategic100Score,
+      value: strategic100Count,
       oldValue: oldValues.current.strategic100,
-      peopleCount: strategic100Count
+      people: strategic100People
     }
   ];
 
-  const getRingKey = (index: number) => {
+  const getActivityKey = (index: number) => {
     switch (index) {
       case 0:
         return 'inner5';
@@ -125,16 +125,18 @@ export function AnimatedRings({
     }
   };
 
+  console.log(activities);
+
   return (
     <div className='flex items-center gap-2'>
       <div
         onClick={() => router.push(routes.network.root())}
-        className='flex cursor-pointer items-center gap-2 rounded-full border bg-background px-2 py-1.5'>
+        className='flex cursor-pointer items-center rounded-full border bg-background px-2 py-1.5'>
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className='mr-1 cursor-pointer rounded-2xl bg-muted p-1'>
-                <BookUser className='size-4 text-muted-foreground' />
+                <Activity className='size-4 text-muted-foreground' />
               </div>
             </TooltipTrigger>
             <TooltipContent
@@ -143,19 +145,19 @@ export function AnimatedRings({
               align='center'
               side='bottom'>
               <div className='space-y-2'>
-                <h4 className='mb-1 font-medium'>Completeness Overview</h4>
+                <h4 className='mb-1 font-medium'>Activity Overview</h4>
                 <p className='text-sm text-muted-foreground'>
-                  This is the average profile completeness for folks in your Key Groups. This is
-                  calculated by Superleader AI based on the saved notes and interactions.
+                  This is pulling all interactions recorded over the time period. Emphasis on
+                  engagement and activity with our core groups of individuals.
                 </p>
               </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        {rings.map((ring, index) => {
-          const ringKey = getRingKey(index);
-          const isShowingDifference = showingDifference[ringKey];
-          const difference = ring.value - ring.oldValue;
+        {activities.map((activity, index) => {
+          const activityKey = getActivityKey(index);
+          const isShowingDifference = showingDifference[activityKey];
+          const difference = activity.value - activity.oldValue;
           const isIncrease = difference > 0;
 
           return (
@@ -173,10 +175,21 @@ export function AnimatedRings({
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className='flex cursor-pointer items-center gap-1'>{ring.icon}</div>
+                      <div className='flex cursor-pointer items-center gap-1'>{activity.icon}</div>
                     </TooltipTrigger>
                     <TooltipContent side='bottom' className='text-sm'>
-                      Average of {ring.peopleCount} people
+                      <div className='flex flex-col gap-1'>
+                        {activity.people.length > 0 ? (
+                          <>
+                            <p className='text-sm font-medium'>Interactions with:</p>
+                            {activity.people.map((person, index) => (
+                              <div key={index}>{person.name}</div>
+                            ))}
+                          </>
+                        ) : (
+                          <p className='text-sm font-medium'>No interactions</p>
+                        )}
+                      </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -191,7 +204,7 @@ export function AnimatedRings({
                         transition={{ duration: 0.2 }}
                         className={cn(
                           'inline-block text-right text-sm font-medium tabular-nums',
-                          isShowingDifference && isIncrease && 'text-green-500',
+                          isShowingDifference && isIncrease && 'text-emerald-500',
                           isShowingDifference && !isIncrease && difference !== 0 && 'text-red-500'
                         )}>
                         {isShowingDifference && difference !== 0 ? (
@@ -200,11 +213,10 @@ export function AnimatedRings({
                             {difference}
                           </>
                         ) : (
-                          ring.value
+                          activity.value
                         )}
                       </motion.span>
                     </AnimatePresence>
-                    <span className='text-xs font-medium'>%</span>
                   </div>
                 </div>
               </motion.div>
@@ -217,21 +229,21 @@ export function AnimatedRings({
 }
 
 // Container component that handles data fetching
-export function NetworkRings() {
+export function AnimatedActivity() {
   const router = useRouter();
-  const { data } = useNetworkCompleteness();
+  const { data } = useTodaysActivity();
 
   if (!data) return null;
 
   return (
-    <AnimatedRings
+    <AnimatedActivityRenderer
       router={router}
-      inner5Score={data.inner5.completeness_score}
       inner5Count={data.inner5.count}
-      central50Score={data.central50.completeness_score}
+      inner5People={data.inner5.people}
       central50Count={data.central50.count}
-      strategic100Score={data.strategic100.completeness_score}
+      central50People={data.central50.people}
       strategic100Count={data.strategic100.count}
+      strategic100People={data.strategic100.people}
     />
   );
 }

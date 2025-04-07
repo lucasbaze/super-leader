@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { getNetworkActivity } from '@/services/network/get-network-activity';
+import { getTodaysActivity } from '@/services/network/get-todays-activity';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest) {
@@ -16,16 +16,14 @@ export async function GET(request: NextRequest) {
       return apiResponse.unauthorized(toError(authResult.error));
     }
 
-    // Get days parameter from query string
+    // Get timezone parameter from query string
     const searchParams = request.nextUrl.searchParams;
-    const days = parseInt(searchParams.get('days') || '7', 10);
     const timezone = searchParams.get('timezone') || 'UTC';
 
     // Call the service method
-    const result = await getNetworkActivity({
+    const result = await getTodaysActivity({
       db: supabase,
       userId: authResult.data.id,
-      days,
       timezone
     });
 

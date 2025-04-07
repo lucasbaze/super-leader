@@ -14,6 +14,7 @@ export {
   Copy,
   EyeOff,
   Tag,
+  BookUser,
   ListChecks,
   Link,
   Check,

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { BookUser } from '@/components/icons';
 import { NetworkCompletenessData } from '@/services/network/get-network-completeness';
 
 import { CompletionCard } from './completeness-card';
@@ -50,11 +51,14 @@ export function CompletenessOverview({ data, className }: CompletionOverviewProp
   return (
     <div ref={containerRef} className={className}>
       <div className='mb-4'>
-        <h1 className='text-lg font-semibold'>Completeness Overview</h1>
+        <h1 className='mb-2 flex items-center text-lg font-semibold'>
+          <BookUser className='mr-2 size-4 text-muted-foreground' />
+          Completeness Overview
+        </h1>
         <p className='mb-4 text-sm text-muted-foreground'>
-          This measures how much information you and Superleader have collected about your network.
-          The more diverse information you have, the more you're able to connect and add value with
-          people.
+          Think of this as "quality" score. This measures how much information you and Superleader
+          have collected about your network. The more diverse information you have, the more you're
+          able to connect and add value with people.
         </p>
       </div>
 

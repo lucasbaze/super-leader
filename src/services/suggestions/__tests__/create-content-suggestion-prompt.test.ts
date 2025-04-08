@@ -8,7 +8,8 @@ import {
   createTestUser
 } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
-import { AuthUser, Person } from '@/types/database';
+import { Person } from '@/types/custom';
+import { AuthUser } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 import { generateObject } from '@/vendors/ai';
 

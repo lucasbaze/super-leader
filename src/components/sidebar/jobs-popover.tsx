@@ -23,33 +23,82 @@ type Run = {
   updatedAt: Date;
 };
 
+// Define the error type from the hook
+type TriggerError = {
+  status?: number;
+  message?: string;
+};
+
 export function JobsPopover({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
+  const [tokenError, setTokenError] = useState<boolean>(false);
+  const [isLoadingToken, setIsLoadingToken] = useState<boolean>(true);
   const executingRuns = useRef(new Set<string>());
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch('/api/trigger/token');
-        const data = await response.json();
-        if (data.data?.token) {
-          setToken(data.data.token);
-        }
-      } catch (error) {
-        console.error('Failed to fetch trigger token:', error);
-      }
-    };
+  // Function to fetch the token
+  const fetchToken = async () => {
+    setIsLoadingToken(true);
+    setTokenError(false);
 
+    try {
+      const response = await fetch('/api/trigger/token');
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch token: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.data?.token) {
+        setToken(data.data.token);
+        setTokenError(false);
+      } else {
+        throw new Error('Token not found in response');
+      }
+    } catch (error) {
+      console.error('Failed to fetch trigger token:', error);
+      setTokenError(true);
+    } finally {
+      setIsLoadingToken(false);
+    }
+  };
+
+  // Initial token fetch
+  useEffect(() => {
     fetchToken();
   }, []);
 
-  const { runs } = useRealtimeRunsWithTag(`user:${userId}`, {
+  // Set up token refresh interval (every 10 minutes)
+  useEffect(() => {
+    const refreshInterval = setInterval(
+      () => {
+        fetchToken();
+      },
+      10 * 60 * 1000
+    ); // 10 minutes
+
+    return () => clearInterval(refreshInterval);
+  }, []);
+
+  const { runs, error: runsError } = useRealtimeRunsWithTag(`user:${userId}`, {
     accessToken: token,
     enabled: !!token
   });
+
+  // Handle token errors from the hook
+  useEffect(() => {
+    if (runsError) {
+      console.error('Error with runs subscription:', runsError);
+      // If we get a 409 error (likely token expired), refresh the token
+      const triggerError = runsError as TriggerError;
+      if (triggerError.status === 409) {
+        fetchToken();
+      }
+    }
+  }, [runsError]);
 
   const hasExecutingJobs = runs?.some((run) => run.status === 'EXECUTING');
 
@@ -120,28 +169,34 @@ export function JobsPopover({ userId }: { userId: string }) {
           <h4 className='font-medium'>Background AI Tasks</h4>
         </div>
         <div className='max-h-[28rem] overflow-y-auto'>
-          {token ? (
-            runs?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).length ? (
-              runs.map((run) => {
-                if (run.taskIdentifier === JOBS.UPDATE_AI_SUMMARY) {
-                  return (
-                    <UpdateAISummaryJobNotifier
-                      key={run.id}
-                      run={run}
-                      onClick={() => handleRunClick(run)}
-                    />
-                  );
-                }
-                return null;
-              })
-            ) : (
-              <div className='p-4 text-center text-sm text-muted-foreground'>
-                No background AI tasks run this session
-              </div>
-            )
+          {isLoadingToken ? (
+            <div className='p-4 text-center text-sm text-muted-foreground'>
+              <Loader className='mx-auto size-5 animate-spin' />
+              <p className='mt-2'>Connecting to background jobs...</p>
+            </div>
+          ) : tokenError ? (
+            <div className='p-4 text-center text-sm text-muted-foreground'>
+              <p>Failed to connect to background jobs.</p>
+              <Button variant='outline' size='sm' className='mt-2' onClick={() => fetchToken()}>
+                Retry
+              </Button>
+            </div>
+          ) : runs?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).length ? (
+            runs.map((run) => {
+              if (run.taskIdentifier === JOBS.UPDATE_AI_SUMMARY) {
+                return (
+                  <UpdateAISummaryJobNotifier
+                    key={run.id}
+                    run={run}
+                    onClick={() => handleRunClick(run)}
+                  />
+                );
+              }
+              return null;
+            })
           ) : (
             <div className='p-4 text-center text-sm text-muted-foreground'>
-              Uh oh... failed to connect to background jobs. Please refresh the page.
+              No background AI tasks run this session
             </div>
           )}
         </div>

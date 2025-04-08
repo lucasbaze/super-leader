@@ -1,9 +1,10 @@
 
 Next: 
   ☐ Add better loading layout for the list views
-  ☐ Fix bug with trigger.dev not firing...
   ☐ Update the avatar component to save an actual image... ( this may be a separate feature )
+  ☐ Add a "delete" note button to the note view
   
+  ✔ Fix bug with trigger.dev not firing... @done(25-04-08 15:11)
   ✔ Fix the loading & styling of the "notes" / interactions section @done(25-04-08 13:32)
   ✔ Remove the unused open-router & perplexity methods @done(25-04-08 12:55)
   ✔ Fix the duplicate of "interactions" in the top bar ( this means dupe in the function as well ) @done(25-04-08 12:36)

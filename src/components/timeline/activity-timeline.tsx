@@ -51,7 +51,7 @@ function TimelineItem({ interaction, isLast }: TimelineItemProps) {
     interactionIconMap[interactionType as keyof typeof interactionIconMap] || Calendar;
 
   // Determine if we should show the expand/collapse button
-  const shouldCollapse = interaction.note && interaction.note.length > 130;
+  const shouldCollapse = interaction.note && interaction.note.length > 400;
 
   return (
     <div className='relative flex gap-4'>
@@ -81,7 +81,7 @@ function TimelineItem({ interaction, isLast }: TimelineItemProps) {
             <div
               className={cn(
                 'overflow-hidden rounded-md bg-sidebar px-3 py-2 text-muted-foreground transition-all duration-200',
-                shouldCollapse && !isExpanded && 'max-h-[90px]'
+                shouldCollapse && !isExpanded && 'max-h-[130px]'
               )}>
               {interaction.note}
             </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { Check, HelpCircle, Loader2, X } from '@/components/icons';
+import { Ban, Check, CircleDashed, HelpCircle, Loader2, X } from '@/components/icons';
 import { routes } from '@/lib/routes';
 
 type UpdateAISummaryJobProps = {
@@ -19,14 +19,18 @@ type UpdateAISummaryJobProps = {
 };
 
 export function UpdateAISummaryJobNotifier({ run, onClick }: UpdateAISummaryJobProps) {
-  const isExecuting = run.status === 'EXECUTING';
-  const isCompleted = run.status === 'COMPLETED';
-  const isFailed = run.status === 'FAILED';
+  const isPending = ['PENDING_VERSION', 'QUEUED', 'DELAYED'].includes(run.status);
+  const isExecuting = ['EXECUTING', 'REATTEMPTING', 'WAITING'].includes(run.status);
+  const isCompleted = ['COMPLETED'].includes(run.status);
+  const isFailed = ['FAILED', 'CRASHED', 'SYSTEM_FAILURE'].includes(run.status);
+  const isCancelled = ['CANCELED', 'INTERRUPTED', 'FROZEN'].includes(run.status);
 
   const StatusIcon = () => {
+    if (isPending) return <CircleDashed className='size-4 animate-spin' />;
     if (isExecuting) return <Loader2 className='size-4 animate-spin' />;
     if (isCompleted) return <Check className='size-4 text-green-500' />;
     if (isFailed) return <X className='size-4 text-destructive' />;
+    if (isCancelled) return <Ban className='size-4 text-destructive' />;
     return <HelpCircle className='size-4 text-muted-foreground' />;
   };
 

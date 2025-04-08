@@ -8,6 +8,7 @@ import { ChevronLeft, Loader, Sparkles } from '@/components/icons';
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
 import { PersonHeader } from '@/components/person/person-header';
+import { PersonLayoutSkeleton } from '@/components/skeletons/person-layout-skeleton';
 import { Button } from '@/components/ui/button';
 import { usePerson } from '@/hooks/use-person';
 import { useTasks } from '@/hooks/use-tasks';
@@ -42,7 +43,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     }
   }, [data?.person, addRecentlyViewed]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <PersonLayoutSkeleton />;
 
   return (
     <div className='absolute inset-0'>

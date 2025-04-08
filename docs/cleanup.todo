@@ -15,7 +15,7 @@ Next:
   ✔ Clean up organization of the stories in storybook @done(25-04-07 13:22)
   ✔ Add a "crop" viewed on the notes, for example with Jeff T's notes in production @done(25-04-07 13:11)
   ✔ Do not "display" null for the lastname if it's null @done(25-04-07 12:20)
-  ☐ Call the "Stop" function when changing routes ( Stops when changing routes within the person, but shouldn't be stopped within subroutes)
+  ✔ Call the "Stop" function when changing routes ( Stops when changing routes within the person, but shouldn't be stopped within subroutes) @done(25-04-07 21:15)
   ✔ Remove the "chat" icon in search for now @done(25-04-07 12:05)
   ✔ Rename "Goals" to something else? @done(25-04-07 12:00)
   ✔ Remove the "Saved" bar for now @done(25-04-07 11:52)
@@ -27,5 +27,5 @@ Thoughts:
   - i.e. Are they in the right "bucket". How well do you know this person? Are you building a "relationship" with them or maintaining one? 
   - How well does this person know you?
   Need to think about these further "building" type questions... Might affect the summary as well...
-  
+
   ☐ Adding a contact information, address, or website should could as an "interaction" or at the very least update the summary of the person in some way... probably both honestly...

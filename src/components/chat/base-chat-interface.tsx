@@ -10,6 +10,7 @@ import { PendingAction, useChatInterface } from '@/hooks/chat/use-chat-interface
 import { useSavedMessages } from '@/hooks/chat/use-saved-messages';
 import { useScrollHandling } from '@/hooks/use-scroll-handling';
 import { useChatConfig } from '@/lib/chat/chat-context';
+import { isPath } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import {
   CONVERSATION_OWNER_TYPES,
@@ -74,6 +75,7 @@ export function BaseChatInterface({
   const pathname = usePathname();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const prevPathRef = useRef<string | null>(null);
   const { config } = useChatConfig();
 
   const { Header, MessagesList, Input } = components;
@@ -123,8 +125,33 @@ export function BaseChatInterface({
     fetchNextPage
   });
 
+  // Stop the chat when we navigate between paths
   useEffect(() => {
-    chatInterface.stop();
+    // Skip the first render
+    if (prevPathRef.current === null) {
+      prevPathRef.current = pathname;
+      return;
+    }
+
+    // Simple check: if we're navigating away from the current person/group context
+    // and not to another person/group context, stop the chat
+    const isPersonPath = (path: string) => path.includes('/person/');
+    const isGroupPath = (path: string) => path.includes('/group/');
+
+    const prevIsPerson = isPersonPath(prevPathRef.current);
+    const currentIsPerson = isPersonPath(pathname);
+    const prevIsGroup = isGroupPath(prevPathRef.current);
+    const currentIsGroup = isGroupPath(pathname);
+
+    // Don't stop if we're staying in the same person/group context
+    if ((prevIsPerson && currentIsPerson) || (prevIsGroup && currentIsGroup)) {
+      return;
+    } else {
+      chatInterface.stop();
+    }
+
+    // Update the previous path reference
+    prevPathRef.current = pathname;
   }, [pathname]);
 
   return (

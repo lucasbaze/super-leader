@@ -327,6 +327,216 @@ describe('getTodaysActivity service', () => {
         });
       });
     });
+
+    it('should deduplicate people in the results when there are multiple interactions with the same person', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        // Create test user and reserved groups
+        testUser = await createTestUser({ db });
+        const groups = await setupReservedGroups(db, testUser.id);
+
+        // Create a person in inner5
+        const person = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Michael',
+            last_name: 'Dedup'
+          }
+        });
+
+        // Add to inner5 group
+        await createTestGroupMember({
+          db,
+          data: {
+            group_id: groups.inner5.id,
+            person_id: person.id,
+            user_id: testUser.id
+          }
+        });
+
+        // Create multiple interactions with the same person today
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person.id,
+            type: 'meeting',
+            note: 'First interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person.id,
+            type: 'call',
+            note: 'Second interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person.id,
+            type: 'email',
+            note: 'Third interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person.id,
+            type: 'meeting',
+            note: 'Fourth interaction'
+          }
+        });
+
+        const result = await getTodaysActivity({
+          db,
+          userId: testUser.id,
+          timezone: 'UTC'
+        });
+
+        expect(result.error).toBeNull();
+        expect(result.data?.inner5).toEqual({
+          count: 4,
+          people: [{ name: 'test_Michael test_Dedup' }]
+        });
+        expect(result.data?.central50.count).toBe(0);
+        expect(result.data?.strategic100.count).toBe(0);
+        expect(result.data?.everyone.count).toBe(0);
+      });
+    });
+
+    it('should correctly count interactions and deduplicate people across different groups', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        // Create test user and reserved groups
+        testUser = await createTestUser({ db });
+        const groups = await setupReservedGroups(db, testUser.id);
+
+        // Create two people in inner5
+        const person1 = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Michael',
+            last_name: 'Multi'
+          }
+        });
+
+        const person2 = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Kendall',
+            last_name: 'Multi'
+          }
+        });
+
+        // Add both to inner5 group
+        await createTestGroupMember({
+          db,
+          data: {
+            group_id: groups.inner5.id,
+            person_id: person1.id,
+            user_id: testUser.id
+          }
+        });
+
+        await createTestGroupMember({
+          db,
+          data: {
+            group_id: groups.inner5.id,
+            person_id: person2.id,
+            user_id: testUser.id
+          }
+        });
+
+        // Create multiple interactions with person1
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person1.id,
+            type: 'meeting',
+            note: 'First interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person1.id,
+            type: 'call',
+            note: 'Second interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person1.id,
+            type: 'email',
+            note: 'Third interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person1.id,
+            type: 'meeting',
+            note: 'Fourth interaction'
+          }
+        });
+
+        // Create multiple interactions with person2
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person2.id,
+            type: 'meeting',
+            note: 'First interaction'
+          }
+        });
+
+        await createTestInteraction({
+          db,
+          data: {
+            user_id: testUser.id,
+            person_id: person2.id,
+            type: 'call',
+            note: 'Second interaction'
+          }
+        });
+
+        const result = await getTodaysActivity({
+          db,
+          userId: testUser.id,
+          timezone: 'UTC'
+        });
+
+        expect(result.error).toBeNull();
+        expect(result.data?.inner5).toEqual({
+          count: 6,
+          people: expect.arrayContaining([
+            { name: 'test_Michael test_Multi' },
+            { name: 'test_Kendall test_Multi' }
+          ])
+        });
+        expect(result.data?.central50.count).toBe(0);
+        expect(result.data?.strategic100.count).toBe(0);
+        expect(result.data?.everyone.count).toBe(0);
+      });
+    });
   });
 
   describe('error cases', () => {

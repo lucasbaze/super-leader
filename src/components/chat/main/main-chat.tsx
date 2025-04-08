@@ -22,7 +22,7 @@ const mainConfig: ChatConfig = {
     innerContainer: 'absolute inset-0 flex flex-col'
   },
   messageStyles: {
-    assistant: 'max-w-[90%] break-words rounded-sm bg-muted px-3 py-2 text-sm',
+    assistant: 'max-w-[90%] break-words rounded-sm bg-sidebar px-3 py-2 text-sm',
     container: 'bg-transparent',
     user: 'max-w-[90%] break-words rounded-sm bg-gradient-to-r from-primary to-blue-500 px-3 py-2 text-sm text-primary-foreground',
     toolCall: 'bg-transparent w-full'

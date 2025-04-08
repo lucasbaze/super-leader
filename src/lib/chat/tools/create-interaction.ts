@@ -79,5 +79,6 @@ export const createInteractionTool: ChatTool<
     console.log('Invalidating queries for:', args);
     queryClient.invalidateQueries({ queryKey: ['person-activity', args.person_id] });
     queryClient.invalidateQueries({ queryKey: ['person', args.person_id] });
+    queryClient.invalidateQueries({ queryKey: ['todays-network-activity'] });
   }
 };

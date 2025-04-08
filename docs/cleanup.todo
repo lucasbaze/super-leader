@@ -1,13 +1,13 @@
 
 Next: 
-  ☐ Move the "recent people" to the bottom of the search list and make it longer
-  ☐ Fix the duplicate of "interactions" in the top bar ( this means dupe in the function as well )
-  ☐ Fix the Summary Profile view within "Goals"
   ☐ Add better loading layout for the list views
-  ☐ Fix the loading & styling of the "notes" / interactions section
-  ☐ Refactor to use the `generateObject` via a prompt for all those calls
-  ☐ Remove the unused open-router & perplexity methods
+  ☐ Fix bug with trigger.dev not firing...
+  ☐ Update the avatar component to save an actual image... ( this may be a separate feature )
   
+  ✔ Fix the loading & styling of the "notes" / interactions section @done(25-04-08 13:32)
+  ✔ Remove the unused open-router & perplexity methods @done(25-04-08 12:55)
+  ✔ Fix the duplicate of "interactions" in the top bar ( this means dupe in the function as well ) @done(25-04-08 12:36)
+  ✔ Move the "recent people" to the bottom of the search list and make it longer @done(25-04-08 12:19)
   ✔ Fix loading of the "profile" section to look more skeleton like z@done(25-04-07 22:03)
   ✔ Update the "initial-message" to include the summary @done(25-04-07 21:15)
   ✔ Update icon of "Network" to something more analytical? (Swap Network icon to "people", move "person" to the "goals" and rename to "Profile") @done(25-04-07 13:22)
@@ -19,6 +19,9 @@ Next:
   ✔ Rename "Goals" to something else? @done(25-04-07 12:00)
   ✔ Remove the "Saved" bar for now @done(25-04-07 11:52)
 
+
+Later: 
+  ☐ Fix the Summary Profile view within "Goals"
 
 Thoughts:
   ☐ Adding the "initial message" prompt for each person is interesting... It makes me think that the AI should be "incrementally" building the profile... which means I need to figure out the right way to do that... 

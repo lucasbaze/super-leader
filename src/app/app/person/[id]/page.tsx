@@ -10,7 +10,7 @@ export default function PersonActivityPage() {
   const { data: interactions, isLoading, error } = usePersonActivity(params.id as string);
 
   if (isLoading) {
-    return <div className='text-muted-foreground'>Loading activity...</div>;
+    return <div className='p-4 text-sm text-muted-foreground'>Loading activity...</div>;
   }
 
   if (error) {

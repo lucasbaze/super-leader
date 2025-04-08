@@ -1,8 +1,8 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { GetTaskSuggestionResult } from '@/services/tasks/types';
-import { PersonGroup } from '@/types/custom';
-import { Address, ContactMethod, DBClient, Group, Person, Website } from '@/types/database';
+import { Person, PersonGroup } from '@/types/custom';
+import { Address, ContactMethod, DBClient, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 

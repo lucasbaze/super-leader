@@ -37,4 +37,5 @@ const SinglePersonSummarySchema = z.object({
     )
 });
 
+export type SinglePersonSummary = z.infer<typeof SinglePersonSummarySchema>;
 export { SinglePersonSummarySchema };

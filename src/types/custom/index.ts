@@ -1,5 +1,6 @@
-// TODO: Move to service types
-import { Group } from '../database';
+import { SinglePersonSummary } from '@/services/summary/schemas';
+
+import { Group, Person as PersonDB } from '../database';
 
 export type PersonGroup = Pick<Group, 'id' | 'name' | 'slug' | 'icon'>;
 
@@ -15,4 +16,8 @@ export type Onboarding = {
   completed: boolean;
   steps: OnboardingSteps;
   currentStep: string;
+};
+
+export type Person = PersonDB & {
+  ai_summary: SinglePersonSummary;
 };

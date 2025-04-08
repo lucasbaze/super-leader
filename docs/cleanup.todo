@@ -1,6 +1,5 @@
 
 Next: 
-  ☐ Update the "initial-message" to include the summary
   ☐ Move the "recent people" to the bottom of the search list and make it longer
   ☐ Fix the duplicate of "interactions" in the top bar ( this means dupe in the function as well )
   ☐ Fix the Summary Profile view within "Goals"
@@ -11,6 +10,7 @@ Next:
   ☐ Refactor to use the `generateObject` via a prompt for all those calls
   ☐ Remove the unused open-router & perplexity methods
   
+  ✔ Update the "initial-message" to include the summary @done(25-04-07 21:15)
   ✔ Update icon of "Network" to something more analytical? (Swap Network icon to "people", move "person" to the "goals" and rename to "Profile") @done(25-04-07 13:22)
   ✔ Clean up organization of the stories in storybook @done(25-04-07 13:22)
   ✔ Add a "crop" viewed on the notes, for example with Jeff T's notes in production @done(25-04-07 13:11)

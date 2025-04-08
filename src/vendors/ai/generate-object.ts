@@ -5,8 +5,6 @@ import { z } from 'zod';
 import { toError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 
-import { createOpenRouterClient } from './client';
-
 export type TGenerateObjectOptions =
   | {
       messages: CoreMessage[];
@@ -23,24 +21,13 @@ export type TGenerateObjectOptions =
       model?: string;
     };
 
-export async function generateObject({
-  messages,
-  prompt,
-  schema,
-  webResults,
-  model = 'openai/gpt-4'
-}: TGenerateObjectOptions) {
+export async function generateObject({ messages, prompt, schema }: TGenerateObjectOptions) {
   try {
-    // const openRouterClient = createOpenRouterClient({ webResults });
-
-    // console.log('AI::GenerateObject::Starting', { model });
-
     const completion = await generateObjectAi({
       // TODO: Used for generating the summaries about individuals... may not be needed if 4o is good enough
       model: openai('gpt-4o', {
         structuredOutputs: true
       }),
-      // model: openRouterClient.chat(model),
       messages,
       prompt,
       schema

@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/messages';
-import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';

@@ -1,15 +1,15 @@
-import { dateHandler } from '@/lib/dates/helpers';
 import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
-import { $assistant } from '@/lib/llm/messages';
-import { APP_SEGMENTS, BASE_PATH, isPath } from '@/lib/routes';
+import { APP_SEGMENTS } from '@/lib/routes';
 import {
   CONVERSATION_OWNER_TYPES,
   ConversationOwnerType
 } from '@/services/conversations/constants';
-import { DBClient, Message } from '@/types/database';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
+
+import { formatPersonSummary } from '../person/format-person-summary';
 
 export const ERRORS = {
   FETCH_FAILED: createError(
@@ -26,17 +26,6 @@ type GetInitialMessagesParams = {
   ownerType: ConversationOwnerType;
   ownerIdentifier: string;
 };
-
-// Helper to create a standard message structure
-const createMessage = (id: string, content: string): Message => ({
-  id: `superleader-msg-${id}`,
-  role: 'assistant',
-  content: '',
-  createdAt: dateHandler().toISOString(),
-  toolInvocations: [],
-  // @ts-ignore - TODO: Fix typing
-  message: $assistant(content, id)
-});
 
 // Define initial messages for different paths
 export const INITIAL_MESSAGES = {
@@ -74,9 +63,16 @@ export const createGroupMessages = (groupName: string, icon: string) => [
   'You can add folks through chat or via the UI.'
 ];
 
-export const createPersonMessages = (firstName: string) => [
-  'Superleader keeps track of a separate conversation in context with each person.',
-  `In this chat for ${firstName}, you can take notes, ask for content suggestions, add to groups, etc...`
+export const createPersonMessage = (personSummary: string | null) => [
+  `You are a master of relationsihp building. Your job is to look at the summary below and suggest a only ONE single action for the person to take. This can be simple such as adding missing information, prompting a follow up question, or reminding the user about a task or upcoming event / note. If null or no information, then the person is new and you should prompt the user to add information about them.
+
+  Keep it short and to the point. No more than 1 sentence. Do not include any filler text, just the action in the form of a question / suggestion. 
+
+  An example could be: "Do you know what inspires <firstName>? If so, you should add it. If not, you should ask them!" or "It's been a while since you last talked to <firstName>, you should reach out to them and see how they are doing." or "I noticed you haven't added any contact information for <firstName>, would you like to add that now? 
+
+  # Summary:
+  ${personSummary}
+  `
 ];
 
 export type GetInitialMessageServiceResult = ServiceResponse<string[]>;
@@ -90,19 +86,17 @@ export async function getInitialMessages({
   try {
     // Handle person-specific messages
     if (ownerType === CONVERSATION_OWNER_TYPES.PERSON && ownerIdentifier) {
-      const { data: person, error: personError } = await db
-        .from('person')
-        .select('first_name')
-        .eq('id', ownerIdentifier)
-        .eq('user_id', userId)
-        .single();
+      const summary = await formatPersonSummary({
+        db,
+        personId: ownerIdentifier
+      });
 
-      if (personError) {
-        errorLogger.log(ERRORS.FETCH_FAILED, { details: personError });
+      if (summary.error) {
+        errorLogger.log(ERRORS.FETCH_FAILED, { details: summary.error });
         return { data: null, error: ERRORS.FETCH_FAILED };
       }
 
-      return { data: createPersonMessages(person.first_name), error: null };
+      return { data: createPersonMessage(summary.data), error: null };
     }
 
     // Handle group-specific messages (for backward compatibility)

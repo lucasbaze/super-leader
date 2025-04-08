@@ -1,19 +1,15 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import type { CoreMessage } from 'ai';
-import { v4 as uuidv4 } from 'uuid';
 
 import { CONVERSATION_OWNER_TYPES } from '@/services/conversations/constants';
-import { createConversation } from '@/services/conversations/create-conversation';
 import { createTestGroup } from '@/tests/test-builder/create-group';
 import { createTestPerson } from '@/tests/test-builder/create-person';
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
-import { Message } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 
 import {
   createGroupMessages,
-  createPersonMessages,
+  createPersonMessage,
   ERRORS,
   getInitialMessages,
   INITIAL_MESSAGES
@@ -44,11 +40,10 @@ describe('get-initial-message-service', () => {
           });
 
           expect(result.error).toBeNull();
-          expect(result.data).toHaveLength(2); // Initial messages for person
+          expect(result.data).toHaveLength(1); // Initial messages for person
           const messages = result.data;
 
-          expect(messages?.[0]).toBe(createPersonMessages('test_John')[0]);
-          expect(messages?.[1]).toBe(createPersonMessages('test_John')[1]);
+          expect(messages?.[0]).toContain('test_John');
         });
       });
 

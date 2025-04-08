@@ -1,3 +1,6 @@
+Note:
+  - Tasks have an overlap with the "follow-ups" feature. 
+
 Detour: 
   ✔ Update the summary output to be a little cleaner / easier to read @done(25-03-26 00:16)
   ✔ Trigger update-summary generation when a new note or interaction is created @done(25-04-01 00:33)
@@ -32,6 +35,7 @@ Next:
   ☐ Need to be able to check tasks off from there as well.
   ☐ Think about how to handle the AI based "Snooze" functionality 
   ☐ Need to think about the "gamification" in relation to the tasks / displaying metrics and "streaks". 
+  ☐ Enable the ability to see past tasks for example using a "withPastTasks" filter
   
 Later: 
   ☐ Need to implement the "Bad suggestion" reason

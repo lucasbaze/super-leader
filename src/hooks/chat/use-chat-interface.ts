@@ -78,20 +78,8 @@ export function useChatInterface({
         }
         return prevActions;
       });
-
-      // if (toolCall.toolName === CHAT_TOOLS.GET_PERSON_SUGGESTIONS) {
-      //   return;
-      // }
-
-      // setPendingAction({
-      //   type: 'function',
-      //   name: toolCall.toolName,
-      //   toolCallId: toolCall.toolCallId,
-      //   arguments: toolCall.args
-      // });
     },
     onFinish: async (result) => {
-      console.log('onFinish', JSON.stringify(result, null, 2));
       // Call "saveMessages" method and pass in this last
       setChatFinished(true);
       setResultingMessage(result);

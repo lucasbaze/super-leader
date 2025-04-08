@@ -8,12 +8,24 @@ Next:
   ☐ Move the "Update summary" button into the "summary" section
   ☐ Fix the loading & styling of the "notes" / interactions section
   ☐ Fix loading of the "profile" section to look more skeleton like
+  ☐ Refactor to use the `generateObject` via a prompt for all those calls
+  ☐ Remove the unused open-router & perplexity methods
   
   ✔ Update icon of "Network" to something more analytical? (Swap Network icon to "people", move "person" to the "goals" and rename to "Profile") @done(25-04-07 13:22)
   ✔ Clean up organization of the stories in storybook @done(25-04-07 13:22)
   ✔ Add a "crop" viewed on the notes, for example with Jeff T's notes in production @done(25-04-07 13:11)
   ✔ Do not "display" null for the lastname if it's null @done(25-04-07 12:20)
-  ✔ Call the "Stop" function when changing routes @done(25-04-07 12:11)
+  ☐ Call the "Stop" function when changing routes ( Stops when changing routes within the person, but shouldn't be stopped within subroutes)
   ✔ Remove the "chat" icon in search for now @done(25-04-07 12:05)
   ✔ Rename "Goals" to something else? @done(25-04-07 12:00)
   ✔ Remove the "Saved" bar for now @done(25-04-07 11:52)
+
+
+Thoughts:
+  ☐ Adding the "initial message" prompt for each person is interesting... It makes me think that the AI should be "incrementally" building the profile... which means I need to figure out the right way to do that... 
+
+  - i.e. Are they in the right "bucket". How well do you know this person? Are you building a "relationship" with them or maintaining one? 
+  - How well does this person know you?
+  Need to think about these further "building" type questions... Might affect the summary as well...
+  
+  ☐ Adding a contact information, address, or website should could as an "interaction" or at the very least update the summary of the person in some way... probably both honestly...

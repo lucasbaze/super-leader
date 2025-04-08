@@ -127,35 +127,40 @@ export function GlobalSearch() {
           onOpenAutoFocus={(e) => {
             e.preventDefault();
           }}>
-          <div
-            ref={resultsRef}
-            className='max-h-[360px] overflow-auto'
-            role='listbox'
-            tabIndex={-1}>
-            {people.length === 0 ? (
-              <div className='flex items-center justify-center py-6 text-sm text-muted-foreground'>
-                No people found
-              </div>
-            ) : (
-              <div className='py-2'>
-                {recentlyViewed.length > 0 && (
-                  <>
-                    <SearchSectionHeader label='Recently Viewed' onClear={clearRecentlyViewed} />
-                    {recentlyViewed.map((person, index) => (
-                      <SimpleSearchListItem
-                        key={person.id}
-                        person={person}
-                        index={index}
-                        activeIndex={activeIndex}
-                        onSelect={handleSelectPerson}
-                      />
-                    ))}
-                  </>
-                )}
-                <SearchSectionHeader
-                  label={!isFetching && searchTerm ? 'Results' : 'Recently Added'}
-                />
-                {people.map((person, index) => (
+          <div className='flex flex-col'>
+            {/* Search Results Section */}
+            <div
+              ref={resultsRef}
+              className='max-h-[360px] overflow-auto'
+              role='listbox'
+              tabIndex={-1}>
+              {people.length === 0 ? (
+                <div className='flex items-center justify-center py-6 text-sm text-muted-foreground'>
+                  No people found
+                </div>
+              ) : (
+                <div className='py-2'>
+                  <SearchSectionHeader
+                    label={!isFetching && searchTerm ? 'Results' : 'Recently Added'}
+                  />
+                  {people.map((person, index) => (
+                    <SimpleSearchListItem
+                      key={person.id}
+                      person={person}
+                      index={index}
+                      activeIndex={activeIndex}
+                      onSelect={handleSelectPerson}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Recently Viewed Section - Attached to bottom */}
+            {recentlyViewed.length > 0 && (
+              <div className='border-t py-2'>
+                <SearchSectionHeader label='Recently Viewed' onClear={clearRecentlyViewed} />
+                {recentlyViewed.map((person, index) => (
                   <SimpleSearchListItem
                     key={person.id}
                     person={person}

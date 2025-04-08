@@ -1,9 +1,5 @@
 
 Next: 
-  ☐ Add better loading layout for the list views
-  ☐ Update the avatar component to save an actual image... ( this may be a separate feature )
-  ☐ Add a "delete" note button to the note view
-  
   ✔ Fix bug with trigger.dev not firing... @done(25-04-08 15:11)
   ✔ Fix the loading & styling of the "notes" / interactions section @done(25-04-08 13:32)
   ✔ Remove the unused open-router & perplexity methods @done(25-04-08 12:55)
@@ -23,6 +19,8 @@ Next:
 
 Later: 
   ☐ Fix the Summary Profile view within "Goals"
+  ☐ Update the avatar component to save an actual image... ( this may be a separate feature )
+  ☐ Add a "delete" note button to the note view
 
 Thoughts:
   ☐ Adding the "initial message" prompt for each person is interesting... It makes me think that the AI should be "incrementally" building the profile... which means I need to figure out the right way to do that... 

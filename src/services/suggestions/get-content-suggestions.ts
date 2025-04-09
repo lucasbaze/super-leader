@@ -185,7 +185,8 @@ export async function getContentSuggestionsForPerson({
     const generatedTopic = await generateTopic({
       personSummary: context.personSummary,
       previousTopics: Array.from(new Set(context.previousSuggestions.map((suggestion) => suggestion.topic))),
-      quantity: 2
+      quantity: 2,
+      requestedContent
     });
     console.log('Suggestions::GetContentSuggestionsForPerson::generatedTopic', generatedTopic);
 

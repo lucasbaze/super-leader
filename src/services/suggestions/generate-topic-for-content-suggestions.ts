@@ -47,9 +47,15 @@ export interface GenerateTopicParams {
   personSummary: string;
   previousTopics: string[];
   quantity?: number;
+  requestedContent?: string;
 }
 
-export async function generateContentTopics({ personSummary, previousTopics, quantity = 2 }: GenerateTopicParams) {
+export async function generateContentTopics({
+  personSummary,
+  previousTopics,
+  quantity = 2,
+  requestedContent
+}: GenerateTopicParams) {
   const prompt = stripIndents`
     
     # Objective
@@ -65,6 +71,7 @@ export async function generateContentTopics({ personSummary, previousTopics, qua
       }
 
     ## Guidelines:
+      - If the user has specified a content type, use that content type in the topic and prompt.
       - There should only be 1 topic and it should be specific and relevant to the person
       - Extract exclusively and only 1 main topic of interest from the provided information
       - The prompt should be detailed but concise
@@ -82,6 +89,9 @@ export async function generateContentTopics({ personSummary, previousTopics, qua
         "topic": "real estate events",
         "prompt": "Find ${quantity} events happening in Houston, Texas that an 45 year old real estate developer would be interested in."
       }
+      
+    # Requested Content
+    ${requestedContent ? `I want to get content suggestions in relation to the user for the following content: ${requestedContent}.` : 'No requested content was provided.'}
       
     # Previous Topic Suggestions
     ${

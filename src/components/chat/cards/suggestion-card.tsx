@@ -37,7 +37,7 @@ export function SuggestionCard({ suggestion }: SuggestionCardProps) {
   const contentVariant = suggestion.suggestion;
 
   const handleCopy = async (message: string) => {
-    copyToClipboard(message);
+    copyToClipboard(`${contentVariant.suggestedContent.url}\n${message}`);
   };
 
   return (

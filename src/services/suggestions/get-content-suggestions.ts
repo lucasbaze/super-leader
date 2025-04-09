@@ -11,6 +11,7 @@ import {
   generateContentTopics,
   generateTopicForContentSuggestionsByPerson
 } from './generate-topic-for-content-suggestions';
+import { saveSuggestions } from './save-suggestions';
 import {
   ContentSuggestionWithId,
   ContentVariants,
@@ -194,8 +195,6 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: generatedTopic.error };
     }
 
-    // return { data: generatedTopic.data, error: null };
-
     // Create content suggestions
     const suggestionsResult = await generateSuggestions({
       topicPrompt: generatedTopic.data.prompt,
@@ -209,9 +208,7 @@ export async function getContentSuggestionsForPerson({
 
     console.log('Suggestions::GetContentSuggestionsForPerson::suggestionsResult', suggestionsResult.data);
 
-    // return { data: suggestionsResult.data, error: null };
-
-    // // Save suggestions with correct type
+    // Save suggestions with correct type
     const suggestions = suggestionsResult.data.contentVariants.map((suggestion) => ({
       person_id: personId,
       user_id: userId,
@@ -220,44 +217,19 @@ export async function getContentSuggestionsForPerson({
       type
     }));
 
-    // // Save the suggestions to the database
-    // // TODO: Move this to a separate service
+    // Save the suggestions to the database using the new service
+    const savedSuggestionsResult = await saveSuggestions({
+      db,
+      suggestions
+    });
 
-    let savedSuggestions: Suggestion[] = [];
-    try {
-      const { data: dbSuggestions, error } = await db
-        .from('suggestions')
-        .insert(suggestions)
-        .select('*')
-        .returns<Suggestion[]>()
-        .throwOnError();
-
-      if (error) {
-        return {
-          data: null,
-          error: { ...ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR, details: error }
-        };
-      }
-
-      // Map the database suggestions to include both the suggestion content and id
-      const suggestionsWithIds = dbSuggestions.map((dbSuggestion) => ({
-        ...dbSuggestion,
-        id: dbSuggestion.id
-      }));
-
-      savedSuggestions = suggestionsWithIds;
-    } catch (error) {
-      return { data: null, error: ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR };
+    if (savedSuggestionsResult.error || !savedSuggestionsResult.data) {
+      return { data: null, error: savedSuggestionsResult.error };
     }
 
-    console.log(
-      'Suggestions::GetContentSuggestionsForPerson::savedSuggestions',
-      JSON.stringify(savedSuggestions, null, 2)
-    );
-
-    // // Return both the suggestions and the prompt response
+    // Return both the suggestions and the prompt response
     return {
-      data: savedSuggestions,
+      data: savedSuggestionsResult.data,
       error: null
     };
   } catch (error) {

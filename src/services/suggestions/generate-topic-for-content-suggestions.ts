@@ -1,12 +1,6 @@
 import { stripIndents } from 'common-tags';
-import { zodResponseFormat } from 'openai/helpers/zod';
 
 import { createError } from '@/lib/errors';
-import { $system, $user } from '@/lib/llm/messages';
-import { wrapTicks } from '@/lib/utils/strings';
-import { GetPersonResult } from '@/services/person/get-person';
-import { Person } from '@/types/custom';
-import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
@@ -57,7 +51,6 @@ export async function generateContentTopics({
   requestedContent
 }: GenerateTopicParams) {
   const prompt = stripIndents`
-    
     # Objective
       Your objective is to generate a high level topic and a prompt to get content suggestions.
       Analyze the provided person information and return:
@@ -186,77 +179,3 @@ const buildGiftSuggestionPrompt = () => ({
     }
   `
 });
-
-export interface TBuildContentSuggestionAugmentationUserPromptParams {
-  personResult: GetPersonResult;
-  suggestions: Suggestion[];
-  requestedContent?: string;
-}
-
-export const buildContentSuggestionAugmentationUserPrompt = ({
-  personResult,
-  suggestions,
-  requestedContent
-}: TBuildContentSuggestionAugmentationUserPromptParams) => {
-  const { person, interactions } = personResult;
-  const { first_name } = person;
-
-  const previousInteractionsNotes = interactions
-    ?.map((interaction) => {
-      return `- ${interaction.type}: ${interaction.note}`;
-    })
-    .join('\n');
-
-  // Get content titles from suggestions
-  const suggestionsTitles =
-    suggestions && suggestions.length > 0
-      ? suggestions
-          .map((suggestion) => SuggestionSchema.safeParse(suggestion.suggestion).data?.title)
-          .filter((title) => title !== null)
-      : [];
-
-  const prompt = stripIndents`
-  Please generate a prompt that will help generate content suggestions that are relevant to ${first_name}.
-
-  ${requestedContent ? `I want to get content suggestions explicitly for the following content: ${requestedContent}. You can deprioritize previous suggestions or previous notes about the person as I want to focus on the aforementioned specific content.` : ''}
-  
-  Previous Interactions & Notes:
-  ${previousInteractionsNotes && wrapTicks(previousInteractionsNotes)}
-  
-  ${
-    suggestionsTitles.length !== 0
-      ? `
-    These are the titles of suggestions that you have generated the past:
-    ${wrapTicks(suggestionsTitles.join('\n'), 'Previous Suggestions')}
-    
-    Try to generate a prompt that does not overlap with the previous suggestions. However, if there is not have enough infomration about the person to suggest topics outside of the scope of the previous suggestions, then it is okay to suggest similar content. If the previous suggestions focus too much on one topic, suggest topics that could be applicable to interesting to many audiences.
-    `
-      : ''
-  }
-  `;
-  console.log('Suggestions::CreateContentSuggestionAugmentationUserPrompt::prompt', prompt);
-
-  return { prompt };
-};
-
-/*
-
-generateGiftTopics() {
-
-  const prompt = buildGiftSuggestionPrompt({ ... })
-
-  return generateTopicForContentSuggestionsByPerson({
-    personResult,
-    suggestions,
-    type: 'gift',
-    requestedContent
-  })
-}
-
-
-generateContentTopics
-
-
-
-
-*/

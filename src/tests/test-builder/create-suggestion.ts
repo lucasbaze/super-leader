@@ -8,6 +8,7 @@ interface CreateTestSuggestionParams {
     user_id?: string;
     person_id?: string;
     suggestion?: any; // This is a JSON field that can contain various suggestion data
+    topic?: string;
     type?: string;
     viewed?: boolean;
     saved?: boolean;
@@ -25,17 +26,14 @@ export async function createTestSuggestion({ db, data = {} }: CreateTestSuggesti
       contentUrl: `https://example.com/${random}`,
       contentTitle: `Test Content ${random}`
     },
+    topic: data.topic || 'Test Topic',
     type: data.type || SuggestionType.Enum.content,
     viewed: data.viewed ?? false,
     saved: data.saved ?? false,
     bad: data.bad ?? false
   };
 
-  const { data: suggestion, error } = await db
-    .from('suggestions')
-    .insert(defaultData)
-    .select()
-    .single();
+  const { data: suggestion, error } = await db.from('suggestions').insert(defaultData).select().single();
 
   if (error) {
     throw new Error(`Failed to create test suggestion: ${error.message}`);

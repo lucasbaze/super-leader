@@ -6,7 +6,7 @@ import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
 import { formatPersonSummary, FormatPersonSummaryResult } from '../person/format-person-summary';
-import { generateContentSuggestions } from './create-content-suggestions';
+import { generateContentSuggestions } from './generate-content-variants';
 import {
   generateContentTopics,
   generateTopicForContentSuggestionsByPerson
@@ -206,7 +206,10 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: suggestionsResult.error };
     }
 
-    console.log('Suggestions::GetContentSuggestionsForPerson::suggestionsResult', suggestionsResult.data);
+    console.log(
+      'Suggestions::GetContentSuggestionsForPerson::suggestionsResult',
+      JSON.stringify(suggestionsResult.data, null, 2)
+    );
 
     // Save suggestions with correct type
     const suggestions = suggestionsResult.data.contentVariants.map((suggestion) => ({

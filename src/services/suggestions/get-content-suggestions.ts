@@ -177,7 +177,8 @@ export async function getContentSuggestionsForPerson({
     // Create the augmented prompt with type
     const generatedTopic = await generateTopic({
       personSummary: context.personSummary,
-      previousTopics: Array.from(new Set(context.previousSuggestions.map((suggestion) => suggestion.topic)))
+      previousTopics: Array.from(new Set(context.previousSuggestions.map((suggestion) => suggestion.topic))),
+      quantity: 2
     });
     console.log('Suggestions::GetContentSuggestionsForPerson::generatedTopic', generatedTopic);
 

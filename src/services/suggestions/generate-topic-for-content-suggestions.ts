@@ -46,16 +46,17 @@ export const ERRORS = {
 export interface GenerateTopicParams {
   personSummary: string;
   previousTopics: string[];
+  quantity?: number;
 }
 
-export async function generateContentTopics({ personSummary, previousTopics }: GenerateTopicParams) {
+export async function generateContentTopics({ personSummary, previousTopics, quantity = 2 }: GenerateTopicParams) {
   const prompt = stripIndents`
     
     # Objective
       Your objective is to generate a high level topic and a prompt to get content suggestions.
       Analyze the provided person information and return:
       1. A singluar key topic or interest
-      2. A prompt to get at least 3 content suggestions
+      2. A prompt to get at least ${quantity} content suggestions
 
       RETURN JSON IN THIS FORMAT:
       {
@@ -74,12 +75,12 @@ export async function generateContentTopics({ personSummary, previousTopics }: G
     ## Example Outputs: 
       {
         "topic": "fiction writing tips",
-        "prompt": "Find 3 pieces of content on tips for writing fiction, especially for beginners who want to develop their novel writing skills."
+        "prompt": "Find ${quantity} pieces of content on tips for writing fiction, especially for beginners who want to develop their novel writing skills."
       }
 
       {
         "topic": "real estate events",
-        "prompt": "Find 3 events happening in Houston, Texas that an 45 year old real estate developer would be interested in."
+        "prompt": "Find ${quantity} events happening in Houston, Texas that an 45 year old real estate developer would be interested in."
       }
       
     # Previous Topic Suggestions

@@ -1,23 +1,15 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { getPerson, GetPersonResult } from '@/services/person/get-person';
-import { DBClient, Suggestion } from '@/types/database';
+import { Suggestion } from '@/types/custom';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-import { formatPersonSummary, FormatPersonSummaryResult } from '../person/format-person-summary';
+import { formatPersonSummary } from '../person/format-person-summary';
 import { generateContentSuggestions } from './generate-content-variants';
-import {
-  generateContentTopics,
-  generateTopicForContentSuggestionsByPerson
-} from './generate-topic-for-content-suggestions';
+import { generateContentTopics, generateGiftTopics } from './generate-topic-for-content-suggestions';
 import { saveSuggestions } from './save-suggestions';
-import {
-  ContentSuggestionWithId,
-  ContentVariants,
-  GetContentSuggestionsForPersonResponse,
-  SuggestionType
-} from './types';
 
 // Define errors
 export const ERRORS = {
@@ -79,7 +71,7 @@ interface SuggestionContext {
   requestedContent?: string;
   person: GetPersonResult['person'];
   personSummary: string;
-  previousSuggestions: any[];
+  previousSuggestions: Suggestion[];
 }
 
 async function prepareSuggestionContext({
@@ -106,7 +98,8 @@ async function prepareSuggestionContext({
     .eq('person_id', personId)
     .eq('user_id', userId)
     .eq('type', type)
-    .gte('created_at', since);
+    .gte('created_at', since)
+    .returns<Suggestion[]>();
 
   if (error) {
     errorLogger.log({
@@ -134,7 +127,7 @@ async function prepareSuggestionContext({
 
 const promptStrategy = {
   content: generateContentTopics,
-  gift: generateContentTopics // can split if needed later
+  gift: generateGiftTopics
 };
 
 const suggestionStrategy = {
@@ -198,8 +191,9 @@ export async function getContentSuggestionsForPerson({
     // Create content suggestions
     const suggestionsResult = await generateSuggestions({
       topicPrompt: generatedTopic.data.prompt,
-      // TODO: Update this after the suggestion is created with proper typings
-      previousSuggestionTitles: []
+      previousSuggestionTitles: context.previousSuggestions.map(
+        (suggestion) => suggestion.suggestion.suggestedContent.title
+      )
     });
 
     if (suggestionsResult.error || !suggestionsResult.data) {

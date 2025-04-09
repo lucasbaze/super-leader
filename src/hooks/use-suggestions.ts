@@ -1,32 +1,6 @@
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { TUpdateSuggestionRequest } from '@/app/api/suggestions/[suggestionId]/route';
 import { errorToast } from '@/components/errors/error-toast';
-import { ContentSuggestionWithId } from '@/services/suggestions/types';
-
-export async function fetchSuggestions(
-  queryClient: QueryClient,
-  id: string
-): Promise<ContentSuggestionWithId[]> {
-  return queryClient.fetchQuery({
-    queryKey: ['suggestions', id],
-    queryFn: async () => {
-      const response = await fetch(`/api/suggestions`, {
-        method: 'POST',
-        body: JSON.stringify({ personId: id })
-      });
-      const json = await response.json();
-
-      if (!response.ok) {
-        // TODO: Add Error Logger
-        errorToast.show(json.error);
-        throw new Error(json.error);
-      }
-
-      return json.data;
-    }
-  });
-}
 
 export function useUpdateSuggestion() {
   const queryClient = useQueryClient();

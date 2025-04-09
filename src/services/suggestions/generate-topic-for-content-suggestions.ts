@@ -5,13 +5,7 @@ import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
 
-import {
-  SuggestionPromptResponse,
-  SuggestionPromptResponseSchema,
-  SuggestionSchema,
-  topicGenerationSchema,
-  TopicGenerationSchema
-} from './types';
+import { topicGenerationSchema, TopicGenerationSchema } from './types';
 
 // Define errors
 export const ERRORS = {
@@ -104,6 +98,73 @@ export async function generateContentTopics({
   });
 }
 
+export async function generateGiftTopics({
+  personSummary,
+  previousTopics,
+  quantity = 2,
+  requestedContent
+}: GenerateTopicParams) {
+  const prompt = stripIndents`
+    # Objective
+      Your objective is to generate a high level topic and a prompt to get gift suggestions that the user can purchase for the person.
+      
+      You are an AI gift advisor that suggests thoughtful and personalized gifts. 
+      Analyze the provided person information and return:
+      1. A singluar key topic or interest
+      2. A prompt to get at most ${quantity} gift suggestions
+
+      Guidelines:
+      - If the user has specified a content type, use that content type in the topic and prompt.
+      - Do not include the names of any specific people in the prompt
+      - Suggest only 1 topic or category of gift that match the person's interests and activities
+      - The gift can be of any price range, but should err on being premium in quality or experience
+      - Focus on gifts that are practical, meaningful, memorable, or experiential
+      - Avoid generic suggestions unless they specifically match the person's interests
+      - The prompt should be detailed but concise
+      - Try to be creative and unique with the topic and prompt
+      - Try to be specific with the gift topic
+      - If there isn't enough information to find a gift specific to the person, broaden the scope of the topic. i.e. gift ideas for a dancer vs gift ideas for a tango dancer in Houston, Texas or fun experiences vs. fun experiences for a race car driver.
+      - If you have the person's address or location, try to use it to make the gift more specific. i.e. family-oriented experiences or activities in Houston, Texas
+
+      RETURN JSON IN THIS FORMAT:
+        {
+          "topic": "gift category",
+          "prompt": "Detailed prompt for finding gift suggestions"
+        }
+
+      Example Output 1: 
+        {
+          "topic": "coffee",
+          "prompt": "Find ${quantity} possible coffee subscriptions that would be interesting to a coffee lover."
+        }
+
+      Example Output 1: 
+        {
+          "topic": "cars",
+          "prompt": "Find ${quantity} possible tickets to car events or car shows that would be interesting to a car enthusiast."
+    }
+      
+    # Requested Content
+    ${requestedContent ? `I want to get content suggestions in relation to the user for the following content: ${requestedContent}.` : 'No specifically requested content was provided.'}
+      
+    # Previous Gift Topic Suggestions
+    ${
+      previousTopics.length !== 0
+        ? `${previousTopics.join(', ')}.`
+        : 'No previous gift topics have been suggested for this person.'
+    }
+
+    # Conext About the Person
+    ${personSummary || 'No person summary provided.'}
+
+    `;
+  console.log('Suggestions::generateGiftTopics::prompt', prompt);
+
+  return generateTopicForContentSuggestionsByPerson({
+    prompt
+  });
+}
+
 interface GenerateTopicForContentSuggestionsByPersonParams {
   prompt: string;
 }
@@ -147,35 +208,3 @@ export async function generateTopicForContentSuggestionsByPerson({
     };
   }
 }
-
-const buildGiftSuggestionPrompt = () => ({
-  prompt: stripIndents`You are an AI gift advisor that suggests thoughtful and personalized gifts. 
-  Analyze the provided person information and return:
-      1. A singluar key topic or interest
-      2. A prompt to get at most 3 gift suggestions
-  
-  Guidelines:
-  - Suggest a singular type of gift that match the person's interests and activities
-  - The gift can be of any price range, but should err on being more premium
-  - Consider both practical, meaningful, and experiential gifts
-  - Avoid generic suggestions unless they specifically match the person's interests
-  
-  RETURN JSON IN THIS FORMAT:
-    {
-      "topics": ["gift category"],
-      "prompt": "Detailed prompt for finding gift suggestions"
-    }
-
-  Example Output 1: 
-    {
-      "topics": ["coffee"],
-      "prompt": "Find 3 possible coffee subscriptions that would be interesting to a coffee lover."
-    }
-
-  Example Output 1: 
-    {
-      "topics": ["cars"],
-      "prompt": "Find 3 possible tickets to car events or car shows that would be interesting to a car enthusiast."
-    }
-  `
-});

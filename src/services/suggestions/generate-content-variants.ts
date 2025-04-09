@@ -1,22 +1,12 @@
 import { stripIndents } from 'common-tags';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/open-ai-messages';
-import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
-import { generateObject } from '@/vendors/ai';
 import { generateSearchObject, GenerateSearchObjectOptions } from '@/vendors/openai/generate-search-object';
 
-import {
-  ContentSuggestion,
-  ContentSuggestionsResponseSchema,
-  ContentVariants,
-  contentVariantSchema,
-  contentVariantsSchema,
-  SuggestionSchema
-} from './types';
+import { ContentVariants, contentVariantsSchema } from './types';
 
 // Define errors
 export const ERRORS = {
@@ -89,7 +79,11 @@ export async function generateContentSuggestions({
     ${topicPrompt}
 
     These are previous suggestions that you have generated the past:
-    ${previousSuggestionTitles ? previousSuggestionTitles.join('\n') : 'No previous suggestions'}
+    ${
+      previousSuggestionTitles && previousSuggestionTitles.length > 0
+        ? previousSuggestionTitles.join('\n')
+        : 'No previous suggestions'
+    }
   `);
 
   console.log('Suggestions::GenerateContentSuggestions::systemPrompt', systemPrompt);

@@ -1,11 +1,10 @@
 ## Remaining Tasks
 
-- [ ] Add previous topics to the suggestions request
+✔ [ ] Add previous topics to the suggestions request @done(25-04-09 14:48)
 - [ ] Add gifts to the suggestions request
-- [ ] Save the suggestions to the database
-- [ ] Fetch previous suggestions from the database and include in responses
-- [ ] Filter out previous suggestions
-- [ ] Create a "limit" and "fallback" for suggestions
+✔ [ ] Save the suggestions to the database @done(25-04-09 14:48)
+✔ [ ] Fetch previous suggestions from the database and include in responses @done(25-04-09 14:48)
+✔ [ ] Filter out previous suggestions @done(25-04-09 14:48)
 - [ ] Create a mechanism to possibly get multiple / different prompts i.e. one for gifts, one for activities, etc.
 
 ### Questions:

@@ -70,7 +70,7 @@ export async function generateContentTopics({ personSummary, previousTopics, qua
       - The prompt should be detailed but concise
       - Do not include the names of any specific people in the prompt
       - Try not to repeat the same topic as the previous suggestions, but it's okay to overlap.
-      - If there is not enough information about the person to generate a clearly defined topic, pick a topic that would apply to a wide audience.
+      - If there are lots of previous topics or not enough information about the person, broaden the scope of the topic. i.e. general startup advice vs specific advice for a startup in a certain industry, or general writing tips vs writing tips for fiction writers.
 
     ## Example Outputs: 
       {

@@ -6,20 +6,17 @@ import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
 import { formatPersonSummary, FormatPersonSummaryResult } from '../person/format-person-summary';
-import { createContentSuggestions } from './create-content-suggestions';
+import { generateContentSuggestions } from './create-content-suggestions';
 import {
   generateContentTopics,
   generateTopicForContentSuggestionsByPerson
 } from './generate-topic-for-content-suggestions';
-import { ContentSuggestionWithId, GetContentSuggestionsForPersonResponse, SuggestionType } from './types';
-
-// Service params interface
-export interface GetSuggestionsForPersonParams {
-  db: DBClient;
-  personId: string;
-  type?: 'content' | 'gift';
-  requestedContent?: string;
-}
+import {
+  ContentSuggestionWithId,
+  ContentVariants,
+  GetContentSuggestionsForPersonResponse,
+  SuggestionType
+} from './types';
 
 // Define errors
 export const ERRORS = {
@@ -69,6 +66,7 @@ export const ERRORS = {
 
 interface PrepareSuggestionContextParams {
   db: DBClient;
+  userId: string;
   personId: string;
   type: 'content' | 'gift';
   requestedContent?: string;
@@ -86,6 +84,7 @@ interface SuggestionContext {
 async function prepareSuggestionContext({
   db,
   personId,
+  userId,
   type,
   requestedContent
 }: PrepareSuggestionContextParams): Promise<ServiceResponse<SuggestionContext>> {
@@ -104,7 +103,7 @@ async function prepareSuggestionContext({
     .from('suggestions')
     .select('*')
     .eq('person_id', personId)
-    .eq('user_id', personResult.data.person.user_id)
+    .eq('user_id', userId)
     .eq('type', type)
     .gte('created_at', since);
 
@@ -138,30 +137,38 @@ const promptStrategy = {
 };
 
 const suggestionStrategy = {
-  content: createContentSuggestions,
-  gift: createContentSuggestions // same as above
+  content: generateContentSuggestions,
+  gift: generateContentSuggestions // same as above
 };
 
 // -------------------
 // Main Orchestrator
 // -------------------
 
+// Service params interface
+export interface GetSuggestionsForPersonParams {
+  db: DBClient;
+  personId: string;
+  userId: string;
+  type?: 'content' | 'gift';
+  requestedContent?: string;
+}
+
 export async function getContentSuggestionsForPerson({
   db,
   personId,
+  userId,
   type = 'content',
   requestedContent
 }: GetSuggestionsForPersonParams): Promise<
   // ServiceResponse<GetContentSuggestionsForPersonResponse>
-  ServiceResponse<{
-    prompt: string;
-    topic: string;
-  }>
+  ServiceResponse<Suggestion[]>
 > {
   try {
     const contextResult = await prepareSuggestionContext({
       db,
       personId,
+      userId,
       type,
       requestedContent
     });
@@ -186,67 +193,72 @@ export async function getContentSuggestionsForPerson({
       return { data: null, error: generatedTopic.error };
     }
 
-    return { data: generatedTopic.data, error: null };
+    // return { data: generatedTopic.data, error: null };
 
     // Create content suggestions
-    // const suggestionsResult = await generateSuggestions({
-    //   userContent: promptResult.data.prompt,
-    //   suggestions: context.previousSuggestions,
-    //   type
-    // });
+    const suggestionsResult = await generateSuggestions({
+      topicPrompt: generatedTopic.data.prompt,
+      // TODO: Update this after the suggestion is created with proper typings
+      previousSuggestionTitles: []
+    });
 
-    // if (suggestionsResult.error || !suggestionsResult.data) {
-    //   return { data: null, error: suggestionsResult.error };
-    // }
+    if (suggestionsResult.error || !suggestionsResult.data) {
+      return { data: null, error: suggestionsResult.error };
+    }
+
+    console.log('Suggestions::GetContentSuggestionsForPerson::suggestionsResult', suggestionsResult.data);
+
+    // return { data: suggestionsResult.data, error: null };
 
     // // Save suggestions with correct type
-    // const suggestions = suggestionsResult.data.map((suggestion) => ({
-    //   person_id: personId,
-    //   user_id: context.person.person.user_id,
-    //   suggestion,
-    //   type
-    // }));
+    const suggestions = suggestionsResult.data.contentVariants.map((suggestion) => ({
+      person_id: personId,
+      user_id: userId,
+      suggestion,
+      topic: generatedTopic.data?.topic || 'Unknown',
+      type
+    }));
 
     // // Save the suggestions to the database
     // // TODO: Move this to a separate service
 
-    // let savedSuggestions: ContentSuggestionWithId[] = [];
-    // try {
-    //   const { data: dbSuggestions, error } = await db
-    //     .from('suggestions')
-    //     .insert(suggestions)
-    //     .select('*')
-    //     .throwOnError();
+    let savedSuggestions: Suggestion[] = [];
+    try {
+      const { data: dbSuggestions, error } = await db
+        .from('suggestions')
+        .insert(suggestions)
+        .select('*')
+        .returns<Suggestion[]>()
+        .throwOnError();
 
-    //   if (error) {
-    //     return {
-    //       data: null,
-    //       error: { ...ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR, details: error }
-    //     };
-    //   }
+      if (error) {
+        return {
+          data: null,
+          error: { ...ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR, details: error }
+        };
+      }
 
-    //   // Map the database suggestions to include both the suggestion content and id
-    //   const suggestionsWithIds = dbSuggestions.map((dbSuggestion) => ({
-    //     ...(dbSuggestion.suggestion as Suggestion),
-    //     contentUrl: dbSuggestion.suggestion.contentUrl,
-    //     title: dbSuggestion.suggestion.title,
-    //     reason: dbSuggestion.suggestion.reason,
-    //     id: dbSuggestion.id
-    //   }));
+      // Map the database suggestions to include both the suggestion content and id
+      const suggestionsWithIds = dbSuggestions.map((dbSuggestion) => ({
+        ...dbSuggestion,
+        id: dbSuggestion.id
+      }));
 
-    //   savedSuggestions = suggestionsWithIds;
-    // } catch (error) {
-    //   return { data: null, error: ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR };
-    // }
+      savedSuggestions = suggestionsWithIds;
+    } catch (error) {
+      return { data: null, error: ERRORS.SUGGESTIONS.SUGGESTIONS_SAVE_ERROR };
+    }
+
+    console.log(
+      'Suggestions::GetContentSuggestionsForPerson::savedSuggestions',
+      JSON.stringify(savedSuggestions, null, 2)
+    );
 
     // // Return both the suggestions and the prompt response
-    // return {
-    //   data: {
-    //     suggestions: savedSuggestions,
-    //     topics: promptResult.data.topics
-    //   },
-    //   error: null
-    // };
+    return {
+      data: savedSuggestions,
+      error: null
+    };
   } catch (error) {
     const serviceError = {
       ...ERRORS.SUGGESTIONS.FETCH_ERROR,

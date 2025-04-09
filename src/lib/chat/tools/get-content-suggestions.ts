@@ -22,11 +22,9 @@ export const getContentSuggestionsTool: ChatTool<
   rulesForAI: stripIndents`\
     ## getContentSuggestions Guidelines
     - Use getContentSuggestions to get personalized content suggestions for a person that
-    - The suggestions are based on the person's interests, interactions, and previous suggestions
     - You can specify either 'content' or 'gift' as the type of suggestions
-    - Content suggestions are refreshed every 30 days, while gift suggestions are refreshed every 60 days
-
     - Only call this tool once per user message. Calling it multiple times will result in too many suggestions being generated.
+    - You can tell the user that if they don't like the suggestion, they can share more details about the person and then we can generate new suggestions.
   `,
   parameters: z.object({
     personId: z.string().describe('The ID of the person to get suggestions for'),
@@ -34,7 +32,9 @@ export const getContentSuggestionsTool: ChatTool<
     requestedContent: z
       .string()
       .optional()
-      .describe('The context of the suggestions to get requested by the user if applicable.')
+      .describe(
+        'If the user specifcally asks for a topic or type of content to find, use this field, otherwise leave it empty'
+      )
   }),
   execute: async (db, { personId, type, requestedContent }, { userId }) => {
     console.log('Getting content suggestions for person:', personId, type, requestedContent);
@@ -43,6 +43,7 @@ export const getContentSuggestionsTool: ChatTool<
       const result = await getContentSuggestionsForPerson({
         db,
         personId,
+        userId,
         type,
         requestedContent
       });

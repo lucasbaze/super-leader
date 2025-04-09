@@ -12,8 +12,11 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_
   console.error('Required environment variables are missing');
   process.exit(1);
 }
+
+const USER_ID = 'c86eb445-a7cd-44c1-a0e0-3dd661ebb526';
+
 // Replace with your actual person ID
-const PERSON_ID = 'bf5808aa-dbd7-4877-a4b2-f04fd66446f8';
+const PERSON_ID = '72c293d1-0656-4d22-96e3-b5e99a61baac';
 
 async function main() {
   console.log('Starting content suggestions test script...');
@@ -28,6 +31,7 @@ async function main() {
     const result = await getContentSuggestionsForPerson({
       db: supabase,
       personId: PERSON_ID,
+      userId: USER_ID,
       type: 'content'
     });
 

@@ -7,9 +7,16 @@ import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 import { generateObject } from '@/vendors/ai';
-import { generateSearchObject } from '@/vendors/openai/generate-search-object';
+import { generateSearchObject, GenerateSearchObjectOptions } from '@/vendors/openai/generate-search-object';
 
-import { ContentSuggestion, ContentSuggestionsResponseSchema, SuggestionSchema } from './types';
+import {
+  ContentSuggestion,
+  ContentSuggestionsResponseSchema,
+  ContentVariants,
+  contentVariantSchema,
+  contentVariantsSchema,
+  SuggestionSchema
+} from './types';
 
 // Define errors
 export const ERRORS = {
@@ -35,38 +42,78 @@ export const ERRORS = {
   }
 };
 
-export interface CreateContentSuggestionsParams {
-  userContent: string;
-  suggestions: Suggestion[];
-  type: 'content' | 'gift';
+export interface GenerateContentSuggestionsParams {
+  topicPrompt: string;
+  previousSuggestionTitles: string[];
+  // type: 'content' | 'gift';
 }
 
-export async function createContentSuggestions({
-  userContent,
-  suggestions,
-  type
-}: CreateContentSuggestionsParams): Promise<ServiceResponse<ContentSuggestion[]>> {
-  try {
-    const messages = [
-      $system(
-        type === 'gift' ? buildGiftSuggestionPrompt().prompt : buildContentSuggestionPrompt().prompt
-      ),
-      $user(buildContentSuggestionUserPrompt(userContent, suggestions).prompt)
-    ];
+export async function generateContentSuggestions({
+  topicPrompt,
+  previousSuggestionTitles
+  // type
+}: GenerateContentSuggestionsParams): Promise<ServiceResponse<ContentVariants>> {
+  const systemPrompt =
+    $system(stripIndents`You are an AI content curator that finds the most recent, engaging and interesting content available. We're looking for content that would be worth sharing and creating a conversation with the other person.
+   
+  Guidelines:
+  - Look for content that is ideally less than 1 year old
+  - The content should be interesting though it doesn't have to be popular
+  - Try NOT to suggest the same content as the previous suggestions
+  - Generate at least 3 different message variants for each suggested content
+  - The message variants should be different tones and styles
 
+  
+  RETURN JSON IN THIS FORMAT:
+    {
+      "contentVariants": [
+        {
+          "suggestedContent": {
+            "title": "Title of the content",
+            "contentUrl": "URL of the content",
+            "reason": "Reason for the suggestion based on the user's interests"
+          },
+          "messageVariants": [
+            {
+              "tone": "friendly, funny, formal, etc...",
+              "message": "A message the user can send to the other person about the content"
+            }
+          ]
+        }
+      ]
+    }
+
+  `);
+
+  const userPrompt = $user(stripIndents`
+    ${topicPrompt}
+
+    These are previous suggestions that you have generated the past:
+    ${previousSuggestionTitles ? previousSuggestionTitles.join('\n') : 'No previous suggestions'}
+  `);
+
+  console.log('Suggestions::GenerateContentSuggestions::systemPrompt', systemPrompt);
+  console.log('Suggestions::GenerateContentSuggestions::userPrompt', userPrompt);
+
+  return generateContentVariants({
+    messages: [systemPrompt, userPrompt]
+  });
+}
+export interface GenerateContentVariantsParams {
+  messages: GenerateSearchObjectOptions<typeof contentVariantsSchema>['messages'];
+}
+
+export async function generateContentVariants({
+  messages
+}: GenerateContentVariantsParams): Promise<ServiceResponse<ContentVariants>> {
+  try {
     const response = await generateSearchObject({
       messages,
-      schema: ContentSuggestionsResponseSchema,
-      schemaName: 'content_suggestions'
-      // model: 'gpt-4o-search-preview'
+      schema: contentVariantsSchema,
+      schemaName: 'content_variants'
     });
-    // const response = await generateObject({
-    //   messages,
-    //   schema: ContentSuggestionsResponseSchema,
-    //   model: 'gpt-4o-search-preview'
-    // });
 
-    console.log('response', response);
+    console.log('Suggestions::GenerateContentVariants::response', response);
 
     if (!response) {
       return {
@@ -75,7 +122,7 @@ export async function createContentSuggestions({
       };
     }
 
-    const parsedContent = ContentSuggestionsResponseSchema.safeParse(response.data);
+    const parsedContent = contentVariantsSchema.safeParse(response.data);
 
     if (!parsedContent.success) {
       return {
@@ -84,7 +131,7 @@ export async function createContentSuggestions({
       };
     }
 
-    return { data: parsedContent.data.suggestions, error: null };
+    return { data: parsedContent.data, error: null };
   } catch (error) {
     return {
       data: null,
@@ -95,26 +142,6 @@ export async function createContentSuggestions({
     };
   }
 }
-
-const buildContentSuggestionPrompt = () => ({
-  prompt: stripIndents`You are an AI content curator that finds the most recent, engaging and interesting content available. We're looking for content that would be worth sharing and creating a conversation with the other person.
-   
-  Instructions:
-  - Search the web for content that is less than 1 year old, relevant to the user's interests, engaging or interesting, recent. The content doesn't have to be popular, but it should be interesting.
-  
-  RETURN JSON IN THIS FORMAT:
-    {
-      "suggestions": [
-        {
-          "title": "Title of the content",
-          "contentUrl": "URL of the content",
-          "reason": "Reason for the suggestion based on the user's interests"
-        }
-      ]
-    }
-
-  `
-});
 
 const buildGiftSuggestionPrompt = () => ({
   prompt: stripIndents`You are an AI gift advisor that suggests thoughtful and personalized gifts.
@@ -138,30 +165,3 @@ const buildGiftSuggestionPrompt = () => ({
     }
   `
 });
-
-const buildContentSuggestionUserPrompt = (userPrompt: string, suggestions: Suggestion[]) => {
-  // If no suggestions, return prompt
-  if (!suggestions || suggestions.length === 0) {
-    return { prompt: userPrompt };
-  }
-
-  // Get content urls from suggestions
-  const suggestionsContent = suggestions
-    .map((suggestion) => SuggestionSchema.safeParse(suggestion.suggestion).data?.contentUrl)
-    .filter((contentUrl) => contentUrl !== null);
-
-  // Add suggestions to prompt
-  const prompt = `${userPrompt}
-
-  These are suggestions that you have generated the past:
-  ${suggestionsContent.join('\n')}
-  
-  Do not generate any suggestions that are similar to these.
-  `;
-
-  console.log('Suggestions::CreateContentSuggestionAugmentationUserPrompt::prompt', prompt);
-
-  return {
-    prompt
-  };
-};

@@ -3540,6 +3540,11 @@
   resolved "https://registry.yarnpkg.com/@storybook/manager-api/-/manager-api-8.5.3.tgz#2a5c1b2e7d14b54d91ed75c94d9618198629cd40"
   integrity sha512-JtfuMgQpKIPU0ARn1jNPce8FmknpM0Ap0mppWl+KGAWWGadJPDaX/nrY/19dT1kRgIhyOnbX6tgJxII4E9dE5w==
 
+"@storybook/manager-api@^8.6.12":
+  version "8.6.12"
+  resolved "https://registry.yarnpkg.com/@storybook/manager-api/-/manager-api-8.6.12.tgz#a9169a3fb8de97ba406ed83314112d5c47d035ad"
+  integrity sha512-O0SpISeJLNTQvhSBOsWzzkCgs8vCjOq1578rwqHlC6jWWm4QmtfdyXqnv7rR1Hk08kQ+Dzqh0uhwHx0nfwy4nQ==
+
 "@storybook/nextjs@^8.5.3":
   version "8.5.3"
   resolved "https://registry.yarnpkg.com/@storybook/nextjs/-/nextjs-8.5.3.tgz#bd006d7c6646a400299d5e1655a4fb0430e9bc84"

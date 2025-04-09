@@ -1,0 +1,14 @@
+Refactoring: 
+  ☐ generateContentTopics -> Add User summary to generateContentTopics when personal context is low. 
+  ☐ Rename the createContentSuggestionPrompt -> generateTopicForSuggestionsByPerson
+  ☐ Update the return type to include messages along with the suggestions to aid the user in "sending" the content
+  ☐ Generate script to test the generateTopic service method
+  ☐ If there's a requested Suggestion, we'll just skip the topic generation step 
+    This means the chat should be able to generate a topic if the user has requested a specific topic of content or topic of gift for example. 
+
+
+    - Generate content topics 
+    - Test that method is working as expected
+    - Continue refactoring the high level service
+    - Refactor the content suggestions generator to accept the prompt and previous topics
+    

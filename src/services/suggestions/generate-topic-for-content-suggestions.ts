@@ -5,6 +5,7 @@ import { createError } from '@/lib/errors';
 import { $system, $user } from '@/lib/llm/messages';
 import { wrapTicks } from '@/lib/utils/strings';
 import { GetPersonResult } from '@/services/person/get-person';
+import { Person } from '@/types/custom';
 import { Suggestion } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -13,7 +14,9 @@ import { generateObject } from '@/vendors/ai';
 import {
   SuggestionPromptResponse,
   SuggestionPromptResponseSchema,
-  SuggestionSchema
+  SuggestionSchema,
+  topicGenerationSchema,
+  TopicGenerationSchema
 } from './types';
 
 // Define errors
@@ -40,38 +43,74 @@ export const ERRORS = {
   }
 };
 
-export interface CreateSuggestionPromptParams {
-  personResult: GetPersonResult;
-  suggestions: Suggestion[];
-  type: 'content' | 'gift';
-  requestedContent?: string;
+export interface GenerateTopicParams {
+  personSummary: string;
+  previousTopics: string[];
 }
 
-export async function createContentSuggestionPrompt({
-  personResult,
-  suggestions,
-  type,
-  requestedContent
-}: CreateSuggestionPromptParams): Promise<ServiceResponse<SuggestionPromptResponse>> {
-  try {
-    const promptMessages = [
-      $system(
-        type === 'gift'
-          ? buildGiftSuggestionPrompt().prompt
-          : buildContentSuggestionAugmentationSystemPrompt().prompt
-      ),
-      $user(
-        buildContentSuggestionAugmentationUserPrompt({
-          personResult,
-          suggestions,
-          requestedContent
-        }).prompt
-      )
-    ];
+export async function generateContentTopics({ personSummary, previousTopics }: GenerateTopicParams) {
+  const prompt = stripIndents`
+    
+    # Objective
+      Your objective is to generate a high level topic and a prompt to get content suggestions.
+      Analyze the provided person information and return:
+      1. A singluar key topic or interest
+      2. A prompt to get at least 3 content suggestions
 
+      RETURN JSON IN THIS FORMAT:
+      {
+        "topic": "the high level topic",
+        "prompt": "Enhanced description incorporating key details..."
+      }
+
+    ## Guidelines:
+      - There should only be 1 topic and it should be specific and relevant to the person
+      - Extract exclusively and only 1 main topic of interest from the provided information
+      - The prompt should be detailed but concise
+      - Do not include the names of any specific people in the prompt
+      - Try not to repeat the same topic as the previous suggestions, but it's okay to overlap.
+      - If there is not enough information about the person to generate a clearly defined topic, pick a topic that would apply to a wide audience.
+
+    ## Example Outputs: 
+      {
+        "topic": "fiction writing tips",
+        "prompt": "Find 3 pieces of content on tips for writing fiction, especially for beginners who want to develop their novel writing skills."
+      }
+
+      {
+        "topic": "real estate events",
+        "prompt": "Find 3 events happening in Houston, Texas that an 45 year old real estate developer would be interested in."
+      }
+      
+    # Previous Topic Suggestions
+    ${
+      previousTopics.length !== 0
+        ? `${previousTopics.join(', ')}.`
+        : 'No previous topics have been suggested for this person.'
+    }
+
+    # Conext About the Person
+    ${personSummary || 'No person summary provided.'}
+
+    `;
+  console.log('Suggestions::generateContentTopics::prompt', prompt);
+
+  return generateTopicForContentSuggestionsByPerson({
+    prompt
+  });
+}
+
+interface GenerateTopicForContentSuggestionsByPersonParams {
+  prompt: string;
+}
+
+export async function generateTopicForContentSuggestionsByPerson({
+  prompt
+}: GenerateTopicForContentSuggestionsByPersonParams): Promise<ServiceResponse<TopicGenerationSchema>> {
+  try {
     const response = await generateObject({
-      messages: promptMessages,
-      schema: SuggestionPromptResponseSchema
+      prompt,
+      schema: topicGenerationSchema
     });
 
     // Add debug logging
@@ -84,7 +123,7 @@ export async function createContentSuggestionPrompt({
       };
     }
 
-    const parsedContent = SuggestionPromptResponseSchema.safeParse(response);
+    const parsedContent = topicGenerationSchema.safeParse(response);
 
     if (!parsedContent.success) {
       return {
@@ -104,39 +143,6 @@ export async function createContentSuggestionPrompt({
     };
   }
 }
-
-const buildContentSuggestionAugmentationSystemPrompt = () => ({
-  prompt: stripIndents`
-      You are an AI prompt engineer that helps understand and categorize content interests.
-      Analyze the provided person information and return:
-      1. A singluar key topic or interest
-      2. A prompt to get at least 3 content suggestions
-
-      RETURN JSON IN THIS FORMAT:
-      {
-        "topics": ["topic1"],
-        "prompt": "Enhanced description incorporating key details..."
-      }
-
-      Guidelines:
-      - Topics should be specific and relevant to the person
-      - Extract exclusively and only 1 main topic of interest from the provided information
-      - The prompt should be detailed but concise
-      - Do not include the names of any specific people in the prompt
-
-    Example Output 1: 
-    {
-      "topics": ["fiction writing"],
-      "prompt": "Find 3 peices of content on tips and resources for writing fiction, especially for beginners who want to develop their novel writing skills, and recommendations for books or workshops that could help in this journey."
-    }
-
-    Example Output 2:
-    {
-      "topics": ["real estate"],
-      "prompt": "Find 3 peices of content or events happening in Houston, Texas that an 45 year old real estate developer would be interested in."
-    }
-    `
-});
 
 const buildGiftSuggestionPrompt = () => ({
   prompt: stripIndents`You are an AI gift advisor that suggests thoughtful and personalized gifts. 
@@ -221,3 +227,25 @@ export const buildContentSuggestionAugmentationUserPrompt = ({
 
   return { prompt };
 };
+
+/*
+
+generateGiftTopics() {
+
+  const prompt = buildGiftSuggestionPrompt({ ... })
+
+  return generateTopicForContentSuggestionsByPerson({
+    personResult,
+    suggestions,
+    type: 'gift',
+    requestedContent
+  })
+}
+
+
+generateContentTopics
+
+
+
+
+*/

@@ -7,7 +7,7 @@ import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-import { formatSummaryForDisplay } from '../summary/format-ai-summary';
+import { formatAiSummaryOfPersonToDisplay } from '../summary/format-ai-summary';
 import { getPerson, GetPersonResult } from './get-person';
 
 export const ERRORS = {
@@ -48,9 +48,7 @@ function formatContactMethods(contactMethods?: GetPersonResult['contactMethods']
 
   return `Contact Information:
   
-    ${contactMethods
-      .map((cm) => `- ${cm.type}: ${cm.value}${cm.label ? ` (${cm.label})` : ''}`)
-      .join('\n')}`;
+    ${contactMethods.map((cm) => `- ${cm.type}: ${cm.value}${cm.label ? ` (${cm.label})` : ''}`).join('\n')}`;
 }
 
 function formatAddresses(addresses?: GetPersonResult['addresses']) {
@@ -71,9 +69,7 @@ function formatWebsites(websites?: GetPersonResult['websites']) {
 
   return `Websites:
   
-    ${websites
-      .map((web) => `- ${web.label || 'Website'}: ${web.url}${web.icon ? ` (${web.icon})` : ''}`)
-      .join('\n')}`;
+    ${websites.map((web) => `- ${web.label || 'Website'}: ${web.url}${web.icon ? ` (${web.icon})` : ''}`).join('\n')}`;
 }
 
 function formatGroups(groups?: GetPersonResult['groups']) {
@@ -127,9 +123,9 @@ export async function formatPersonSummary({
       This is a summary of information about ${person.first_name} ${person.last_name} based on the information available in the system: 
     
       First is an AI generated summary of all the unstructured information I have collected. (Little to no data means that this person is new and I have not collected any information about them yet):
-      ${formatSummaryForDisplay(person.ai_summary)}
+      ${formatAiSummaryOfPersonToDisplay(person.ai_summary)}
       
-      The summary above is also composed of structured information that I have. This includes the following: 
+      This summary is also composed of structured information. This includes the following: 
       
       # Personal Information
       ${formatPersonalInformation(person)}
@@ -137,7 +133,7 @@ export async function formatPersonSummary({
       It's important to note that I have organized ${person.first_name} into the following groups for better organization.: 
       ${formatGroups(data.groups)}
 
-      The following is contact information for ${person.first_name} that can be
+      The following is contact information that can be used to reach ${person.first_name}:
       # Contact Information 
       ${formatContactMethods(data.contactMethods)}
 

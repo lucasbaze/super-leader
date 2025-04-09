@@ -1,5 +1,12 @@
 import { SinglePersonSummary } from './schemas';
 
+export function formatAiSummaryOfPersonToDisplay(summary: SinglePersonSummary): string {
+  return formatSummaryForDisplay(summary);
+}
+
+/**
+ * @internal Use `formatAiSummaryOfPersonToDisplay` instead.
+ */
 export function formatSummaryForDisplay(summary: SinglePersonSummary): string {
   let output = `Summary\n\n`;
 
@@ -8,7 +15,7 @@ export function formatSummaryForDisplay(summary: SinglePersonSummary): string {
   }
 
   summary.groupedSections.forEach((group, groupIndex) => {
-    output += `Group ${groupIndex + 1}\n`;
+    output += `Section ${groupIndex + 1}\n`;
     group.sections.forEach((section) => {
       output += `${section.title}: ${section.content.trim()}\n`;
     });

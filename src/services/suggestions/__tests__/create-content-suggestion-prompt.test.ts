@@ -15,8 +15,8 @@ import { generateObject } from '@/vendors/ai';
 
 import {
   buildContentSuggestionAugmentationUserPrompt,
-  createContentSuggestionPrompt
-} from '../create-content-suggestion-prompt';
+  generateTopicForContentSuggestionsByPerson
+} from '../generate-topic-for-content-suggestions';
 
 // Mock the chatCompletion function
 jest.mock('@/vendors/ai', () => {

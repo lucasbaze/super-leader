@@ -28,6 +28,17 @@ export const SuggestionPromptResponseSchema = z.object({
 export type SuggestionPromptResponse = z.infer<typeof SuggestionPromptResponseSchema>;
 
 /*
+ * Topic Generation
+ */
+
+export const topicGenerationSchema = z.object({
+  topic: z.string().describe('The singular topic of the content to generate suggestion for'),
+  prompt: z.string().describe('A prompt to define the topic and find the content.')
+});
+
+export type TopicGenerationSchema = z.infer<typeof topicGenerationSchema>;
+
+/*
  * Suggestions
  */
 // Suggestion Schema for content suggestions

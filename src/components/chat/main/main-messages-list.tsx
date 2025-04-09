@@ -25,27 +25,17 @@ interface ChatMessagesProps {
 
 export const MainMessagesList = forwardRef<HTMLDivElement, ChatMessagesProps>(
   (
-    {
-      messages,
-      pendingAction,
-      setPendingAction,
-      addToolResult,
-      append,
-      isLoading,
-      isLoadingConversations,
-      ...props
-    },
+    { messages, pendingAction, setPendingAction, addToolResult, append, isLoading, isLoadingConversations, ...props },
     ref
   ) => {
+    console.log('messages', messages);
     return (
       <div ref={ref} className='absolute inset-0 overflow-y-auto p-4' onScroll={props.onScroll}>
         <div className='flex flex-col gap-2'>
           {/* Loading indicator */}
           {props.hasMore && (
             <div className='flex justify-center py-2'>
-              {props.isFetchingNextPage && (
-                <Loader className='size-6 animate-spin text-muted-foreground' />
-              )}
+              {props.isFetchingNextPage && <Loader className='size-6 animate-spin text-muted-foreground' />}
             </div>
           )}
 

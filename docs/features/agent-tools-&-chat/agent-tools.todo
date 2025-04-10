@@ -1,4 +1,8 @@
 Now:
+  ☐ Need to get the AI to ask follow up questions after creating an interaction somehow.
+  ☐ Need to figure out a way to not say "User did x" and use the actual name of the user?
+  ☐ Ability to update the last note or a note via the chat to fix things or delete the note.
+  ☐ Add ability to update the person's name, birthday, date met, addresses, emails, contact methods, & websites via the chat interface.
   ☐ Need to add ability to transcribe audio into text using the chat interface
   ☐ AI can support standard fields: updating name, birthday, date met, addresses, emails, contact methods, & websites.
   ☐ Need the AI to be able to update the custom fields if necessary

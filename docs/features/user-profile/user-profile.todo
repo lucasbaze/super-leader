@@ -1,0 +1,5 @@
+Bugs: 
+  ☐ Need to reduce how often the memory gets updated.
+
+Backlog: 
+  ☐ After creating the user profile, need to pass to the content generation like @get-content-suggestions.ts

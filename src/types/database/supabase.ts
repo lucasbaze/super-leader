@@ -488,6 +488,7 @@ export type Database = {
           person_id: string | null
           saved: boolean
           suggestion: Json
+          topic: string
           type: string
           user_id: string | null
           viewed: boolean | null
@@ -499,6 +500,7 @@ export type Database = {
           person_id?: string | null
           saved?: boolean
           suggestion: Json
+          topic: string
           type?: string
           user_id?: string | null
           viewed?: boolean | null
@@ -510,6 +512,7 @@ export type Database = {
           person_id?: string | null
           saved?: boolean
           suggestion?: Json
+          topic?: string
           type?: string
           user_id?: string | null
           viewed?: boolean | null
@@ -730,6 +733,35 @@ export type Database = {
           count: number
         }[]
       }
+      get_network_activity_by_period: {
+        Args: {
+          p_user_id: string
+          p_days: number
+          p_offset: number
+          p_core_group_slugs: string[]
+          p_timezone?: string
+        }
+        Returns: {
+          date: string
+          inner5: number
+          central50: number
+          strategic100: number
+          everyone: number
+        }[]
+      }
+      get_people_needing_follow_up: {
+        Args: {
+          p_user_id: string
+          p_group_id: string
+          p_date: string
+        }
+        Returns: {
+          id: string
+          first_name: string
+          last_name: string
+          user_id: string
+        }[]
+      }
       get_people_with_upcoming_birthdays: {
         Args: {
           p_user_id: string
@@ -741,6 +773,18 @@ export type Database = {
           first_name: string
           last_name: string
           birthday: string
+        }[]
+      }
+      get_todays_network_activity: {
+        Args: {
+          p_user_id: string
+          p_core_group_slugs: string[]
+          p_timezone?: string
+        }
+        Returns: {
+          group_name: string
+          interaction_count: number
+          people: Json
         }[]
       }
       rollback_test_transaction: {

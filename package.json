@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:trigger": "npx trigger.dev dev",
     "build": "next build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -24,7 +25,8 @@
     "setup-new-user": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/setup-new-user.ts",
     "bulk-import": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/bulk-import-from-json.ts",
     "test-script": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/test-script.ts",
-    "reset-onboarding": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/reset-onboarding.ts"
+    "reset-onboarding": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/reset-onboarding.ts",
+    "test-content-suggestions": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/test-content-suggestions.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.5",

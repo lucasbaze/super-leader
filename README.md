@@ -122,3 +122,4 @@ All async tasks are handled by Trigger.dev in the src/trigger folder.
 
 Make sure that you have the TRIGGER_SECRET_KEY environment variable set in your .env.local file.
 
+You also need to make sure that trigger.dev has any environment variables in the trigger.dev dashboard as those methods are hosted on trigger.dev.

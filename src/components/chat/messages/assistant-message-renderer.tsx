@@ -2,13 +2,13 @@ import { CreateMessage, Message } from 'ai';
 
 import { CHAT_TOOLS } from '@/lib/chat/tools/constants';
 import { cn } from '@/lib/utils';
-import { ContentSuggestionWithId } from '@/services/suggestions/types';
+import { Suggestion } from '@/types/custom';
 
 import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
 import { MarkdownMessage } from './markdown-message';
 
-type AssistantMessageType = 'error' | 'suggestion' | 'default';
+type AssistantMessageType = 'error' | 'suggestion' | 'default' | typeof CHAT_TOOLS.GET_CONTENT_SUGGESTIONS;
 
 interface AssistantMessageRendererProps {
   message: Message;
@@ -20,30 +20,19 @@ const getAssistantMessageType = (message: Message): AssistantMessageType => {
   const toolCalls = message.parts?.filter((part) => part.type === 'tool-invocation');
 
   if (
-    toolCalls?.some(
-      (toolCall) =>
-        toolCall.toolInvocation.state === 'result' && toolCall.toolInvocation.result?.error
-    )
+    toolCalls?.some((toolCall) => toolCall.toolInvocation.state === 'result' && toolCall.toolInvocation.result?.error)
   ) {
     return 'error';
   }
 
-  if (
-    toolCalls?.some(
-      (toolCall) => toolCall.toolInvocation.toolName === CHAT_TOOLS.GET_CONTENT_SUGGESTIONS
-    )
-  ) {
-    return 'suggestion';
+  if (toolCalls?.some((toolCall) => toolCall.toolInvocation.toolName === CHAT_TOOLS.GET_CONTENT_SUGGESTIONS)) {
+    return CHAT_TOOLS.GET_CONTENT_SUGGESTIONS;
   }
 
   return 'default';
 };
 
-export function AssistantMessageRenderer({
-  message,
-  append,
-  messageStyles
-}: AssistantMessageRendererProps) {
+export function AssistantMessageRenderer({ message, append, messageStyles }: AssistantMessageRendererProps) {
   const messageType = getAssistantMessageType(message);
   const toolCalls = message.parts?.filter((part) => part.type === 'tool-invocation');
   const textParts = message.parts?.filter((part) => part.type === 'text');
@@ -62,25 +51,20 @@ export function AssistantMessageRenderer({
         />
       );
     }
-    case 'suggestion': {
+    // TODO: Make this case a constant
+    case CHAT_TOOLS.GET_CONTENT_SUGGESTIONS: {
       const suggestions = toolCalls
-        ?.filter(
-          (toolCall) => toolCall.toolInvocation.toolName === CHAT_TOOLS.GET_CONTENT_SUGGESTIONS
-        )
-        .map((toolCall) =>
-          toolCall.toolInvocation.state === 'result'
-            ? toolCall.toolInvocation.result?.suggestions
-            : []
-        )
+        ?.filter((toolCall) => toolCall.toolInvocation.toolName === CHAT_TOOLS.GET_CONTENT_SUGGESTIONS)
+        .map((toolCall) => (toolCall.toolInvocation.state === 'result' ? toolCall.toolInvocation.result : []))
         .flat()
-        .filter((suggestion): suggestion is ContentSuggestionWithId => !!suggestion);
+        .filter((suggestion): suggestion is Suggestion => !!suggestion);
 
       if (!suggestions?.length) return null;
 
       return (
         <>
           {suggestions.map((suggestion) => (
-            <SuggestionCard key={suggestion.id} suggestion={suggestion} append={append} />
+            <SuggestionCard key={suggestion.id} suggestion={suggestion} />
           ))}
         </>
       );

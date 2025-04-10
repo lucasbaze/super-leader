@@ -1,6 +1,7 @@
+import { ContentVariant } from '@/services/suggestions/types';
 import { SinglePersonSummary } from '@/services/summary/schemas';
 
-import { Group, Person as PersonDB } from '../database';
+import { Group, Person as PersonDB, Suggestion as SuggestionDB } from '../database';
 
 export type PersonGroup = Pick<Group, 'id' | 'name' | 'slug' | 'icon'>;
 
@@ -20,4 +21,8 @@ export type Onboarding = {
 
 export type Person = PersonDB & {
   ai_summary: SinglePersonSummary;
+};
+
+export type Suggestion = SuggestionDB & {
+  suggestion: ContentVariant;
 };

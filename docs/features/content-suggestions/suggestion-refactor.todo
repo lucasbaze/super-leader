@@ -1,0 +1,9 @@
+Refactoring: 
+  ☐ generateContentTopics -> Add User summary to generateContentTopics when personal context is low. 
+  ✔ Rename the createContentSuggestionPrompt -> generateTopicForSuggestionsByPerson @done(25-04-09 19:30)
+  ✔ Update the return type to include messages along with the suggestions to aid the user in "sending" the content @done(25-04-09 19:30)
+  ✔ Generate script to test the generateTopic service method @done(25-04-09 19:30)
+  ✔ User can request a specifc topic or category of content, we'll just skip the topic generation step @done(25-04-09 19:31)
+  ✔ Can handle gifts properly @done(25-04-09 19:31)
+
+    

@@ -8,7 +8,7 @@ import { SuggestionCard } from '../cards/suggestion-card';
 import { ToolErrorCard } from '../cards/tool-error-card';
 import { MarkdownMessage } from './markdown-message';
 
-type AssistantMessageType = 'error' | 'suggestion' | 'default';
+type AssistantMessageType = 'error' | 'suggestion' | 'default' | typeof CHAT_TOOLS.GET_CONTENT_SUGGESTIONS;
 
 interface AssistantMessageRendererProps {
   message: Message;
@@ -26,7 +26,7 @@ const getAssistantMessageType = (message: Message): AssistantMessageType => {
   }
 
   if (toolCalls?.some((toolCall) => toolCall.toolInvocation.toolName === CHAT_TOOLS.GET_CONTENT_SUGGESTIONS)) {
-    return 'suggestion';
+    return CHAT_TOOLS.GET_CONTENT_SUGGESTIONS;
   }
 
   return 'default';
@@ -52,7 +52,7 @@ export function AssistantMessageRenderer({ message, append, messageStyles }: Ass
       );
     }
     // TODO: Make this case a constant
-    case 'suggestion': {
+    case CHAT_TOOLS.GET_CONTENT_SUGGESTIONS: {
       const suggestions = toolCalls
         ?.filter((toolCall) => toolCall.toolInvocation.toolName === CHAT_TOOLS.GET_CONTENT_SUGGESTIONS)
         .map((toolCall) => (toolCall.toolInvocation.state === 'result' ? toolCall.toolInvocation.result : []))

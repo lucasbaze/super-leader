@@ -35,13 +35,11 @@ export const ERRORS = {
 export interface GenerateContentSuggestionsParams {
   topicPrompt: string;
   previousSuggestionTitles: string[];
-  // type: 'content' | 'gift';
 }
 
 export async function generateContentSuggestions({
   topicPrompt,
   previousSuggestionTitles
-  // type
 }: GenerateContentSuggestionsParams): Promise<ServiceResponse<ContentVariants>> {
   const systemPrompt =
     $system(stripIndents`You are an AI content curator that finds the most recent, engaging and interesting content available. We're looking for content that would be worth sharing and creating a conversation with the other person.
@@ -136,26 +134,3 @@ export async function generateContentVariants({
     };
   }
 }
-
-const buildGiftSuggestionPrompt = () => ({
-  prompt: stripIndents`You are an AI gift advisor that suggests thoughtful and personalized gifts.
-  
-  Instructions:
-  - Search for available gifts that match the person's interests
-  - Include a mix of price ranges
-  - Provide specific product suggestions with links
-  - Explain why each gift would be meaningful
-  - Be very specific about the specific gift to assist with web search and finding the gift 
-  
-  RETURN JSON IN THIS FORMAT:
-    {
-      "suggestions": [
-        {
-          "title": "Gift name and brief description",
-          "contentUrl": "URL to purchase the gift",
-          "reason": "Why this gift would be meaningful"
-        }
-      ]
-    }
-  `
-});

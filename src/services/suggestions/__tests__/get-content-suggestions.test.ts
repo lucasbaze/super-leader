@@ -1,7 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { formatPersonSummary } from '@/services/person/format-person-summary';
-import { getPerson } from '@/services/person/get-person';
 import { createTestPerson, createTestSuggestion, createTestUser } from '@/tests/test-builder';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { Person } from '@/types/custom';
@@ -9,13 +7,13 @@ import { AuthUser } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 
 import { generateContentSuggestions } from '../generate-content-variants';
-import { generateContentTopics } from '../generate-topic-for-content-suggestions';
+import { generateContentTopics, generateGiftTopics } from '../generate-topic-for-content-suggestions';
 import { ERRORS, getContentSuggestionsForPerson } from '../get-content-suggestions';
-import { ContentVariant } from '../types';
 
 // Only mock the AI service dependencies
 jest.mock('../generate-topic-for-content-suggestions', () => ({
-  generateContentTopics: jest.fn()
+  generateContentTopics: jest.fn(),
+  generateGiftTopics: jest.fn()
 }));
 
 jest.mock('../generate-content-variants', () => ({
@@ -62,6 +60,7 @@ describe('getContentSuggestionsForPerson', () => {
 
     // Setup default mock implementations for AI services
     (generateContentTopics as jest.Mock).mockResolvedValue(mockGeneratedTopic);
+    (generateGiftTopics as jest.Mock).mockResolvedValue(mockGeneratedTopic);
     (generateContentSuggestions as jest.Mock).mockResolvedValue(mockContentSuggestions);
   });
 
@@ -82,7 +81,7 @@ describe('getContentSuggestionsForPerson', () => {
   describe('success cases', () => {
     it('should generate and save content suggestions successfully', async () => {
       await withTestTransaction(supabase, async (db) => {
-        // Create test data
+        // Create test data with the correct structure
         const testSuggestion = await createTestSuggestion({
           db,
           data: {
@@ -90,9 +89,17 @@ describe('getContentSuggestionsForPerson', () => {
             person_id: testPerson.id,
             topic: 'Previous Topic',
             suggestion: {
-              title: 'Previous Suggestion',
-              contentUrl: 'https://example.com',
-              reason: 'Test reason'
+              suggestedContent: {
+                title: 'Previous Suggestion',
+                description: 'Previous suggestion description',
+                url: 'https://example.com'
+              },
+              messageVariants: [
+                {
+                  tone: 'friendly',
+                  message: 'Check out this previous suggestion!'
+                }
+              ]
             }
           }
         });
@@ -153,7 +160,7 @@ describe('getContentSuggestionsForPerson', () => {
         });
 
         // Verify that the AI services were called with the correct parameters
-        expect(generateContentTopics).toHaveBeenCalledWith({
+        expect(generateGiftTopics).toHaveBeenCalledWith({
           personSummary: expect.any(String),
           previousTopics: expect.any(Array),
           quantity: 2,

@@ -1,4 +1,3 @@
-// TODO: Refactor this to use the new taskContextSchema & taskSuggestionSchema
 import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
@@ -11,11 +10,10 @@ import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
 import { CHAT_TOOLS } from './constants';
 
-// TODO: Clean up this duplication with `taskSuggestionSchema`
 const createTaskParametersSchema = z.object({
   person_id: z.string().min(1).describe('The ID of the person the task is associated with'),
   context: z.string().describe('Context about the task requested by the user'),
-  end_at: z.string().describe('The ISO date-time string when the task should be completed')
+  end_at: z.string().datetime().describe('The ISO date-time string when the task should be completed')
 });
 
 export const createTaskTool: ChatTool<
@@ -68,11 +66,13 @@ export const createTaskTool: ChatTool<
   execute: async (db, { person_id, context, end_at }, { userId }) => {
     console.log('Creating task for:', person_id, context, end_at);
 
+    const endAt = dateHandler(end_at).toISOString();
+
     try {
       const validationResult = createTaskParametersSchema.safeParse({
         person_id,
         context,
-        end_at
+        end_at: endAt
       });
 
       if (validationResult.error) {
@@ -85,7 +85,7 @@ export const createTaskTool: ChatTool<
         personId: person_id,
         trigger: TASK_TRIGGERS.USER_REQUESTED_REMINDER.slug,
         context,
-        endAt: end_at
+        endAt
       });
 
       if (result.error) {

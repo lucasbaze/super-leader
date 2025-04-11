@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTaskActions } from '@/hooks/use-task-actions';
+import { dateHandler } from '@/lib/dates/helpers';
 import { TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { cn } from '@/lib/utils';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
@@ -62,7 +63,7 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
               <h3 className='font-medium'>
                 {task.person.first_name} {task.person.last_name}
               </h3>
-              <span className='text-sm text-muted-foreground'>Today</span>
+              <span className='text-sm text-muted-foreground'>{dateHandler(task.end_at).format('ddd, MMM D')}</span>
             </div>
 
             <div className='mt-1 flex items-center justify-between'>

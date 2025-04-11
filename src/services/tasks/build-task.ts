@@ -10,6 +10,8 @@ import { createTask } from './create-task';
 import { generateContextAndActionType } from './generate-tasks/generate-context-and-action-type';
 import { generateTaskAction } from './generate-tasks/generate-task-action';
 import { BuildTaskServiceResult } from './types';
+import { isValidEndAt } from './validate-task-suggestion';
+import { isValidTaskTrigger } from './validate-task-suggestion';
 
 // Define errors
 export const ERRORS = {
@@ -31,7 +33,14 @@ export const ERRORS = {
       ErrorType.VALIDATION_ERROR,
       'Person ID is required',
       'Person identifier is missing'
-    )
+    ),
+    INVALID_TRIGGER: createError(
+      'invalid_trigger',
+      ErrorType.VALIDATION_ERROR,
+      'Trigger is invalid',
+      'Trigger is invalid'
+    ),
+    INVALID_END_AT: createError('invalid_end_at', ErrorType.VALIDATION_ERROR, 'End at is invalid', 'End at is invalid')
   }
 };
 
@@ -45,6 +54,26 @@ export interface BuildTaskParams {
   context?: string; // This could literally just be a string that be passed to the task context LLM call
 }
 
+function validateBuildTaskParams({ trigger, endAt, userId }: Pick<BuildTaskParams, 'trigger' | 'endAt' | 'userId'>) {
+  // We should validate the inputs here before we even call the LLM
+  const validTrigger = isValidTaskTrigger(trigger);
+  const validEndAt = isValidEndAt(endAt);
+
+  if (!validTrigger) {
+    return { data: null, error: ERRORS.GENERATION.INVALID_TRIGGER };
+  }
+
+  if (!validEndAt) {
+    return { data: null, error: ERRORS.GENERATION.INVALID_END_AT };
+  }
+
+  if (!userId) {
+    return { data: null, error: ERRORS.GENERATION.MISSING_USER_ID };
+  }
+
+  return { data: null, error: null };
+}
+
 export async function buildTask({
   db,
   userId,
@@ -54,8 +83,10 @@ export async function buildTask({
   context
 }: BuildTaskParams): Promise<BuildTaskServiceResult> {
   try {
-    if (!userId) {
-      return { data: null, error: ERRORS.GENERATION.MISSING_USER_ID };
+    const validationResult = validateBuildTaskParams({ trigger, endAt, userId });
+
+    if (validationResult.error) {
+      return { data: null, error: validationResult.error };
     }
 
     // TODO: Get the user
@@ -90,7 +121,7 @@ export async function buildTask({
     console.log('AI::GenerateObject::SuggestedAction', suggestedAction);
 
     // create the task and insert into the database
-    const task = await createTask({
+    const { data: task, error: taskError } = await createTask({
       db,
       task: {
         userId,
@@ -104,10 +135,14 @@ export async function buildTask({
       }
     });
 
+    if (taskError) {
+      return { data: null, error: taskError };
+    }
+
     console.log('AI::CreateTask::Task', task);
 
     return {
-      data: task.data,
+      data: task,
       error: null
     };
   } catch (error) {

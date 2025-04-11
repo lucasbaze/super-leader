@@ -16,12 +16,16 @@ export async function GET(req: NextRequest) {
 
   const url = new URL(req.url);
   const personId = url.searchParams.get('personId');
+  const after = url.searchParams.get('after');
+  const before = url.searchParams.get('before');
 
   try {
     const result = await getTasks({
       db: supabase,
       userId: authResult.data.id,
-      ...(personId && { personId })
+      ...(personId && { personId }),
+      ...(after && { after }),
+      ...(before && { before })
     });
 
     if (result.error) {

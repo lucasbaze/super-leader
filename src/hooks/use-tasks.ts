@@ -1,13 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
+import { DateRange, getDateRangeForTimePeriod, TimePeriod } from '@/lib/tasks/time-periods';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
-export function useTasks(personId?: string) {
+export function useTasks(personId?: string, timePeriod?: TimePeriod, dateRange?: DateRange) {
   return useQuery<GetTaskSuggestionResult[]>({
-    queryKey: ['tasks', personId],
+    queryKey: ['tasks', personId, timePeriod, dateRange],
     queryFn: async () => {
-      const url = personId ? `/api/tasks?personId=${personId}` : '/api/tasks';
+      const params = new URLSearchParams();
+      if (personId) params.append('personId', personId);
+
+      // Use provided date range or calculate from time period
+      const range = dateRange || (timePeriod ? getDateRangeForTimePeriod(timePeriod) : undefined);
+
+      if (range) {
+        params.append('after', range.after);
+        params.append('before', range.before);
+      }
+
+      const url = `/api/tasks${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await fetch(url);
       const json = await response.json();
       if (json.error) {

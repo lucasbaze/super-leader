@@ -12,19 +12,16 @@ interface TaskRendererProps {
 
 export const TaskRenderer = ({ task }: TaskRendererProps) => {
   switch (task.suggestedActionType) {
-    case SUGGESTED_ACTION_TYPES.SEND_MESSAGE:
+    case SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug:
       return <SendMessageTask task={task} />;
-    case SUGGESTED_ACTION_TYPES.SHARE_CONTENT:
+    case SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug:
       return <ShareContentTask task={task} />;
-    case SUGGESTED_ACTION_TYPES.ADD_NOTE:
+    case SUGGESTED_ACTION_TYPES.ADD_NOTE.slug:
       return <AddNoteTask task={task} />;
-    case SUGGESTED_ACTION_TYPES.BUY_GIFT:
+    case SUGGESTED_ACTION_TYPES.BUY_GIFT.slug:
       return <BuyGiftTask task={task} />;
     default:
-      console.warn(
-        `No task card component found for action type: ${task.suggestedActionType}`,
-        task
-      );
+      console.warn(`No task card component found for action type: ${task.suggestedActionType}`, task);
       return null;
   }
 };

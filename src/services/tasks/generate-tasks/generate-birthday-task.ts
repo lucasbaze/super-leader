@@ -8,7 +8,8 @@ import { ServiceResponse } from '@/types/service-response';
 
 import { createTask } from '../create-task';
 import { getTasks } from '../get-tasks';
-import { generateSendMessageSuggestedAction, generateTaskContext } from './utils';
+
+// import { generateSendMessageSuggestedAction, generateTaskContext } from './generate-context-and-action-type';
 
 // Service params interface
 export interface GenerateTasksParams {
@@ -55,10 +56,7 @@ const createBirthdayReminderDate = (birthday: string) => {
 
 type PersonWithBirthday = Person & { birthday: string };
 
-export async function generateBirthdayTasks(
-  db: DBClient,
-  userId: string
-): Promise<ServiceResponse<number>> {
+export async function generateBirthdayTasks(db: DBClient, userId: string): Promise<ServiceResponse<number>> {
   try {
     // Get people with birthdays in next 30 days
     const thirtyDaysFromNow = dateHandler().add(30, 'days').format('MM-DD');
@@ -81,82 +79,82 @@ export async function generateBirthdayTasks(
     }
 
     // Create an array of promises for task creation
-    const taskPromises = peopleWithBirthdays.map(async (person: PersonWithBirthday) => {
-      // Check if there's already an active birthday task
-      // TODO: Only check within the next 30 days
-      const existingTasksResult = await getTasks({
-        db,
-        userId,
-        personId: person.id
-      });
+    // const taskPromises = peopleWithBirthdays.map(async (person: PersonWithBirthday) => {
+    //   // Check if there's already an active birthday task
+    //   // TODO: Only check within the next 30 days
+    //   const existingTasksResult = await getTasks({
+    //     db,
+    //     userId,
+    //     personId: person.id
+    //   });
 
-      const hasExistingBirthdayTask = existingTasksResult.data?.some(
-        (task) => task.trigger === TASK_TRIGGERS.BIRTHDAY_REMINDER
-      );
+    //   const hasExistingBirthdayTask = existingTasksResult.data?.some(
+    //     (task) => task.trigger === TASK_TRIGGERS.BIRTHDAY_REMINDER.slug
+    //   );
 
-      if (hasExistingBirthdayTask) {
-        return null;
-      }
+    //   if (hasExistingBirthdayTask) {
+    //     return null;
+    //   }
 
-      // Generate task content
-      const birthdayDate = dateHandler(person.birthday).format('MMMM D');
+    //   // Generate task content
+    //   const birthdayDate = dateHandler(person.birthday).format('MMMM D');
+    // }
+    // const taskContext = await generateTaskContext(person, birthdayDate);
 
-      const taskContext = await generateTaskContext(person, birthdayDate);
+    // console.log('AI::GenerateObject::TaskContext', taskContext);
 
-      console.log('AI::GenerateObject::TaskContext', taskContext);
+    // let suggestedAction: any;
 
-      let suggestedAction: any;
+    // if (taskContext.actionType === SUGGESTED_ACTION_TYPES.SEND_MESSAGE) {
+    //   suggestedAction = await generateSendMessageSuggestedAction(taskContext);
+    //}
 
-      if (taskContext.actionType === SUGGESTED_ACTION_TYPES.SEND_MESSAGE) {
-        suggestedAction = await generateSendMessageSuggestedAction(taskContext);
-      }
+    // if (taskContext.actionType === SUGGESTED_ACTION_TYPES.BUY_GIFT) {
+    //   suggestedAction = await generateSearchObject({
+    //     schema: buyGiftActionSchema,
+    //     schemaName: 'suggested_gifts',
+    //     messages: [
+    //       {
+    //         role: 'system',
+    //         content: `
+    //         `
+    //       },
+    //       {
+    //         role: 'user',
+    //         content: `
+    //         `
+    //       }
+    //     ]
+    //   });
+    // }
 
-      // if (taskContext.actionType === SUGGESTED_ACTION_TYPES.BUY_GIFT) {
-      //   suggestedAction = await generateSearchObject({
-      //     schema: buyGiftActionSchema,
-      //     schemaName: 'suggested_gifts',
-      //     messages: [
-      //       {
-      //         role: 'system',
-      //         content: `
-      //         `
-      //       },
-      //       {
-      //         role: 'user',
-      //         content: `
-      //         `
-      //       }
-      //     ]
-      //   });
-      // }
+    // console.log('AI::GenerateObject::SuggestedActionObject', suggestedAction);
 
-      console.log('AI::GenerateObject::SuggestedActionObject', suggestedAction);
+    // // Create the task
+    // return createTask({
+    //   db,
+    //   task: {
+    //     userId,
+    //     personId: person.id,
+    //     trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+    //     context: {
+    //       context: taskContext.context,
+    //       callToAction: taskContext.callToAction
+    //     },
+    //     suggestedActionType: taskContext.actionType,
+    //     suggestedAction: suggestedAction,
+    //     endAt: createBirthdayReminderDate(person.birthday)
+    //   }
+    // });
+    // });
 
-      // Create the task
-      return createTask({
-        db,
-        task: {
-          userId,
-          personId: person.id,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
-          context: {
-            context: taskContext.context,
-            callToAction: taskContext.callToAction
-          },
-          suggestedActionType: taskContext.actionType,
-          suggestedAction: suggestedAction,
-          endAt: createBirthdayReminderDate(person.birthday)
-        }
-      });
-    });
+    // // Wait for all task creation promises to complete
+    // const results = await Promise.all(taskPromises);
 
-    // Wait for all task creation promises to complete
-    const results = await Promise.all(taskPromises);
+    // // Count successful task creations
+    // const tasksCreated = results.filter((result) => result?.data).length;
 
-    // Count successful task creations
-    const tasksCreated = results.filter((result) => result?.data).length;
-
-    return { data: tasksCreated, error: null };
+    return { data: 0, error: null };
   } catch (error) {
     const serviceError = {
       ...ERRORS.GENERATION.BIRTHDAY_TASKS_FAILED,

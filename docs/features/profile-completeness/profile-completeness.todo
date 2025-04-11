@@ -1,2 +1,3 @@
 Ideas:
+  ☐ Trigger the profile completeness check whenever a person is created for the first time. 
   ☐ Auto add a label for the "environment" that this person belongs to. For example, I just met a person that works in Media as a TV producer, but I don't have that ecosystem / label predefined. I'm wondering if it would make sense to "auto-label" the person based on that type of information? 

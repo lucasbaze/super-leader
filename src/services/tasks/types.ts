@@ -1,17 +1,13 @@
 import { z } from 'zod';
 
 import { CONTEXT_GATHERING_TYPES } from '@/lib/people/context-gathering';
-import { SUGGESTED_ACTION_TYPES, SuggestedActionType, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { SUGGESTED_ACTION_TYPES, SuggestedActionType, TASK_TRIGGERS, TaskTrigger } from '@/lib/tasks/constants';
 import { Person, TaskSuggestion } from '@/types/database';
 import { ServiceResponse } from '@/types/service-response';
 
 export const taskContextSchema = z.object({
   context: z.string().describe('Context about the task (1 sentence max)'),
-  callToAction: z
-    .string()
-    .describe(
-      'The high level, context-specific call to action for completing the task (1 brief sentence max) such as "Send a birthday message" or "Share an interesting article about the Himalaya’s in reference to his upcoming trip"'
-    )
+  callToAction: z.string().describe('The specific call to action to complete the task')
 });
 
 export const sendMessageActionSchema = z.object({
@@ -48,12 +44,8 @@ const QUESTION_TYPES = CONTEXT_GATHERING_TYPES;
 export const addNoteActionSchema = z.object({
   questionVariants: z.array(
     z.object({
-      type: z
-        .enum(Object.values(QUESTION_TYPES) as [string, ...string[]])
-        .describe('The type of question'),
-      question: z
-        .string()
-        .describe('The question to ask the person that will help you gather context about them.')
+      type: z.enum(Object.values(QUESTION_TYPES) as [string, ...string[]]).describe('The type of question'),
+      question: z.string().describe('The question to ask the person that will help you gather context about them.')
     })
   )
 });
@@ -75,11 +67,16 @@ export const taskSuggestionSchema = z.object({
   userId: z.string().min(1).describe('The ID of the user the task is associated with'),
   personId: z.string().min(1).describe('The ID of the person the task is associated with'),
   trigger: z
-    .enum(Object.values(TASK_TRIGGERS) as [string, ...string[]])
+    .enum(Object.values(TASK_TRIGGERS).map((trigger) => trigger.slug) as [TaskTrigger, ...TaskTrigger[]])
     .describe('The trigger for the creation of this task'),
   context: taskContextSchema,
   suggestedActionType: z
-    .enum(Object.values(SUGGESTED_ACTION_TYPES) as [string, ...string[]])
+    .enum(
+      Object.values(SUGGESTED_ACTION_TYPES).map((action) => action.slug) as [
+        SuggestedActionType,
+        ...SuggestedActionType[]
+      ]
+    )
     .describe('The type of action to take'),
   suggestedAction: z.union([
     sendMessageActionSchema,
@@ -87,10 +84,7 @@ export const taskSuggestionSchema = z.object({
     addNoteActionSchema,
     buyGiftActionSchema
   ]),
-  endAt: z
-    .string()
-    .datetime()
-    .describe('The ISO date-time string when the task should be completed')
+  endAt: z.string().datetime().describe('The ISO date-time string when the task should be completed')
 });
 export type CreateTaskSuggestion = z.infer<typeof taskSuggestionSchema>;
 
@@ -100,7 +94,7 @@ export type GetTaskSuggestionResult = Omit<
   TaskSuggestion,
   'trigger' | 'context' | 'suggested_action_type' | 'suggested_action' | 'person_id' | 'user_id'
 > & {
-  trigger: (typeof TASK_TRIGGERS)[keyof typeof TASK_TRIGGERS];
+  trigger: (typeof TASK_TRIGGERS)[keyof typeof TASK_TRIGGERS]['slug'];
   context: TaskContext;
   suggestedActionType: SuggestedActionType;
   suggestedAction: CreateTaskSuggestion['suggestedAction'];
@@ -127,3 +121,9 @@ export type CreateTaskResult = {
 };
 
 export type CreateTaskServiceResult = ServiceResponse<CreateTaskResult>;
+
+export type BuildTaskResult = {
+  task: TaskSuggestion;
+};
+
+export type BuildTaskServiceResult = ServiceResponse<BuildTaskResult>;

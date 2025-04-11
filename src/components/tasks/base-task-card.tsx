@@ -33,11 +33,11 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
 
   const getActionIcon = (type: string) => {
     switch (type) {
-      case TASK_TRIGGERS.BIRTHDAY_REMINDER:
+      case TASK_TRIGGERS.BIRTHDAY_REMINDER.slug:
         return <Gift className='size-4' />;
-      case TASK_TRIGGERS.CONTEXT_GATHER:
+      case TASK_TRIGGERS.CONTEXT_GATHER.slug:
         return <User className='size-4' />;
-      case TASK_TRIGGERS.FOLLOW_UP:
+      case TASK_TRIGGERS.FOLLOW_UP.slug:
         return <AlarmClock className='size-4' />;
       default:
         return <Info className='size-4' />;
@@ -145,10 +145,7 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
         <Button
           variant='ghost'
           size='sm'
-          className={cn(
-            'mr-2 size-6 p-0 transition-transform duration-200',
-            isExpanded && 'rotate-180'
-          )}>
+          className={cn('mr-2 size-6 p-0 transition-transform duration-200', isExpanded && 'rotate-180')}>
           <ChevronDown className='size-4' />
         </Button>
         <p className='flex-1 text-sm'>{task.context.callToAction}</p>

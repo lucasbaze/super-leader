@@ -1,18 +1,26 @@
 Note:
-  - Tasks have an overlap with the "follow-ups" feature. 
+  - Tasks have an overlap with the "follow-up score" feature. 
+  - person_id is nullable already... so a task doesn't have to be associated with a person... This allows us to create tasks that are associated with a company, project, or the person etc.
 
 Detour: 
   ✔ Update the summary output to be a little cleaner / easier to read @done(25-03-26 00:16)
   ✔ Trigger update-summary generation when a new note or interaction is created @done(25-04-01 00:33)
-    ☐ Determine if the note warrants an update to the summary[']
+    ☐ Determine if the note warrants an update to the summary
     ✔ Generate the update-summary @done(25-04-01 00:32)
     ☐ Update the summary if a note gets deleted
     ✔ Ping the client and notify the user that the summary has been updated somehow? @done(25-04-01 00:32)
     ✔ Build a small event-bus implementation to "trigger" the update-summary generation in a naive way for the client to listen to and get notified when it's complete. @done(25-04-01 00:32)
   ☐ Update get-initial-messsage to be contextually aware & to fire off if the last message is > 1 day old. 
-  ☐ Get the "result" of a tool-invocation into the onSuccess callback of a tool.
+  ☐ Get the "result" of a tool-invocation into the onSuccess callback of a tool?
 
-Now: 
+Refactoring: 
+  ☐ Need to allow the user to create a task via the chat-tools
+  ☐ Need the system to be able to create tasks via a cron job
+  ☐ Need to ensure the context / call to action makes sense for the task
+  ☐ Rename the "task_suggestion" table to just "tasks" ( add a creator column? Can be the user vs. the system )
+
+
+Next:
   ✔ Create the send-message suggestion task @done(25-03-25 12:53)
   ☐ Create the get-content-suggestions prompt in a way that it can be used for task generation
   ☐ Create the get-gift-suggestions prompt
@@ -26,7 +34,7 @@ Now:
   ☐ Allow clicking on a task to navigate to the person's chat page.
   ☐ Get and display "tasks" that are associated with a person on the person page
 
-Next:
+Backlog:
   ☐ Need to create a "completed" variant for the task suggestion list item for display purposes
   ☐ Need to create a "skipped" variant for the task suggestion
   ☐ Adjust tabs to be "This week" and "All tasks" all tasks will "infinite scroll" ( Need to also think about groupings )
@@ -37,7 +45,7 @@ Next:
   ☐ Need to think about the "gamification" in relation to the tasks / displaying metrics and "streaks". 
   ☐ Enable the ability to see past tasks for example using a "withPastTasks" filter
   
-Later: 
+Icebox: 
   ☐ Need to implement the "Bad suggestion" reason
   ☐ Update getTasks to have additional filters for limit, offset, ordering, etc... e.g. for birthday tasks when we check if previous tasks exist... this might go "too far" into the past...
     

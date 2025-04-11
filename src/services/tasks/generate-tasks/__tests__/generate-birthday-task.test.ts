@@ -8,7 +8,7 @@ import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
 import { generateBirthdayTasks } from '../generate-birthday-task';
-import { generateSendMessageSuggestedAction, generateTaskContext } from '../utils';
+import { generateSendMessageSuggestedAction, generateTaskContext } from '../generate-context-and-action-type';
 
 // Mock the task generation methods
 jest.mock('../utils', () => {
@@ -25,8 +25,7 @@ jest.mock('../utils', () => {
         messageVariants: [
           {
             tone: 'friendly',
-            message:
-              "Hey! Just wanted to remind you that your birthday is coming up! I'd love to help make it special."
+            message: "Hey! Just wanted to remind you that your birthday is coming up! I'd love to help make it special."
           },
           {
             tone: 'casual',
@@ -34,8 +33,7 @@ jest.mock('../utils', () => {
           },
           {
             tone: 'formal',
-            message:
-              "I noticed your birthday is approaching. I'd like to help make it a memorable occasion."
+            message: "I noticed your birthday is approaching. I'd like to help make it a memorable occasion."
           },
           {
             tone: 'funny',
@@ -72,10 +70,7 @@ describe('generateBirthdayTasks', () => {
         const testUser = await createTestUser({ db });
 
         // Create people with birthdays in the next 30 days
-        const birthdayInTwoWeeks = dateHandler()
-          .add(14, 'days')
-          .subtract(30, 'years')
-          .toISOString();
+        const birthdayInTwoWeeks = dateHandler().add(14, 'days').subtract(30, 'years').toISOString();
         const birthdayInAWeek = dateHandler().add(7, 'days').subtract(60, 'years').toISOString();
 
         await createTestPerson({
@@ -158,10 +153,7 @@ describe('generateBirthdayTasks', () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
 
-        const birthdayInThirtyOneDays = dateHandler()
-          .add(32, 'days')
-          .subtract(18, 'years')
-          .toISOString();
+        const birthdayInThirtyOneDays = dateHandler().add(32, 'days').subtract(18, 'years').toISOString();
         await createTestPerson({
           db,
           data: {

@@ -1,6 +1,6 @@
 import { dateHandler, getCurrentUtcTime } from '@/lib/dates/helpers';
 import { createError } from '@/lib/errors';
-import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { SUGGESTED_ACTION_TYPES, SuggestedActionType, TASK_TRIGGERS, TaskTrigger } from '@/lib/tasks/constants';
 import { TaskSuggestionInsert } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 
@@ -65,9 +65,9 @@ export type ValidateTaskSuggestionResult = {
 export type ValidateTaskSuggestionInput = {
   userId: string;
   personId: string;
-  trigger: string;
+  trigger: TaskTrigger;
   context: TaskContext;
-  suggestedActionType: string;
+  suggestedActionType: SuggestedActionType;
   suggestedAction: CreateTaskSuggestion['suggestedAction'];
   endAt: string;
 };
@@ -82,15 +82,7 @@ export function validateTaskSuggestion({
   endAt
 }: ValidateTaskSuggestionInput): ValidateTaskSuggestionResult {
   // Validate required fields
-  if (
-    !userId ||
-    !personId ||
-    !trigger ||
-    !context ||
-    !suggestedActionType ||
-    !suggestedAction ||
-    !endAt
-  ) {
+  if (!userId || !personId || !trigger || !context || !suggestedActionType || !suggestedAction || !endAt) {
     return {
       valid: false,
       data: null,
@@ -99,7 +91,11 @@ export function validateTaskSuggestion({
   }
 
   // Validate trigger
-  if (!Object.values(TASK_TRIGGERS).includes(trigger as any)) {
+  if (
+    !Object.values(TASK_TRIGGERS)
+      .map((trigger) => trigger.slug)
+      .includes(trigger)
+  ) {
     return {
       valid: false,
       data: null,
@@ -119,7 +115,11 @@ export function validateTaskSuggestion({
   }
 
   // Validate action type
-  if (!Object.values(SUGGESTED_ACTION_TYPES).includes(suggestedActionType as any)) {
+  if (
+    !Object.values(SUGGESTED_ACTION_TYPES)
+      .map((action) => action.slug)
+      .includes(suggestedActionType)
+  ) {
     return {
       valid: false,
       data: null,
@@ -130,16 +130,16 @@ export function validateTaskSuggestion({
   // Validate action based on type
   try {
     switch (suggestedActionType) {
-      case SUGGESTED_ACTION_TYPES.SEND_MESSAGE:
+      case SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug:
         sendMessageActionSchema.parse(suggestedAction);
         break;
-      case SUGGESTED_ACTION_TYPES.SHARE_CONTENT:
+      case SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug:
         shareContentActionSchema.parse(suggestedAction);
         break;
-      case SUGGESTED_ACTION_TYPES.ADD_NOTE:
+      case SUGGESTED_ACTION_TYPES.ADD_NOTE.slug:
         addNoteActionSchema.parse(suggestedAction);
         break;
-      case SUGGESTED_ACTION_TYPES.BUY_GIFT:
+      case SUGGESTED_ACTION_TYPES.BUY_GIFT.slug:
         buyGiftActionSchema.parse(suggestedAction);
         break;
       default:

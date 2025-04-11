@@ -30,7 +30,6 @@ Next:
   ☐ Create the add-note suggestion task
     ☐ I'll need to later think about how this updates the person's summary profile summary score... maybe this should be fetched alongside the person?
   ☐ Update the chat-tools task creation mechanism
-  ☐ Create the "edit in chat" functionality for any messages
   ☐ Allow clicking on a task to navigate to the person's chat page.
   ☐ Get and display "tasks" that are associated with a person on the person page
 

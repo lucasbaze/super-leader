@@ -22,3 +22,7 @@ Possible options:
 #Notes
 
 - If I've completed or skipped a task, I might want to see what the contents of the task actually was.
+
+# Bugs
+
+- Completing a task that is in the future, does not show in the "today" tab, but does show in the acitivty header as a completed task for today. The task-group is grouping the tasks by the day, so the future tasks, even though completed are not included. This would need to get filtered on the server side.

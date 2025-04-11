@@ -3,10 +3,9 @@ import { GetTaskSuggestionResult } from '@/services/tasks/types';
 
 import { AddNoteTask } from './add-note-task';
 import { BuyGiftTask } from './buy-gift-task';
-import { CompletedTaskCard } from './completed-task-card';
 import { SendMessageTask } from './send-message-task';
 import { ShareContentTask } from './share-content-task';
-import { SkippedTaskCard } from './skipped-task-card';
+import { StatusTaskCard } from './status-task-card';
 
 interface TaskRendererProps {
   task: GetTaskSuggestionResult;
@@ -15,12 +14,12 @@ interface TaskRendererProps {
 export const TaskRenderer = ({ task }: TaskRendererProps) => {
   // Handle completed tasks
   if (task.completed_at) {
-    return <CompletedTaskCard task={task} />;
+    return <StatusTaskCard task={task} status='completed' />;
   }
 
   // Handle skipped tasks
   if (task.skipped_at) {
-    return <SkippedTaskCard task={task} />;
+    return <StatusTaskCard task={task} status='skipped' />;
   }
 
   // Handle active tasks

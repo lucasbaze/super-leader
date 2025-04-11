@@ -5,8 +5,7 @@ import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { GetTaskSuggestionResult } from '@/services/tasks/types';
 
 import { BaseTaskCard } from './base-task-card';
-import { CompletedTaskCard } from './completed-task-card';
-import { SkippedTaskCard } from './skipped-task-card';
+import { StatusTaskCard } from './status-task-card';
 import { TaskList } from './task-list';
 
 const meta = {
@@ -61,22 +60,24 @@ export const Active: StoryObj<typeof BaseTaskCard> = {
   }
 };
 
-export const Completed: StoryObj<typeof CompletedTaskCard> = {
+export const Completed: StoryObj<typeof StatusTaskCard> = {
   render: () => (
-    <CompletedTaskCard
+    <StatusTaskCard
       task={createTestTask({
         completed_at: dateHandler().subtract(2, 'hours').toISOString()
       })}
+      status='completed'
     />
   )
 };
 
-export const Skipped: StoryObj<typeof SkippedTaskCard> = {
+export const Skipped: StoryObj<typeof StatusTaskCard> = {
   render: () => (
-    <SkippedTaskCard
+    <StatusTaskCard
       task={createTestTask({
         skipped_at: dateHandler().subtract(1, 'hour').toISOString()
       })}
+      status='skipped'
     />
   )
 };

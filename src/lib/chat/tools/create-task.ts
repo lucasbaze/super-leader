@@ -32,6 +32,7 @@ export const createTaskTool: ChatTool<
     
     - Use createTask to create new task reminders for the user
     - Before creating a task, you should ask the user for details about the task:
+      - Who the task is for if you don't already know or have a person_id
       - What the task is about
       - When the task should be completed
     

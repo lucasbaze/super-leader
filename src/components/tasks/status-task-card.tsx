@@ -1,30 +1,26 @@
-import { Check } from '@/components/icons';
+import { Check, X } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { dateHandler } from '@/lib/dates/helpers';
-import { TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { cn } from '@/lib/utils';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
-type CompletedTaskCardProps = {
-  task: Omit<GetTaskSuggestionResult, 'suggested_action_type' | 'suggested_action'>;
-};
+type TaskStatus = 'completed' | 'skipped';
 
-export function CompletedTaskCard({ task }: CompletedTaskCardProps) {
-  const getActionIcon = (type: string) => {
-    switch (type) {
-      case TASK_TRIGGERS.BIRTHDAY_REMINDER.slug:
-        return 'Wished happy birthday';
-      case TASK_TRIGGERS.CONTEXT_GATHER.slug:
-        return 'Updated context';
-      case TASK_TRIGGERS.FOLLOW_UP.slug:
-        return 'Followed up';
-      default:
-        return 'Completed task';
-    }
-  };
+interface StatusTaskCardProps {
+  task: Omit<GetTaskSuggestionResult, 'suggested_action_type' | 'suggested_action'>;
+  status: TaskStatus;
+}
+
+export function StatusTaskCard({ task, status }: StatusTaskCardProps) {
+  const isCompleted = status === 'completed';
 
   return (
-    <Card className='bg-muted/20 relative w-full min-w-[500px] overflow-hidden shadow-sm'>
+    <Card
+      className={cn(
+        'relative w-full min-w-[500px] overflow-hidden shadow-sm',
+        isCompleted ? 'bg-muted/20' : 'bg-red-50/20'
+      )}>
       <div className='p-3'>
         <div className='flex items-start'>
           <Avatar className='mr-3 size-8 flex-shrink-0'>
@@ -41,14 +37,14 @@ export function CompletedTaskCard({ task }: CompletedTaskCardProps) {
                 <h3 className='text-sm font-medium text-muted-foreground'>
                   {task.person.first_name} {task.person.last_name}
                 </h3>
-                <Check className='size-3.5 text-green-500' />
+                {isCompleted ? <Check className='size-3.5 text-green-500' /> : <X className='size-3.5 text-red-500' />}
               </div>
               <span className='text-xs text-muted-foreground'>
-                {dateHandler(task.completed_at || task.end_at).format('h:mm A')}
+                {dateHandler(isCompleted ? task.completed_at : task.skipped_at || task.end_at).format('h:mm A')}
               </span>
             </div>
 
-            <p className='mt-0.5 text-xs text-muted-foreground'>{getActionIcon(task.trigger)}</p>
+            <p className='mt-0.5 text-xs text-muted-foreground'>{task.context.context}</p>
           </div>
         </div>
       </div>

@@ -111,8 +111,6 @@ export async function buildTask({
 
     console.log('AI::GenerateObject::TaskContextAndActionType', taskContextAndActionType);
 
-    // generate the suggested action
-    // validate the suggested action
     const suggestedAction = await generateTaskAction({
       db,
       taskContext: taskContextAndActionType
@@ -130,7 +128,6 @@ export async function buildTask({
         context: taskContextAndActionType,
         suggestedActionType: taskContextAndActionType.actionType,
         suggestedAction: suggestedAction.data,
-        // TODO: Generate the endAt date from the generateContextAndActionType
         endAt
       }
     });
@@ -154,71 +151,3 @@ export async function buildTask({
     return { data: null, error: serviceError };
   }
 }
-
-// chat -> build task -> generate suggested action -> validate suggested action -> create task -> insert into database
-
-// system -> get upcoming birthdays -> build task(trigger: birthday)
-
-// system -> get follow ups -> build task(trigger: follow up, & context: )
-
-/*
-* Birthday tasks
-* const thirtyDaysFromNow = dateHandler().add(30, 'days').format('MM-DD');
-    const today = dateHandler().format('MM-DD');
-
-    const { data: peopleWithBirthdays, error: fetchBirthdayError } = await db.rpc(
-      'get_people_with_upcoming_birthdays',
-      {
-        p_user_id: userId,
-        p_start_date: today,
-        p_end_date: thirtyDaysFromNow
-      }
-    );
-
-    if (fetchBirthdayError) {
-      return {
-        data: null,
-        error: { ...ERRORS.GENERATION.FETCHING_BIRTHDAYS_FAILED, details: fetchBirthdayError }
-      };
-    }
-
-    // Create an array of promises for task creation
-    const taskPromises = peopleWithBirthdays.map(async (person: PersonWithBirthday) => {
-      // Check if there's already an active birthday task
-      // TODO: Only check within the next 30 days
-      const existingTasksResult = await getTasks({
-        db,
-        userId,
-        personId: person.id
-      });
-
-      const hasExistingBirthdayTask = existingTasksResult.data?.some(
-        (task) => task.trigger === TASK_TRIGGERS.BIRTHDAY_REMINDER
-      );
-
-      if (hasExistingBirthdayTask) {
-        return null;
-      }
-
-      // Generate task content
-      const birthdayDate = dateHandler(person.birthday).format('MMMM D');
-
-      // HERE IS WHERE WE BUILD THE TASK NOW
-
-      const task = await buildTask({ ... })
-
-              const taskContext = await generateTaskContext(person, birthdayDate);
-
-              console.log('AI::GenerateObject::TaskContext', taskContext);
-
-              let suggestedAction: any;
-
-              if (taskContext.actionType === SUGGESTED_ACTION_TYPES.SEND_MESSAGE) {
-                suggestedAction = await generateSendMessageSuggestedAction(taskContext);
-              }
-* 
-* 
-* 
-* 
-* 
-*/

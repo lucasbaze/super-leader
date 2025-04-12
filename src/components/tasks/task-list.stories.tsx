@@ -4,17 +4,15 @@ import { dateHandler } from '@/lib/dates/helpers';
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { GetTaskSuggestionResult } from '@/services/tasks/types';
 
-import { BaseTaskCard } from './base-task-card';
-import { StatusTaskCard } from './status-task-card';
 import { TaskList } from './task-list';
 
 const meta = {
   title: 'Tasks/List',
-  component: BaseTaskCard,
+  component: TaskList,
   parameters: {
     layout: 'centered'
   }
-} satisfies Meta<typeof BaseTaskCard>;
+} satisfies Meta<typeof TaskList>;
 
 export default meta;
 
@@ -52,35 +50,6 @@ function createTestTask(overrides = {}): GetTaskSuggestionResult {
     ...overrides
   };
 }
-
-export const Active: StoryObj<typeof BaseTaskCard> = {
-  args: {
-    task: createTestTask(),
-    actionBody: <div>Action content goes here</div>
-  }
-};
-
-export const Completed: StoryObj<typeof StatusTaskCard> = {
-  render: () => (
-    <StatusTaskCard
-      task={createTestTask({
-        completed_at: dateHandler().subtract(2, 'hours').toISOString()
-      })}
-      status='completed'
-    />
-  )
-};
-
-export const Skipped: StoryObj<typeof StatusTaskCard> = {
-  render: () => (
-    <StatusTaskCard
-      task={createTestTask({
-        skipped_at: dateHandler().subtract(1, 'hour').toISOString()
-      })}
-      status='skipped'
-    />
-  )
-};
 
 // Create a story for the TaskList component
 export const List: StoryObj<typeof TaskList> = {

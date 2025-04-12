@@ -14,9 +14,9 @@ Detour:
   ☐ Get the "result" of a tool-invocation into the onSuccess callback of a tool?
 
 Refactoring: 
-  ☐ Need to allow the user to create a task via the chat-tools
+  ✔ Need to allow the user to create a task via the chat-tools @done(25-04-12 00:01)
   ☐ Need the system to be able to create tasks via a cron job
-  ☐ Need to ensure the context / call to action makes sense for the task
+  ✔ Need to ensure the context / call to action makes sense for the task @done(25-04-12 00:01)
   ☐ Rename the "task_suggestion" table to just "tasks" ( add a creator column? Can be the user vs. the system )
 
 

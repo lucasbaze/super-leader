@@ -67,9 +67,9 @@ describe('createTask', () => {
         expect(tasksResult.data).toHaveLength(1);
 
         const createdTask = tasksResult.data![0];
-        expect(createdTask.trigger).toBe(TASK_TRIGGERS.BIRTHDAY_REMINDER);
+        expect(createdTask.trigger).toBe(TASK_TRIGGERS.BIRTHDAY_REMINDER.slug);
         expect(createdTask.context).toEqual(taskData.context);
-        expect(createdTask.suggestedActionType).toBe(SUGGESTED_ACTION_TYPES.SEND_MESSAGE);
+        expect(createdTask.suggestedActionType).toBe(SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug);
         expect(createdTask.suggestedAction).toEqual(taskData.suggestedAction);
         expect(dateHandler(createdTask.end_at).isSame(dateHandler(taskData.endAt))).toBe(true);
         expect(createdTask.person.id).toBe(person.id);

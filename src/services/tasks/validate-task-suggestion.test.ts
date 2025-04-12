@@ -8,12 +8,12 @@ describe('validateTaskSuggestion', () => {
   const validInput = {
     userId: 'user-123',
     personId: 'person-123',
-    trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+    trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
     context: {
       context: 'Birthday coming up next week',
       callToAction: 'Send a thoughtful birthday message'
     },
-    suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+    suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
     suggestedAction: {
       messageVariants: [
         {
@@ -50,12 +50,12 @@ describe('validateTaskSuggestion', () => {
       // Test share content action
       const shareContentInput = {
         ...validInput,
-        trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+        trigger: TASK_TRIGGERS.EXTERNAL_NEWS.slug,
         context: {
           context: 'Found an interesting article about their interests',
           callToAction: 'Share the article about AI developments'
         },
-        suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+        suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug,
         suggestedAction: {
           contentVariants: [
             {
@@ -82,12 +82,12 @@ describe('validateTaskSuggestion', () => {
       // Test add note action
       const addNoteInput = {
         ...validInput,
-        trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+        trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
         context: {
           context: 'Need to gather more information about their interests',
           callToAction: 'Ask about their favorite hobbies'
         },
-        suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+        suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE.slug,
         suggestedAction: {
           questionVariants: [
             {
@@ -105,12 +105,12 @@ describe('validateTaskSuggestion', () => {
       // Test buy gift action
       const buyGiftInput = {
         ...validInput,
-        trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+        trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
         context: {
           context: 'Birthday coming up, likes tech gadgets',
           callToAction: 'Buy a thoughtful birthday gift'
         },
-        suggestedActionType: SUGGESTED_ACTION_TYPES.BUY_GIFT,
+        suggestedActionType: SUGGESTED_ACTION_TYPES.BUY_GIFT.slug,
         suggestedAction: {
           suggestedGifts: [
             {
@@ -133,6 +133,7 @@ describe('validateTaskSuggestion', () => {
     it('should reject invalid trigger', () => {
       const result = validateTaskSuggestion({
         ...validInput,
+        // @ts-expect-error
         trigger: 'INVALID_TRIGGER'
       });
 
@@ -157,6 +158,7 @@ describe('validateTaskSuggestion', () => {
     it('should reject invalid action type', () => {
       const result = validateTaskSuggestion({
         ...validInput,
+        // @ts-expect-error
         suggestedActionType: 'INVALID_ACTION'
       });
 
@@ -174,9 +176,7 @@ describe('validateTaskSuggestion', () => {
       });
 
       expect(result.valid).toBe(false);
-      expect(result.error?.displayMessage).toEqual(
-        ERRORS.TASK_SUGGESTION.INVALID_ACTION.displayMessage
-      );
+      expect(result.error?.displayMessage).toEqual(ERRORS.TASK_SUGGESTION.INVALID_ACTION.displayMessage);
       expect(result.data).toBeNull();
     });
 

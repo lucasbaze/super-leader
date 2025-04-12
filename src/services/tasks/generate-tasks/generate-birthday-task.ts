@@ -49,7 +49,7 @@ const createBirthdayReminderDate = (birthday: string) => {
     return now.endOf('day').toISOString();
   }
 
-  return reminderDate.toISOString();
+  return reminderDate.startOf('day').toISOString();
 };
 
 type PersonWithBirthday = Person & { birthday: string };
@@ -109,6 +109,8 @@ export async function generateBirthdayTasks(db: DBClient, userId: string): Promi
 
     // Wait for all task creation promises to complete
     const results = await Promise.all(taskPromises);
+
+    console.log('promise results', results);
 
     // Count successful task creations
     const tasksCreated = results.filter((result) => result?.data).length;

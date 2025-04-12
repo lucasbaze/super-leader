@@ -21,7 +21,7 @@ export const Default: Story = {
   args: {
     task: {
       id: '1',
-      trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+      trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
       completed_at: null,
       created_at: '2024-01-01T00:00:00Z',
       end_at: '2024-01-01T00:00:00Z',
@@ -39,7 +39,7 @@ export const Default: Story = {
         context: "It's Alex's birthday!",
         callToAction: 'Send a birthday message'
       },
-      suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+      suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
       suggestedAction: {
         messageVariants: [
           {
@@ -54,8 +54,7 @@ export const Default: Story = {
           },
           {
             tone: 'Celebratory',
-            message:
-              'Happy birthday to you, Alex! 🎂🎈 Wishing you all the happiness in the world on your special day!'
+            message: 'Happy birthday to you, Alex! 🎂🎈 Wishing you all the happiness in the world on your special day!'
           }
         ]
       }

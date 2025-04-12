@@ -43,12 +43,12 @@ describe('getTasks service', () => {
         const taskData = {
           userId: testUser.id,
           personId: testPerson.id,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
           context: {
             context: 'Birthday coming up next week',
             callToAction: 'Send a thoughtful birthday message'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
           suggestedAction: {
             messageVariants: [
               {
@@ -71,9 +71,9 @@ describe('getTasks service', () => {
         expect(result.data).toHaveLength(1);
         expect(result.data![0]).toMatchObject({
           id: testTask.data!.id,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
           context: taskData.context,
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
           suggestedAction: taskData.suggestedAction,
           person: {
             id: testPerson.id,
@@ -99,12 +99,12 @@ describe('getTasks service', () => {
         const taskData = {
           userId: testUser.id,
           personId: testPerson.id,
-          trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+          trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
           context: {
             context: 'Need to gather more information',
             callToAction: 'Ask about their interests'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE.slug,
           suggestedAction: {
             questionVariants: [
               {
@@ -123,10 +123,7 @@ describe('getTasks service', () => {
         });
 
         // Mark task as completed
-        await db
-          .from('task_suggestion')
-          .update({ completed_at: new Date().toISOString() })
-          .eq('user_id', testUser.id);
+        await db.from('task_suggestion').update({ completed_at: new Date().toISOString() }).eq('user_id', testUser.id);
 
         const result = await getTasks({ db, userId: testUser.id });
 
@@ -162,12 +159,12 @@ describe('getTasks service', () => {
         const taskData1 = {
           userId: testUser1.id,
           personId: testPerson1.id,
-          trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+          trigger: TASK_TRIGGERS.EXTERNAL_NEWS.slug,
           context: {
             context: 'Found an interesting article',
             callToAction: 'Share the article about AI'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug,
           suggestedAction: {
             contentVariants: [
               {
@@ -199,12 +196,12 @@ describe('getTasks service', () => {
         const taskData2 = {
           userId: testUser2.id,
           personId: testPerson2.id,
-          trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+          trigger: TASK_TRIGGERS.EXTERNAL_NEWS.slug,
           context: {
             context: 'Found an interesting article',
             callToAction: 'Share the article about AI'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug,
           suggestedAction: {
             contentVariants: [
               {

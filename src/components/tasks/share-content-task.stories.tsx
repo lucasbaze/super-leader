@@ -25,7 +25,7 @@ export const Default: Story = {
         first_name: 'Michael',
         last_name: 'Bashour'
       },
-      trigger: TASK_TRIGGERS.FOLLOW_UP,
+      trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
       completed_at: null,
       created_at: '2024-01-01T00:00:00Z',
       end_at: '2024-01-01T00:00:00Z',
@@ -36,10 +36,9 @@ export const Default: Story = {
       updated_at: '2024-01-01T00:00:00Z',
       context: {
         context: "You requested to be notified about Michael's recent trip",
-        callToAction:
-          "Share an interesting article about the Himalaya's in reference to his upcoming trip."
+        callToAction: "Share an interesting article about the Himalaya's in reference to his upcoming trip."
       },
-      suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+      suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug,
       suggestedAction: {
         contentVariants: [
           {
@@ -65,8 +64,7 @@ export const Default: Story = {
           {
             suggestedContent: {
               title: 'Hidden Gems of the Himalayas',
-              description:
-                'Discover lesser-known destinations and unique experiences in the Himalayan region.',
+              description: 'Discover lesser-known destinations and unique experiences in the Himalayan region.',
               url: 'https://example.com/himalaya-hidden-gems'
             },
             messageVariants: [

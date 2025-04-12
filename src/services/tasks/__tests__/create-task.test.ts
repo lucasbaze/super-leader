@@ -29,12 +29,12 @@ describe('createTask', () => {
         const taskData = {
           userId: user.id,
           personId: person.id,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
           context: {
             context: 'Birthday coming up next week',
             callToAction: 'Send a thoughtful birthday message'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
           suggestedAction: {
             messageVariants: [
               {
@@ -90,12 +90,12 @@ describe('createTask', () => {
         // Test different action types
         const actionTypes = [
           {
-            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
             context: {
               context: 'Birthday coming up',
               callToAction: 'Send birthday wishes'
             },
-            actionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+            actionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
             action: {
               messageVariants: [
                 {
@@ -106,12 +106,12 @@ describe('createTask', () => {
             }
           },
           {
-            trigger: TASK_TRIGGERS.EXTERNAL_NEWS,
+            trigger: TASK_TRIGGERS.EXTERNAL_NEWS.slug,
             context: {
               context: 'Found relevant article',
               callToAction: 'Share the article'
             },
-            actionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT,
+            actionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug,
             action: {
               contentVariants: [
                 {
@@ -131,12 +131,12 @@ describe('createTask', () => {
             }
           },
           {
-            trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+            trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
             context: {
               context: 'Need to gather more information about their interests',
               callToAction: 'Ask about their favorite hobbies'
             },
-            actionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+            actionType: SUGGESTED_ACTION_TYPES.ADD_NOTE.slug,
             action: {
               questionVariants: [
                 {
@@ -147,12 +147,12 @@ describe('createTask', () => {
             }
           },
           {
-            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+            trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
             context: {
               context: 'Birthday gift needed',
               callToAction: 'Buy a birthday gift'
             },
-            actionType: SUGGESTED_ACTION_TYPES.BUY_GIFT,
+            actionType: SUGGESTED_ACTION_TYPES.BUY_GIFT.slug,
             action: {
               suggestedGifts: [
                 {
@@ -202,9 +202,7 @@ describe('createTask', () => {
         // Verify each action type exists
         for (const actionConfig of actionTypes) {
           const typeExists = tasks!.some(
-            (task) =>
-              task.trigger === actionConfig.trigger &&
-              task.suggested_action_type === actionConfig.actionType
+            (task) => task.trigger === actionConfig.trigger && task.suggested_action_type === actionConfig.actionType
           );
           expect(typeExists).toBe(true);
         }
@@ -252,12 +250,12 @@ describe('createTask', () => {
         const taskData = {
           userId: user.id,
           personId: nonExistentPersonId,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
           context: {
             context: 'Birthday coming up',
             callToAction: 'Send birthday wishes'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
           suggestedAction: {
             messageVariants: [
               {
@@ -294,12 +292,12 @@ describe('createTask', () => {
         const taskData = {
           userId: user2.id, // Different user
           personId: person.id,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
           context: {
             context: 'Birthday coming up',
             callToAction: 'Send birthday wishes'
           },
-          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+          suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
           suggestedAction: {
             messageVariants: [
               {

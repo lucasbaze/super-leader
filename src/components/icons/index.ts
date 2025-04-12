@@ -7,6 +7,7 @@ export {
   Orbit,
   CircleDashed,
   LandPlot,
+  ListTodo,
   Mic,
   BrainCog,
   HelpCircle,
@@ -102,12 +103,7 @@ export {
   X
 } from 'lucide-react';
 export * as LogoIcons from './logos';
-export {
-  CaretSortIcon,
-  ComponentPlaceholderIcon,
-  ChevronRightIcon,
-  DotsHorizontalIcon
-} from '@radix-ui/react-icons';
+export { CaretSortIcon, ComponentPlaceholderIcon, ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 
 // Export custom icons
 export { OneRing } from './custom/one-ring';

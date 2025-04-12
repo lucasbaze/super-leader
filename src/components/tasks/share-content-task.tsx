@@ -5,12 +5,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 
 import { Clipboard, Edit, ExternalLink } from '@/components/icons';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useCopyToClipboard } from '@/hooks/utils/use-copy-to-clipboard';
@@ -31,9 +26,7 @@ export const ShareContentTask = ({ task }: { task: GetTaskSuggestionResult }) =>
   return (
     <BaseTaskCard
       task={task}
-      actionBody={
-        <ShareContentCardActionBody contentVariants={task.suggestedAction.contentVariants} />
-      }
+      actionBody={<ShareContentCardActionBody contentVariants={task.suggestedAction.contentVariants} />}
     />
   );
 };
@@ -58,9 +51,7 @@ const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionB
   );
 
   const updateContentState = (index: number, updates: Partial<ContentSectionState>) => {
-    setContentStates((prev) =>
-      prev.map((state, i) => (i === index ? { ...state, ...updates } : state))
-    );
+    setContentStates((prev) => prev.map((state, i) => (i === index ? { ...state, ...updates } : state)));
   };
 
   const handleCopy = async (message: string) => {
@@ -120,9 +111,7 @@ const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionB
               {/* Message Editor */}
               <Textarea
                 value={contentStates[contentIndex].editedMessage}
-                onChange={(e) =>
-                  updateContentState(contentIndex, { editedMessage: e.target.value })
-                }
+                onChange={(e) => updateContentState(contentIndex, { editedMessage: e.target.value })}
                 rows={4}
                 className='w-full resize-none'
                 placeholder='Edit message...'
@@ -130,16 +119,9 @@ const ShareContentCardActionBody = ({ contentVariants }: ShareContentCardActionB
 
               {/* Action Buttons */}
               <div className='flex flex-wrap justify-end gap-2'>
-                <Button size='sm' variant='outline'>
-                  <Edit className='mr-1 size-3.5' /> Edit in Chat
-                </Button>
-                <Button
-                  size='sm'
-                  onClick={() => handleCopy(contentStates[contentIndex].editedMessage)}>
+                <Button size='sm' onClick={() => handleCopy(contentStates[contentIndex].editedMessage)}>
                   <Clipboard className='mr-1 size-3.5' />
-                  <span className='transition-opacity duration-200 ease-in-out'>
-                    {isCopied ? 'Copied!' : 'Copy'}
-                  </span>
+                  <span className='transition-opacity duration-200 ease-in-out'>{isCopied ? 'Copied!' : 'Copy'}</span>
                 </Button>
               </div>
             </div>

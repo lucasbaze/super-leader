@@ -1,14 +1,13 @@
 import { dateHandler } from '@/lib/dates/helpers';
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { DBClient, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-import { createTask } from '../create-task';
+import { buildTask } from '../build-task';
 import { getTasks } from '../get-tasks';
-import { generateSendMessageSuggestedAction, generateTaskContext } from './utils';
 
 // Service params interface
 export interface GenerateTasksParams {
@@ -50,15 +49,12 @@ const createBirthdayReminderDate = (birthday: string) => {
     return now.endOf('day').toISOString();
   }
 
-  return reminderDate.toISOString();
+  return reminderDate.startOf('day').toISOString();
 };
 
 type PersonWithBirthday = Person & { birthday: string };
 
-export async function generateBirthdayTasks(
-  db: DBClient,
-  userId: string
-): Promise<ServiceResponse<number>> {
+export async function generateBirthdayTasks(db: DBClient, userId: string): Promise<ServiceResponse<number>> {
   try {
     // Get people with birthdays in next 30 days
     const thirtyDaysFromNow = dateHandler().add(30, 'days').format('MM-DD');
@@ -91,7 +87,7 @@ export async function generateBirthdayTasks(
       });
 
       const hasExistingBirthdayTask = existingTasksResult.data?.some(
-        (task) => task.trigger === TASK_TRIGGERS.BIRTHDAY_REMINDER
+        (task) => task.trigger === TASK_TRIGGERS.BIRTHDAY_REMINDER.slug
       );
 
       if (hasExistingBirthdayTask) {
@@ -101,57 +97,20 @@ export async function generateBirthdayTasks(
       // Generate task content
       const birthdayDate = dateHandler(person.birthday).format('MMMM D');
 
-      const taskContext = await generateTaskContext(person, birthdayDate);
-
-      console.log('AI::GenerateObject::TaskContext', taskContext);
-
-      let suggestedAction: any;
-
-      if (taskContext.actionType === SUGGESTED_ACTION_TYPES.SEND_MESSAGE) {
-        suggestedAction = await generateSendMessageSuggestedAction(taskContext);
-      }
-
-      // if (taskContext.actionType === SUGGESTED_ACTION_TYPES.BUY_GIFT) {
-      //   suggestedAction = await generateSearchObject({
-      //     schema: buyGiftActionSchema,
-      //     schemaName: 'suggested_gifts',
-      //     messages: [
-      //       {
-      //         role: 'system',
-      //         content: `
-      //         `
-      //       },
-      //       {
-      //         role: 'user',
-      //         content: `
-      //         `
-      //       }
-      //     ]
-      //   });
-      // }
-
-      console.log('AI::GenerateObject::SuggestedActionObject', suggestedAction);
-
-      // Create the task
-      return createTask({
+      return buildTask({
         db,
-        task: {
-          userId,
-          personId: person.id,
-          trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
-          context: {
-            context: taskContext.context,
-            callToAction: taskContext.callToAction
-          },
-          suggestedActionType: taskContext.actionType,
-          suggestedAction: suggestedAction,
-          endAt: createBirthdayReminderDate(person.birthday)
-        }
+        userId,
+        personId: person.id,
+        trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
+        endAt: createBirthdayReminderDate(person.birthday),
+        context: `${person.first_name} has a birthday coming up on ${birthdayDate}. Today is ${today}`
       });
     });
 
     // Wait for all task creation promises to complete
     const results = await Promise.all(taskPromises);
+
+    console.log('promise results', results);
 
     // Count successful task creations
     const tasksCreated = results.filter((result) => result?.data).length;

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTaskActions } from '@/hooks/use-task-actions';
+import { dateHandler } from '@/lib/dates/helpers';
 import { TASK_TRIGGERS } from '@/lib/tasks/constants';
 import { cn } from '@/lib/utils';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
@@ -33,11 +34,11 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
 
   const getActionIcon = (type: string) => {
     switch (type) {
-      case TASK_TRIGGERS.BIRTHDAY_REMINDER:
+      case TASK_TRIGGERS.BIRTHDAY_REMINDER.slug:
         return <Gift className='size-4' />;
-      case TASK_TRIGGERS.CONTEXT_GATHER:
+      case TASK_TRIGGERS.CONTEXT_GATHER.slug:
         return <User className='size-4' />;
-      case TASK_TRIGGERS.FOLLOW_UP:
+      case TASK_TRIGGERS.FOLLOW_UP.slug:
         return <AlarmClock className='size-4' />;
       default:
         return <Info className='size-4' />;
@@ -62,7 +63,7 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
               <h3 className='font-medium'>
                 {task.person.first_name} {task.person.last_name}
               </h3>
-              <span className='text-sm text-muted-foreground'>Today</span>
+              <span className='text-sm text-muted-foreground'>{dateHandler(task.end_at).format('ddd, MMM D')}</span>
             </div>
 
             <div className='mt-1 flex items-center justify-between'>
@@ -145,10 +146,7 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
         <Button
           variant='ghost'
           size='sm'
-          className={cn(
-            'mr-2 size-6 p-0 transition-transform duration-200',
-            isExpanded && 'rotate-180'
-          )}>
+          className={cn('mr-2 size-6 p-0 transition-transform duration-200', isExpanded && 'rotate-180')}>
           <ChevronDown className='size-4' />
         </Button>
         <p className='flex-1 text-sm'>{task.context.callToAction}</p>

@@ -1,6 +1,8 @@
+import { E } from 'node_modules/@faker-js/faker/dist/airline-D6ksJFwG';
+
 import { dateHandler, getCurrentUtcTime } from '@/lib/dates/helpers';
 import { createError } from '@/lib/errors';
-import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { SUGGESTED_ACTION_TYPES, SuggestedActionType, TASK_TRIGGERS, TaskTrigger } from '@/lib/tasks/constants';
 import { TaskSuggestionInsert } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 
@@ -52,6 +54,12 @@ export const ERRORS = {
       ErrorType.VALIDATION_ERROR,
       'Missing required fields',
       'Please provide all required task information'
+    ),
+    SCHEMA_VALIDATION_ERROR: createError(
+      'schema_validation_error',
+      ErrorType.VALIDATION_ERROR,
+      'Schema validation error',
+      'The task suggestion schema is not valid'
     )
   }
 };
@@ -65,12 +73,28 @@ export type ValidateTaskSuggestionResult = {
 export type ValidateTaskSuggestionInput = {
   userId: string;
   personId: string;
-  trigger: string;
+  trigger: TaskTrigger;
   context: TaskContext;
-  suggestedActionType: string;
+  suggestedActionType: SuggestedActionType;
   suggestedAction: CreateTaskSuggestion['suggestedAction'];
   endAt: string;
 };
+
+export function isValidTaskTrigger(trigger: TaskTrigger): boolean {
+  return Object.values(TASK_TRIGGERS)
+    .map((trigger) => trigger.slug)
+    .includes(trigger);
+}
+
+export function isValidTaskActionType(actionType: SuggestedActionType): boolean {
+  return Object.values(SUGGESTED_ACTION_TYPES)
+    .map((action) => action.slug)
+    .includes(actionType);
+}
+
+export function isValidEndAt(endAt: string): boolean {
+  return dateHandler(endAt).isAfter(dateHandler(getCurrentUtcTime()));
+}
 
 export function validateTaskSuggestion({
   userId,
@@ -82,15 +106,7 @@ export function validateTaskSuggestion({
   endAt
 }: ValidateTaskSuggestionInput): ValidateTaskSuggestionResult {
   // Validate required fields
-  if (
-    !userId ||
-    !personId ||
-    !trigger ||
-    !context ||
-    !suggestedActionType ||
-    !suggestedAction ||
-    !endAt
-  ) {
+  if (!userId || !personId || !trigger || !context || !suggestedActionType || !suggestedAction || !endAt) {
     return {
       valid: false,
       data: null,
@@ -99,7 +115,7 @@ export function validateTaskSuggestion({
   }
 
   // Validate trigger
-  if (!Object.values(TASK_TRIGGERS).includes(trigger as any)) {
+  if (!isValidTaskTrigger(trigger)) {
     return {
       valid: false,
       data: null,
@@ -119,7 +135,7 @@ export function validateTaskSuggestion({
   }
 
   // Validate action type
-  if (!Object.values(SUGGESTED_ACTION_TYPES).includes(suggestedActionType as any)) {
+  if (!isValidTaskActionType(suggestedActionType)) {
     return {
       valid: false,
       data: null,
@@ -130,16 +146,16 @@ export function validateTaskSuggestion({
   // Validate action based on type
   try {
     switch (suggestedActionType) {
-      case SUGGESTED_ACTION_TYPES.SEND_MESSAGE:
+      case SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug:
         sendMessageActionSchema.parse(suggestedAction);
         break;
-      case SUGGESTED_ACTION_TYPES.SHARE_CONTENT:
+      case SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug:
         shareContentActionSchema.parse(suggestedAction);
         break;
-      case SUGGESTED_ACTION_TYPES.ADD_NOTE:
+      case SUGGESTED_ACTION_TYPES.ADD_NOTE.slug:
         addNoteActionSchema.parse(suggestedAction);
         break;
-      case SUGGESTED_ACTION_TYPES.BUY_GIFT:
+      case SUGGESTED_ACTION_TYPES.BUY_GIFT.slug:
         buyGiftActionSchema.parse(suggestedAction);
         break;
       default:
@@ -158,7 +174,7 @@ export function validateTaskSuggestion({
   }
 
   // Validate end_at if provided
-  if (!dateHandler(endAt).isAfter(dateHandler(getCurrentUtcTime()))) {
+  if (!isValidEndAt(endAt)) {
     return {
       valid: false,
       data: null,
@@ -201,7 +217,7 @@ export function validateTaskSuggestion({
     return {
       valid: false,
       data: null,
-      error: ERRORS.TASK_SUGGESTION.MISSING_REQUIRED_FIELDS
+      error: { ...ERRORS.TASK_SUGGESTION.SCHEMA_VALIDATION_ERROR, details: error }
     };
   }
 }

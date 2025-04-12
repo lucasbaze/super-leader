@@ -23,9 +23,7 @@ export const SendMessageTask = ({ task }: { task: GetTaskSuggestionResult }) => 
   return (
     <BaseTaskCard
       task={task}
-      actionBody={
-        <SendMessageCardActionBody messageVariants={task.suggestedAction.messageVariants} />
-      }
+      actionBody={<SendMessageCardActionBody messageVariants={task.suggestedAction.messageVariants} />}
     />
   );
 };
@@ -74,15 +72,9 @@ const SendMessageCardActionBody = ({ messageVariants }: SendMessageCardActionBod
 
       <div className='space-y-3'>
         <div className='flex flex-wrap justify-end gap-2'>
-          <Button size='sm' variant='outline'>
-            {/* <Button size='sm' onClick={() => onOpenChat(task.person, editedContent)}> */}
-            <Edit className='mr-1 size-3.5' /> Edit in Chat
-          </Button>
           <Button size='sm' onClick={() => handleCopy(editedContent)}>
             <Clipboard className='mr-1 size-3.5' />
-            <span className='transition-opacity duration-200 ease-in-out'>
-              {isCopied ? 'Copied!' : 'Copy'}
-            </span>
+            <span className='transition-opacity duration-200 ease-in-out'>{isCopied ? 'Copied!' : 'Copy'}</span>
           </Button>
         </div>
       </div>

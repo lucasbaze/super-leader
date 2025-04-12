@@ -17,12 +17,12 @@ const getRandomEndDate = () => {
 };
 
 const generateBirthdayTask = (person: { first_name: string }) => ({
-  trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+  trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
   context: {
     context: `${person.first_name}'s birthday is coming up!`,
     callToAction: `Send birthday wishes to ${person.first_name}`
   },
-  suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+  suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
   suggestedAction: {
     messageVariants: [
       {
@@ -38,12 +38,12 @@ const generateBirthdayTask = (person: { first_name: string }) => ({
 });
 
 const generateProfileUpdateTask = (person: { first_name: string }) => ({
-  trigger: TASK_TRIGGERS.CONTEXT_GATHER,
+  trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
   context: {
     context: 'Missing key information for potential investor',
     callToAction: `Gather more information about ${person.first_name}'s current role and interests`
   },
-  suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE,
+  suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE.slug,
   suggestedAction: {
     questionVariants: [
       {
@@ -59,12 +59,12 @@ const generateProfileUpdateTask = (person: { first_name: string }) => ({
 });
 
 const generateFollowUpTask = (person: { first_name: string }) => ({
-  trigger: TASK_TRIGGERS.FOLLOW_UP,
+  trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
   context: {
     context: `It's been a while since your last interaction with ${person.first_name}`,
     callToAction: 'Schedule a catch-up meeting to maintain the connection'
   },
-  suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE,
+  suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
   suggestedAction: {
     messageVariants: [
       {
@@ -91,9 +91,7 @@ export async function seedTaskSuggestions({ supabase, userId }: SeedContext) {
   if (!people?.length) throw new Error('No people found to create tasks for');
 
   // Filter people with birthdays for birthday reminders
-  const peopleWithBirthdays = people.filter(
-    (person): person is TPerson => person.birthday !== null
-  );
+  const peopleWithBirthdays = people.filter((person): person is TPerson => person.birthday !== null);
 
   const taskSuggestions = [
     // Birthday reminders - only for people with birthdays

@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { z } from 'zod';
 
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
-import { buyGiftActionSchema, GetTaskSuggestionResult } from '@/services/tasks/types';
 
 import { BuyGiftTask } from './buy-gift-task';
 
@@ -26,7 +24,7 @@ export const Default: Story = {
         first_name: 'Rodrigo',
         last_name: 'Silva'
       },
-      trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER,
+      trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
       completed_at: null,
       created_at: '2024-01-01T00:00:00Z',
       end_at: '2024-01-01T00:00:00Z',
@@ -39,7 +37,7 @@ export const Default: Story = {
         context: "Rodrigo's birthday is coming up in a few days",
         callToAction: 'I found a few gift ideas you could consider buying.'
       },
-      suggestedActionType: SUGGESTED_ACTION_TYPES.BUY_GIFT,
+      suggestedActionType: SUGGESTED_ACTION_TYPES.BUY_GIFT.slug,
       suggestedAction: {
         suggestedGifts: [
           {

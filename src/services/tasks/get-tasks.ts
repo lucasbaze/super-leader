@@ -1,3 +1,4 @@
+import { dateHandler } from '@/lib/dates/helpers';
 import { createError, errorLogger } from '@/lib/errors';
 import { SuggestedActionType, TaskTrigger } from '@/lib/tasks/constants';
 import { DBClient, Person, TaskSuggestion } from '@/types/database';
@@ -19,6 +20,12 @@ export const ERRORS = {
       ErrorType.VALIDATION_ERROR,
       'User ID is required',
       'User identifier is missing'
+    ),
+    INVALID_DATE_RANGE: createError(
+      'invalid_date_range',
+      ErrorType.VALIDATION_ERROR,
+      'Invalid date range specified',
+      'Please provide valid date range parameters'
     )
   }
 };
@@ -27,25 +34,32 @@ export interface GetTasksParams {
   db: DBClient;
   userId: string;
   personId?: string;
+  after?: string; // ISO date string
+  before?: string; // ISO date string
 }
 
 export type GetTasksQueryResult = TaskSuggestion & {
   person: Pick<Person, 'id' | 'first_name' | 'last_name'>;
 };
 
-// TODO: Add additional filters for limit, offset, ordering, etc...
-// e.g. getTasks to check for birthday's need to be scoped down within the next 30 days... don't want to miss a birthday from being in the past as a past task.
 export async function getTasks({
   db,
   userId,
-  personId
+  personId,
+  after,
+  before
 }: GetTasksParams): Promise<ServiceResponse<GetTaskSuggestionResult[]>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.TASKS.MISSING_USER_ID };
     }
 
-    const query = db
+    const today = dateHandler();
+    const startOfToday = today.startOf('day').toISOString();
+    const endOfToday = today.endOf('day').toISOString();
+
+    // First query for active tasks
+    const activeTasksQuery = db
       .from('task_suggestion')
       .select(
         `
@@ -73,20 +87,68 @@ export async function getTasks({
       .is('snoozed_at', null)
       .order('end_at', { ascending: true });
 
+    // Second query for completed/skipped tasks from today
+    const todayTasksQuery = db
+      .from('task_suggestion')
+      .select(
+        `
+        id,
+        trigger,
+        context,
+        suggested_action_type,
+        suggested_action,
+        end_at,
+        completed_at,
+        skipped_at,
+        snoozed_at,
+        created_at,
+        updated_at,
+        person:person!inner (
+          id,
+          first_name,
+          last_name
+        )
+      `
+      )
+      .eq('user_id', userId)
+      .or(`completed_at.gte.${startOfToday},skipped_at.gte.${startOfToday}`)
+      .lte('end_at', endOfToday)
+      .order('end_at', { ascending: true });
+
     // Add person filter if personId is provided
     if (personId) {
-      query.eq('person_id', personId);
+      activeTasksQuery.eq('person_id', personId);
+      todayTasksQuery.eq('person_id', personId);
     }
 
-    const { data: tasks, error } = await query.returns<GetTasksQueryResult[]>();
+    // Add date range filters if provided
+    if (after) {
+      activeTasksQuery.gte('end_at', after);
+    }
 
-    if (error) {
+    if (before) {
+      activeTasksQuery.lte('end_at', before);
+    }
+
+    // Execute both queries in parallel
+    const [activeTasksResult, todayTasksResult] = await Promise.all([
+      activeTasksQuery.returns<GetTasksQueryResult[]>(),
+      todayTasksQuery.returns<GetTasksQueryResult[]>()
+    ]);
+
+    if (activeTasksResult.error || todayTasksResult.error) {
       const serviceError = ERRORS.TASKS.FETCH_ERROR;
-      errorLogger.log(serviceError, { details: error });
+      errorLogger.log(serviceError, {
+        details: activeTasksResult.error || todayTasksResult.error
+      });
       return { data: null, error: serviceError };
     }
 
-    const formattedTasks: GetTaskSuggestionResult[] = tasks.map((task) => ({
+    // Combine and format all tasks
+    const allTasks = [...(activeTasksResult.data || []), ...(todayTasksResult.data || [])];
+    const uniqueTasks = Array.from(new Map(allTasks.map((task) => [task.id, task])).values());
+
+    const formattedTasks: GetTaskSuggestionResult[] = uniqueTasks.map((task) => ({
       ...task,
       trigger: task.trigger as TaskTrigger,
       context: task.context as TaskContext,

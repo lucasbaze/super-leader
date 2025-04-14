@@ -594,7 +594,6 @@ export type Database = {
           content: string
           created_at: string
           id: string
-          processed: boolean
           processed_at: string | null
           reason: string
           user_id: string
@@ -603,7 +602,6 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
-          processed?: boolean
           processed_at?: string | null
           reason: string
           user_id: string
@@ -612,7 +610,6 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          processed?: boolean
           processed_at?: string | null
           reason?: string
           user_id?: string

@@ -1,3 +1,6 @@
+New:
+  ☐ Update a task date / context / action type, etc...
+
 Note:
   - Tasks have an overlap with the "follow-up score" feature. 
   - person_id is nullable already... so a task doesn't have to be associated with a person... This allows us to create tasks that are associated with a company, project, or the person etc.

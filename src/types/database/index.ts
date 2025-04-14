@@ -1,5 +1,8 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
+// TODO: Probably need to move this
+import { UserProfileSummary } from '@/services/user/generate-user-profile-summary';
+
 import { Onboarding } from '../custom';
 import { Database } from './supabase';
 
@@ -22,6 +25,7 @@ export type TaskSuggestionInsert = Database['public']['Tables']['task_suggestion
 
 export type UserProfile = Database['public']['Tables']['user_profile']['Row'] & {
   onboarding: Onboarding;
+  context_summary: UserProfileSummary;
 };
 export type UserContext = Database['public']['Tables']['user_context']['Row'];
 

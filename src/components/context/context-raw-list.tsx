@@ -42,8 +42,7 @@ export function ContextRawList({ contexts, isLoading, error }: ContextRawListPro
       <div className='p-6 text-center'>
         <h3 className='mb-2 text-xl font-medium'>No context data available</h3>
         <p className='text-muted-foreground'>
-          Context data is generated as you share more about yourself and as you use the platform
-          more and more.
+          Context data is generated as you share more about yourself and as you use the platform more and more.
         </p>
       </div>
     );
@@ -56,30 +55,29 @@ export function ContextRawList({ contexts, isLoading, error }: ContextRawListPro
           <div className='divide-y'>
             {contexts.map((context) => (
               <div key={context.id} className='relative p-4 hover:bg-muted'>
-                <div className='absolute right-4 top-4'>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Badge variant={context.processed ? 'default' : 'outline'}>
-                        {context.processed ? 'Processed' : 'Pending'}
-                      </Badge>
-                    </TooltipTrigger>
-                    {context.processed && (
-                      <TooltipContent>
-                        <p className='max-w-xs text-sm'>
-                          This context record has been included in your profile and goals planning
-                          as appropriate
-                        </p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </div>
-                <div className='space-y-2'>
-                  <div>
-                    <p className='text-md whitespace-pre-wrap font-medium'>{context.content}</p>
+                <div className='flex items-start justify-between gap-4'>
+                  <div className='flex-1 space-y-2'>
+                    <div>
+                      <p className='text-md whitespace-pre-wrap font-medium'>{context.content}</p>
+                    </div>
+                    {context.reason && <p className='text-sm italic'>{context.reason}</p>}
+                    <div className='text-xs'>{format(new Date(context.created_at), 'MMM d, yyyy h:mm a')}</div>
                   </div>
-                  {context.reason && <p className='text-sm italic'>{context.reason}</p>}
-                  <div className='text-xs'>
-                    {format(new Date(context.created_at), 'MMM d, yyyy h:mm a')}
+                  <div className='flex-shrink-0'>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Badge variant={context.processed_at ? 'default' : 'outline'}>
+                          {context.processed_at ? 'Processed' : 'Pending'}
+                        </Badge>
+                      </TooltipTrigger>
+                      {context.processed_at && (
+                        <TooltipContent>
+                          <p className='max-w-xs text-sm'>
+                            This context record has been included in your profile and goals planning as appropriate
+                          </p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
                   </div>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const SectionSchema = z.object({
   title: z.string().describe('The title of the section'),
+  icon: z.string().describe('The icon of the section'),
   content: z.string().describe('The content of the section in markdown format')
 });
 
@@ -11,7 +12,11 @@ const GroupedSectionSchema = z.object({
 });
 
 const ContextSummarySchema = z.object({
-  groupedSections: z.array(GroupedSectionSchema)
+  completeness: z.number().describe('A score between 0 and 100 indicating the completeness of the summary'),
+  groupedSections: z.array(GroupedSectionSchema),
+  followUpQuestions: z
+    .array(z.string())
+    .describe('A list of follow up questions to ask the user about the person to improve the summary')
 });
 
 export type Section = z.infer<typeof SectionSchema>;

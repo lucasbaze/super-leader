@@ -114,7 +114,7 @@ export async function buildUserProfileSummary({
       .from('user_profile')
       .update({
         context_summary: result,
-        context_summary_completeness_score: calculateCompletenessScore(result),
+        context_summary_completeness_score: result.completeness,
         updated_at: new Date().toISOString()
       })
       .eq('user_id', userId);
@@ -129,14 +129,10 @@ export async function buildUserProfileSummary({
 
     // Mark contexts as processed
     const contextIds = userContexts.map((context) => context.id);
-    console.log('User::BuildUserProfileSummary::ContextIds', contextIds);
+    const now = new Date().toISOString();
 
-    const { error: processError } = await db
-      .from('user_context')
-      .update({
-        processed_at: new Date().toISOString()
-      })
-      .in('id', contextIds);
+    // Just update without select
+    const { error: processError } = await db.from('user_context').update({ processed_at: now }).in('id', contextIds);
 
     if (processError) {
       console.error('User::BuildUserProfileSummary::ProcessError', processError);
@@ -154,14 +150,4 @@ export async function buildUserProfileSummary({
       error: { ...ERRORS.CALCULATION.FAILED, details: error }
     };
   }
-}
-
-// Helper function to calculate completeness score based on the summary
-function calculateCompletenessScore(summary: UserProfileSummary): number {
-  // This is a simplified calculation - in a real implementation,
-  // you might want to analyze the content more deeply
-  const totalSections = summary.groupedSections.reduce((total, group) => total + group.sections.length, 0);
-
-  // Assuming each section represents 10 points, with a maximum of 100
-  return Math.min(totalSections * 10, 100);
 }

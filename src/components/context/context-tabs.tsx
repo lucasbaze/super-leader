@@ -23,13 +23,11 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
             onClick={() => setActiveTab('summary')}
             className={cn(
               'rounded-md px-2 py-1 text-sm font-medium',
-              activeTab === 'summary'
-                ? 'bg-muted text-foreground'
-                : 'text-muted-foreground hover:bg-muted'
+              activeTab === 'summary' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
             )}>
             Summary Profile
           </button>
-          <div className='mx-2 h-4 w-px bg-border'></div>
+          {/* <div className='mx-2 h-4 w-px bg-border'></div>
           <button
             onClick={() => setActiveTab('plan')}
             className={cn(
@@ -39,15 +37,13 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
                 : 'text-muted-foreground hover:bg-muted'
             )}>
             Networking Plan
-          </button>
+          </button> */}
           <div className='mx-2 h-4 w-px bg-border'></div>
           <button
             onClick={() => setActiveTab('memory')}
             className={cn(
               'rounded-md px-2 py-1 text-sm font-medium',
-              activeTab === 'memory'
-                ? 'bg-muted text-foreground'
-                : 'text-muted-foreground hover:bg-muted'
+              activeTab === 'memory' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
             )}>
             Memory
           </button>
@@ -64,9 +60,8 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
                 <div className='p-6 text-center'>
                   <h3 className='mb-2 text-xl font-medium'>No context summary available</h3>
                   <p className='text-muted-foreground'>
-                    This context summary is generated from your activity within the platform, and
-                    helps build your plan and personalize suggestions, tasks, and more within the
-                    application
+                    This context summary is generated from your activity within the platform, and helps build your plan
+                    and personalize suggestions, tasks, and more within the application
                   </p>
                 </div>
               </div>
@@ -78,9 +73,7 @@ export function ContextTabs({ contextSummary }: ContextTabsProps) {
           <div className='flex h-full items-center justify-center'>
             <div className='p-6 text-center'>
               <h3 className='mb-2 text-xl font-medium'>No plan available yet</h3>
-              <p className='text-muted-foreground'>
-                Plans help you organize your goals and track your progress.
-              </p>
+              <p className='text-muted-foreground'>Plans help you organize your goals and track your progress.</p>
             </div>
           </div>
         )}

@@ -109,7 +109,7 @@ const buildPrompt = ({ userContexts, userProfile }: TGenerateUserProfileSummaryP
   The overall score is the sum of all dimension scores, creating a 0-100 scale. It doesn't need to be 100% accurate, but should be a fair estimate.
 
   ## SECTION ORGANIZATION
-  Organize & Summarize the information into these high level section groups (use only what has sufficient information. If there is not enough information, do not include the section):
+  Organize & Summarize the information into high level section groups (use only what has sufficient information. If there is not enough information, do not include the section):
 
   ## SECTION ICONS
   Use these icons for sections:

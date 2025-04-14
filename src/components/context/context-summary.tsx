@@ -28,11 +28,9 @@ export function ContextSummary({ data }: ContextSummaryProps) {
   }
 
   return (
-    <div className='flex h-full overflow-hidden'>
-      <ContextNav sections={data.groupedSections} activeSection={activeSection} onSectionChange={setActiveSection} />
-      <div className='flex-1 overflow-hidden'>
-        <ContextContent groupedSection={data.groupedSections[activeSection]} />
-      </div>
+    <div className='flex h-full'>
+      <ContextNav sections={data.groupedSections} activeSection={activeSection} onSectionClick={setActiveSection} />
+      <ContextContent sections={data.groupedSections} onSectionInView={setActiveSection} />
     </div>
   );
 }

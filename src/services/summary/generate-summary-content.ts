@@ -190,18 +190,14 @@ const buildUserPrompt = ({
   addresses = []
 }: TGenerateAISummaryParams) => {
   // Helper to get primary or first item
-  const getPrimaryOrFirst = <T extends { is_primary?: boolean | null }>(
-    items: T[]
-  ): T | undefined => {
+  const getPrimaryOrFirst = <T extends { is_primary?: boolean | null }>(items: T[]): T | undefined => {
     return items.find((i) => i.is_primary) || items[0];
   };
 
   const primaryEmail = getPrimaryOrFirst(contactMethods.filter((c) => c.type === 'email'));
   const primaryPhone = getPrimaryOrFirst(contactMethods.filter((c) => c.type === 'phone'));
   const primaryAddress = getPrimaryOrFirst(addresses);
-  const powerCircle = groups.find(
-    (g) => g.name === Object.values(RESERVED_GROUP_SLUGS).find((s) => s === g.name)
-  );
+  const powerCircle = groups.find((g) => g.name === Object.values(RESERVED_GROUP_SLUGS).find((s) => s === g.name));
 
   return {
     prompt: stripIndents`

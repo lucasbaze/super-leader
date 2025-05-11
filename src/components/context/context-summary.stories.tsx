@@ -16,6 +16,8 @@ type Story = StoryObj<typeof ContextSummary>;
 export const Default: Story = {
   args: {
     data: {
+      completeness: 100,
+      followUpQuestions: [],
       groupedSections: [
         {
           title: 'Introduction',
@@ -45,6 +47,7 @@ export const Default: Story = {
             },
             {
               title: 'Mutual Growth',
+              icon: '💖',
               content:
                 "Another expectation that INFJs bring to their friendships is mutual support and growth. Having fun together is wonderful, but for these personalities, it isn't quite enough. They want to surround themselves with friends who inspire them to learn, expand, and improve themselves. For INFJs, the surest way for two friends to deepen their bond is by helping each other move forward on their respective life missions."
             }

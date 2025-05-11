@@ -46,8 +46,7 @@ const sampleContexts = [
   {
     id: '4',
     user_id: 'user-1',
-    content:
-      'User mentioned they have a goal to "improve communication with team members" during onboarding',
+    content: 'User mentioned they have a goal to "improve communication with team members" during onboarding',
     reason: 'Goal identification',
     processed: true,
     created_at: new Date(2023, 5, 17, 14, 10).toISOString(),
@@ -96,7 +95,6 @@ export const WithPendingItems: Story = {
         user_id: 'user-1',
         content: 'User created a new contact named Jane Doe',
         reason: 'Contact creation',
-        processed: false,
         created_at: new Date(2023, 5, 17, 14, 22).toISOString(),
         processed_at: null
       },
@@ -105,7 +103,6 @@ export const WithPendingItems: Story = {
         user_id: 'user-1',
         content: 'User scheduled a meeting with John Smith for next Tuesday',
         reason: 'Interaction creation',
-        processed: false,
         created_at: new Date(2023, 5, 17, 15, 45).toISOString(),
         processed_at: null
       }

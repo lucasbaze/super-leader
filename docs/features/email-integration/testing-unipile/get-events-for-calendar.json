@@ -1,0 +1,469 @@
+{
+  "data": [
+    {
+      "object": "CalendarEvent",
+      "id": "3f7jpe3ef89tk4ue3h26v20d22",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2024-03-21T17:12:10.000Z",
+      "updated_at": "2024-03-21T17:13:31.348Z",
+      "title": "Sub - X.com - $115 ",
+      "is_cancelled": false,
+      "is_all_day": true,
+      "is_attendees_list_hidden": false,
+      "attendees": [],
+      "start": {
+        "date": "2024-03-22"
+      },
+      "end": {
+        "date": "2024-03-23"
+      },
+      "recurrence": ["RRULE:FREQ=YEARLY"],
+      "organizer": {
+        "email": "lucasabazemore@gmail.com",
+        "display_name": ""
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "3ftbd0trada0i2ak2hpe44q6t6",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2024-07-14T23:30:05.000Z",
+      "updated_at": "2024-07-29T03:18:29.389Z",
+      "title": "Update Character Sheet",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2024-07-14T19:00:00-05:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2024-07-14T19:45:00-05:00",
+        "time_zone": "America/Chicago"
+      },
+      "recurrence": ["RRULE:FREQ=MONTHLY;BYDAY=2SU"],
+      "organizer": {
+        "email": "lucasabazemore@gmail.com",
+        "display_name": ""
+      },
+      "conference": {
+        "provider": "google_meet",
+        "url": "https://meet.google.com/gar-jevz-qoy"
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "3v5eq5cp4i4o1157q1omr8a0j5",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2024-12-18T14:58:40.000Z",
+      "updated_at": "2024-12-23T15:35:25.579Z",
+      "title": "Cait's 30th",
+      "body": "Checkered flag, black and white stripped attire",
+      "location": "NRG Stadium, NRG Pkwy, Houston, TX 77054, USA",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-02-01T17:30:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-02-01T23:59:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "kendall.ludlow@gmail.com",
+        "display_name": ""
+      },
+      "conference": {
+        "provider": "google_meet",
+        "url": "https://meet.google.com/eth-fdwq-tbt"
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "0bqnnvuv34u0vhq8d5r8gl5pbs",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-01-05T01:21:10.000Z",
+      "updated_at": "2025-01-05T01:21:10.213Z",
+      "title": "Sonic the Hedgehog 3 Standard Format Luxury Lounger",
+      "body": "To see detailed information for automatically created events like this one, use the official Google Calendar app. https://g.co/calendar\n\nThis event was created from an email you received in Gmail. https://mail.google.com/mail?extsrc=cal&plid=ACUX6DN-oZtr-KjWM5Gcun340a3P0WydpKi_vpk\n",
+      "location": "Cinemark Cypress and XD, 25720 Northwest Frwy Cypress, TX 77429",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-01-04T20:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-01-04T21:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "lucasabazemore@gmail.com",
+        "display_name": ""
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "fromGmail"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "gmkt6sbkfb9umo6v6n0f0hiv8o",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-01-06T02:17:48.000Z",
+      "updated_at": "2025-01-07T14:52:44.339Z",
+      "title": "Stay at Peaceful 1x1 Apt In South ATX",
+      "body": "To see detailed information for automatically created events like this one, use the official Google Calendar app. https://g.co/calendar\n\nThis event was created from an email you received in Gmail. https://mail.google.com/mail?extsrc=cal&plid=ACUX6DOlZ_k-kMb3eg4_OVgAaEyf33fWUcvm8y4\n",
+      "location": "Peaceful 1x1 Apt In South ATX, Austin",
+      "is_cancelled": false,
+      "is_all_day": true,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date": "2025-01-06"
+      },
+      "end": {
+        "date": "2025-01-11"
+      },
+      "organizer": {
+        "email": "lucasabazemore@gmail.com",
+        "display_name": ""
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "fromGmail"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "30h83o35b5a4f08783n1cca2fu",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-01-12T22:40:19.000Z",
+      "updated_at": "2025-01-13T02:05:07.963Z",
+      "title": "Kendall <> Lucas Dance Lessons",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-01-14T17:45:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-01-14T18:45:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "lucasabazemore@gmail.com",
+        "display_name": ""
+      },
+      "conference": {
+        "provider": "google_meet",
+        "url": "https://meet.google.com/yoh-yywm-qcu"
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "4vn638vnb9q8rau68qja1mmapj",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-01-13T20:45:41.000Z",
+      "updated_at": "2025-01-16T17:35:31.566Z",
+      "title": "Magnolia Venue Tour",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "noreply"
+        },
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-01-16T12:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-01-16T13:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "kendall.ludlow@gmail.com",
+        "display_name": ""
+      },
+      "conference": {
+        "provider": "google_meet",
+        "url": "https://meet.google.com/vjw-kdcf-ems"
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "4n8rca7pgstvt3qvbc12d3o9c6",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-01-09T18:31:49.000Z",
+      "updated_at": "2025-01-23T23:58:20.974Z",
+      "title": "Bazemore: Planning Meeting",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "info@avphtx.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-01-30T16:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-01-30T17:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "info@avphtx.com",
+        "display_name": ""
+      },
+      "conference": {
+        "provider": "unknown",
+        "url": "https://us06web.zoom.us/j/87059134646?pwd=YwtaUVKWlaBnUxxfxb5VNJsuXScq2B.1"
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "5722hscceoa2gfpq6ajjpak2nf",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-01-31T20:17:00.000Z",
+      "updated_at": "2025-02-02T18:06:47.559Z",
+      "title": "Potluck Wedding Invite",
+      "location": "8508 Coles Rd, Brenham, TX 77833, USA",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-05-17T15:00:00-05:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-05-17T19:00:00-05:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "lucasabazemore@gmail.com",
+        "display_name": ""
+      },
+      "conference": {
+        "provider": "google_meet",
+        "url": "https://meet.google.com/zry-jdex-xgi"
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    },
+    {
+      "object": "CalendarEvent",
+      "id": "4p77b0gkm1hmel7j7pls5bshp7",
+      "master_event_id": "",
+      "calendar_id": "lucasabazemore@gmail.com",
+      "created_at": "2025-02-05T16:58:48.000Z",
+      "updated_at": "2025-02-05T17:22:39.461Z",
+      "title": "Bazemore: Majestic Metro Tour",
+      "body": "Mark Sampson, our venue manager, will be conducting your tour. His contact number is 281-704-0461.",
+      "location": "Majestic Metro, 911 Preston St, Houston, TX 77002, USA",
+      "is_cancelled": false,
+      "is_all_day": false,
+      "is_attendees_list_hidden": false,
+      "attendees": [
+        {
+          "email": "info@avphtx.com",
+          "is_organizer": true,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "lucasabazemore@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        },
+        {
+          "email": "kendall.ludlow@gmail.com",
+          "is_organizer": false,
+          "is_optional": false,
+          "is_resource": false,
+          "type": "required",
+          "response_status": "yes"
+        }
+      ],
+      "start": {
+        "date_time": "2025-02-06T11:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "end": {
+        "date_time": "2025-02-06T12:00:00-06:00",
+        "time_zone": "America/Chicago"
+      },
+      "organizer": {
+        "email": "info@avphtx.com",
+        "display_name": ""
+      },
+      "visibility": "private",
+      "transparency": "transparent",
+      "event_type": "default"
+    }
+  ],
+  "next_cursor": "CkAKMAouCgwI37yOvQYQwJrp2wESHgocCho0cDc3YjBna20xaG1lbDdqN3BsczVic2hwNxoMCLn3_L8GEOCjl9cDwD4B"
+}

@@ -1,0 +1,64 @@
+{
+  "data": [
+    {
+      "object": "Calendar",
+      "id": "lucasabazemore@gmail.com",
+      "name": "lucasabazemore@gmail.com",
+      "is_read_only": false,
+      "is_owned_by_user": true,
+      "access_role": "owner",
+      "is_primary": true,
+      "background_color": "#9fe1e7",
+      "etag": "\"1741293526944015\"",
+      "sync_token": null,
+      "sync_activated": false,
+      "foreground_color": "#000000",
+      "timezone": "America/Chicago"
+    },
+    {
+      "object": "Calendar",
+      "id": "lucas@eigen.net",
+      "name": "lucas@eigen.net",
+      "is_read_only": true,
+      "is_owned_by_user": false,
+      "access_role": "reader",
+      "is_primary": false,
+      "background_color": "#fa573c",
+      "etag": "\"1742498024100367\"",
+      "sync_token": null,
+      "sync_activated": false,
+      "foreground_color": "#000000",
+      "timezone": "America/Chicago"
+    },
+    {
+      "object": "Calendar",
+      "id": "lucas@township.ventures",
+      "name": "lucas@township.ventures",
+      "is_read_only": true,
+      "is_owned_by_user": false,
+      "access_role": "reader",
+      "is_primary": false,
+      "background_color": "#4986e7",
+      "etag": "\"1742498026252655\"",
+      "sync_token": null,
+      "sync_activated": false,
+      "foreground_color": "#000000",
+      "timezone": "America/Chicago"
+    },
+    {
+      "object": "Calendar",
+      "id": "kendall.ludlow@gmail.com",
+      "name": "kendall.ludlow@gmail.com",
+      "is_read_only": true,
+      "is_owned_by_user": false,
+      "access_role": "reader",
+      "is_primary": false,
+      "background_color": "#7bd148",
+      "etag": "\"1742498042970863\"",
+      "sync_token": null,
+      "sync_activated": false,
+      "foreground_color": "#000000",
+      "timezone": "America/Chicago"
+    }
+  ]
+}

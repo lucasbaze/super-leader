@@ -17,27 +17,18 @@ export default function Home() {
             </div>
 
             <div className='max-w-xl space-y-4 md:space-y-6'>
-              <h1 className='text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl'>
-                You, but Super
-              </h1>
+              <h1 className='text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl'>You, but Super</h1>
 
               <h2 className='text-xl font-medium text-gray-700 sm:text-2xl md:text-3xl'>
-                An AI assistant to help you find, nurture, and scale your relationships for life.
+                An AI first, Personal CRM to help you nurture and scale your relationships for life.
               </h2>
-
-              <p className='mt-6 text-sm text-gray-700 sm:text-base'>
-                Every leader needs a system to build and maintain long term relationships.
-                Superleader is an AI first application designed to do just that.
-              </p>
 
               <p className='text-lg font-bold sm:text-xl'>Join the Superleader waitlist.</p>
               <WaitlistForm />
 
               <div className='flex items-center gap-2'>
                 <AvatarGroup />
-                <span className='text-xs text-gray-500 sm:text-sm'>
-                  Over 100 people ahead of you.
-                </span>
+                <span className='text-xs text-gray-500 sm:text-sm'>100+ people ahead of you.</span>
               </div>
               <div>
                 <Link href='/app' className='text-xs text-gray-500 sm:text-sm'>

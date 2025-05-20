@@ -8,6 +8,7 @@ export {
   CircleDashed,
   LandPlot,
   ListTodo,
+  Hotel,
   Mic,
   BrainCog,
   HelpCircle,

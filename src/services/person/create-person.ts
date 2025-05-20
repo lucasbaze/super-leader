@@ -14,7 +14,7 @@ export const createPersonSchema = z.object({
   user_id: z.string().min(1, 'User ID is required')
 });
 
-export type TCreatePersonParams = z.infer<typeof createPersonSchema>;
+type CreatePersonParams = z.infer<typeof createPersonSchema>;
 
 export const ERRORS = {
   VALIDATION_ERROR: createError({
@@ -50,7 +50,7 @@ export async function createPerson({
   data
 }: {
   db: SupabaseClient;
-  data: TCreatePersonParams;
+  data: CreatePersonParams;
 }): Promise<CreatePersonServiceResult> {
   try {
     const validationResult = createPersonSchema.safeParse(data);

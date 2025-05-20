@@ -13,7 +13,8 @@ export const APP_SEGMENTS = {
   LOGIN: 'login',
   CONTEXT: 'context',
   SETTINGS: 'settings',
-  ONBOARDING: 'onboarding'
+  ONBOARDING: 'onboarding',
+  ORGANIZATIONS: 'organizations'
 } as const;
 
 // Define sub-segments
@@ -45,6 +46,11 @@ export const routes = {
     byId: (params: PersonIdParam) => `${routes.person.root()}/${params.id}`,
     summary: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.SUMMARY}`,
     tasks: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.TASKS}`
+  },
+
+  organization: {
+    root: () => `${BASE_PATH}/${APP_SEGMENTS.ORGANIZATIONS}`,
+    byId: ({ id }: { id: number }) => `${routes.organization.root()}/${id}`
   },
 
   // Group routes
@@ -109,5 +115,6 @@ export const ROUTES = {
   BOOKMARKS: routes.bookmarks.root(),
   CONTEXT: routes.context.root(),
   SETTINGS: routes.settings.root(),
-  ONBOARDING: routes.onboarding.root()
+  ONBOARDING: routes.onboarding.root(),
+  ORGANIZATIONS: routes.organization.root()
 } as const;

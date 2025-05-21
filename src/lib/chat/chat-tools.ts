@@ -4,6 +4,7 @@ import {
   addPeopleToGroupTool,
   createGroupTool,
   createInteractionTool,
+  createOrganizationTool,
   createPersonTool,
   createTaskTool,
   createUserContextTool,
@@ -27,5 +28,6 @@ ChatTools.register(removePeopleFromGroupTool);
 ChatTools.register(getGroupsTool);
 ChatTools.register(getInitialMessageTool);
 ChatTools.register(getContentSuggestionsTool);
+ChatTools.register(createOrganizationTool);
 
 export { ChatTools };

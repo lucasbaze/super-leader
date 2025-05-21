@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
+import { OrganizationsHeader } from '@/components/organizations/organizations-header';
 import { OrganizationsTable } from '@/components/tables/organizations-table';
 import { OrganizationsTableSkeleton } from '@/components/tables/organizations-table-skeleton';
 import { useOrganizations } from '@/hooks/use-organizations';
@@ -19,10 +20,7 @@ export default function OrganizationsPage() {
 
   return (
     <div className='absolute inset-0'>
-      <div className='flex h-12 items-center border-b px-4'>
-        <h1 className='text-lg font-semibold'>Organizations</h1>
-        <span className='ml-2 text-sm text-muted-foreground'>{isLoading ? 0 : organizations.length} organizations</span>
-      </div>
+      <OrganizationsHeader organizationsCount={isLoading ? 0 : organizations.length} />
       <div className='absolute inset-0 top-[48px] mt-[1px]'>
         {isLoading ? (
           <OrganizationsTableSkeleton />

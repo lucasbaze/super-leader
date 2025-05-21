@@ -6,6 +6,7 @@ import { type Column, type ColumnDef, flexRender, getCoreRowModel, useReactTable
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getDomainFromUrl } from '@/lib/ui/utils';
 import { Organization } from '@/types/database';
 
 interface OrganizationsTableProps {
@@ -56,7 +57,7 @@ export function OrganizationsTable({
               target='_blank'
               rel='noopener noreferrer'
               className='text-blue-600 hover:underline'>
-              {row.original.url}
+              {getDomainFromUrl(row.original.url)}
             </a>
           ) : (
             'No website'

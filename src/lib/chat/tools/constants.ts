@@ -10,5 +10,6 @@ export const CHAT_TOOLS = {
   GET_GROUPS: 'getGroups',
   GET_INITIAL_MESSAGE: 'getInitialMessage',
   UPDATE_ONBOARDING_STATUS: 'updateOnboardingStatus',
-  GET_CONTENT_SUGGESTIONS: 'getContentSuggestions'
+  GET_CONTENT_SUGGESTIONS: 'getContentSuggestions',
+  CREATE_ORGANIZATION: 'createOrganization'
 } as const;

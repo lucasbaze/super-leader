@@ -30,7 +30,7 @@ This Turborepo has some additional tools already setup for you:
 Getting types from local Supabase CLI:
 
 ```bash
-> npx supabase gen types typescript --local > ./src/types/database.ts
+> npx supabase gen types typescript --local > ./src/types/database/supabase.ts
 ```
 
 Getting diff of migrations from local Supabase CLI:

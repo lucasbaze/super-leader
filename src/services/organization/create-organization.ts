@@ -1,8 +1,8 @@
-import { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 
 import { createErrorV2 as createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
@@ -40,7 +40,7 @@ export async function createOrganization({
   db,
   data
 }: {
-  db: SupabaseClient;
+  db: DBClient;
   data: CreateOrganizationParams;
 }): Promise<CreateOrganizationServiceResult> {
   try {

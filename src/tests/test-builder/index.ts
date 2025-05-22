@@ -7,3 +7,4 @@ export { createTestSuggestion } from './create-suggestion';
 export { createTestTaskSuggestion } from './create-task';
 export { createTestUserProfile } from './create-user-profile';
 export { createTestUserContext } from './create-user-context';
+export { createTestOrganization } from './create-organization';

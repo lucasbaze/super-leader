@@ -11,3 +11,5 @@ export { getInitialMessageTool } from './get-initial-message';
 export { removePeopleFromGroupTool } from './remove-people-from-group';
 export { updateOnboardingStatusTool } from './update-onboarding-status';
 export { createOrganizationTool } from './create-organization';
+export { findOrganizationsTool } from './find-organizations';
+export { createPersonOrgTool } from './create-person-org';

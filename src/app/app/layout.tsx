@@ -66,7 +66,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
                   </div>
                   <div className='flex items-center gap-2'>
                     <JobsPopover userId={data.user.id} />
-                    <ThemeToggle />
+                    {/* <ThemeToggle /> */}
                     <NavUser
                       user={{
                         id: data.user.id,

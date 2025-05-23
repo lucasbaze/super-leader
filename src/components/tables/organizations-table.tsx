@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { CSSProperties } from 'react';
 
 import { type Column, type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
@@ -7,6 +8,7 @@ import { type Column, type ColumnDef, flexRender, getCoreRowModel, useReactTable
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { UseOrganizationResult } from '@/hooks/use-organizations';
+import { routes } from '@/lib/routes';
 import { getDomainFromUrl } from '@/lib/ui/utils';
 
 interface OrganizationsTableProps {
@@ -61,6 +63,36 @@ export function OrganizationsTable({
             </a>
           ) : (
             'No website'
+          )}
+        </div>
+      )
+    },
+    {
+      accessorKey: 'people',
+      header: () => <div className='pl-3'>Team</div>,
+      size: 250,
+      cell: ({ row }) => (
+        <div className='flex gap-2 pl-3'>
+          {row.original.people && row.original.people.length > 0 ? (
+            row.original.people.map((person) => (
+              <Link
+                key={person.id}
+                href={routes.person.byId({ id: person.id })}
+                className='flex items-center gap-1 whitespace-nowrap rounded-full border border-gray-200 bg-gray-100 p-1 pr-2 text-xs font-medium text-gray-800 shadow-sm transition-colors hover:bg-gray-200'
+                style={{ maxWidth: 160 }}>
+                <Avatar className='mr-1 size-5'>
+                  <AvatarFallback className='text-[10px]'>
+                    {person.first_name?.[0]}
+                    {person.last_name?.[0] ?? ''}
+                  </AvatarFallback>
+                </Avatar>
+                <span className='truncate'>
+                  {person.first_name} {person.last_name}
+                </span>
+              </Link>
+            ))
+          ) : (
+            <span className='text-sm text-gray-400'>No team</span>
           )}
         </div>
       )

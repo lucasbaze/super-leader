@@ -13,3 +13,4 @@ export { updateOnboardingStatusTool } from './update-onboarding-status';
 export { createOrganizationTool } from './create-organization';
 export { findOrganizationsTool } from './find-organizations';
 export { createPersonOrgTool } from './create-person-org';
+export { deletePersonOrgTool } from './delete-person-org';

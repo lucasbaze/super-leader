@@ -53,7 +53,6 @@ export const createPersonOrgTool: ChatTool<
   },
   onSuccessEach: true,
   onSuccess: ({ queryClient }) => {
-    // console.log('Invalidating person-organization queries');
-    // queryClient.invalidateQueries({ queryKey: ['person-organization'] });
+    queryClient.invalidateQueries({ queryKey: ['organizations'] });
   }
 };

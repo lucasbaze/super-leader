@@ -6,16 +6,16 @@ import { type Column, type ColumnDef, flexRender, getCoreRowModel, useReactTable
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { UseOrganizationResult } from '@/hooks/use-organizations';
 import { getDomainFromUrl } from '@/lib/ui/utils';
-import { Organization } from '@/types/database';
 
 interface OrganizationsTableProps {
-  organizations: Organization[];
-  onRowClick?: (organizationId: number) => void;
+  organizations: UseOrganizationResult[];
+  onRowClick?: (organizationId: string) => void;
   emptyMessage?: string;
 }
 
-const getCommonPinningStyles = (column: Column<Organization>): CSSProperties => {
+const getCommonPinningStyles = (column: Column<UseOrganizationResult>): CSSProperties => {
   const isPinned = column.getIsPinned();
   return {
     position: isPinned ? 'sticky' : 'relative',
@@ -30,7 +30,7 @@ export function OrganizationsTable({
   onRowClick,
   emptyMessage = 'No organizations found'
 }: OrganizationsTableProps) {
-  const columns: ColumnDef<Organization>[] = [
+  const columns: ColumnDef<UseOrganizationResult>[] = [
     {
       accessorKey: 'name',
       header: () => <div className='pl-3'>Name</div>,

@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
-import { Organization } from '@/types/database';
+import { GetOrganizationsResult } from '@/services/organization/get-organizations';
+
+export type UseOrganizationResult = GetOrganizationsResult;
 
 export function useOrganizations() {
-  return useQuery<Organization[]>({
+  return useQuery<UseOrganizationResult[]>({
     queryKey: ['organizations'],
-    queryFn: async (): Promise<Organization[]> => {
+    queryFn: async (): Promise<UseOrganizationResult[]> => {
       const response = await fetch('/api/organizations', { credentials: 'include' });
       const json = await response.json();
 

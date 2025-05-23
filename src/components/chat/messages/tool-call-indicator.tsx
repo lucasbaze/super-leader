@@ -20,18 +20,12 @@ export function ToolCallIndicator({ toolName, state, args }: ToolCallIndicatorPr
   if (config.hiddenTools?.includes(toolName)) {
     return null;
   }
-
   // Get display name from tools config, fallback to toolName if not found
   const displayName = config.toolRegistry.get(toolName)?.displayName || toolName;
 
   return (
     <div className={config.messageStyles.toolCall}>
-      <ToolCallIndicatorDisplay
-        displayName={displayName}
-        toolName={toolName}
-        state={state}
-        args={args}
-      />
+      <ToolCallIndicatorDisplay displayName={displayName} toolName={toolName} state={state} args={args} />
     </div>
   );
 }

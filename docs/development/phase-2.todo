@@ -1,0 +1,27 @@
+# Phase 2 Thoughts
+
+☐ Fix the tasks list view to see past tasks
+☐ Display a task count in the sidebar next to "home"
+
+☐ Update the avatar component to be an image or static color gradient
+☐ Add a "remove" button to the organization list view
+
+☐ Add ability to update contact methods, addresses, and websites, etc... from the chat.
+
+☐ Add ability to remove a person. 
+☐ Add ability to merge duplicate records.
+
+☐ Add ability to upload a LinkedIn list of connections. ( Full feature that I need to think more deeply about )
+☐ Same thing, but for a CSV of connections or a vCard from Apple.
+
+☐ Add the "Stage" and "Category" to the person as default "custom" fields.
+
+
+
+
+Thoughts on the initiation of a user:
+  - Create an account and setup a user-name and password.
+  - Make sure password reset works as expected.
+  
+  - User needs to upload their contacts
+  - 

@@ -2,10 +2,11 @@ Next:
   ☐ Add address fields to the organization.
   ☐ Add a map view of the organizations to the organizations page based on a grouping?
   ☐ Display the organization address
-  ☐ Display only the domain of the url of the organization.
+  ✔ Display only the domain of the url of the organization. @done(25-05-23 22:15)
   ☐ Update "Global Search" to also search by organization name.
-
+  ☐ Add a "remove" button to the organization list view.
+  ☐ Update the get-initial-message tool to work with the organization list and organization profile page.
 
 Current: 
-  ☐ Add the ability to link a person to an organization. Looks like it worked, but working on the kinks with the RLS. Need to display the organization name in the person profile. Also need to display the user's associated with the organization in the organization list view and the organization profile view. 
+  ✔ Add the ability to link a person to an organization. Looks like it worked, but working on the kinks with the RLS. Need to display the organization name in the person profile. Also need to display the user's associated with the organization in the organization list view and the organization profile view. @done(25-05-23 22:15)
   ☐ Need to add an organization profile page as well.

@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
+import type { GetPersonResult } from '@/services/person/get-person';
 import type { TInteraction } from '@/services/person/person-activity';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 import type { PersonGroup } from '@/types/custom';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
-interface PersonAboutData {
+export interface UsePersonHookResult {
   person: Person;
   contactMethods?: ContactMethod[];
   addresses?: Address[];
@@ -14,6 +15,7 @@ interface PersonAboutData {
   groups?: PersonGroup[];
   interactions?: TInteraction[];
   tasks?: GetTaskSuggestionResult[];
+  organizations?: GetPersonResult['organizations'];
 }
 
 interface UsePersonOptions {
@@ -23,10 +25,11 @@ interface UsePersonOptions {
   withGroups?: boolean;
   withInteractions?: boolean;
   withTasks?: boolean;
+  withOrganizations?: boolean;
 }
 
 export function usePerson(id: string | null, options: UsePersonOptions = {}) {
-  return useQuery<PersonAboutData>({
+  return useQuery<UsePersonHookResult>({
     queryKey: ['person', id, 'about', options],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -36,6 +39,7 @@ export function usePerson(id: string | null, options: UsePersonOptions = {}) {
       if (options.withGroups) params.append('withGroups', 'true');
       if (options.withInteractions) params.append('withInteractions', 'true');
       if (options.withTasks) params.append('withTasks', 'true');
+      if (options.withOrganizations) params.append('withOrganizations', 'true');
 
       const queryString = params.toString();
       const url = `/api/person/${id}${queryString ? `?${queryString}` : ''}`;

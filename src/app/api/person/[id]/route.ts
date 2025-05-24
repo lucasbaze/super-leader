@@ -14,7 +14,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const withGroups = searchParams.get('withGroups') === 'true';
   const withInteractions = searchParams.get('withInteractions') === 'true';
   const withTasks = searchParams.get('withTasks') === 'true';
-
+  const withOrganizations = searchParams.get('withOrganizations') === 'true';
   const supabase = await createClient();
   const { id } = await params;
 
@@ -32,7 +32,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       withWebsites: withWebsites,
       withGroups: withGroups,
       withInteractions: withInteractions,
-      withTasks: withTasks
+      withTasks: withTasks,
+      withOrganizations: withOrganizations
     });
 
     if (result.error) {

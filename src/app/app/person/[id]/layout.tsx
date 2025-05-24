@@ -25,7 +25,8 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     withContactMethods: true,
     withAddresses: true,
     withWebsites: true,
-    withGroups: true
+    withGroups: true,
+    withOrganizations: true
   });
 
   const { data: tasks } = useTasks(params.id as string);
@@ -92,6 +93,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
           <div className='col-span-2 h-full overflow-hidden'>
             <PersonHeader
               person={data?.person}
+              organizations={data?.organizations}
               groups={data?.groups}
               segment={segment}
               taskCount={tasks?.length ?? 0}

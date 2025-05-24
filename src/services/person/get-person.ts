@@ -8,6 +8,7 @@ import { ServiceResponse } from '@/types/service-response';
 
 import { TInteraction } from './person-activity';
 
+type GetPersonOrganization = { id: string; name: string };
 export interface GetPersonResult {
   person: Person;
   contactMethods?: ContactMethod[];
@@ -16,6 +17,7 @@ export interface GetPersonResult {
   interactions?: TInteraction[];
   groups?: PersonGroup[];
   tasks?: GetTaskSuggestionResult[];
+  organizations?: GetPersonOrganization[];
 }
 
 export interface GetPersonParams {
@@ -27,6 +29,7 @@ export interface GetPersonParams {
   withInteractions?: boolean;
   withGroups?: boolean;
   withTasks?: boolean;
+  withOrganizations?: boolean;
 }
 
 interface GroupMemberWithGroup {
@@ -94,15 +97,12 @@ export async function getPerson({
   withWebsites = false,
   withInteractions = false,
   withGroups = false,
-  withTasks = false
+  withTasks = false,
+  withOrganizations = false
 }: GetPersonParams): Promise<ServiceResponse<GetPersonResult>> {
   try {
     // Get person
-    const { data: person, error: personError } = await db
-      .from('person')
-      .select('*')
-      .eq('id', personId)
-      .single();
+    const { data: person, error: personError } = await db.from('person').select('*').eq('id', personId).single();
 
     if (!person || personError) {
       const error = { ...ERRORS.PERSON.NOT_FOUND, details: personError };
@@ -132,10 +132,7 @@ export async function getPerson({
 
     // Get addresses if requested
     if (withAddresses) {
-      const { data: addresses, error: addressError } = await db
-        .from('addresses')
-        .select('*')
-        .eq('person_id', personId);
+      const { data: addresses, error: addressError } = await db.from('addresses').select('*').eq('person_id', personId);
 
       if (addressError) {
         const error = { ...ERRORS.PERSON.ADDRESSES_ERROR, details: addressError };
@@ -149,10 +146,7 @@ export async function getPerson({
 
     // Get websites if requested
     if (withWebsites) {
-      const { data: websites, error: websiteError } = await db
-        .from('websites')
-        .select('*')
-        .eq('person_id', personId);
+      const { data: websites, error: websiteError } = await db.from('websites').select('*').eq('person_id', personId);
 
       if (websiteError) {
         const error = { ...ERRORS.PERSON.WEBSITES_ERROR, details: websiteError };
@@ -244,6 +238,30 @@ export async function getPerson({
       }
 
       result.tasks = tasks;
+    }
+
+    if (withOrganizations) {
+      type PersonOrganizationWithOrg = { organization: { id: string; name: string } | null };
+      const { data: orgLinks, error: orgsError } = await db
+        .from('person_organization')
+        .select<string, PersonOrganizationWithOrg>(`organization(id, name)`)
+        .eq('person_id', personId);
+
+      if (orgsError) {
+        const error = { ...ERRORS.PERSON.FETCH_ERROR, details: orgsError };
+        errorLogger.log(error);
+        return { data: null, error };
+      }
+
+      // Flatten the nested organization data and filter out nulls
+      result.organizations =
+        orgLinks?.reduce((acc: { id: string; name: string }[], link) => {
+          const org = link.organization;
+          if (org && typeof org.id === 'string' && typeof org.name === 'string') {
+            acc.push({ id: org.id, name: org.name });
+          }
+          return acc;
+        }, []) || [];
     }
 
     return { data: result, error: null };

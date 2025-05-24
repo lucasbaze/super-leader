@@ -13,29 +13,40 @@ import type { Person } from '@/types/database';
 
 import { ProfileCompleteness } from '../indicators/profile-completeness';
 import { TaskCount } from '../indicators/task-count';
+import { OrganizationBadge } from '../organizations/organization-badge';
 
 interface PersonHeaderProps {
   person: Person | undefined;
   groups?: PersonGroup[];
+  organizations?: { id: string; name: string }[];
   segment: string | null;
   taskCount: number;
 }
 
 // TODO: Do something with thhe "contact Methods"
-export function PersonHeader({ person, groups = [], segment, taskCount }: PersonHeaderProps) {
+export function PersonHeader({ person, groups = [], segment, taskCount, organizations = [] }: PersonHeaderProps) {
   const router = useRouter();
   const initials = `${person?.first_name[0]}${person?.last_name?.[0] || ''}`;
 
   return (
     <div className='px-5'>
-      <div className='mt-4 flex flex-col gap-4'>
-        <div className='flex items-center gap-3'>
+      <div className='mt-4 flex flex-col gap-1 pb-2'>
+        <div className='flex items-center gap-3 pb-0'>
           <Avatar className='size-8'>
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <h1 className='text-lg font-medium'>
             {person?.first_name} {person?.last_name}
           </h1>
+          {organizations.length > 0 && (
+            <div className='flex flex-wrap gap-2'>
+              {organizations.map((organization) => (
+                <OrganizationBadge key={organization.id} organization={organization} asLink />
+              ))}
+            </div>
+          )}
+        </div>
+        <div className='ml-10 flex flex-wrap gap-2'>
           {groups.length > 0 && (
             <div className='flex flex-wrap gap-2'>
               {groups.map((group) => (
@@ -47,20 +58,15 @@ export function PersonHeader({ person, groups = [], segment, taskCount }: Person
         {/* <UpdateFollowUpScoreButton personId={person?.id || ''} /> */}
       </div>
 
-      <div className='-mx-5'>
-        <Tabs value={segment || 'activity'} className='mt-6'>
+      <div className='-mx-5 pt-2'>
+        <Tabs value={segment || 'activity'} className=''>
           <TabsList variant='underline' className='w-full justify-start gap-2 px-5'>
             <TabsTrigger
               value='activity'
               variant='underline'
               onClick={() => router.push(routes.person.byId({ id: person?.id || '' }))}>
               <span className='mr-2'>Activity</span>
-              <FollowUpIndicator
-                value={person?.follow_up_score ?? 0}
-                personId={person?.id}
-                size='sm'
-                editable
-              />
+              <FollowUpIndicator value={person?.follow_up_score ?? 0} personId={person?.id} size='sm' editable />
             </TabsTrigger>
             <TabsTrigger
               value='summary'

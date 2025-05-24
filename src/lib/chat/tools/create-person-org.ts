@@ -52,7 +52,12 @@ export const createPersonOrgTool: ChatTool<
     }
   },
   onSuccessEach: true,
-  onSuccess: ({ queryClient }) => {
+  onSuccess: ({ queryClient, args }) => {
     queryClient.invalidateQueries({ queryKey: ['organizations'] });
+    if (args?.person_id) {
+      queryClient.invalidateQueries({
+        queryKey: ['person', args.person_id, 'about', { withOrganizations: true }]
+      });
+    }
   }
 };

@@ -50,7 +50,7 @@ export const routes = {
 
   organization: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.ORGANIZATIONS}`,
-    byId: ({ id }: { id: number }) => `${routes.organization.root()}/${id}`
+    byId: ({ id }: { id: string }) => `${routes.organization.root()}/${id}`
   },
 
   // Group routes

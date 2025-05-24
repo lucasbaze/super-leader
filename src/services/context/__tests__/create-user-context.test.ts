@@ -31,8 +31,8 @@ describe('context-service', () => {
           expect(result.error).toBeNull();
           expect(result.data).toMatchObject({
             user_id: testUser.id,
-            content: 'User mentioned they enjoy hiking on weekends',
-            processed: false
+            content: 'User mentioned they enjoy hiking on weekends'
+            // processed: false
           });
 
           // Verify using getUserContext
@@ -56,8 +56,8 @@ describe('context-service', () => {
             data: {
               user_id: testUser.id,
               content: 'User has three children aged 5, 8, and 12',
-              reason: 'Family information',
-              processed: true
+              reason: 'Family information'
+              // processed: true
             }
           });
 
@@ -65,15 +65,15 @@ describe('context-service', () => {
           expect(result.data).toMatchObject({
             user_id: testUser.id,
             content: 'User has three children aged 5, 8, and 12',
-            reason: 'Family information',
-            processed: true
+            reason: 'Family information'
+            // processed: true
           });
 
           // Verify using getUserContext with processed filter
           const getResult = await getUserContext({
             db,
-            userId: testUser.id,
-            processed: true
+            userId: testUser.id
+            // processed: true
           });
 
           expect(getResult.error).toBeNull();

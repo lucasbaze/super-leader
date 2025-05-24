@@ -37,11 +37,7 @@ type ChartTooltipContentProps = {
   config?: ChartConfig;
 };
 
-export function ChartTooltipContent({
-  active,
-  payload,
-  config: chartConfig
-}: ChartTooltipContentProps) {
+export function ChartTooltipContent({ active, payload, config: chartConfig }: ChartTooltipContentProps) {
   if (!active || !payload || !chartConfig) return null;
 
   return (
@@ -54,10 +50,7 @@ export function ChartTooltipContent({
 
           return (
             <div key={entry.dataKey} className='flex items-center gap-2'>
-              <div
-                className='h-2 w-2 rounded-full'
-                style={{ backgroundColor: seriesConfig.color }}
-              />
+              <div className='size-2 rounded-full' style={{ backgroundColor: seriesConfig.color }} />
               <span className='text-sm font-medium'>
                 {seriesConfig.label}
                 {entry.dataKey.endsWith('Previous') ? ' (Previous)' : ''}

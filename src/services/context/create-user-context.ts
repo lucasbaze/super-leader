@@ -54,8 +54,8 @@ export async function createUserContext({
       .insert({
         user_id: data.user_id,
         content: data.content,
-        reason: data.reason || null,
-        processed: data.processed || false
+        reason: data.reason || null
+        // processed: data.processed || false
       })
       .select('*')
       .single();

@@ -12,7 +12,7 @@ export default function OrganizationsPage() {
   const router = useRouter();
   const { data: organizations = [], isLoading, error } = useOrganizations();
 
-  const handleRowClick = (organizationId: number) => {
+  const handleRowClick = (organizationId: string) => {
     router.push(routes.organization.byId({ id: organizationId }));
   };
 

@@ -10,8 +10,7 @@ import { createTask } from './create-task';
 import { generateContextAndActionType } from './generate-tasks/generate-context-and-action-type';
 import { generateTaskAction } from './generate-tasks/generate-task-action';
 import { BuildTaskServiceResult } from './types';
-import { isValidEndAt } from './validate-task-suggestion';
-import { isValidTaskTrigger } from './validate-task-suggestion';
+import { isValidEndAt, isValidTaskTrigger } from './validate-task-suggestion';
 
 // Define errors
 export const ERRORS = {

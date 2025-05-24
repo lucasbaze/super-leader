@@ -35,7 +35,7 @@ export function OrganizationBadge({
   );
 
   if (asLink) {
-    return <Link href={routes.organization.byId({ id: Number(organization.id) })}>{badge}</Link>;
+    return <Link href={routes.organization.byId({ id: organization.id })}>{badge}</Link>;
   }
 
   return badge;

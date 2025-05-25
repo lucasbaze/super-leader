@@ -1,0 +1,8 @@
+Next: 
+☐ Birthday dates are being displayed in the wrong timezone. i.e. Mark & Mom's birthday's are off
+☐ Adding a task to a person I've already viewed doesn't show up in the task list on the person. Cache invalidation is required for this or refetching the person on view... maybe in the background?
+☐ When updating the summary and there are no interactions, the service will fail
+☐ Bug when trying to add multiple people at the same time. It will only add the last person.
+☐ Bug when adding multiple people to a group at once? "Create a new group called "Dinner" and add Derek Burgman, Roberto, Darian, Andy, Magui, Tim, Eli, Charles, Anthony, Katie, Samantha G" this failed in production... well it worked actually? Just failed to return a message?
+☐ There's a "comma" issue in the copy / pasting of the phones numbers.
+☐ Show loading indicators on save of the address information about a person.

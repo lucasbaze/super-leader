@@ -14,7 +14,7 @@ Question: "How can I "see" the progress of information that I'm filling out abou
 
 -- Should we save error messages as well?
 
-- [ ] Build the AI summary view of an individual person.
+- [x] ~~_Build the AI summary view of an individual person._~~ [2025-05-24]
 
 This will be based on the interactions that have been loaded up, messages, events, & notes. We'll show the "summary" of the person across many domains. The question is how much detail to show. And do we segment based on the type of person? Does the AI "suggest" the summary or the components of the summary?
 
@@ -23,11 +23,11 @@ This will be based on the interactions that have been loaded up, messages, event
 This will also be used to populate the home page with suggested actions that need to take place.
 Hard part will be getting visibility into the queue and the jobs that are being processed.
 
-- [ ] Need a background jobs / queue handler
+- [x] ~~_Need a background jobs / queue handler_~~ [2025-05-24]
 
 This will handle updating async activities such as the AI summary. It will tie into the follow-up indicator and process jobs in a queue to determine the follow-up status of each person. Hard part will be getting visibility into the queue and the jobs that are being processed.
 
-- [ ] Build the v1 of the "Home Page"
+- [x] ~~_Build the v1 of the "Home Page"_~~ [2025-05-24]
 
 The home page will be the "actions" oriented page of things to do based on knowledge of the system internally. Events, previous notes, set reminders & follow-ups, email messages follow-up actions, etc...
 
@@ -50,13 +50,13 @@ Special people that aren't in the 5,50,100: Recently met folks, folks that you h
 
 ### Gift Suggestions
 
-- [ ] Add a "gift" button that will prompt to get gift suggestions for the person.
+- [x] Add a "gift" button that will prompt to get gift suggestions for the person.
 
 We'll add a header to the chat that will show the gift suggestions.
 
 #### Suggestions: Nice to have
 
-- [ ] Show link preview in the suggestion
+- [x] Show link preview in the suggestion
 
 #### Suggestions Cleanup:
 
@@ -64,24 +64,19 @@ We'll add a header to the chat that will show the gift suggestions.
 
 ### Metrics
 
-- [ ] Summarization of each person
-- [ ] Summarization of the "network" for individual quality
+- [x] Summarization of each person
+- [x] Summarization of the "network" for individual quality
 
 ### Clean up
 
 - [ ] Automatically update the test database on push with new migrations
 - [ ] Type the API and useHooks so that the json response is typed.
 - [ ] Clean up test data properly after running tests. The rollback mechanism is not working as expected.
-- [ ] Need to add a fallback page for 404 such as when I navigate to /app/inner-5 which doesn't exist
-- [ ] Central links on the client side, so that we don't have `/app/person` just laying around.
-- [ ] Clean up the types that have been created. They're laying in different places. Particularly true in the test files.
-- [ ] Standardize the name of tables to singular or plural. Currently it's a mix with groups & group.
 - [ ] ISSUE: Currently set the RLS policy to allow anyone to access people records so that the API can access people for createSuggestions & createMessageSuggestions. This is a security risk, but not sure if it's a big deal.
-- [ ] Update names of Activity & Interactions to be more consistent.
 - [ ] Remove database functions to handle update person details that are no longer being used.
 - [ ] Move supabase from utils/supabase to lib/supabase
 
-- [ ] Need to figure out a way to consistently handle the timezone of the user. For example displaying the date in the correct timezone coming from the server on the client side.
+- [x] Need to figure out a way to consistently handle the timezone of the user. For example displaying the date in the correct timezone coming from the server on the client side.
 - [ ] Remove open-ai structuredObject call vendor from create-message-suggestions.ts
 - [ ] Need to limit the number of messages that are sent to the chat to prevent too many tokens from being used if the user searches back really far...
 

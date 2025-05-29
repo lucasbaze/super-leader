@@ -58,6 +58,66 @@ export async function getTasks({
     const startOfToday = today.startOf('day').toISOString();
     const endOfToday = today.endOf('day').toISOString();
 
+    // Special handling for overdue: if before < today, only return incomplete tasks in the past
+    if (before && before < startOfToday) {
+      const overdueQuery = db
+        .from('task_suggestion')
+        .select(
+          `
+          id,
+          trigger,
+          context,
+          suggested_action_type,
+          suggested_action,
+          end_at,
+          completed_at,
+          skipped_at,
+          snoozed_at,
+          created_at,
+          updated_at,
+          person:person!inner (
+            id,
+            first_name,
+            last_name
+          )
+        `
+        )
+        .eq('user_id', userId)
+        .is('completed_at', null)
+        .is('skipped_at', null)
+        .is('snoozed_at', null)
+        .gte('end_at', after || '')
+        .lt('end_at', startOfToday)
+        .order('end_at', { ascending: true });
+
+      if (personId) {
+        overdueQuery.eq('person_id', personId);
+      }
+
+      const overdueResult = await overdueQuery.returns<GetTasksQueryResult[]>();
+      if (overdueResult.error) {
+        const serviceError = ERRORS.TASKS.FETCH_ERROR;
+        errorLogger.log(serviceError, { details: overdueResult.error });
+        return { data: null, error: serviceError };
+      }
+
+      const formattedTasks: GetTaskSuggestionResult[] = (overdueResult.data || []).map((task) => ({
+        ...task,
+        trigger: task.trigger as TaskTrigger,
+        context: task.context as TaskContext,
+        suggestedActionType: task.suggested_action_type as SuggestedActionType,
+        suggestedAction: task.suggested_action as CreateTaskSuggestion['suggestedAction'],
+        endAt: task.end_at,
+        completedAt: task.completed_at,
+        skippedAt: task.skipped_at,
+        snoozedAt: task.snoozed_at,
+        createdAt: task.created_at,
+        updatedAt: task.updated_at
+      }));
+
+      return { data: formattedTasks, error: null };
+    }
+
     // First query for active tasks
     const activeTasksQuery = db
       .from('task_suggestion')

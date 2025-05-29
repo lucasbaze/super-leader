@@ -1,6 +1,6 @@
 import { dateHandler } from '@/lib/dates/helpers';
 
-export type TimePeriod = 'today' | 'this-week' | 'this-month' | 'all';
+export type TimePeriod = 'today' | 'this-week' | 'this-month' | 'all' | 'overdue';
 
 export interface DateRange {
   after: string;
@@ -30,6 +30,12 @@ export function getDateRangeForTimePeriod(timePeriod: TimePeriod): DateRange {
       return {
         after: now.startOf('day').toISOString(),
         before: now.add(30, 'day').endOf('day').toISOString()
+      };
+
+    case 'overdue':
+      return {
+        after: now.subtract(1, 'year').startOf('day').toISOString(),
+        before: now.startOf('day').toISOString()
       };
 
     case 'all':

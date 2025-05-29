@@ -211,3 +211,48 @@ export function filterTodayTasks(tasks: GetTaskSuggestionResult[]): GetTaskSugge
 export function filterAllTasks(tasks: GetTaskSuggestionResult[]): GetTaskSuggestionResult[] {
   return tasks;
 }
+
+export function groupTasksByReverseTimeframe(tasks: GetTaskSuggestionResult[]): TaskGroup[] {
+  const today = dateHandler();
+  const yesterday = today.clone().subtract(1, 'day');
+  const startOfThisWeek = today.clone().startOf('week');
+  const startOfLastWeek = startOfThisWeek.clone().subtract(1, 'week');
+  const startOfThisMonth = today.clone().startOf('month');
+  const startOfLastMonth = startOfThisMonth.clone().subtract(1, 'month');
+
+  const groups = {
+    yesterday: [] as GetTaskSuggestionResult[],
+    lastWeek: [] as GetTaskSuggestionResult[],
+    lastMonth: [] as GetTaskSuggestionResult[],
+    past: [] as GetTaskSuggestionResult[]
+  };
+
+  tasks.forEach((task) => {
+    if (!task.end_at) return;
+    const endAt = dateHandler(task.end_at);
+    if (endAt.isSame(yesterday, 'day')) {
+      groups.yesterday.push(task);
+    } else if (endAt.isSame(startOfLastWeek, 'week')) {
+      groups.lastWeek.push(task);
+    } else if (endAt.isSame(startOfLastMonth, 'month')) {
+      groups.lastMonth.push(task);
+    } else if (endAt.isBefore(startOfLastMonth, 'month')) {
+      groups.past.push(task);
+    }
+  });
+
+  const result: TaskGroup[] = [];
+  if (groups.yesterday.length > 0) {
+    result.push({ title: 'Yesterday', tasks: groups.yesterday });
+  }
+  if (groups.lastWeek.length > 0) {
+    result.push({ title: 'Last Week', tasks: groups.lastWeek });
+  }
+  if (groups.lastMonth.length > 0) {
+    result.push({ title: 'Last Month', tasks: groups.lastMonth });
+  }
+  if (groups.past.length > 0) {
+    result.push({ title: 'Past', tasks: groups.past });
+  }
+  return result;
+}

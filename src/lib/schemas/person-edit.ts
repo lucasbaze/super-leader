@@ -51,7 +51,7 @@ export const addressSchema = z.object({
 
 export const websiteSchema = z.object({
   id: z.string().optional(),
-  url: z.string().url(),
+  url: z.string().url().optional(),
   label: z.string().optional(),
   _delete: z.boolean().optional().default(false).describe('If true, the website will be deleted')
 });

@@ -55,12 +55,13 @@ export type UpdatePersonWebsiteParams = {
   personId: string;
   websiteId?: string;
   data: {
-    url: string;
+    url?: string;
     label?: string;
     _delete?: boolean;
   };
 };
 
+// TODO: Update the error types and messages to be more specific to the field that is being updated.
 export const ERRORS = {
   PERSON: {
     UPDATE_ERROR: createError(
@@ -92,11 +93,14 @@ export async function updatePersonField({
   value
 }: UpdatePersonFieldParams): Promise<ServiceResponse<Person>> {
   try {
-    console.log('Updating person field', field, value);
+    let newValue = value;
+    if (typeof value === 'string' && value.length === 0) {
+      newValue = null;
+    }
 
     const { data: person, error: updateError } = await db
       .from('person')
-      .update({ [field]: value })
+      .update({ [field]: newValue })
       .eq('id', personId)
       .select('*')
       .single();
@@ -323,6 +327,10 @@ export async function updatePersonWebsite({
       }
       website = updatedWebsite;
     } else {
+      if (!data.url) {
+        return { data: null, error: ERRORS.PERSON.INVALID_FIELD };
+      }
+
       const { data: newWebsite, error: insertError } = await db
         .from('websites')
         .insert({

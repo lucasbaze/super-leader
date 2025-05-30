@@ -1,16 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ListFilter, Save, Send, Tag } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 import { EditablePopover } from './editable-popover';
@@ -49,6 +43,12 @@ export function ContactMethodPopover({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (contactMethod) {
+      setFormData(contactMethod);
+    }
+  }, [contactMethod]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -65,14 +65,12 @@ export function ContactMethodPopover({
 
   const defaultTrigger = (
     <div className={cn('space-y-1', className)}>
-      <div className='text-sm'>{formData.value}</div>
+      <div className='text-sm'>{contactMethod.value}</div>
       <div className='flex items-center gap-2'>
         <span className='text-xs text-muted-foreground'>
-          {CONTACT_TYPES.find((t) => t.value === formData.type)?.label}
+          {CONTACT_TYPES.find((t) => t.value === contactMethod.type)?.label}
         </span>
-        {formData.label && (
-          <span className='text-xs text-muted-foreground'>({formData.label})</span>
-        )}
+        {contactMethod.label && <span className='text-xs text-muted-foreground'>({contactMethod.label})</span>}
       </div>
     </div>
   );
@@ -87,9 +85,7 @@ export function ContactMethodPopover({
       <form onSubmit={handleSubmit} className='relative space-y-4 pb-14'>
         <div className='grid grid-cols-[24px,1fr] items-center gap-2'>
           <ListFilter className='size-4 text-muted-foreground' />
-          <Select
-            value={formData.type}
-            onValueChange={(value) => setFormData({ ...formData, type: value })}>
+          <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
             <SelectTrigger>
               <SelectValue placeholder='Select type' />
             </SelectTrigger>
@@ -127,9 +123,7 @@ export function ContactMethodPopover({
             <Checkbox
               id='is_primary'
               checked={formData.is_primary || false}
-              onCheckedChange={(checked) =>
-                setFormData({ ...formData, is_primary: checked as boolean })
-              }
+              onCheckedChange={(checked) => setFormData({ ...formData, is_primary: checked as boolean })}
             />
             <label htmlFor='is_primary' className='text-sm'>
               Set as primary contact
@@ -138,12 +132,7 @@ export function ContactMethodPopover({
         </div>
 
         <div className='absolute bottom-0 right-0 flex w-full items-center justify-end'>
-          <Button
-            type='submit'
-            size='icon'
-            variant='ghost'
-            className='size-8'
-            disabled={isSubmitting}>
+          <Button type='submit' size='icon' variant='ghost' className='size-8' disabled={isSubmitting}>
             <Save className={cn('size-4', isSubmitting && 'animate-spin')} />
           </Button>
         </div>

@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
-import { personEditSchema } from '@/lib/schemas/person-edit';
 import {
   updatePersonAddress,
   updatePersonContactMethod,
-  updatePersonDetails,
   updatePersonField,
   updatePersonWebsite
 } from '@/services/person/update-person-details';
@@ -82,18 +80,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
           data: data.website
         }));
         break;
-
-      case 'full':
-      default: // Validate the incoming data for full updates
-      {
-        const validated = personEditSchema.parse(data);
-        ({ error } = await updatePersonDetails({
-          db: supabase,
-          personId: id,
-          data: validated
-        }));
-        break;
-      }
     }
 
     if (error) throw error;

@@ -8,28 +8,27 @@ import {
   websiteSchema
 } from './person-edit';
 
-// For creation, require first_name and user_id in person
 export const personCreateFieldsSchema = basePersonSchema.extend({
   first_name: z.string().min(1, 'First name is required'),
   user_id: z.string().min(1, 'User ID is required')
 });
 
-// For creation, require is_primary and _delete to always be present (default false)
 export const contactMethodCreateSchema = baseContactMethodSchema.extend({
-  is_primary: z.boolean().default(false),
-  _delete: z.boolean().default(false)
+  type: z.string(),
+  value: z.string()
 });
 
-export const addressCreateSchema = baseAddressSchema.extend({
-  is_primary: z.boolean().default(false),
-  _delete: z.boolean().default(false)
+export const addressCreateSchema = baseAddressSchema.extend({});
+
+export const websiteCreateSchema = websiteSchema.extend({
+  url: z.string().min(1, 'URL is required')
 });
 
 export const personCreateSchema = z.object({
   person: personCreateFieldsSchema,
   contactMethods: z.array(contactMethodCreateSchema).optional(),
   addresses: z.array(addressCreateSchema).optional(),
-  websites: z.array(websiteSchema).optional(),
+  websites: z.array(websiteCreateSchema).optional(),
   note: z.string().optional()
 });
 

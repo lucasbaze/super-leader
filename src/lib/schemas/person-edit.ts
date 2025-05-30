@@ -12,11 +12,11 @@ export const personSchema = z.object({
 
 export const contactMethodSchema = z.object({
   id: z.string().optional(),
-  type: z.string(),
-  value: z.string(),
+  type: z.string().optional(),
+  value: z.string().optional(),
   label: z.string().optional(),
-  is_primary: z.boolean().optional().default(false),
-  _delete: z.boolean().optional().default(false).describe('If true, the contact method will be deleted')
+  is_primary: z.boolean().optional(),
+  _delete: z.boolean().optional().describe('If true, the contact method will be deleted')
 });
 
 export const addressSchema = z.object({
@@ -45,15 +45,15 @@ export const addressSchema = z.object({
     .string()
     .nullish()
     .transform((val) => val || ''),
-  is_primary: z.boolean().optional().default(false),
-  _delete: z.boolean().optional().default(false).describe('If true, the address will be deleted')
+  is_primary: z.boolean().optional(),
+  _delete: z.boolean().optional().describe('If true, the address will be deleted')
 });
 
 export const websiteSchema = z.object({
   id: z.string().optional(),
   url: z.string().url().optional(),
   label: z.string().optional(),
-  _delete: z.boolean().optional().default(false).describe('If true, the website will be deleted')
+  _delete: z.boolean().optional().describe('If true, the website will be deleted')
 });
 
 export const personEditSchema = z.object({

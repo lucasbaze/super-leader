@@ -1,14 +1,16 @@
+import { omit } from 'lodash';
+
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { TPersonEditFormData } from '@/lib/schemas/person-edit';
-import { DBClient } from '@/types/database';
+import { PersonEditFormData } from '@/lib/schemas/person-edit';
+import { Address, ContactMethod, DBClient, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
 export type UpdatePersonDetailsParams = {
   db: DBClient;
   personId: string;
-  data: TPersonEditFormData;
+  data: PersonEditFormData;
 };
 
 // New interfaces for granular updates
@@ -26,8 +28,8 @@ export type UpdatePersonContactMethodParams = {
   data: {
     type: string;
     value: string;
-    label?: string;
     is_primary: boolean;
+    label?: string;
     _delete?: boolean;
   };
 };
@@ -37,13 +39,13 @@ export type UpdatePersonAddressParams = {
   personId: string;
   addressId?: string;
   data: {
-    street: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    country: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    postal_code?: string;
+    country?: string;
     label?: string;
-    is_primary: boolean;
+    is_primary?: boolean;
     _delete?: boolean;
   };
 };
@@ -88,12 +90,16 @@ export async function updatePersonField({
   personId,
   field,
   value
-}: UpdatePersonFieldParams): Promise<ServiceResponse<null>> {
+}: UpdatePersonFieldParams): Promise<ServiceResponse<Person>> {
   try {
-    const { error: updateError } = await db
+    console.log('Updating person field', field, value);
+
+    const { data: person, error: updateError } = await db
       .from('person')
       .update({ [field]: value })
-      .eq('id', personId);
+      .eq('id', personId)
+      .select('*')
+      .single();
 
     if (updateError) {
       const error = {
@@ -104,7 +110,7 @@ export async function updatePersonField({
       return { data: null, error };
     }
 
-    return { data: null, error: null };
+    return { data: person, error: null };
   } catch (error) {
     const serviceError = {
       ...ERRORS.PERSON.TRANSACTION_ERROR,
@@ -121,13 +127,15 @@ export async function updatePersonContactMethod({
   personId,
   methodId,
   data
-}: UpdatePersonContactMethodParams): Promise<ServiceResponse<null>> {
+}: UpdatePersonContactMethodParams): Promise<ServiceResponse<ContactMethod>> {
   try {
     const { data: person } = await db.from('person').select('user_id').eq('id', personId).single();
 
     if (!person) {
       return { data: null, error: ERRORS.PERSON.UPDATE_ERROR };
     }
+
+    let contactMethod: ContactMethod | null = null;
 
     if (methodId && data._delete) {
       const { error: deleteError } = await db.from('contact_methods').delete().eq('id', methodId);
@@ -141,11 +149,13 @@ export async function updatePersonContactMethod({
         return { data: null, error };
       }
     } else if (methodId) {
-      const { error: updateError } = await db
+      const { data: updatedContactMethod, error: updateError } = await db
         .from('contact_methods')
-        .update(data)
+        .update(omit(data, '_delete'))
         .eq('id', methodId)
-        .eq('person_id', personId);
+        .eq('person_id', personId)
+        .select('*')
+        .single();
 
       if (updateError) {
         const error = {
@@ -155,12 +165,17 @@ export async function updatePersonContactMethod({
         errorLogger.log(error);
         return { data: null, error };
       }
+      contactMethod = updatedContactMethod;
     } else {
-      const { error: insertError } = await db.from('contact_methods').insert({
-        ...data,
-        person_id: personId,
-        user_id: person.user_id
-      });
+      const { data: newContactMethod, error: insertError } = await db
+        .from('contact_methods')
+        .insert({
+          ...omit(data, '_delete'),
+          person_id: personId,
+          user_id: person.user_id
+        })
+        .select('*')
+        .single();
 
       if (insertError) {
         const error = {
@@ -170,9 +185,10 @@ export async function updatePersonContactMethod({
         errorLogger.log(error);
         return { data: null, error };
       }
+      contactMethod = newContactMethod;
     }
 
-    return { data: null, error: null };
+    return { data: contactMethod, error: null };
   } catch (error) {
     const serviceError = {
       ...ERRORS.PERSON.TRANSACTION_ERROR,
@@ -189,13 +205,15 @@ export async function updatePersonAddress({
   personId,
   addressId,
   data
-}: UpdatePersonAddressParams): Promise<ServiceResponse<null>> {
+}: UpdatePersonAddressParams): Promise<ServiceResponse<Address>> {
   try {
     const { data: person } = await db.from('person').select('user_id').eq('id', personId).single();
 
     if (!person) {
       return { data: null, error: ERRORS.PERSON.UPDATE_ERROR };
     }
+
+    let address: Address | null = null;
 
     if (addressId && data._delete) {
       const { error: deleteError } = await db.from('addresses').delete().eq('id', addressId);
@@ -209,11 +227,13 @@ export async function updatePersonAddress({
         return { data: null, error };
       }
     } else if (addressId) {
-      const { error: updateError } = await db
+      const { data: updatedAddress, error: updateError } = await db
         .from('addresses')
-        .update(data)
+        .update(omit(data, '_delete'))
         .eq('id', addressId)
-        .eq('person_id', personId);
+        .eq('person_id', personId)
+        .select('*')
+        .single();
 
       if (updateError) {
         const error = {
@@ -223,12 +243,17 @@ export async function updatePersonAddress({
         errorLogger.log(error);
         return { data: null, error };
       }
+      address = updatedAddress;
     } else {
-      const { error: insertError } = await db.from('addresses').insert({
-        ...data,
-        person_id: personId,
-        user_id: person.user_id
-      });
+      const { data: newAddress, error: insertError } = await db
+        .from('addresses')
+        .insert({
+          ...omit(data, '_delete'),
+          person_id: personId,
+          user_id: person.user_id
+        })
+        .select('*')
+        .single();
 
       if (insertError) {
         const error = {
@@ -238,9 +263,10 @@ export async function updatePersonAddress({
         errorLogger.log(error);
         return { data: null, error };
       }
+      address = newAddress;
     }
 
-    return { data: null, error: null };
+    return { data: address, error: null };
   } catch (error) {
     const serviceError = {
       ...ERRORS.PERSON.TRANSACTION_ERROR,
@@ -257,13 +283,15 @@ export async function updatePersonWebsite({
   personId,
   websiteId,
   data
-}: UpdatePersonWebsiteParams): Promise<ServiceResponse<null>> {
+}: UpdatePersonWebsiteParams): Promise<ServiceResponse<Website>> {
   try {
     const { data: person } = await db.from('person').select('user_id').eq('id', personId).single();
 
     if (!person) {
       return { data: null, error: ERRORS.PERSON.UPDATE_ERROR };
     }
+
+    let website: Website | null = null;
 
     if (websiteId && data._delete) {
       const { error: deleteError } = await db.from('websites').delete().eq('id', websiteId);
@@ -277,11 +305,13 @@ export async function updatePersonWebsite({
         return { data: null, error };
       }
     } else if (websiteId) {
-      const { error: updateError } = await db
+      const { data: updatedWebsite, error: updateError } = await db
         .from('websites')
-        .update(data)
+        .update(omit(data, '_delete'))
         .eq('id', websiteId)
-        .eq('person_id', personId);
+        .eq('person_id', personId)
+        .select('*')
+        .single();
 
       if (updateError) {
         const error = {
@@ -291,12 +321,17 @@ export async function updatePersonWebsite({
         errorLogger.log(error);
         return { data: null, error };
       }
+      website = updatedWebsite;
     } else {
-      const { error: insertError } = await db.from('websites').insert({
-        ...data,
-        person_id: personId,
-        user_id: person.user_id
-      });
+      const { data: newWebsite, error: insertError } = await db
+        .from('websites')
+        .insert({
+          ...omit(data, '_delete'),
+          person_id: personId,
+          user_id: person.user_id
+        })
+        .select('*')
+        .single();
 
       if (insertError) {
         const error = {
@@ -306,9 +341,10 @@ export async function updatePersonWebsite({
         errorLogger.log(error);
         return { data: null, error };
       }
+      website = newWebsite;
     }
 
-    return { data: null, error: null };
+    return { data: website, error: null };
   } catch (error) {
     const serviceError = {
       ...ERRORS.PERSON.TRANSACTION_ERROR,
@@ -320,6 +356,7 @@ export async function updatePersonWebsite({
 }
 
 // Keep the original function for bulk updates
+// This function expects all the data to be provided in the data object every time
 export async function updatePersonDetails({
   db,
   personId,
@@ -327,11 +364,7 @@ export async function updatePersonDetails({
 }: UpdatePersonDetailsParams): Promise<ServiceResponse<null>> {
   try {
     // Start a transaction
-    const { data: person, error: personError } = await db
-      .from('person')
-      .select('user_id')
-      .eq('id', personId)
-      .single();
+    const { data: person, error: personError } = await db.from('person').select('user_id').eq('id', personId).single();
 
     if (personError || !person) {
       const error = {
@@ -345,27 +378,21 @@ export async function updatePersonDetails({
     const userId = person.user_id;
 
     // Update person bio
-    const { error: bioError } = await db
-      .from('person')
-      .update({ bio: data.bio })
-      .eq('id', personId);
+    // const { error: bioError } = await db.from('person').update({ bio: data.bio }).eq('id', personId);
 
-    if (bioError) {
-      const error = {
-        ...ERRORS.PERSON.UPDATE_ERROR,
-        details: bioError
-      };
-      errorLogger.log(error);
-      return { data: null, error };
-    }
+    // if (bioError) {
+    //   const error = {
+    //     ...ERRORS.PERSON.UPDATE_ERROR,
+    //     details: bioError
+    //   };
+    //   errorLogger.log(error);
+    //   return { data: null, error };
+    // }
 
     // Handle contact methods
     if (data.contactMethods) {
       // Get existing contact methods
-      const { data: existingContacts } = await db
-        .from('contact_methods')
-        .select('id')
-        .eq('person_id', personId);
+      const { data: existingContacts } = await db.from('contact_methods').select('id').eq('person_id', personId);
 
       const existingIds = new Set(existingContacts?.map((c) => c.id) || []);
       const newIds = new Set(data.contactMethods.map((c) => c.id).filter(Boolean));
@@ -373,10 +400,7 @@ export async function updatePersonDetails({
       // Delete removed contacts
       const idsToDelete = [...existingIds].filter((id) => !newIds.has(id));
       if (idsToDelete.length > 0) {
-        const { error: deleteError } = await db
-          .from('contact_methods')
-          .delete()
-          .in('id', idsToDelete);
+        const { error: deleteError } = await db.from('contact_methods').delete().in('id', idsToDelete);
 
         if (deleteError) {
           const error = {
@@ -436,10 +460,7 @@ export async function updatePersonDetails({
     // Handle addresses
     if (data.addresses) {
       // Get existing addresses
-      const { data: existingAddresses } = await db
-        .from('addresses')
-        .select('id')
-        .eq('person_id', personId);
+      const { data: existingAddresses } = await db.from('addresses').select('id').eq('person_id', personId);
 
       const existingIds = new Set(existingAddresses?.map((a) => a.id) || []);
       const newIds = new Set(data.addresses.map((a) => a.id).filter(Boolean));
@@ -513,10 +534,7 @@ export async function updatePersonDetails({
     // Handle websites
     if (data.websites) {
       // Get existing websites
-      const { data: existingWebsites } = await db
-        .from('websites')
-        .select('id')
-        .eq('person_id', personId);
+      const { data: existingWebsites } = await db.from('websites').select('id').eq('person_id', personId);
 
       const existingIds = new Set(existingWebsites?.map((w) => w.id) || []);
       const newIds = new Set(data.websites.map((w) => w.id).filter(Boolean));

@@ -7,32 +7,21 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { Plus, Trash } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { personEditSchema, TPersonEditFormData } from '@/lib/schemas/person-edit';
+import { PersonEditFormData, personEditSchema } from '@/lib/schemas/person-edit';
 
 import type { BioSidebarData } from './bio-sidebar';
 
 /* Deprecated */
 
+/* Deprecated */
+
 interface BioSidebarEditProps {
   data: BioSidebarData;
-  onSubmit: (data: TPersonEditFormData) => Promise<void>;
+  onSubmit: (data: PersonEditFormData) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -45,7 +34,7 @@ function nullToEmpty(value: string | null | undefined): string {
 }
 
 export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps) {
-  const form = useForm<TPersonEditFormData>({
+  const form = useForm<PersonEditFormData>({
     resolver: zodResolver(personEditSchema),
     defaultValues: {
       bio: data.person.bio || '',
@@ -202,11 +191,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='sm'
-                    onClick={() => removeContact(index)}>
+                  <Button type='button' variant='ghost' size='sm' onClick={() => removeContact(index)}>
                     <Trash className='size-4 stroke-red-600' />
                   </Button>
                 </div>
@@ -303,11 +288,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='sm'
-                    onClick={() => removeAddress(index)}>
+                  <Button type='button' variant='ghost' size='sm' onClick={() => removeAddress(index)}>
                     <Trash className='size-4 stroke-red-600' />
                   </Button>
                 </div>
@@ -356,11 +337,7 @@ export function BioSidebarEdit({ data, onSubmit, onCancel }: BioSidebarEditProps
                   )}
                 />
                 <div className='flex justify-end'>
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='sm'
-                    onClick={() => removeWebsite(index)}>
+                  <Button type='button' variant='ghost' size='sm' onClick={() => removeWebsite(index)}>
                     <Trash className='size-4' />
                   </Button>
                 </div>

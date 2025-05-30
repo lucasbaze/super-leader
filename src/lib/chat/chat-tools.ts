@@ -15,7 +15,8 @@ import {
   getContentSuggestionsTool,
   getGroupsTool,
   getInitialMessageTool,
-  removePeopleFromGroupTool
+  removePeopleFromGroupTool,
+  updatePersonDetailsTool
 } from './tools';
 
 const ChatTools = createChatToolRegistry();
@@ -35,5 +36,6 @@ ChatTools.register(createOrganizationTool);
 ChatTools.register(findOrganizationsTool);
 ChatTools.register(createPersonOrgTool);
 ChatTools.register(deletePersonOrgTool);
+ChatTools.register(updatePersonDetailsTool);
 
 export { ChatTools };

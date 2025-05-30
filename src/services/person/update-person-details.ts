@@ -133,6 +133,7 @@ export async function updatePersonContactMethod({
   data
 }: UpdatePersonContactMethodParams): Promise<ServiceResponse<ContactMethod>> {
   try {
+    // NOTE: This probably won't work when there are "accounts" with multiple accounts
     const { data: person } = await db.from('person').select('user_id').eq('id', personId).single();
 
     if (!person) {

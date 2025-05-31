@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Building2, MapPin, Save, Tag } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -25,13 +25,7 @@ interface AddressPopoverProps {
   trigger?: React.ReactNode;
 }
 
-export function AddressPopover({
-  address,
-  onSave,
-  onDelete,
-  className,
-  trigger
-}: AddressPopoverProps) {
+export function AddressPopover({ address, onSave, onDelete, className, trigger }: AddressPopoverProps) {
   const [formData, setFormData] = useState(address);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -50,14 +44,14 @@ export function AddressPopover({
     }
   };
 
+  useEffect(() => {
+    if (address) {
+      setFormData(address);
+    }
+  }, [address]);
+
   // Format the address for display in the trigger
-  const displayAddress = [
-    formData.street,
-    formData.city,
-    formData.state,
-    formData.postal_code,
-    formData.country
-  ]
+  const displayAddress = [address.street, address.city, address.state, address.postal_code, address.country]
     .filter(Boolean)
     .join(', ');
 
@@ -132,9 +126,7 @@ export function AddressPopover({
             <Checkbox
               id='is_primary'
               checked={formData.is_primary}
-              onCheckedChange={(checked) =>
-                setFormData({ ...formData, is_primary: checked as boolean })
-              }
+              onCheckedChange={(checked) => setFormData({ ...formData, is_primary: checked as boolean })}
             />
             <label htmlFor='is_primary' className='text-sm'>
               Set as primary address
@@ -143,12 +135,7 @@ export function AddressPopover({
         </div>
 
         <div className='absolute bottom-0 right-0 flex w-full items-center justify-end'>
-          <Button
-            type='submit'
-            size='icon'
-            variant='ghost'
-            className='size-8'
-            disabled={isSubmitting}>
+          <Button type='submit' size='icon' variant='ghost' className='size-8' disabled={isSubmitting}>
             <Save className={cn('size-4', isSubmitting && 'animate-spin')} />
           </Button>
         </div>

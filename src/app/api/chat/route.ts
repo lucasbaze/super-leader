@@ -74,6 +74,9 @@ export async function POST(req: NextRequest) {
   - If you are given a person's ID, you do not need to search for a person, just use that ID to perform the action.
   `;
 
+  // TODO: Update the system prompt to include the information from the person's profile, so that the chat already has access to all of it.
+  // TODO: Update the searchPerson tool to include more of the person's profile information, so that the chat already has access to all of it.
+
   console.log('systemPrompt', systemPrompt);
 
   const contextualMessages: Message[] = [
@@ -114,7 +117,7 @@ export async function POST(req: NextRequest) {
                   const response = await tool.execute?.(supabase, params, {
                     userId: authResult.data!.id
                   });
-                  console.log(`Tool execution success: ${toolName} ->`, response);
+                  console.log(`Tool execution success: ${toolName} ->`, JSON.stringify(response, null, 2));
                   return response;
                 } catch (toolError) {
                   console.error(`Error executing tool: ${toolName}`, toolError);

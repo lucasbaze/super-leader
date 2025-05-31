@@ -3,25 +3,19 @@ import { z } from 'zod';
 
 import { createErrorV2 as createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
+import { PersonCreateFormData, personCreateSchema } from '@/lib/schemas/person-create';
+import { Address, ContactMethod, Interaction, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-export const createPersonSchema = z.object({
-  first_name: z.string().min(1, 'First name is required'),
-  last_name: z.string().optional(),
-  note: z.string().optional(),
-  date_met: z.string().optional(),
-  user_id: z.string().min(1, 'User ID is required')
-});
-
-type CreatePersonParams = z.infer<typeof createPersonSchema>;
+import { updatePersonAddress, updatePersonContactMethod, updatePersonWebsite } from './update-person-details';
 
 export const ERRORS = {
   VALIDATION_ERROR: createError({
     name: 'validation_error',
     type: ErrorType.VALIDATION_ERROR,
-    message: 'First name is required',
-    displayMessage: 'Please provide a first name'
+    message: 'First name and user ID are required',
+    displayMessage: 'Please provide a first name and user ID'
   }),
   CREATE_FAILED: createError({
     name: 'create_person_failed',
@@ -29,20 +23,20 @@ export const ERRORS = {
     message: 'Failed to create person',
     displayMessage: 'Unable to create person at this time'
   }),
-  CREATE_INTERACTION_FAILED: createError({
-    name: 'create_interaction_failed',
+  CREATE_RELATED_FAILED: createError({
+    name: 'create_related_failed',
     type: ErrorType.DATABASE_ERROR,
-    message: 'Failed to create interaction',
-    displayMessage: 'Person was created but unable to save the note'
+    message: 'Failed to create related record',
+    displayMessage: 'Unable to create related record at this time'
   })
 };
 
 export type CreatePersonServiceResult = ServiceResponse<{
-  id: string;
-  first_name: string;
-  last_name: string | null;
-  date_met: string | null;
-  user_id: string;
+  person: Person;
+  contactMethods?: ContactMethod[];
+  addresses?: Address[];
+  websites?: Website[];
+  interaction?: Interaction;
 }>;
 
 export async function createPerson({
@@ -50,60 +44,113 @@ export async function createPerson({
   data
 }: {
   db: SupabaseClient;
-  data: CreatePersonParams;
+  data: PersonCreateFormData;
 }): Promise<CreatePersonServiceResult> {
   try {
-    const validationResult = createPersonSchema.safeParse(data);
-
+    const validationResult = personCreateSchema.safeParse(data);
     if (!validationResult.success) {
       errorLogger.log(ERRORS.VALIDATION_ERROR, {
         details: { validationError: validationResult.error }
       });
       return { data: null, error: ERRORS.VALIDATION_ERROR };
     }
-
-    const { first_name, last_name, date_met, user_id, note } = validationResult.data;
+    const { person, contactMethods, addresses, websites, note } = validationResult.data;
 
     // Create the person
-    const { data: person, error: personError } = await db
-      .from('person')
-      .insert({
-        first_name,
-        last_name,
-        date_met,
-        user_id
-      })
-      .select()
-      .single();
+    const { data: personRecord, error: personError } = await db.from('person').insert(person).select().single();
 
-    if (personError) {
+    if (personError || !personRecord) {
       errorLogger.log(ERRORS.CREATE_FAILED, {
-        details: { ...personError, userId: user_id }
+        details: { ...personError, userId: person.user_id }
       });
       return { data: null, error: ERRORS.CREATE_FAILED };
     }
 
-    // If there's a note, create an interaction
-    if (note) {
-      const { error: interactionError } = await db.from('interactions').insert({
-        person_id: person.id,
-        note,
-        type: 'note',
-        user_id
-      });
+    const personId = personRecord.id;
+    const userId = person.user_id;
 
+    // Optionally create initial interaction
+    let createdInteraction = null;
+    if (note) {
+      const { data: interaction, error: interactionError } = await db
+        .from('interactions')
+        .insert({
+          person_id: personId,
+          note,
+          type: 'note',
+          user_id: userId
+        })
+        .select()
+        .single();
       if (interactionError) {
-        errorLogger.log(ERRORS.CREATE_INTERACTION_FAILED, {
-          details: { ...interactionError, userId: user_id, personId: person.id }
+        errorLogger.log(ERRORS.CREATE_RELATED_FAILED, { details: interactionError });
+        return { data: null, error: ERRORS.CREATE_RELATED_FAILED };
+      }
+      createdInteraction = interaction;
+    }
+
+    // Use granular service methods for related records
+    const createdContactMethods = [];
+    if (contactMethods && contactMethods.length > 0) {
+      for (const method of contactMethods) {
+        const result = await updatePersonContactMethod({
+          db,
+          personId,
+          data: method
         });
-        return { data: null, error: ERRORS.CREATE_INTERACTION_FAILED };
+        if (result.error) {
+          errorLogger.log(ERRORS.CREATE_RELATED_FAILED, { details: result.error });
+          return { data: null, error: ERRORS.CREATE_RELATED_FAILED };
+        }
+        if (result.data) createdContactMethods.push(result.data);
       }
     }
 
-    return { data: person, error: null };
+    const createdAddresses = [];
+    if (addresses && addresses.length > 0) {
+      for (const address of addresses) {
+        const result = await updatePersonAddress({
+          db,
+          personId,
+          data: address
+        });
+        if (result.error) {
+          errorLogger.log(ERRORS.CREATE_RELATED_FAILED, { details: result.error });
+          return { data: null, error: ERRORS.CREATE_RELATED_FAILED };
+        }
+        if (result.data) createdAddresses.push(result.data);
+      }
+    }
+
+    const createdWebsites = [];
+    if (websites && websites.length > 0) {
+      for (const website of websites) {
+        const result = await updatePersonWebsite({
+          db,
+          personId,
+          data: website
+        });
+        if (result.error) {
+          errorLogger.log(ERRORS.CREATE_RELATED_FAILED, { details: result.error });
+          return { data: null, error: ERRORS.CREATE_RELATED_FAILED };
+        }
+        if (result.data) createdWebsites.push(result.data);
+      }
+    }
+
+    return {
+      data: {
+        person: personRecord,
+        contactMethods: createdContactMethods,
+        addresses: createdAddresses,
+        websites: createdWebsites,
+        interaction: createdInteraction
+      },
+      error: null
+    };
   } catch (error) {
     errorLogger.log(ERRORS.CREATE_FAILED, {
-      details: { ...(error as Error), userId: data.user_id }
+      details: { ...(error as Error), userId: data.person?.user_id }
     });
     return { data: null, error: ERRORS.CREATE_FAILED };
   }

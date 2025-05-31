@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Link, Save, Tag } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -20,13 +20,7 @@ interface WebsitePopoverProps {
   trigger?: React.ReactNode;
 }
 
-export function WebsitePopover({
-  website,
-  onSave,
-  onDelete,
-  className,
-  trigger
-}: WebsitePopoverProps) {
+export function WebsitePopover({ website, onSave, onDelete, className, trigger }: WebsitePopoverProps) {
   const [formData, setFormData] = useState(website);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -45,10 +39,16 @@ export function WebsitePopover({
     }
   };
 
+  useEffect(() => {
+    if (website) {
+      setFormData(website);
+    }
+  }, [website]);
+
   const defaultTrigger = (
     <div className={cn('space-y-1', className)}>
-      <div className='text-sm'>{formData.url}</div>
-      {formData.label && <div className='text-xs text-muted-foreground'>{formData.label}</div>}
+      <div className='text-sm'>{website.url}</div>
+      {website.label && <div className='text-xs text-muted-foreground'>{website.label}</div>}
     </div>
   );
 
@@ -79,12 +79,7 @@ export function WebsitePopover({
         </div>
 
         <div className='absolute bottom-0 right-0 flex w-full items-center justify-end'>
-          <Button
-            type='submit'
-            size='icon'
-            variant='ghost'
-            className='size-8'
-            disabled={isSubmitting}>
+          <Button type='submit' size='icon' variant='ghost' className='size-8' disabled={isSubmitting}>
             <Save className={cn('size-4', isSubmitting && 'animate-spin')} />
           </Button>
         </div>

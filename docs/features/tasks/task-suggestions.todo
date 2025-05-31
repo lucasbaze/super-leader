@@ -1,6 +1,9 @@
 New:
   ☐ Update a task date / context / action type, etc...
   ☐ Need to display the "note" of the task in the task list.
+  ☐ Click on the name to direct to the person's page.
+  ☐ Add Snooze functionality ( AI will determine where to put the task)
+  ☐ 
 
 Note:
   - Tasks have an overlap with the "follow-up score" feature. 

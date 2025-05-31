@@ -23,7 +23,7 @@ export const createPersonTool: ChatTool<
     - Before creating a new person, use findPerson to see if the person already exists. If you get no result, then you can go ahead and create the person.
     - You can provide addresses, contact methods, and websites in the details object.
   `,
-  // TODO: Fix this type error
+  // TODO: Fix this type error... I think z.infer is not working as expected
   // @ts-ignore
   parameters: z.object({
     details: personCreateSchema.describe(

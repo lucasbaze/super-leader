@@ -14,10 +14,6 @@ import { ChatTool } from '../chat-tool-registry';
 import { handleToolError, ToolError } from '../utils';
 import { CHAT_TOOLS } from './constants';
 
-// TODO: If you want to remove an address, website, or contact method, simply omit it from the array in the details object.
-// TODO: Need to return back the record id from the update call to enable easier updating
-// TODO: Updating the name doesn't quite work, need to fix this
-
 export const updatePersonDetailsTool: ChatTool<
   {
     personId: string;

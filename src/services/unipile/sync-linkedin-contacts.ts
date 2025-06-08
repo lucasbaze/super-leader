@@ -10,7 +10,7 @@ import { transformToPersonData } from '@/vendors/unipile/transformer';
 import { searchPerson } from '../people/search-people-linkedin';
 import { createPerson } from '../person/create-person';
 import { getPerson } from '../person/get-person';
-import { updatePersonField } from '../person/update-person-details';
+import { updatePersonField, updatePersonWebsite } from '../person/update-person-details';
 
 // Development mode settings
 const MAX_BATCHES = process.env.NODE_ENV === 'development' ? 2 : Infinity;
@@ -45,10 +45,21 @@ export const ERRORS = {
 };
 
 export interface SyncContactsResult {
-  processed: number;
-  created: number;
-  updated: number;
-  skipped: number;
+  processed: {
+    count: number;
+  };
+  created: {
+    count: number;
+    record: any;
+  };
+  updated: {
+    count: number;
+    record: any;
+  };
+  skipped: {
+    count: number;
+    record: any;
+  };
   errors: Array<{
     error: string;
     details?: unknown;
@@ -69,10 +80,21 @@ export async function syncLinkedInContacts({
   cursor
 }: SyncContactsParams): Promise<ServiceResponse<SyncContactsResult>> {
   const result: SyncContactsResult = {
-    processed: 0,
-    created: 0,
-    updated: 0,
-    skipped: 0,
+    processed: {
+      count: 0
+    },
+    created: {
+      count: 0,
+      record: []
+    },
+    updated: {
+      count: 0,
+      record: []
+    },
+    skipped: {
+      count: 0,
+      record: []
+    },
     errors: []
   };
 
@@ -103,7 +125,7 @@ export async function syncLinkedInContacts({
 
       // Process current batch of relations
       for (const relation of response.relations) {
-        result.processed++;
+        result.processed.count++;
 
         try {
           const personData = transformToPersonData(relation, userId);
@@ -115,24 +137,38 @@ export async function syncLinkedInContacts({
             linkedinPublicId: personData.person.linkedin_public_id || ''
           });
 
+          // TODO: Add better logic here to handle if the title has changed.
+          // Clean this up to update the records accordingly.
           if (existingPerson.data) {
-            if (existingPerson.data.title === personData.person.title) {
-              result.skipped++;
-              continue;
-            }
+            const promises = [
+              updatePersonField({
+                db,
+                personId: existingPerson.data.id,
+                field: 'title',
+                value: personData.person.title
+              }),
+              updatePersonField({
+                db,
+                personId: existingPerson.data.id,
+                field: 'linkedin_public_id',
+                value: personData.person.linkedin_public_id
+              }),
+              updatePersonWebsite({
+                db,
+                personId: existingPerson.data.id,
+                data: {
+                  url: personData.websites?.[0]?.url,
+                  label: personData.websites?.[0]?.label
+                }
+              })
+            ];
 
-            // Update existing person
-            const updateResult = await updatePersonField({
-              db,
-              personId: existingPerson.data.id,
-              field: 'title',
-              value: personData.person.title
-            });
+            const [updateResult, updateResult2, updateResult3] = await Promise.all(promises);
 
-            if (updateResult.error) {
+            if (updateResult.error || updateResult2.error || updateResult3.error) {
               const error = {
                 ...ERRORS.SYNC.PERSON_UPDATE_FAILED,
-                details: updateResult.error
+                details: updateResult.error || updateResult2.error || updateResult3.error
               };
               errorLogger.log(error);
               result.errors.push({
@@ -140,10 +176,14 @@ export async function syncLinkedInContacts({
                 details: error
               });
             } else {
-              result.updated++;
+              result.updated.count++;
+              result.updated.record.push({
+                ...existingPerson.data
+              });
             }
           } else {
             // Create new person
+            // TODO: Need to run an extraction to get the profile picture from the profile page.
             const createResult = await createPerson({
               db,
               data: personData
@@ -160,7 +200,8 @@ export async function syncLinkedInContacts({
                 details: error
               });
             } else {
-              result.created++;
+              result.created.count++;
+              result.created.record.push(createResult.data);
             }
           }
         } catch (error) {
@@ -173,7 +214,8 @@ export async function syncLinkedInContacts({
             error: serviceError.message,
             details: serviceError
           });
-          result.skipped++;
+          result.skipped.count++;
+          result.skipped.record.push(relation);
         }
       }
 

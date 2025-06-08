@@ -52,15 +52,13 @@ export async function searchPerson({
       return { data: null, error: ERRORS.SEARCH.MISSING_SEARCH_PARAMS };
     }
 
-    const query = db.from('person').select('*').eq('user_id', userId).limit(1);
-
-    // Search for both conditions simultaneously
-    // This will match if either:
-    // 1. The person has the exact same name combination (firstName and lastName)
-    // 2. The person has the exact same LinkedIn ID (linkedinPublicId)
-    query.or(`and(first_name.eq.${firstName},last_name.eq.${lastName}),linkedin_public_id.eq.${linkedinPublicId}`);
-
-    const { data: person, error } = await query;
+    // Use PostgREST's built-in parameter binding
+    const { data: person, error } = await db
+      .from('person')
+      .select('*')
+      .eq('user_id', userId)
+      .or(`and(first_name.eq."${firstName}",last_name.eq."${lastName}"),linkedin_public_id.eq."${linkedinPublicId}"`)
+      .limit(1);
 
     if (error) {
       const serviceError = {

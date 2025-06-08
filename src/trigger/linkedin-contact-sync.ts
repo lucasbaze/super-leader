@@ -25,20 +25,26 @@ export const linkedInContactSyncTask = task({
     });
 
     if (result.error) {
-      console.error('Email sync completed with errors', {
-        processed: result.data?.processed,
-        created: result.data?.created,
-        updated: result.data?.updated,
-        skipped: result.data?.skipped,
-        errors: result.error
-      });
+      console.error(
+        'Email sync completed with errors',
+        JSON.stringify({
+          processed: result.data?.processed,
+          created: result.data?.created,
+          updated: result.data?.updated,
+          skipped: result.data?.skipped,
+          errors: result.error
+        })
+      );
     } else {
-      console.log('Email sync completed successfully', {
-        processed: result.data?.processed,
-        created: result.data?.created,
-        updated: result.data?.updated,
-        skipped: result.data?.skipped
-      });
+      console.log(
+        'Linkedin contacts sync completed successfully',
+        JSON.stringify({
+          processed: result.data?.processed,
+          created: result.data?.created,
+          updated: result.data?.updated,
+          skipped: result.data?.skipped
+        })
+      );
     }
 
     return result;

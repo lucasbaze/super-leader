@@ -6,9 +6,19 @@
 
 #1 Fetching contacts & Processing Them
 
-Need to trigger a job that will
+Need to trigger a job that will be delayed by a random amount of time into the future.
 
-# Finalization
+i.e. Every 6 hours, a job will be triggered to run between 1 & 4 hours from now.
+12:00a -> 2:47
+6:00p -> 3:12
+12p ->
+
+# Cleanup
 
 - Need logging and metrics for the job and notifications on failure.
 - Need visibility to debug in production.
+- Update Background Job "notifications" to show the LinkedIn sync status
+
+- Consider creating a "imported via LinkedIn" flag on the person record. or some type of "import source" record / field to track where people are added or merged from? Probably too much work for now.
+
+- Need to actually "STOP" running the sync job if we've already processed the person.

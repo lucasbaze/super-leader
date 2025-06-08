@@ -156,6 +156,102 @@ describe('searchPerson service', () => {
         expect(result.data).toBeNull();
       });
     });
+
+    it('should handle names with special characters and spaces', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        const testUser = await createTestUser({ db });
+        const testPerson = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Valerie',
+            last_name: 'Soto M. Psych, MSpED.',
+            linkedin_public_id: 'valeriesoto2025'
+          },
+          withPrefix: false
+        });
+
+        const result = await searchPerson({
+          db,
+          userId: testUser.id,
+          firstName: 'Valerie',
+          lastName: 'Soto M. Psych, MSpED.',
+          linkedinPublicId: 'valeriesoto2025'
+        });
+
+        expect(result.error).toBeNull();
+        expect(result.data).toMatchObject({
+          id: testPerson.id,
+          first_name: 'Valerie',
+          last_name: 'Soto M. Psych, MSpED.',
+          linkedin_public_id: 'valeriesoto2025'
+        });
+      });
+    });
+
+    it('should handle names with special characters and spaces when searching by LinkedIn ID only', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        const testUser = await createTestUser({ db });
+        const testPerson = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Valerie',
+            last_name: 'Soto M. Psych, MSpED.',
+            linkedin_public_id: 'valeriesoto2025'
+          },
+          withPrefix: false
+        });
+
+        const result = await searchPerson({
+          db,
+          userId: testUser.id,
+          firstName: 'Different',
+          lastName: 'Name',
+          linkedinPublicId: 'valeriesoto2025'
+        });
+
+        expect(result.error).toBeNull();
+        expect(result.data).toMatchObject({
+          id: testPerson.id,
+          first_name: 'Valerie',
+          last_name: 'Soto M. Psych, MSpED.',
+          linkedin_public_id: 'valeriesoto2025'
+        });
+      });
+    });
+
+    it('should handle names with special characters and spaces when searching by name only', async () => {
+      await withTestTransaction(supabase, async (db) => {
+        const testUser = await createTestUser({ db });
+        const testPerson = await createTestPerson({
+          db,
+          data: {
+            user_id: testUser.id,
+            first_name: 'Valerie',
+            last_name: 'Soto M. Psych, MSpED.',
+            linkedin_public_id: 'valeriesoto2025'
+          },
+          withPrefix: false
+        });
+
+        const result = await searchPerson({
+          db,
+          userId: testUser.id,
+          firstName: 'Valerie',
+          lastName: 'Soto M. Psych, MSpED.',
+          linkedinPublicId: 'different-linkedin-id'
+        });
+
+        expect(result.error).toBeNull();
+        expect(result.data).toMatchObject({
+          id: testPerson.id,
+          first_name: 'Valerie',
+          last_name: 'Soto M. Psych, MSpED.',
+          linkedin_public_id: 'valeriesoto2025'
+        });
+      });
+    });
   });
 
   describe('error cases', () => {

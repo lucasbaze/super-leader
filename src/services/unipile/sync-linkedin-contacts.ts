@@ -7,6 +7,7 @@ import { ServiceResponse } from '@/types/service-response';
 import { getAllRelationsByAccountId } from '@/vendors/unipile/client';
 import { transformToPersonData } from '@/vendors/unipile/transformer';
 
+import { searchPerson } from '../people/search-people-linkedin';
 import { createPerson } from '../person/create-person';
 import { getPerson } from '../person/get-person';
 import { updatePersonField } from '../person/update-person-details';
@@ -106,19 +107,24 @@ export async function syncLinkedInContacts({
 
         try {
           const personData = transformToPersonData(relation, userId);
-          const existingPerson = await getPerson({
+          const existingPerson = await searchPerson({
             db,
-            personId: relation.member_id,
-            withContactMethods: true,
-            withAddresses: true,
-            withWebsites: true
+            userId,
+            firstName: personData.person.first_name || '',
+            lastName: personData.person.last_name || '',
+            linkedinPublicId: personData.person.linkedin_public_id || ''
           });
 
           if (existingPerson.data) {
+            if (existingPerson.data.title === personData.person.title) {
+              result.skipped++;
+              continue;
+            }
+
             // Update existing person
             const updateResult = await updatePersonField({
               db,
-              personId: existingPerson.data.person.id,
+              personId: existingPerson.data.id,
               field: 'title',
               value: personData.person.title
             });

@@ -7,6 +7,7 @@ export interface TestPerson {
   id?: string;
   bio?: string;
   birthday?: string;
+  linkedin_public_id?: string;
   contactMethods?: Array<{
     type: string;
     value: string;
@@ -29,10 +30,11 @@ export interface TestPerson {
 export interface CreateTestPersonParams {
   db: DBClient;
   data: TestPerson;
+  withPrefix?: boolean;
 }
 
-export async function createTestPerson({ db, data }: CreateTestPersonParams) {
-  const testPrefix = 'test_';
+export async function createTestPerson({ db, data, withPrefix = true }: CreateTestPersonParams) {
+  const testPrefix = withPrefix ? 'test_' : '';
 
   const { data: person, error } = await db
     .from('person')
@@ -42,7 +44,8 @@ export async function createTestPerson({ db, data }: CreateTestPersonParams) {
       bio: data.bio ? `${testPrefix}${data.bio}` : null,
       user_id: data.user_id,
       birthday: data.birthday || null,
-      completeness_score: data.completeness_score || null
+      completeness_score: data.completeness_score || null,
+      linkedin_public_id: data.linkedin_public_id || null
     })
     .select()
     .single();

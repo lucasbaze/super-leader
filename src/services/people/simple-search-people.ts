@@ -69,9 +69,7 @@ export async function simpleSearchPeople({
 
       if (terms.length === 1) {
         // Single term - search in first_name OR last_name OR bio
-        query.or(
-          `first_name.ilike.%${terms[0]}%,last_name.ilike.%${terms[0]}%,bio.ilike.%${terms[0]}%`
-        );
+        query.or(`first_name.ilike.%${terms[0]}%,last_name.ilike.%${terms[0]}%,bio.ilike.%${terms[0]}%`);
       } else {
         const firstTerm = terms[0];
         const secondTerm = terms[1];
@@ -85,7 +83,7 @@ export async function simpleSearchPeople({
 
     // Order by creation date if no search term, otherwise by name
     if (!searchTerm) {
-      query.order('created_at', { ascending: false }).limit(30);
+      query.order('created_at', { ascending: false }).limit(15);
     } else {
       query.order('first_name', { ascending: true }).limit(50);
     }

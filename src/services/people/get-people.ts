@@ -20,16 +20,13 @@ export interface GetPeopleParams {
   userId: string;
 }
 
-export async function getPeople({
-  db,
-  userId
-}: GetPeopleParams): Promise<ServiceResponse<Person[]>> {
+export async function getPeople({ db, userId }: GetPeopleParams): Promise<ServiceResponse<Person[]>> {
   try {
     const { data: people, error } = await db
       .from('person')
       .select('*')
       .eq('user_id', userId)
-      .order('first_name', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (error) {
       const serviceError = ERRORS.PEOPLE.FETCH_ERROR;

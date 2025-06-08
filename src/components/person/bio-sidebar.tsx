@@ -152,6 +152,14 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
     <section className='space-y-3'>
       <h3 className='text-sm font-semibold text-muted-foreground'>Basic Information</h3>
       <div className='space-y-2'>
+        {/* <div className='space-y-1'>
+          <label className='text-xs text-muted-foreground'>Title</label>
+          <EditableField
+            value={data.person.title || ''}
+            onChange={(value) => updates.updateField('title', value)}
+            placeholder='Enter title'
+          />
+        </div> */}
         <div className='space-y-1'>
           <label className='text-xs text-muted-foreground'>Birthday</label>
           <EditableDate

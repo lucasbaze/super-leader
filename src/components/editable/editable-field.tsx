@@ -107,8 +107,8 @@ export function EditableField({
       <div
         onClick={() => setIsEditing(true)}
         className={cn(
-          'cursor-text rounded px-2 py-1 hover:bg-accent',
-          !value && 'italic text-muted-foreground',
+          'cursor-text rounded pb-1 pr-2 hover:bg-accent',
+          !value && 'text-sm italic text-muted-foreground',
           className
         )}>
         {value || placeholder || 'Click to edit'}

@@ -46,14 +46,17 @@ export function PersonHeader({ person, groups = [], segment, taskCount, organiza
             </div>
           )}
         </div>
-        <div className='ml-10 flex flex-wrap gap-2'>
-          {groups.length > 0 && (
-            <div className='flex flex-wrap gap-2'>
-              {groups.map((group) => (
-                <GroupBadge key={group.id} group={group} asLink />
-              ))}
-            </div>
-          )}
+        <div className='ml-10'>
+          <div className='mb-2 text-sm text-muted-foreground'>{person?.title}</div>
+          <div className='flex flex-wrap gap-2'>
+            {groups.length > 0 && (
+              <div className='flex flex-wrap gap-2'>
+                {groups.map((group) => (
+                  <GroupBadge key={group.id} group={group} asLink />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         {/* <UpdateFollowUpScoreButton personId={person?.id || ''} /> */}
       </div>

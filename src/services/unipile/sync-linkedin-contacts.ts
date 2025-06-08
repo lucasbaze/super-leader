@@ -139,54 +139,85 @@ export async function syncLinkedInContacts({
 
           // TODO: Add better logic here to handle if the title has changed.
           // Clean this up to update the records accordingly.
+          // Update Title if not the same.
           if (existingPerson.data) {
-            const promises = [
-              updatePersonField({
+            if (existingPerson.data.person.title !== personData.person.title) {
+              const updateTitleResult = await updatePersonField({
                 db,
-                personId: existingPerson.data.id,
+                personId: existingPerson.data.person.id,
                 field: 'title',
                 value: personData.person.title
-              }),
-              updatePersonField({
+              });
+              if (updateTitleResult.error) {
+                const error = {
+                  ...ERRORS.SYNC.PERSON_UPDATE_FAILED,
+                  details: updateTitleResult.error
+                };
+                errorLogger.log(error);
+                result.errors.push({
+                  error: error.message,
+                  details: error
+                });
+              }
+            }
+
+            // Update linkedIn Public IF if not the same.
+            if (existingPerson.data.person.linkedin_public_id !== personData.person.linkedin_public_id) {
+              const updateLinkedinPublicIdResult = await updatePersonField({
                 db,
-                personId: existingPerson.data.id,
+                personId: existingPerson.data.person.id,
                 field: 'linkedin_public_id',
                 value: personData.person.linkedin_public_id
-              }),
-              updatePersonWebsite({
+              });
+              if (updateLinkedinPublicIdResult.error) {
+                const error = {
+                  ...ERRORS.SYNC.PERSON_UPDATE_FAILED,
+                  details: updateLinkedinPublicIdResult.error
+                };
+                errorLogger.log(error);
+                result.errors.push({
+                  error: error.message,
+                  details: error
+                });
+              }
+            }
+
+            // Add website if not already in the list.
+            if (existingPerson.data.websites?.every((website) => website.url !== personData.websites?.[0]?.url)) {
+              const updateWebsiteResult = await updatePersonWebsite({
                 db,
-                personId: existingPerson.data.id,
+                personId: existingPerson.data.person.id,
                 data: {
                   url: personData.websites?.[0]?.url,
                   label: personData.websites?.[0]?.label
                 }
-              })
-            ];
-
-            const [updateResult, updateResult2, updateResult3] = await Promise.all(promises);
-
-            if (updateResult.error || updateResult2.error || updateResult3.error) {
-              const error = {
-                ...ERRORS.SYNC.PERSON_UPDATE_FAILED,
-                details: updateResult.error || updateResult2.error || updateResult3.error
-              };
-              errorLogger.log(error);
-              result.errors.push({
-                error: error.message,
-                details: error
               });
-            } else {
-              result.updated.count++;
-              result.updated.record.push({
-                ...existingPerson.data
-              });
+              if (updateWebsiteResult.error) {
+                const error = {
+                  ...ERRORS.SYNC.PERSON_UPDATE_FAILED,
+                  details: updateWebsiteResult.error
+                };
+                errorLogger.log(error);
+                result.errors.push({
+                  error: error.message,
+                  details: error
+                });
+              }
             }
+
+            result.updated.count++;
+            result.updated.record.push({
+              ...existingPerson.data
+            });
           } else {
             // Create new person
             // TODO: Need to run an extraction to get the profile picture from the profile page.
             const createResult = await createPerson({
               db,
-              data: personData
+              data: {
+                ...personData,
+                note: 'Imported via LinkedIn'
+              }
             });
 
             if (createResult.error) {

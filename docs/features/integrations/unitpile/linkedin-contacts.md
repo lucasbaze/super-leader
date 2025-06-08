@@ -22,3 +22,5 @@ i.e. Every 6 hours, a job will be triggered to run between 1 & 4 hours from now.
 - Consider creating a "imported via LinkedIn" flag on the person record. or some type of "import source" record / field to track where people are added or merged from? Probably too much work for now.
 
 - Need to actually "STOP" running the sync job if we've already processed the person.
+- Need to display the title of the person in the UI somehwere / somehow.
+  - Need to fix the EditableField component to handle the click events properly.

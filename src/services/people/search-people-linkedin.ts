@@ -1,6 +1,6 @@
 import { createError } from '@/lib/errors/error-factory';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { DBClient, Person } from '@/types/database';
+import { DBClient, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
@@ -23,6 +23,12 @@ export const ERRORS = {
       ErrorType.VALIDATION_ERROR,
       'Both name combination and LinkedIn ID are required',
       'Please provide both full name and LinkedIn ID to search'
+    ),
+    WEBSITES_ERROR: createError(
+      'websites_error',
+      ErrorType.DATABASE_ERROR,
+      'Failed to fetch websites',
+      'Unable to load website information'
     )
   }
 };
@@ -35,13 +41,18 @@ export interface SearchPersonParams {
   linkedinPublicId: string;
 }
 
+export interface SearchPersonResult {
+  person: Person;
+  websites?: Website[];
+}
+
 export async function searchPerson({
   db,
   userId,
   firstName,
   lastName,
   linkedinPublicId
-}: SearchPersonParams): Promise<ServiceResponse<Person | null>> {
+}: SearchPersonParams): Promise<ServiceResponse<SearchPersonResult>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.SEARCH.MISSING_USER_ID };
@@ -69,8 +80,31 @@ export async function searchPerson({
       return { data: null, error: serviceError };
     }
 
-    // Return null if no person found, otherwise return the first match
-    return { data: person?.[0] || null, error: null };
+    // Return null if no person found
+    if (!person?.[0]) {
+      return { data: null, error: null };
+    }
+
+    // Get websites for the found person
+    const { data: websites, error: websitesError } = await db
+      .from('websites')
+      .select('*')
+      .eq('person_id', person[0].id);
+
+    if (websitesError) {
+      const error = { ...ERRORS.SEARCH.WEBSITES_ERROR, details: websitesError };
+      errorLogger.log(error);
+      return { data: null, error };
+    }
+
+    // Return person with their websites
+    return {
+      data: {
+        person: person[0],
+        websites: websites || []
+      },
+      error: null
+    };
   } catch (error) {
     const serviceError = {
       ...ERRORS.SEARCH.FETCH_ERROR,

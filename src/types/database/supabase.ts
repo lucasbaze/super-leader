@@ -468,6 +468,8 @@ export type Database = {
           follow_up_score: number;
           id: string;
           last_name: string | null;
+          linkedin_public_id: string | null;
+          title: string | null;
           updated_at: string;
           user_id: string;
         };
@@ -482,6 +484,8 @@ export type Database = {
           follow_up_score?: number;
           id?: string;
           last_name?: string | null;
+          linkedin_public_id?: string | null;
+          title?: string | null;
           updated_at?: string;
           user_id: string;
         };
@@ -496,6 +500,8 @@ export type Database = {
           follow_up_score?: number;
           id?: string;
           last_name?: string | null;
+          linkedin_public_id?: string | null;
+          title?: string | null;
           updated_at?: string;
           user_id?: string;
         };

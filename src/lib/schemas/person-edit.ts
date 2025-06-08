@@ -6,8 +6,8 @@ export const personSchema = z.object({
   last_name: z.string().optional(),
   birthday: z.string().optional(),
   date_met: z.string().optional(),
-  title: z.string().optional()
-  // TODO: Add title
+  title: z.string().optional(),
+  linkedin_public_id: z.string().optional()
 });
 
 export const contactMethodSchema = z.object({

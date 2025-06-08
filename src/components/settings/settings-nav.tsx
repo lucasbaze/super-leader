@@ -10,6 +10,10 @@ const SETTINGS_SECTIONS = [
   {
     title: 'Custom Fields',
     href: routes.settings.customFields()
+  },
+  {
+    title: 'Integrations',
+    href: routes.settings.integrations()
   }
   // Add more sections here as needed
 ];
@@ -27,9 +31,7 @@ export function SettingsNav() {
             className={cn(
               'px-4 py-2 text-left text-sm transition-colors',
               'flex items-center hover:bg-muted',
-              pathname === section.href
-                ? 'bg-muted/50 font-medium text-foreground'
-                : 'text-muted-foreground'
+              pathname === section.href ? 'bg-muted/50 font-medium text-foreground' : 'text-muted-foreground'
             )}>
             <span>{section.title}</span>
           </Link>

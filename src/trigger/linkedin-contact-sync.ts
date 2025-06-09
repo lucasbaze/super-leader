@@ -26,18 +26,24 @@ export const linkedInContactSyncTask = task({
 
     if (result.error) {
       console.error('Linkedin contacts sync completed with errors', {
-        processed: result.data?.processed,
-        created: result.data?.created,
-        updated: result.data?.updated,
-        skipped: result.data?.skipped,
+        processedCount: result.data?.processed.count,
+        createdCount: result.data?.created.count,
+        created: JSON.stringify(result.data?.created.record),
+        updatedCount: result.data?.updated.count,
+        updated: JSON.stringify(result.data?.updated.record),
+        skippedCount: result.data?.skipped.count,
+        skipped: JSON.stringify(result.data?.skipped.record),
         errors: result.error
       });
     } else {
       console.log('Linkedin contacts sync completed successfully', {
-        processed: result.data?.processed,
-        created: result.data?.created,
-        updated: result.data?.updated,
-        skipped: result.data?.skipped
+        processedCount: result.data?.processed.count,
+        createdCount: result.data?.created.count,
+        created: JSON.stringify(result.data?.created.record),
+        updatedCount: result.data?.updated.count,
+        updated: JSON.stringify(result.data?.updated.record),
+        skippedCount: result.data?.skipped.count,
+        skipped: JSON.stringify(result.data?.skipped.record)
       });
     }
 

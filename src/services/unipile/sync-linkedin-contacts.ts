@@ -9,11 +9,14 @@ import { transformToPersonData } from '@/vendors/unipile/transformer';
 
 import { searchPerson } from '../people/search-people-linkedin';
 import { createPerson } from '../person/create-person';
-import { getPerson } from '../person/get-person';
 import { updatePersonField, updatePersonWebsite } from '../person/update-person-details';
 
 // Development mode settings
 const MAX_BATCHES = process.env.NODE_ENV === 'development' ? 2 : Infinity;
+const BATCH_DELAY_MS = 1000; // 1 second delay between batches
+
+// Helper function to create a delay
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const ERRORS = {
   SYNC: {
@@ -141,7 +144,12 @@ export async function syncLinkedInContacts({
           // Clean this up to update the records accordingly.
           // Update Title if not the same.
           if (existingPerson.data) {
+            let updatedPerson = false;
+
             if (existingPerson.data.person.title !== personData.person.title) {
+              console.log(
+                `[DEV] Updating title for ${existingPerson.data.person.id} from ${existingPerson.data.person.title} to ${personData.person.title}`
+              );
               const updateTitleResult = await updatePersonField({
                 db,
                 personId: existingPerson.data.person.id,
@@ -159,10 +167,14 @@ export async function syncLinkedInContacts({
                   details: error
                 });
               }
+              updatedPerson = true;
             }
 
             // Update linkedIn Public IF if not the same.
             if (existingPerson.data.person.linkedin_public_id !== personData.person.linkedin_public_id) {
+              console.log(
+                `[DEV] Updating linkedin_public_id for ${existingPerson.data.person.id} from ${existingPerson.data.person.linkedin_public_id} to ${personData.person.linkedin_public_id}`
+              );
               const updateLinkedinPublicIdResult = await updatePersonField({
                 db,
                 personId: existingPerson.data.person.id,
@@ -180,10 +192,14 @@ export async function syncLinkedInContacts({
                   details: error
                 });
               }
+              updatedPerson = true;
             }
 
             // Add website if not already in the list.
             if (existingPerson.data.websites?.every((website) => website.url !== personData.websites?.[0]?.url)) {
+              console.log(
+                `[DEV] Adding website for ${existingPerson.data.person.id} from ${personData.websites?.[0]?.url}`
+              );
               const updateWebsiteResult = await updatePersonWebsite({
                 db,
                 personId: existingPerson.data.person.id,
@@ -203,12 +219,20 @@ export async function syncLinkedInContacts({
                   details: error
                 });
               }
+              updatedPerson = true;
             }
 
-            result.updated.count++;
-            result.updated.record.push({
-              ...existingPerson.data
-            });
+            if (updatedPerson) {
+              result.updated.count++;
+              result.updated.record.push({
+                ...existingPerson.data
+              });
+            } else {
+              result.skipped.count++;
+              result.skipped.record.push({
+                ...existingPerson.data
+              });
+            }
           } else {
             // Create new person
             // TODO: Need to run an extraction to get the profile picture from the profile page.
@@ -254,6 +278,10 @@ export async function syncLinkedInContacts({
       if (!response.has_more || !response.next_cursor) {
         break;
       }
+
+      // Add delay before processing next batch
+      console.log(`[DEV] Waiting ${BATCH_DELAY_MS}ms before processing next batch...`);
+      await delay(BATCH_DELAY_MS);
 
       currentCursor = response.next_cursor;
     }

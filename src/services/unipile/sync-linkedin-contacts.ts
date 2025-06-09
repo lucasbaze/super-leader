@@ -18,6 +18,44 @@ const BATCH_DELAY_MS = 1000; // 1 second delay between batches
 // Helper function to create a delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Structured logging helper
+interface LogContext {
+  userId: string;
+  accountId: string;
+  batchNumber?: number;
+  cursor?: string;
+  linkedinPublicId?: string;
+  personId?: string;
+  operation?: 'search' | 'create' | 'update' | 'skip';
+  duration?: number;
+  error?: unknown;
+  stats?: {
+    processed: number;
+    created: number;
+    updated: number;
+    skipped: number;
+    errors: number;
+  };
+}
+
+const logSync = (message: string, context: LogContext) => {
+  const timestamp = new Date().toISOString();
+  const logEntry = {
+    timestamp,
+    message,
+    ...context,
+    environment: process.env.NODE_ENV
+  };
+
+  // In development, use console.log for readability
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[SYNC] ${JSON.stringify(logEntry, null, 2)}`);
+  } else {
+    // In production, use structured logging
+    console.log(JSON.stringify(logEntry));
+  }
+};
+
 export const ERRORS = {
   SYNC: {
     FAILED: createError({
@@ -82,6 +120,9 @@ export async function syncLinkedInContacts({
   accountId,
   cursor
 }: SyncContactsParams): Promise<ServiceResponse<SyncContactsResult>> {
+  const startTime = Date.now();
+  logSync('Starting LinkedIn contacts sync', { userId, accountId, cursor });
+
   const result: SyncContactsResult = {
     processed: {
       count: 0
@@ -106,32 +147,52 @@ export async function syncLinkedInContacts({
 
   try {
     while (true) {
+      const batchStartTime = Date.now();
+
       // Check if we've reached the maximum number of batches in development
       if (batchCount >= MAX_BATCHES) {
-        console.log(`[DEV] Reached maximum batch limit of ${MAX_BATCHES}`);
+        logSync('Reached maximum batch limit', { userId, accountId, batchNumber: batchCount });
         break;
       }
 
+      logSync('Fetching relations batch', { userId, accountId, batchNumber: batchCount, cursor: currentCursor });
+
       const response = await getAllRelationsByAccountId({
         accountId,
-        limit: 10,
+        limit: 5,
         cursor: currentCursor
       });
 
       if (!response) {
-        console.log(`[DEV] No more relations to process`);
+        logSync('No more relations to process', { userId, accountId, batchNumber: batchCount });
         break;
       }
 
       batchCount++;
-      console.log(`[DEV] Processing batch ${batchCount} of ${MAX_BATCHES}`);
+      logSync('Processing relations batch', {
+        userId,
+        accountId,
+        batchNumber: batchCount,
+        cursor: currentCursor,
+        duration: Date.now() - batchStartTime
+      });
 
       // Process current batch of relations
       for (const relation of response.relations) {
+        const relationStartTime = Date.now();
         result.processed.count++;
 
+        const personData = transformToPersonData(relation, userId);
+
         try {
-          const personData = transformToPersonData(relation, userId);
+          logSync('Searching for existing person', {
+            userId,
+            accountId,
+            batchNumber: batchCount,
+            linkedinPublicId: personData.person.linkedin_public_id,
+            operation: 'search'
+          });
+
           const existingPerson = await searchPerson({
             db,
             userId,
@@ -140,22 +201,26 @@ export async function syncLinkedInContacts({
             linkedinPublicId: personData.person.linkedin_public_id || ''
           });
 
-          // TODO: Add better logic here to handle if the title has changed.
-          // Clean this up to update the records accordingly.
-          // Update Title if not the same.
           if (existingPerson.data) {
             let updatedPerson = false;
 
             if (existingPerson.data.person.title !== personData.person.title) {
-              console.log(
-                `[DEV] Updating title for ${existingPerson.data.person.id} from ${existingPerson.data.person.title} to ${personData.person.title}`
-              );
+              logSync('Updating person title', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                personId: existingPerson.data.person.id,
+                operation: 'update'
+              });
+
               const updateTitleResult = await updatePersonField({
                 db,
                 personId: existingPerson.data.person.id,
                 field: 'title',
                 value: personData.person.title
               });
+
               if (updateTitleResult.error) {
                 const error = {
                   ...ERRORS.SYNC.PERSON_UPDATE_FAILED,
@@ -166,15 +231,29 @@ export async function syncLinkedInContacts({
                   error: error.message,
                   details: error
                 });
+                logSync('Failed to update person title', {
+                  userId,
+                  accountId,
+                  batchNumber: batchCount,
+                  linkedinPublicId: personData.person.linkedin_public_id,
+                  personId: existingPerson.data.person.id,
+                  operation: 'update',
+                  error: updateTitleResult.error
+                });
               }
               updatedPerson = true;
             }
 
             // Update linkedIn Public IF if not the same.
             if (existingPerson.data.person.linkedin_public_id !== personData.person.linkedin_public_id) {
-              console.log(
-                `[DEV] Updating linkedin_public_id for ${existingPerson.data.person.id} from ${existingPerson.data.person.linkedin_public_id} to ${personData.person.linkedin_public_id}`
-              );
+              logSync('Updating linkedin_public_id', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                personId: existingPerson.data.person.id,
+                operation: 'update'
+              });
               const updateLinkedinPublicIdResult = await updatePersonField({
                 db,
                 personId: existingPerson.data.person.id,
@@ -191,15 +270,29 @@ export async function syncLinkedInContacts({
                   error: error.message,
                   details: error
                 });
+                logSync('Failed to update linkedin_public_id', {
+                  userId,
+                  accountId,
+                  batchNumber: batchCount,
+                  linkedinPublicId: personData.person.linkedin_public_id,
+                  personId: existingPerson.data.person.id,
+                  operation: 'update',
+                  error: updateLinkedinPublicIdResult.error
+                });
               }
               updatedPerson = true;
             }
 
             // Add website if not already in the list.
             if (existingPerson.data.websites?.every((website) => website.url !== personData.websites?.[0]?.url)) {
-              console.log(
-                `[DEV] Adding website for ${existingPerson.data.person.id} from ${personData.websites?.[0]?.url}`
-              );
+              logSync('Adding website', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                personId: existingPerson.data.person.id,
+                operation: 'update'
+              });
               const updateWebsiteResult = await updatePersonWebsite({
                 db,
                 personId: existingPerson.data.person.id,
@@ -218,6 +311,15 @@ export async function syncLinkedInContacts({
                   error: error.message,
                   details: error
                 });
+                logSync('Failed to update website', {
+                  userId,
+                  accountId,
+                  batchNumber: batchCount,
+                  linkedinPublicId: personData.person.linkedin_public_id,
+                  personId: existingPerson.data.person.id,
+                  operation: 'update',
+                  error: updateWebsiteResult.error
+                });
               }
               updatedPerson = true;
             }
@@ -227,15 +329,39 @@ export async function syncLinkedInContacts({
               result.updated.record.push({
                 ...existingPerson.data
               });
+              logSync('Person updated successfully', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                personId: existingPerson.data.person.id,
+                operation: 'update',
+                duration: Date.now() - relationStartTime
+              });
             } else {
               result.skipped.count++;
               result.skipped.record.push({
                 ...existingPerson.data
               });
+              logSync('Person skipped - no updates needed', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                personId: existingPerson.data.person.id,
+                operation: 'skip',
+                duration: Date.now() - relationStartTime
+              });
             }
           } else {
-            // Create new person
-            // TODO: Need to run an extraction to get the profile picture from the profile page.
+            logSync('Creating new person', {
+              userId,
+              accountId,
+              batchNumber: batchCount,
+              linkedinPublicId: personData.person.linkedin_public_id,
+              operation: 'create'
+            });
+
             const createResult = await createPerson({
               db,
               data: {
@@ -254,9 +380,26 @@ export async function syncLinkedInContacts({
                 error: error.message,
                 details: error
               });
+              logSync('Failed to create person', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                operation: 'create',
+                error: createResult.error
+              });
             } else {
               result.created.count++;
               result.created.record.push(createResult.data);
+              logSync('Person created successfully', {
+                userId,
+                accountId,
+                batchNumber: batchCount,
+                linkedinPublicId: personData.person.linkedin_public_id,
+                personId: createResult.data?.person.id,
+                operation: 'create',
+                duration: Date.now() - relationStartTime
+              });
             }
           }
         } catch (error) {
@@ -271,20 +414,49 @@ export async function syncLinkedInContacts({
           });
           result.skipped.count++;
           result.skipped.record.push(relation);
+          logSync('Failed to process relation', {
+            userId,
+            accountId,
+            batchNumber: batchCount,
+            linkedinPublicId: personData.person.linkedin_public_id,
+            operation: 'skip',
+            error,
+            duration: Date.now() - relationStartTime
+          });
         }
       }
 
       // Check if we should continue to the next page
       if (!response.has_more || !response.next_cursor) {
+        logSync('No more pages to process', { userId, accountId, batchNumber: batchCount });
         break;
       }
 
       // Add delay before processing next batch
-      console.log(`[DEV] Waiting ${BATCH_DELAY_MS}ms before processing next batch...`);
+      logSync('Waiting before next batch', {
+        userId,
+        accountId,
+        batchNumber: batchCount,
+        duration: BATCH_DELAY_MS
+      });
       await delay(BATCH_DELAY_MS);
 
       currentCursor = response.next_cursor;
     }
+
+    const totalDuration = Date.now() - startTime;
+    logSync('Sync completed', {
+      userId,
+      accountId,
+      duration: totalDuration,
+      stats: {
+        processed: result.processed.count,
+        created: result.created.count,
+        updated: result.updated.count,
+        skipped: result.skipped.count,
+        errors: result.errors.length
+      }
+    });
 
     return { data: result, error: null };
   } catch (error) {
@@ -293,6 +465,12 @@ export async function syncLinkedInContacts({
       details: error
     };
     errorLogger.log(serviceError);
+    logSync('Sync failed', {
+      userId,
+      accountId,
+      error,
+      duration: Date.now() - startTime
+    });
     return { data: result, error: serviceError };
   }
 }

@@ -27,3 +27,9 @@ i.e. Every 6 hours, a job will be triggered to run between 1 & 4 hours from now.
   - Need to fix the EditableField component to handle the click events properly.
 
 - Need to add a "last synced" field to the person record?
+
+- Can we get the jobs notifier to display the number of contacts synced?
+
+Part 2:
+
+- Need to allow the user to "disconnect" the linked account.

@@ -1,15 +1,21 @@
 import { NextRequest } from 'next/server';
 
-import { UnipileClient } from 'unipile-node-sdk';
+import { SupportedProvider } from 'unipile-node-sdk';
 
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
+import { AccountName } from '@/types/custom';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
+import { getClient } from '@/vendors/unipile/client';
 
 export async function POST(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const accountName = searchParams.get('account_name') as AccountName;
+    console.log('accountName', accountName);
+
     const supabase = await createClient();
     const authResult = await validateAuthentication(supabase);
 
@@ -27,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Unipile client
-    const client = new UnipileClient(`https://${process.env.UNIPILE_DSN}`, `${process.env.UNIPILE_API_KEY}`);
+    const client = getClient();
 
     // Calculate expiration time (5 minutes from now)
     const expiresOn = new Date(Date.now() + 5 * 60 * 1000).toISOString();
@@ -37,10 +43,10 @@ export async function POST(request: NextRequest) {
       type: 'create',
       expiresOn,
       api_url: `https://${process.env.UNIPILE_DSN}`,
-      providers: '*',
-      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations/winner`,
+      providers: [accountName],
+      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations/success`,
       failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations/failure`,
-      notify_url: `${process.env.NEXT_PUBLIC_API_TUNNEL_URL}/api/integrations/callbacks/unipile`,
+      notify_url: `${process.env.NEXT_PUBLIC_API_TUNNEL_URL}/api/callbacks/unipile?account_name=${accountName}`,
       name: authResult.data!.id
     });
     console.log('result', result);

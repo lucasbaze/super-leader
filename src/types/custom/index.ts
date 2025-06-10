@@ -26,3 +26,25 @@ export type Person = PersonDB & {
 export type Suggestion = SuggestionDB & {
   suggestion: ContentVariant;
 };
+
+// https://developer.unipile.com/docs/account-lifecycle
+export const authStatuses = [
+  'OK',
+  'CREDENTIALS',
+  'ERROR',
+  'STOPPED',
+  'CONNECTING',
+  'DELETED',
+  'CREATION_SUCCESS',
+  'RECONNECTED',
+  'SYNC_SUCCESS'
+] as const;
+export type AuthStatus = (typeof authStatuses)[number];
+
+export const accountStatuses = ['ACTIVE', 'INACTIVE'] as const;
+export type AccountStatus = (typeof accountStatuses)[number];
+
+export const accountNames = {
+  LINKEDIN: 'LINKEDIN'
+} as const;
+export type AccountName = (typeof accountNames)[keyof typeof accountNames];

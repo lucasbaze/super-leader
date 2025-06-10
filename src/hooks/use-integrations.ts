@@ -1,9 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { AccountName } from '@/types/custom';
+
 export function useConnectUnipileAccount() {
   return useMutation({
-    mutationFn: async () => {
-      const response = await fetch('/api/integrations/unipile/connect-account', {
+    mutationFn: async (accountName: AccountName) => {
+      const response = await fetch(`/api/integrations/unipile/connect-account?account_name=${accountName}`, {
         method: 'POST'
       });
       const json = await response.json();

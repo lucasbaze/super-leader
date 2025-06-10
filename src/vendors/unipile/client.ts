@@ -25,7 +25,7 @@ export const ERRORS = {
 // Rate limiting helper
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const getClient = () => {
+export const getClient = () => {
   if (!process.env.UNIPILE_DSN || !process.env.UNIPILE_API_KEY) {
     throw ERRORS.CLIENT_INIT_FAILED;
   }

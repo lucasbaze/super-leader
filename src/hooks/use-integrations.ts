@@ -1,6 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { AccountName } from '@/types/custom';
+import { IntegratedAccount } from '@/types/database';
 
 export function useConnectUnipileAccount() {
   return useMutation({
@@ -13,6 +14,18 @@ export function useConnectUnipileAccount() {
         throw new Error(json?.error?.displayMessage || 'Failed to get auth link');
       }
       return json.data.url;
+    }
+  });
+}
+
+export function useIntegratedAccounts() {
+  return useQuery<IntegratedAccount[], Error>({
+    queryKey: ['integrated-accounts'],
+    queryFn: async () => {
+      const res = await fetch('/api/integrations');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error?.displayMessage || 'Failed to fetch integrations');
+      return json.data || [];
     }
   });
 }

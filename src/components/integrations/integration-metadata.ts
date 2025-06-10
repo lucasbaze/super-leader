@@ -10,7 +10,7 @@ export interface IntegrationMetadata {
 export const INTEGRATION_METADATA: Record<AccountName, IntegrationMetadata> = {
   [accountNames.LINKEDIN]: {
     name: 'LinkedIn',
-    description: 'Add your LinkedIn connections.',
+    description: 'Sync your LinkedIn connections.',
     icon: LogoIcons.LogoIcons.linkedin
   }
   // Add more integrations here as you expand accountNames

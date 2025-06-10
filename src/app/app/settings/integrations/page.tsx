@@ -1,15 +1,16 @@
 'use client';
 
 import { Loader } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { useConnectUnipileAccount } from '@/hooks/use-integrations';
-import { accountNames } from '@/types/custom';
+import { IntegrationList } from '@/components/integrations/integration-list';
+import { useConnectUnipileAccount, useIntegratedAccounts } from '@/hooks/use-integrations';
+import { AccountName, accountNames } from '@/types/custom';
 
 export default function IntegrationsPage() {
-  const { mutate: connectAccount, error, isPending } = useConnectUnipileAccount();
+  const { mutate: connectAccount, error: connectError, isPending } = useConnectUnipileAccount();
+  const { data: integratedAccounts, isLoading, error } = useIntegratedAccounts();
 
-  const handleConnectAccount = () => {
-    connectAccount(accountNames.LINKEDIN, {
+  const handleConnectAccount = (accountName: AccountName) => {
+    connectAccount(accountName, {
       onSuccess: (url) => {
         window.location.href = url;
       }
@@ -19,11 +20,16 @@ export default function IntegrationsPage() {
   return (
     <div className='mx-auto max-w-xl py-12'>
       <h1 className='mb-6 text-2xl font-bold'>Integrations</h1>
-      <Button onClick={handleConnectAccount} disabled={isPending}>
-        {isPending ? <Loader className='mr-2 size-4' /> : null}
-        Connect LinkedIn Account
-      </Button>
-      {error && <div className='mt-4 text-red-600'>{(error as Error).message}</div>}
+      {isLoading ? (
+        <div className='flex items-center gap-2 text-gray-500'>
+          <Loader className='size-4 animate-spin' /> Loading integrations...
+        </div>
+      ) : error ? (
+        <div className='text-red-600'>Failed to load integrations: {error.message}</div>
+      ) : (
+        <IntegrationList integratedAccounts={integratedAccounts || []} onConnect={handleConnectAccount} />
+      )}
+      {connectError && <div className='mt-4 text-red-600'>{(connectError as Error).message}</div>}
     </div>
   );
 }

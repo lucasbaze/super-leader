@@ -2,7 +2,7 @@
 
 import { Loader } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { useConnectUnipileAccount } from '@/hooks/use-connect-unipile-account';
+import { useConnectUnipileAccount } from '@/hooks/use-integrations';
 import { accountNames } from '@/types/custom';
 
 export default function IntegrationsPage() {

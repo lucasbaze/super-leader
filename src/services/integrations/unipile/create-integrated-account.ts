@@ -2,16 +2,16 @@ import { z } from 'zod';
 
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { accountNames, accountStatuses, authStatuses } from '@/types/custom';
+import { ACCOUNT_NAMES, ACCOUNT_STATUS, AUTH_STATUS } from '@/types/custom';
 import { ErrorType } from '@/types/errors';
 import { CreateIntegratedAccountParams } from '@/types/integrations/unipile';
 import { ServiceResponse } from '@/types/service-response';
 
 // Validation schema for the account parameters
 const createAccountSchema = z.object({
-  accountName: z.nativeEnum(accountNames),
-  accountStatus: z.enum(accountStatuses),
-  authStatus: z.enum(authStatuses)
+  accountName: z.nativeEnum(ACCOUNT_NAMES),
+  accountStatus: z.nativeEnum(ACCOUNT_STATUS),
+  authStatus: z.nativeEnum(AUTH_STATUS)
 });
 
 export const ERRORS = {

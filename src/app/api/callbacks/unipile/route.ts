@@ -4,8 +4,7 @@ import { z } from 'zod';
 
 import { handleAccountCreationCallback } from '@/services/integrations/unipile/handle-account-creation-callback';
 import { AccountName } from '@/types/custom';
-import { createClient } from '@/utils/supabase/server';
-import { getClient } from '@/vendors/unipile/client';
+import { createServiceRoleClient } from '@/utils/supabase/service-role';
 
 const unipileAccountConnectionStatuses = ['CREATION_SUCCESS', 'RECONNECTED'] as const;
 const unipileAccountConnectionCallbackSchema = z.object({
@@ -21,11 +20,11 @@ export async function POST(request: NextRequest) {
     console.log('accountName', accountName);
 
     const body = await request.json();
-    console.log('Unipile Callback Called', body);
+    console.log('Unipile Callback Called', body, accountName);
 
     const validatedBody = unipileAccountConnectionCallbackSchema.parse(body);
 
-    const db = await createClient();
+    const db = await createServiceRoleClient();
 
     const { data, error } = await handleAccountCreationCallback({
       db,

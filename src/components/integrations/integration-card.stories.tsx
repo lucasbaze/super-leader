@@ -33,16 +33,6 @@ export const NeedsReconnection = () => (
   />
 );
 
-export const Disabled = () => (
-  <IntegrationCard
-    name={meta.name}
-    description={meta.description}
-    icon={meta.icon}
-    status={integrationUIStatuses.DISABLED}
-    onClick={onClick}
-  />
-);
-
 export const Processing = () => (
   <IntegrationCard
     name={meta.name}

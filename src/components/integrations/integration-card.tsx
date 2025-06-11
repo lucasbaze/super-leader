@@ -15,7 +15,6 @@ const statusLabel: Record<IntegrationUIStatus, string> = {
   UNCONNECTED: 'Unconnected',
   CONNECTED: 'Connected',
   NEEDS_RECONNECTION: 'Needs Reconnection',
-  DISABLED: 'Disabled',
   PROCESSING: 'Processing...'
 };
 
@@ -23,7 +22,6 @@ function getActionLabel(status: IntegrationUIStatus, disconnected?: boolean) {
   if (status === 'CONNECTED') return 'Manage';
   if (status === 'PROCESSING') return 'Processing...';
   if (status === 'NEEDS_RECONNECTION') return 'Reconnect';
-  if (status === 'DISABLED') return disconnected ? 'Enable' : 'Disabled';
   // UNCONNECTED or fallback
   return 'Connect';
 }
@@ -32,8 +30,6 @@ function getActionColor(status: IntegrationUIStatus, disconnected?: boolean) {
   if (status === 'CONNECTED') return 'bg-gray-300 text-gray-600 cursor-default';
   if (status === 'PROCESSING') return 'bg-blue-400 text-white';
   if (status === 'NEEDS_RECONNECTION') return 'bg-yellow-600 hover:bg-yellow-700 text-white';
-  if (status === 'DISABLED')
-    return disconnected ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-200 text-gray-400 cursor-default';
   // UNCONNECTED or fallback
   return 'bg-green-600 hover:bg-green-700 text-white';
 }
@@ -42,7 +38,6 @@ function getLabelColor(status: IntegrationUIStatus, disconnected?: boolean) {
   if (status === 'CONNECTED') return 'bg-green-100 text-green-700';
   if (status === 'PROCESSING') return 'bg-blue-100 text-blue-700';
   if (status === 'NEEDS_RECONNECTION') return 'bg-yellow-100 text-yellow-800';
-  if (status === 'DISABLED') return disconnected ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500';
   // UNCONNECTED or fallback
   return 'bg-gray-200 text-gray-500';
 }
@@ -69,7 +64,7 @@ export function IntegrationCard({
         </div>
       </div>
       <div className='flex items-center gap-3'>
-        {status !== 'UNCONNECTED' && status !== 'DISABLED' && (
+        {status !== 'UNCONNECTED' && (
           <span className={`rounded px-2 py-1 text-xs font-semibold ${getLabelColor(status, disconnected)}`}>
             {statusLabel[status]}
           </span>

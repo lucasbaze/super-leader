@@ -27,20 +27,18 @@ export interface GetUserProfileParams {
 
 export type GetUserProfileServiceResult = ServiceResponse<UserProfile>;
 
-export async function getUserProfile({
-  db,
-  userId
-}: GetUserProfileParams): Promise<GetUserProfileServiceResult> {
+export async function getUserProfile({ db, userId }: GetUserProfileParams): Promise<GetUserProfileServiceResult> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.USER_PROFILE.MISSING_USER_ID };
     }
 
-    const { data: profile, error } = await db
-      .from('user_profile')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+    console.log('Getting user profile for user', userId);
+    console.log('Querying database with userId:', userId);
+
+    const { data: profile, error } = await db.from('user_profile').select('*').eq('user_id', userId).single();
+
+    console.log('Database response:', { profile, error });
 
     if (error) {
       const serviceError = { ...ERRORS.USER_PROFILE.FETCH_ERROR, details: error };

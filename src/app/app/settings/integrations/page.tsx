@@ -3,7 +3,7 @@
 import { Loader } from '@/components/icons';
 import { IntegrationList } from '@/components/integrations/integration-list';
 import { useConnectUnipileAccount, useIntegratedAccounts } from '@/hooks/use-integrations';
-import { AccountName, accountNames } from '@/types/custom';
+import { ACCOUNT_NAMES, AccountName } from '@/types/custom';
 
 export default function IntegrationsPage() {
   const { mutate: connectAccount, error: connectError, isPending } = useConnectUnipileAccount();
@@ -16,6 +16,10 @@ export default function IntegrationsPage() {
       }
     });
   };
+
+  // TODO: Re-sync the account / contacts
+  // TODO: Disconnect the account
+  // TODO: Reconnect the account
 
   return (
     <div className='mx-auto max-w-xl py-12'>

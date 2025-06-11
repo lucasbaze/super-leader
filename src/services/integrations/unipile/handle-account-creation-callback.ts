@@ -1,13 +1,28 @@
+import { z } from 'zod';
+
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { getUserProfile } from '@/services/user/get-user-profile';
-import { accountNames, AccountStatus, AuthStatus } from '@/types/custom';
+import { initialLinkedInContactSyncTask } from '@/trigger/linkedin-contact-sync';
+import { ACCOUNT_NAMES, AccountStatus, AuthStatus } from '@/types/custom';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { HandleAccountCreationCallbackParams } from '@/types/integrations/unipile';
 import { ServiceResponse } from '@/types/service-response';
 
-import { syncLinkedInContacts } from '../../unipile/sync-linkedin-contacts';
 import { createIntegratedAccount } from './create-integrated-account';
+
+const unipileAccountCreationCallbackSchema = z.object({
+  userId: z.string(),
+  accountId: z.string(),
+  accountName: z.nativeEnum(ACCOUNT_NAMES),
+  status: z.string()
+});
+type UnipileCreationCallbackPayload = z.infer<typeof unipileAccountCreationCallbackSchema>;
+
+interface HandleAccountCreationCallbackParams {
+  db: DBClient;
+  payload: UnipileCreationCallbackPayload;
+}
 
 export const ERRORS = {
   INVALID_USER: createErrorV2({
@@ -41,6 +56,7 @@ export async function handleAccountCreationCallback({
   payload
 }: HandleAccountCreationCallbackParams): Promise<ServiceResponse<any>> {
   try {
+    console.log('Handle Unipile Account Creation Callback', payload);
     // 1. Validate creation status
     if (payload.status !== 'CREATION_SUCCESS') {
       return { data: null, error: ERRORS.INVALID_STATUS };
@@ -58,12 +74,18 @@ export async function handleAccountCreationCallback({
     }
 
     // 3. Validate user exists
+    console.log('Raw userId:', payload.userId);
+    console.log('Trimmed userId:', payload.userId.trim());
+    console.log('userId length:', payload.userId.length);
+    console.log('userId type:', typeof payload.userId);
+
     const { data: userProfile } = await getUserProfile({
       db,
-      userId: payload.userId
+      userId: payload.userId.trim()
     });
 
     if (!userProfile) {
+      console.log('User profile not found for userId:', payload.userId);
       return { data: null, error: ERRORS.INVALID_USER };
     }
 
@@ -82,10 +104,10 @@ export async function handleAccountCreationCallback({
     if (createError) throw createError;
 
     // 6. If LinkedIn account, trigger sync
-    if (payload.accountName === accountNames.LINKEDIN) {
+    if (payload.accountName === ACCOUNT_NAMES.LINKEDIN) {
       console.log('Triggering LinkedIn sync');
-      await syncLinkedInContacts({
-        db,
+
+      await initialLinkedInContactSyncTask.trigger({
         userId: payload.userId,
         accountId: payload.accountId
       });

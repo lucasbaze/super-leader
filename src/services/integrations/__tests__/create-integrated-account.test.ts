@@ -2,7 +2,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
-import { accountNames, accountStatuses, authStatuses } from '@/types/custom';
+import { ACCOUNT_NAMES, ACCOUNT_STATUS, AUTH_STATUS } from '@/types/custom';
 import { createClient } from '@/utils/supabase/server';
 
 import { createIntegratedAccount, ERRORS } from '../unipile/create-integrated-account';
@@ -24,18 +24,18 @@ describe('integrated-account service', () => {
             db,
             userId: testUser.id,
             accountId: 'test-account-123',
-            accountName: accountNames.LINKEDIN,
-            accountStatus: accountStatuses[0],
-            authStatus: authStatuses[0]
+            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountStatus: ACCOUNT_STATUS.ACTIVE,
+            authStatus: AUTH_STATUS.OK
           });
 
           expect(result.error).toBeNull();
           expect(result.data).toMatchObject({
             user_id: testUser.id,
             account_id: 'test-account-123',
-            account_name: accountNames.LINKEDIN,
-            account_status: accountStatuses[0],
-            auth_status: authStatuses[0]
+            account_name: ACCOUNT_NAMES.LINKEDIN,
+            account_status: ACCOUNT_STATUS.ACTIVE,
+            auth_status: AUTH_STATUS.OK
           });
         });
       });
@@ -44,14 +44,14 @@ describe('integrated-account service', () => {
         await withTestTransaction(supabase, async (db) => {
           const testUser = await createTestUser({ db });
 
-          for (const accountName of Object.values(accountNames)) {
+          for (const accountName of Object.values(ACCOUNT_NAMES)) {
             const result = await createIntegratedAccount({
               db,
               userId: testUser.id,
               accountId: `test-account-${accountName}`,
               accountName,
-              accountStatus: accountStatuses[0],
-              authStatus: authStatuses[0]
+              accountStatus: ACCOUNT_STATUS.ACTIVE,
+              authStatus: AUTH_STATUS.OK
             });
 
             expect(result.error).toBeNull();
@@ -60,17 +60,17 @@ describe('integrated-account service', () => {
         });
       });
 
-      it.each(accountStatuses)('should create accounts with account status %s', async (accountStatus) => {
+      it.each(Object.values(ACCOUNT_STATUS))('should create accounts with account status %s', async (accountStatus) => {
         await withTestTransaction(supabase, async (db) => {
           const testUser = await createTestUser({ db });
 
           await Promise.all(
-            authStatuses.map(async (authStatus) => {
+            Object.values(AUTH_STATUS).map(async (authStatus) => {
               const result = await createIntegratedAccount({
                 db,
                 userId: testUser.id,
                 accountId: `test-account-${accountStatus}-${authStatus}`,
-                accountName: accountNames.LINKEDIN,
+                accountName: ACCOUNT_NAMES.LINKEDIN,
                 accountStatus,
                 authStatus
               });
@@ -94,8 +94,8 @@ describe('integrated-account service', () => {
             userId: testUser.id,
             accountId: 'test-account-123',
             accountName: 'INVALID_ACCOUNT' as any,
-            accountStatus: accountStatuses[0],
-            authStatus: authStatuses[0]
+            accountStatus: ACCOUNT_STATUS.ACTIVE,
+            authStatus: AUTH_STATUS.OK
           });
 
           expect(result.data).toBeNull();
@@ -111,9 +111,9 @@ describe('integrated-account service', () => {
             db,
             userId: testUser.id,
             accountId: 'test-account-123',
-            accountName: accountNames.LINKEDIN,
+            accountName: ACCOUNT_NAMES.LINKEDIN,
             accountStatus: 'INVALID_STATUS' as any,
-            authStatus: authStatuses[0]
+            authStatus: AUTH_STATUS.OK
           });
 
           expect(result.data).toBeNull();
@@ -129,8 +129,8 @@ describe('integrated-account service', () => {
             db,
             userId: testUser.id,
             accountId: 'test-account-123',
-            accountName: accountNames.LINKEDIN,
-            accountStatus: accountStatuses[0],
+            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountStatus: ACCOUNT_STATUS.ACTIVE,
             authStatus: 'INVALID_AUTH' as any
           });
 
@@ -145,9 +145,9 @@ describe('integrated-account service', () => {
             db,
             userId: 'invalid-uuid',
             accountId: 'test-account-123',
-            accountName: accountNames.LINKEDIN,
-            accountStatus: accountStatuses[0],
-            authStatus: authStatuses[0]
+            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountStatus: ACCOUNT_STATUS.ACTIVE,
+            authStatus: AUTH_STATUS.OK
           });
 
           expect(result.data).toBeNull();

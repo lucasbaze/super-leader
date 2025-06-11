@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
       expiresOn,
       api_url: `https://${process.env.UNIPILE_DSN}`,
       providers: [accountName],
-      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations/success`,
-      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations/failure`,
+      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations`,
+      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/integrations`,
       notify_url: `${process.env.NEXT_PUBLIC_API_TUNNEL_URL}/api/callbacks/unipile?account_name=${accountName}`,
       name: authResult.data!.id
     });

@@ -1,9 +1,8 @@
-import { AuthStatus } from '@/types/custom';
+import { AUTH_STATUS, AuthStatus } from '@/types/custom';
 
 export const integrationUIStatuses = {
   CONNECTED: 'CONNECTED',
   NEEDS_RECONNECTION: 'NEEDS_RECONNECTION',
-  DISABLED: 'DISABLED',
   PROCESSING: 'PROCESSING',
   UNCONNECTED: 'UNCONNECTED'
 } as const;
@@ -12,18 +11,17 @@ export type IntegrationUIStatus = (typeof integrationUIStatuses)[keyof typeof in
 
 export function mapAuthStatusToUIStatus(authStatus: AuthStatus): IntegrationUIStatus {
   switch (authStatus) {
-    case 'OK':
-    case 'CREATION_SUCCESS':
-    case 'RECONNECTED':
-    case 'SYNC_SUCCESS':
+    case AUTH_STATUS.OK:
+    case AUTH_STATUS.CREATION_SUCCESS:
+    case AUTH_STATUS.RECONNECTED:
+    case AUTH_STATUS.SYNC_SUCCESS:
       return 'CONNECTED';
-    case 'CREDENTIALS':
-    case 'ERROR':
+    case AUTH_STATUS.STOPPED:
+    case AUTH_STATUS.DELETED:
+    case AUTH_STATUS.CREDENTIALS:
+    case AUTH_STATUS.ERROR:
       return 'NEEDS_RECONNECTION';
-    case 'STOPPED':
-    case 'DELETED':
-      return 'DISABLED';
-    case 'CONNECTING':
+    case AUTH_STATUS.CONNECTING:
       return 'PROCESSING';
     default:
       return 'UNCONNECTED';

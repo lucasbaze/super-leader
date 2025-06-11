@@ -7,3 +7,4 @@ Next:
 ☐ There's a "comma" issue in the copy / pasting of the phones numbers.
 ☐ Show loading indicators on save of the address information about a person.
 ☐ Bug with Prompt 1 (see bug-prompts.md)
+☐ Need to fix the EditableField component to handle the click events properly.

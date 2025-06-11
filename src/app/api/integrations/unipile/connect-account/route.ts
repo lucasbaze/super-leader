@@ -22,6 +22,8 @@ export async function POST(request: NextRequest) {
     if (authResult.error || !authResult.data) {
       return apiResponse.unauthorized(toError(authResult.error));
     }
+
+    // TODO: Create a config service to handle this.
     // Validate required environment variables
     if (!process.env.UNIPILE_DSN || !process.env.UNIPILE_API_KEY) {
       return apiResponse.error({
@@ -49,7 +51,6 @@ export async function POST(request: NextRequest) {
       notify_url: `${process.env.NEXT_PUBLIC_API_TUNNEL_URL}/api/callbacks/unipile?account_name=${accountName}`,
       name: authResult.data!.id
     });
-    console.log('result', result);
 
     return apiResponse.success(result);
   } catch (error) {

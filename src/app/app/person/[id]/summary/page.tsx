@@ -11,10 +11,12 @@ export default function PersonSummaryPage() {
 
   if (!data?.person?.ai_summary) {
     return (
-      <div className='p-4 text-sm text-muted-foreground'>
-        No summary available. A summary will be generated automatically after you add more notes,
-        interactions, and activity.
-      </div>
+      <>
+        <div className='p-4 text-sm text-muted-foreground'>
+          No summary available. A summary will be generated automatically after you add more notes, interactions, and
+          activity.
+        </div>
+      </>
     );
   }
 

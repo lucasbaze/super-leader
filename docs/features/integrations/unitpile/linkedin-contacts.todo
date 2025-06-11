@@ -1,0 +1,30 @@
+
+Phase 1:
+  ✔ Need to create a mechanism to fetch contacts and process them. @done(25-06-10 21:19)
+  ✔ Need to check if the user exists and save the contact if it doesn't. @done(25-06-10 21:19)
+  ✔ Can check for exact first and last name match, linkedin url match. @done(25-06-10 21:19)
+  ✔ Need to display the title of the person in the UI somehwere / somehow. @done(25-06-10 21:22)
+  ☐ Update Background Job "notifications" to show the LinkedIn sync status (Need to check this works... doesn't seem to be working locally when triggered from the server?)
+
+Phase 2:
+  ☐ Need to create a mechanism to download the url of the linkedin profile and save it to my bucket and serve this image.
+  ☐ On "update" we only need to process the first ~50 - 100 contacts and if they are all "skips" we can stop the job.
+  ☐ Need to allow the user to "disconnect" the linked account.
+  ☐ Need to react to the webhook from unipile in case the account changes. 
+
+Phase 3:
+  ☐ Need to trigger a job that will be delayed by a random amount of time into the future. (i.e. Every 6 hours, a job will be triggered to run between 1 & 4 hours from now.
+12:00a -> 2:47
+6:00p -> 3:12
+12p ->)
+
+
+# Cleanup
+
+- Need logging and metrics for the job and notifications on failure.
+- Need visibility to debug in production.
+
+- Consider creating a "imported via LinkedIn" flag on the person record. or some type of "import source" record / field to track where people are added or merged from? Probably too much work for now. (Currently just adding a note field to the person record to track this.)
+
+- Need to add a "last synced" field to the person record?
+- Can we get the jobs notifier to display the number of contacts synced?

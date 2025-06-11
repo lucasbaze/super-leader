@@ -3,7 +3,7 @@
 import { Loader } from '@/components/icons';
 import { IntegrationList } from '@/components/integrations/integration-list';
 import { useConnectUnipileAccount, useIntegratedAccounts } from '@/hooks/use-integrations';
-import { ACCOUNT_NAMES, AccountName } from '@/types/custom';
+import { AccountName } from '@/types/custom';
 
 export default function IntegrationsPage() {
   const { mutate: connectAccount, error: connectError, isPending } = useConnectUnipileAccount();

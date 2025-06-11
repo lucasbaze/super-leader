@@ -1,13 +1,13 @@
 import { AUTH_STATUS, AuthStatus } from '@/types/custom';
 
-export const integrationUIStatuses = {
+export const INTEGRATION_UI_STATUS = {
   CONNECTED: 'CONNECTED',
   NEEDS_RECONNECTION: 'NEEDS_RECONNECTION',
   PROCESSING: 'PROCESSING',
   UNCONNECTED: 'UNCONNECTED'
 } as const;
 
-export type IntegrationUIStatus = (typeof integrationUIStatuses)[keyof typeof integrationUIStatuses];
+export type IntegrationUIStatus = (typeof INTEGRATION_UI_STATUS)[keyof typeof INTEGRATION_UI_STATUS];
 
 export function mapAuthStatusToUIStatus(authStatus: AuthStatus): IntegrationUIStatus {
   switch (authStatus) {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { IntegrationCard } from './integration-card';
 import { INTEGRATION_METADATA } from './integration-metadata';
-import { integrationUIStatuses } from './integration-status';
+import { INTEGRATION_UI_STATUS } from './integration-status';
 
 export default {
   title: 'Integrations/IntegrationCard',
@@ -18,7 +18,7 @@ export const Connected = () => (
     name={meta.name}
     description={meta.description}
     icon={meta.icon}
-    status={integrationUIStatuses.CONNECTED}
+    status={INTEGRATION_UI_STATUS.CONNECTED}
     onClick={onClick}
   />
 );
@@ -28,7 +28,7 @@ export const NeedsReconnection = () => (
     name={meta.name}
     description={meta.description}
     icon={meta.icon}
-    status={integrationUIStatuses.NEEDS_RECONNECTION}
+    status={INTEGRATION_UI_STATUS.NEEDS_RECONNECTION}
     onClick={onClick}
   />
 );
@@ -38,7 +38,7 @@ export const Processing = () => (
     name={meta.name}
     description={meta.description}
     icon={meta.icon}
-    status={integrationUIStatuses.PROCESSING}
+    status={INTEGRATION_UI_STATUS.PROCESSING}
     onClick={onClick}
   />
 );
@@ -48,7 +48,7 @@ export const Unconnected = () => (
     name={meta.name}
     description={meta.description}
     icon={meta.icon}
-    status={integrationUIStatuses.UNCONNECTED}
+    status={INTEGRATION_UI_STATUS.UNCONNECTED}
     onClick={onClick}
   />
 );

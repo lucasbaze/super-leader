@@ -8,7 +8,6 @@ export interface IntegrationCardProps {
   icon: React.ComponentType<{ className?: string }>;
   status: IntegrationUIStatus;
   onClick?: () => void;
-  disconnected?: boolean; // If true, show 'Enable' for DISABLED
 }
 
 const statusLabel: Record<IntegrationUIStatus, string> = {
@@ -18,7 +17,7 @@ const statusLabel: Record<IntegrationUIStatus, string> = {
   PROCESSING: 'Processing...'
 };
 
-function getActionLabel(status: IntegrationUIStatus, disconnected?: boolean) {
+function getActionLabel(status: IntegrationUIStatus) {
   if (status === INTEGRATION_UI_STATUS.CONNECTED) return 'Manage';
   if (status === INTEGRATION_UI_STATUS.PROCESSING) return 'Processing...';
   if (status === INTEGRATION_UI_STATUS.NEEDS_RECONNECTION) return 'Reconnect';
@@ -26,7 +25,7 @@ function getActionLabel(status: IntegrationUIStatus, disconnected?: boolean) {
   return 'Connect';
 }
 
-function getActionColor(status: IntegrationUIStatus, disconnected?: boolean) {
+function getActionColor(status: IntegrationUIStatus) {
   if (status === INTEGRATION_UI_STATUS.CONNECTED) return 'bg-gray-300 text-gray-600 cursor-default';
   if (status === INTEGRATION_UI_STATUS.PROCESSING) return 'bg-blue-400 text-white';
   if (status === INTEGRATION_UI_STATUS.NEEDS_RECONNECTION) return 'bg-yellow-600 hover:bg-yellow-700 text-white';
@@ -34,7 +33,7 @@ function getActionColor(status: IntegrationUIStatus, disconnected?: boolean) {
   return 'bg-green-600 hover:bg-green-700 text-white';
 }
 
-function getLabelColor(status: IntegrationUIStatus, disconnected?: boolean) {
+function getLabelColor(status: IntegrationUIStatus) {
   if (status === INTEGRATION_UI_STATUS.CONNECTED) return 'bg-green-100 text-green-700';
   if (status === INTEGRATION_UI_STATUS.PROCESSING) return 'bg-blue-100 text-blue-700';
   if (status === INTEGRATION_UI_STATUS.NEEDS_RECONNECTION) return 'bg-yellow-100 text-yellow-800';
@@ -42,14 +41,7 @@ function getLabelColor(status: IntegrationUIStatus, disconnected?: boolean) {
   return 'bg-gray-200 text-gray-500';
 }
 
-export function IntegrationCard({
-  name,
-  description,
-  icon: Icon,
-  status,
-  onClick,
-  disconnected
-}: IntegrationCardProps) {
+export function IntegrationCard({ name, description, icon: Icon, status, onClick }: IntegrationCardProps) {
   return (
     <div
       className={`mb-3 flex items-center justify-between rounded-lg border bg-white px-4 py-3 shadow-sm transition-opacity hover:shadow-md`}
@@ -65,7 +57,7 @@ export function IntegrationCard({
       </div>
       <div className='flex items-center gap-3'>
         {status !== INTEGRATION_UI_STATUS.UNCONNECTED && (
-          <span className={`rounded px-2 py-1 text-xs font-semibold ${getLabelColor(status, disconnected)}`}>
+          <span className={`rounded px-2 py-1 text-xs font-semibold ${getLabelColor(status)}`}>
             {statusLabel[status]}
           </span>
         )}
@@ -73,9 +65,9 @@ export function IntegrationCard({
           <button
             type='button'
             onClick={onClick}
-            className={`ml-2 rounded px-3 py-1 text-sm font-medium transition-colors ${getActionColor(status, disconnected)}`}
-            aria-label={getActionLabel(status, disconnected)}>
-            {getActionLabel(status, disconnected)}
+            className={`ml-2 rounded px-3 py-1 text-sm font-medium transition-colors ${getActionColor(status)}`}
+            aria-label={getActionLabel(status)}>
+            {getActionLabel(status)}
           </button>
         )}
       </div>

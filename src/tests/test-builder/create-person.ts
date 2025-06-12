@@ -6,6 +6,7 @@ export interface TestPerson {
   last_name: string;
   id?: string;
   bio?: string;
+  title?: string;
   birthday?: string;
   linkedin_public_id?: string;
   contactMethods?: Array<{
@@ -45,7 +46,8 @@ export async function createTestPerson({ db, data, withPrefix = true }: CreateTe
       user_id: data.user_id,
       birthday: data.birthday || null,
       completeness_score: data.completeness_score || null,
-      linkedin_public_id: data.linkedin_public_id || null
+      linkedin_public_id: data.linkedin_public_id || null,
+      title: data.title || null
     })
     .select()
     .single();

@@ -46,7 +46,7 @@ export interface SearchPersonResult {
   websites?: Website[];
 }
 
-export async function searchPerson({
+export async function searchPersonByNameAndLinkedInId({
   db,
   userId,
   firstName,

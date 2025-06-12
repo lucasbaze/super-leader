@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { handleAccountWebhook } from '@/services/integrations/unipile/handle-account-webhook';
+import { handleAccountWebhook } from '@/services/integrations/handle-account-webhook';
 import { createServiceRoleClient } from '@/utils/supabase/service-role';
 
 export async function POST(request: NextRequest) {

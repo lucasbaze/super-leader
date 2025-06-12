@@ -1,5 +1,5 @@
 import { LogoIcons } from '@/components/icons';
-import { ACCOUNT_NAMES, AccountName } from '@/types/custom';
+import { AccountName, INTEGRATION_ACCOUNT_NAME } from '@/types/custom';
 
 export interface IntegrationMetadata {
   name: string;
@@ -8,12 +8,12 @@ export interface IntegrationMetadata {
 }
 
 export const INTEGRATION_METADATA: Record<AccountName, IntegrationMetadata> = {
-  [ACCOUNT_NAMES.LINKEDIN]: {
+  [INTEGRATION_ACCOUNT_NAME.LINKEDIN]: {
     name: 'LinkedIn',
     description: 'Sync your LinkedIn connections.',
     icon: LogoIcons.LogoIcons.linkedin
   }
-  // [ACCOUNT_NAMES.GOOGLE]: {
+  // [INTEGRATION_ACCOUNT_NAME.GOOGLE]: {
   //   name: 'Google',
   //   description: 'Sync your Google contacts.',
   //   icon: LogoIcons.LogoIcons.google

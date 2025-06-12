@@ -28,8 +28,7 @@ export type Suggestion = SuggestionDB & {
 };
 
 // https://developer.unipile.com/docs/account-lifecycle
-// TODO: Update name to INTEGRATION_AUTH_STATUS
-export const AUTH_STATUS = {
+export const INTEGRATION_AUTH_STATUS = {
   OK: 'OK',
   CREDENTIALS: 'CREDENTIALS',
   ERROR: 'ERROR',
@@ -40,18 +39,17 @@ export const AUTH_STATUS = {
   RECONNECTED: 'RECONNECTED',
   SYNC_SUCCESS: 'SYNC_SUCCESS'
 } as const;
-export type AuthStatus = (typeof AUTH_STATUS)[keyof typeof AUTH_STATUS];
+export type AuthStatus = (typeof INTEGRATION_AUTH_STATUS)[keyof typeof INTEGRATION_AUTH_STATUS];
 
-// TODO: Update name to INTEGRATION_ACCOUNT_STATUS
-export const ACCOUNT_STATUS = {
+export const INTEGRATION_ACCOUNT_STATUS = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE'
 } as const;
-export type AccountStatus = (typeof ACCOUNT_STATUS)[keyof typeof ACCOUNT_STATUS];
+export type AccountStatus = (typeof INTEGRATION_ACCOUNT_STATUS)[keyof typeof INTEGRATION_ACCOUNT_STATUS];
 
 // TODO: Update name to INTEGRATION_ACCOUNT_NAME
-export const ACCOUNT_NAMES = {
+export const INTEGRATION_ACCOUNT_NAME = {
   LINKEDIN: 'LINKEDIN'
   // GOOGLE: 'GOOGLE'
 } as const;
-export type AccountName = (typeof ACCOUNT_NAMES)[keyof typeof ACCOUNT_NAMES];
+export type AccountName = (typeof INTEGRATION_ACCOUNT_NAME)[keyof typeof INTEGRATION_ACCOUNT_NAME];

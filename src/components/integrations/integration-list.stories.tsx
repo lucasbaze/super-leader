@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ACCOUNT_NAMES } from '@/types/custom';
+import { INTEGRATION_ACCOUNT_NAME } from '@/types/custom';
 import { IntegratedAccount } from '@/types/database';
 
 import { IntegrationList } from './integration-list';
@@ -15,7 +15,7 @@ const onConnect = (accountName: string) => alert(`Connect ${accountName}`);
 
 const baseAccount = {
   account_id: 'id1',
-  account_name: ACCOUNT_NAMES.LINKEDIN,
+  account_name: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
   account_status: 'ACTIVE',
   auth_status: 'OK',
   created_at: '',

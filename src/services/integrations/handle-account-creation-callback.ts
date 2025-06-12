@@ -4,7 +4,7 @@ import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { getUserProfile } from '@/services/user/get-user-profile';
 import { initialLinkedInContactSyncTask } from '@/trigger/linkedin-contact-sync';
-import { ACCOUNT_NAMES, AccountStatus, AuthStatus } from '@/types/custom';
+import { AccountStatus, AuthStatus, INTEGRATION_ACCOUNT_NAME } from '@/types/custom';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -14,7 +14,7 @@ import { createIntegratedAccount } from './create-integrated-account';
 const unipileAccountCreationCallbackSchema = z.object({
   userId: z.string(),
   accountId: z.string(),
-  accountName: z.nativeEnum(ACCOUNT_NAMES),
+  accountName: z.nativeEnum(INTEGRATION_ACCOUNT_NAME),
   status: z.string()
 });
 type UnipileCreationCallbackPayload = z.infer<typeof unipileAccountCreationCallbackSchema>;
@@ -99,7 +99,7 @@ export async function handleAccountCreationCallback({
     if (createError) throw createError;
 
     // 6. If LinkedIn account, trigger sync
-    if (payload.accountName === ACCOUNT_NAMES.LINKEDIN) {
+    if (payload.accountName === INTEGRATION_ACCOUNT_NAME.LINKEDIN) {
       console.log('Triggering LinkedIn sync');
 
       await initialLinkedInContactSyncTask.trigger(

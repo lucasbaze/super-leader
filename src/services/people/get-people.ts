@@ -26,7 +26,7 @@ export async function getPeople({ db, userId }: GetPeopleParams): Promise<Servic
       .from('person')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .order('first_name', { ascending: true });
 
     if (error) {
       const serviceError = ERRORS.PEOPLE.FETCH_ERROR;

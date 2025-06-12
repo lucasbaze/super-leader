@@ -2,8 +2,8 @@ import { NextRequest } from 'next/server';
 
 import { z } from 'zod';
 
-import { handleAccountCreationCallback } from '@/services/integrations/unipile/handle-account-creation-callback';
-import { ACCOUNT_NAMES, AccountName } from '@/types/custom';
+import { handleAccountCreationCallback } from '@/services/integrations/handle-account-creation-callback';
+import { AccountName, INTEGRATION_ACCOUNT_NAME } from '@/types/custom';
 import { createServiceRoleClient } from '@/utils/supabase/service-role';
 
 const UNIPILE_ACCOUNT_CONNECTION_STATUS = {
@@ -15,7 +15,7 @@ const unipileAccountConnectionCallbackSchema = z.object({
   account_id: z.string(),
   name: z.string(),
   status: z.nativeEnum(UNIPILE_ACCOUNT_CONNECTION_STATUS),
-  accountName: z.nativeEnum(ACCOUNT_NAMES)
+  accountName: z.nativeEnum(INTEGRATION_ACCOUNT_NAME)
 });
 
 export async function POST(request: NextRequest) {

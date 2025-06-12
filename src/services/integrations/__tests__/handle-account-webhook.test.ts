@@ -3,11 +3,11 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { randomString } from '@/lib/utils';
 import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
-import { ACCOUNT_NAMES, ACCOUNT_STATUS, AUTH_STATUS } from '@/types/custom';
+import { INTEGRATION_ACCOUNT_NAME, INTEGRATION_ACCOUNT_STATUS, INTEGRATION_AUTH_STATUS } from '@/types/custom';
 import { createClient } from '@/utils/supabase/server';
 
-import { createIntegratedAccount } from '../unipile/create-integrated-account';
-import { ERRORS, handleAccountWebhook } from '../unipile/handle-account-webhook';
+import { createIntegratedAccount } from '../create-integrated-account';
+import { ERRORS, handleAccountWebhook } from '../handle-account-webhook';
 
 describe('handle-account-webhook service', () => {
   let supabase: SupabaseClient;
@@ -27,9 +27,9 @@ describe('handle-account-webhook service', () => {
           db,
           userId: testUser.id,
           accountId,
-          accountName: ACCOUNT_NAMES.LINKEDIN,
-          accountStatus: ACCOUNT_STATUS.ACTIVE,
-          authStatus: AUTH_STATUS.OK
+          accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+          accountStatus: INTEGRATION_ACCOUNT_STATUS.ACTIVE,
+          authStatus: INTEGRATION_AUTH_STATUS.OK
         });
 
         // Then update it via webhook
@@ -38,8 +38,8 @@ describe('handle-account-webhook service', () => {
           payload: {
             AccountStatus: {
               account_id: accountId,
-              account_type: ACCOUNT_NAMES.LINKEDIN,
-              message: AUTH_STATUS.CREDENTIALS
+              account_type: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+              message: INTEGRATION_AUTH_STATUS.CREDENTIALS
             }
           }
         });
@@ -48,9 +48,9 @@ describe('handle-account-webhook service', () => {
         expect(result.data).toMatchObject({
           user_id: testUser.id,
           account_id: accountId,
-          account_name: ACCOUNT_NAMES.LINKEDIN,
-          account_status: ACCOUNT_STATUS.ACTIVE,
-          auth_status: AUTH_STATUS.CREDENTIALS
+          account_name: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+          account_status: INTEGRATION_ACCOUNT_STATUS.ACTIVE,
+          auth_status: INTEGRATION_AUTH_STATUS.CREDENTIALS
         });
       });
     });
@@ -64,9 +64,9 @@ describe('handle-account-webhook service', () => {
           db,
           userId: testUser.id,
           accountId,
-          accountName: ACCOUNT_NAMES.LINKEDIN,
-          accountStatus: ACCOUNT_STATUS.ACTIVE,
-          authStatus: AUTH_STATUS.OK
+          accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+          accountStatus: INTEGRATION_ACCOUNT_STATUS.ACTIVE,
+          authStatus: INTEGRATION_AUTH_STATUS.OK
         });
 
         // Then try to update it with the same status
@@ -75,8 +75,8 @@ describe('handle-account-webhook service', () => {
           payload: {
             AccountStatus: {
               account_id: accountId,
-              account_type: ACCOUNT_NAMES.LINKEDIN,
-              message: AUTH_STATUS.OK
+              account_type: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+              message: INTEGRATION_AUTH_STATUS.OK
             }
           }
         });
@@ -85,9 +85,9 @@ describe('handle-account-webhook service', () => {
         expect(result.data).toMatchObject({
           user_id: testUser.id,
           account_id: accountId,
-          account_name: ACCOUNT_NAMES.LINKEDIN,
-          account_status: ACCOUNT_STATUS.ACTIVE,
-          auth_status: AUTH_STATUS.OK
+          account_name: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+          account_status: INTEGRATION_ACCOUNT_STATUS.ACTIVE,
+          auth_status: INTEGRATION_AUTH_STATUS.OK
         });
       });
     });
@@ -101,8 +101,8 @@ describe('handle-account-webhook service', () => {
           payload: {
             AccountStatus: {
               account_id: 'non-existent-account',
-              account_type: ACCOUNT_NAMES.LINKEDIN,
-              message: AUTH_STATUS.OK
+              account_type: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
+              message: INTEGRATION_AUTH_STATUS.OK
             }
           }
         });

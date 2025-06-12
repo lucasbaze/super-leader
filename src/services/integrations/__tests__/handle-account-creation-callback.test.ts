@@ -5,10 +5,10 @@ import { createTestUser } from '@/tests/test-builder/create-user';
 import { createTestUserProfile } from '@/tests/test-builder/create-user-profile';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { initialLinkedInContactSyncTask } from '@/trigger/linkedin-contact-sync';
-import { ACCOUNT_NAMES } from '@/types/custom';
+import { INTEGRATION_ACCOUNT_NAME } from '@/types/custom';
 import { createClient } from '@/utils/supabase/server';
 
-import { ERRORS, handleAccountCreationCallback } from '../unipile/handle-account-creation-callback';
+import { ERRORS, handleAccountCreationCallback } from '../handle-account-creation-callback';
 
 // Mock the initialLinkedInContactSyncTask function
 jest.mock('../../../trigger/linkedin-contact-sync', () => ({
@@ -52,7 +52,7 @@ describe('handle-account-creation-callback service', () => {
           payload: {
             userId: testUser.id,
             accountId,
-            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
             status: 'CREATION_SUCCESS'
           }
         });
@@ -61,16 +61,21 @@ describe('handle-account-creation-callback service', () => {
         expect(result.data).toMatchObject({
           user_id: testUser.id,
           account_id: accountId,
-          account_name: ACCOUNT_NAMES.LINKEDIN,
+          account_name: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
           account_status: 'ACTIVE',
           auth_status: 'CREATION_SUCCESS'
         });
 
         // Verify initialLinkedInContactSyncTask was called with correct parameters
-        expect(initialLinkedInContactSyncTask.trigger).toHaveBeenCalledWith({
-          userId: testUser.id,
-          accountId
-        });
+        expect(initialLinkedInContactSyncTask.trigger).toHaveBeenCalledWith(
+          {
+            userId: testUser.id,
+            accountId
+          },
+          {
+            tags: [`user:${testUser.id}`]
+          }
+        );
       });
     });
 
@@ -97,7 +102,7 @@ describe('handle-account-creation-callback service', () => {
           payload: {
             userId: testUser.id,
             accountId,
-            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
             status: 'CREATION_SUCCESS'
           }
         });
@@ -106,16 +111,21 @@ describe('handle-account-creation-callback service', () => {
         expect(result.data).toMatchObject({
           user_id: testUser.id,
           account_id: accountId,
-          account_name: ACCOUNT_NAMES.LINKEDIN,
+          account_name: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
           account_status: 'ACTIVE',
           auth_status: 'CREATION_SUCCESS'
         });
 
         // Verify syncLinkedInContacts was called (since it's LinkedIn)
-        expect(initialLinkedInContactSyncTask.trigger).toHaveBeenCalledWith({
-          userId: testUser.id,
-          accountId
-        });
+        expect(initialLinkedInContactSyncTask.trigger).toHaveBeenCalledWith(
+          {
+            userId: testUser.id,
+            accountId
+          },
+          {
+            tags: [`user:${testUser.id}`]
+          }
+        );
       });
     });
   });
@@ -141,7 +151,7 @@ describe('handle-account-creation-callback service', () => {
           payload: {
             userId: testUser.id,
             accountId,
-            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
             status: 'INVALID_STATUS'
           }
         });
@@ -174,7 +184,7 @@ describe('handle-account-creation-callback service', () => {
           payload: {
             userId: testUser.id,
             accountId,
-            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
             status: 'CREATION_SUCCESS'
           }
         });
@@ -185,7 +195,7 @@ describe('handle-account-creation-callback service', () => {
           payload: {
             userId: testUser.id,
             accountId,
-            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
             status: 'CREATION_SUCCESS'
           }
         });
@@ -204,7 +214,7 @@ describe('handle-account-creation-callback service', () => {
           payload: {
             userId: 'non-existent-user',
             accountId,
-            accountName: ACCOUNT_NAMES.LINKEDIN,
+            accountName: INTEGRATION_ACCOUNT_NAME.LINKEDIN,
             status: 'CREATION_SUCCESS'
           }
         });

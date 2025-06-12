@@ -8,9 +8,9 @@ import { ServiceResponse } from '@/types/service-response';
 import { getAllRelationsByAccountId } from '@/vendors/unipile/client';
 import { transformToPersonData } from '@/vendors/unipile/transformer';
 
-import { searchPerson } from '../people/search-people-linkedin';
 import { createPerson } from '../person/create-person';
 import { updatePersonField, updatePersonWebsite } from '../person/update-person-details';
+import { searchPersonByNameAndLinkedInId } from './search-people-linkedin';
 
 // Development mode settings
 const MAX_BATCHES = process.env.NODE_ENV === 'development' ? 2 : Infinity;
@@ -197,7 +197,7 @@ export async function syncLinkedInContacts({
             operation: 'search'
           });
 
-          const existingPerson = await searchPerson({
+          const existingPerson = await searchPersonByNameAndLinkedInId({
             db,
             userId,
             firstName: personData.person.first_name || '',

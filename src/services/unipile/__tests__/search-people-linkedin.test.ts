@@ -5,7 +5,7 @@ import { createTestUser } from '@/tests/test-builder/create-user';
 import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
-import { ERRORS, searchPerson } from '../search-people-linkedin';
+import { ERRORS, searchPersonByNameAndLinkedInId } from '../../unipile/search-people-linkedin';
 
 describe('searchPerson service', () => {
   let supabase: SupabaseClient;
@@ -24,12 +24,13 @@ describe('searchPerson service', () => {
             user_id: testUser.id,
             first_name: 'John',
             last_name: 'Doe',
-            linkedin_public_id: 'john-doe-123'
+            linkedin_public_id: 'john-doe-123',
+            title: 'Software Engineer'
           },
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'John',
@@ -39,10 +40,14 @@ describe('searchPerson service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          id: testPerson.id,
-          first_name: 'John',
-          last_name: 'Doe',
-          linkedin_public_id: 'john-doe-123'
+          person: expect.objectContaining({
+            id: testPerson.id,
+            first_name: 'John',
+            last_name: 'Doe',
+            linkedin_public_id: 'john-doe-123',
+            title: 'Software Engineer'
+          }),
+          websites: expect.arrayContaining([])
         });
       });
     });
@@ -61,7 +66,7 @@ describe('searchPerson service', () => {
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'Different',
@@ -71,10 +76,13 @@ describe('searchPerson service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          id: testPerson.id,
-          first_name: 'John',
-          last_name: 'Doe',
-          linkedin_public_id: 'john-doe-123'
+          person: expect.objectContaining({
+            id: testPerson.id,
+            first_name: 'John',
+            last_name: 'Doe',
+            linkedin_public_id: 'john-doe-123'
+          }),
+          websites: expect.arrayContaining([])
         });
       });
     });
@@ -93,7 +101,7 @@ describe('searchPerson service', () => {
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'John',
@@ -103,10 +111,13 @@ describe('searchPerson service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          id: testPerson.id,
-          first_name: 'John',
-          last_name: 'Doe',
-          linkedin_public_id: 'john-doe-123'
+          person: expect.objectContaining({
+            id: testPerson.id,
+            first_name: 'John',
+            last_name: 'Doe',
+            linkedin_public_id: 'john-doe-123'
+          }),
+          websites: expect.arrayContaining([])
         });
       });
     });
@@ -115,7 +126,7 @@ describe('searchPerson service', () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'Nonexistent',
@@ -144,7 +155,7 @@ describe('searchPerson service', () => {
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'John',
@@ -171,7 +182,7 @@ describe('searchPerson service', () => {
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'Valerie',
@@ -181,10 +192,13 @@ describe('searchPerson service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          id: testPerson.id,
-          first_name: 'Valerie',
-          last_name: 'Soto M. Psych, MSpED.',
-          linkedin_public_id: 'valeriesoto2025'
+          person: expect.objectContaining({
+            id: testPerson.id,
+            first_name: 'Valerie',
+            last_name: 'Soto M. Psych, MSpED.',
+            linkedin_public_id: 'valeriesoto2025'
+          }),
+          websites: expect.arrayContaining([])
         });
       });
     });
@@ -203,7 +217,7 @@ describe('searchPerson service', () => {
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'Different',
@@ -213,10 +227,13 @@ describe('searchPerson service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          id: testPerson.id,
-          first_name: 'Valerie',
-          last_name: 'Soto M. Psych, MSpED.',
-          linkedin_public_id: 'valeriesoto2025'
+          person: expect.objectContaining({
+            id: testPerson.id,
+            first_name: 'Valerie',
+            last_name: 'Soto M. Psych, MSpED.',
+            linkedin_public_id: 'valeriesoto2025'
+          }),
+          websites: expect.arrayContaining([])
         });
       });
     });
@@ -235,7 +252,7 @@ describe('searchPerson service', () => {
           withPrefix: false
         });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'Valerie',
@@ -245,10 +262,13 @@ describe('searchPerson service', () => {
 
         expect(result.error).toBeNull();
         expect(result.data).toMatchObject({
-          id: testPerson.id,
-          first_name: 'Valerie',
-          last_name: 'Soto M. Psych, MSpED.',
-          linkedin_public_id: 'valeriesoto2025'
+          person: expect.objectContaining({
+            id: testPerson.id,
+            first_name: 'Valerie',
+            last_name: 'Soto M. Psych, MSpED.',
+            linkedin_public_id: 'valeriesoto2025'
+          }),
+          websites: expect.arrayContaining([])
         });
       });
     });
@@ -257,7 +277,7 @@ describe('searchPerson service', () => {
   describe('error cases', () => {
     it('should return error when userId is missing', async () => {
       await withTestTransaction(supabase, async (db) => {
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: '',
           firstName: 'John',
@@ -274,7 +294,7 @@ describe('searchPerson service', () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: '',
@@ -291,7 +311,7 @@ describe('searchPerson service', () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'John',
@@ -308,7 +328,7 @@ describe('searchPerson service', () => {
       await withTestTransaction(supabase, async (db) => {
         const testUser = await createTestUser({ db });
 
-        const result = await searchPerson({
+        const result = await searchPersonByNameAndLinkedInId({
           db,
           userId: testUser.id,
           firstName: 'John',

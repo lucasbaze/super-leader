@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { AUTH_STATUS, AuthStatus } from '@/types/custom';
+import { AuthStatus, INTEGRATION_AUTH_STATUS } from '@/types/custom';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -65,7 +65,7 @@ export async function handleAccountWebhook({ db, payload }: HandleAccountWebhook
     }
 
     // 2. If the account is deleted, delete it
-    if (existingAccount && message === AUTH_STATUS.DELETED) {
+    if (existingAccount && message === INTEGRATION_AUTH_STATUS.DELETED) {
       const { data: deletedAccount, error: deleteError } = await deleteIntegratedAccount({
         db,
         accountId: account_id
@@ -87,7 +87,7 @@ export async function handleAccountWebhook({ db, payload }: HandleAccountWebhook
       if (updateError) throw updateError;
 
       // Handle CREDENTIALS status
-      if (message === AUTH_STATUS.CREDENTIALS) {
+      if (message === INTEGRATION_AUTH_STATUS.CREDENTIALS) {
         // TODO: Trigger email or UI notification
         console.log('Credentials need to be updated for account:', account_id);
       }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ACCOUNT_NAMES, AccountName } from '@/types/custom';
+import { AccountName, INTEGRATION_ACCOUNT_NAME } from '@/types/custom';
 import { IntegratedAccount } from '@/types/database';
 
 import { IntegrationCard } from './integration-card';
@@ -24,7 +24,7 @@ export function IntegrationList({ integratedAccounts, onConnect }: IntegrationLi
 
   return (
     <div className='flex flex-col gap-2'>
-      {Object.values(ACCOUNT_NAMES).map((accountName) => {
+      {Object.values(INTEGRATION_ACCOUNT_NAME).map((accountName) => {
         const meta = INTEGRATION_METADATA[accountName];
         const account = accountMap[accountName];
         let status: IntegrationUIStatus = 'UNCONNECTED' as any;

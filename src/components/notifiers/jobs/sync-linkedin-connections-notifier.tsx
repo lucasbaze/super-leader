@@ -34,6 +34,14 @@ export function SyncLinkedInConnectionsJobNotifier({ run, onClick }: SyncLinkedI
     return <HelpCircle className='size-4 text-muted-foreground' />;
   };
 
+  const getStatusText = () => {
+    if (isExecuting) return 'Superleader is currently syncing your LinkedIn connections';
+    if (isCompleted) return 'Successfully synced your LinkedIn connections';
+    if (isPending) return 'LinkedIn sync is pending';
+    if (isFailed) return 'Failed to sync LinkedIn connections. Please contact support to fix this issue!';
+    if (isCancelled) return 'LinkedIn sync was cancelled';
+  };
+
   return (
     <Link
       href={routes.settings.integrations()}
@@ -44,17 +52,7 @@ export function SyncLinkedInConnectionsJobNotifier({ run, onClick }: SyncLinkedI
         <h4 className='truncate text-sm font-medium'>
           {isExecuting ? 'Syncing LinkedIn Connections' : 'LinkedIn Connections Synced'}
         </h4>
-        <p className='text-sm text-muted-foreground'>
-          {isExecuting
-            ? 'Superleader is currently syncing your LinkedIn connections'
-            : isCompleted
-              ? 'Successfully synced your LinkedIn connections'
-              : isFailed
-                ? 'Failed to sync LinkedIn connections'
-                : isCancelled
-                  ? 'LinkedIn sync was cancelled'
-                  : 'LinkedIn sync is pending'}
-        </p>
+        <p className='text-sm text-muted-foreground'>{getStatusText()}</p>
         <div className='mt-1 flex items-center justify-between'>
           <span className='text-xs text-muted-foreground'>
             {new Date(run.createdAt).toLocaleDateString('en-US', {

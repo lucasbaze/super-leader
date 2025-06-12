@@ -29,13 +29,13 @@ export default async function Page({ children }: { children: React.ReactNode }) 
     .eq('user_id', data.user.id)
     .single();
 
-  if (userProfileError) {
-    redirect('/onboarding');
-  }
+  // if (userProfileError) {
+  //   redirect('/onboarding');
+  // }
 
-  if (!userProfile?.onboarding?.completed) {
-    redirect('/onboarding');
-  }
+  // if (!userProfile?.onboarding?.completed) {
+  //   redirect('/onboarding');
+  // }
 
   return (
     <SidebarProvider>

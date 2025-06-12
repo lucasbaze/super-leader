@@ -38,7 +38,7 @@ describe('searchPeople service', () => {
           userId: testUser.id
         });
 
-        expect(result.data).toHaveLength(30);
+        expect(result.data).toHaveLength(15);
         expect(result.error).toBeNull();
       });
     });

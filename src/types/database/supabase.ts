@@ -359,6 +359,39 @@ export type Database = {
           }
         ];
       };
+      integrated_accounts: {
+        Row: {
+          account_id: string | null;
+          account_name: string;
+          account_status: string;
+          auth_status: string;
+          created_at: string;
+          id: string;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          account_id?: string | null;
+          account_name: string;
+          account_status: string;
+          auth_status: string;
+          created_at?: string;
+          id?: string;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          account_id?: string | null;
+          account_name?: string;
+          account_status?: string;
+          auth_status?: string;
+          created_at?: string;
+          id?: string;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       interactions: {
         Row: {
           created_at: string;
@@ -468,6 +501,8 @@ export type Database = {
           follow_up_score: number;
           id: string;
           last_name: string | null;
+          linkedin_public_id: string | null;
+          title: string | null;
           updated_at: string;
           user_id: string;
         };
@@ -482,6 +517,8 @@ export type Database = {
           follow_up_score?: number;
           id?: string;
           last_name?: string | null;
+          linkedin_public_id?: string | null;
+          title?: string | null;
           updated_at?: string;
           user_id: string;
         };
@@ -496,6 +533,8 @@ export type Database = {
           follow_up_score?: number;
           id?: string;
           last_name?: string | null;
+          linkedin_public_id?: string | null;
+          title?: string | null;
           updated_at?: string;
           user_id?: string;
         };

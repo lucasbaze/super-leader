@@ -6,3 +6,5 @@ Next:
 ☐ Bug when adding multiple people to a group at once? "Create a new group called "Dinner" and add Derek Burgman, Roberto, Darian, Andy, Magui, Tim, Eli, Charles, Anthony, Katie, Samantha G" this failed in production... well it worked actually? Just failed to return a message?
 ☐ There's a "comma" issue in the copy / pasting of the phones numbers.
 ☐ Show loading indicators on save of the address information about a person.
+☐ Bug with Prompt 1 (see bug-prompts.md)
+☐ Need to fix the EditableField component to handle the click events properly.

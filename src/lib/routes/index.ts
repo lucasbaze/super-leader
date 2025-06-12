@@ -24,7 +24,8 @@ const PERSON_SEGMENTS = {
 } as const;
 
 const SETTINGS_SEGMENTS = {
-  CUSTOM_FIELDS: 'custom-fields'
+  CUSTOM_FIELDS: 'custom-fields',
+  INTEGRATIONS: 'integrations'
 } as const;
 
 // Base path
@@ -82,7 +83,8 @@ export const routes = {
   // Settings routes
   settings: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.SETTINGS}`,
-    customFields: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.CUSTOM_FIELDS}`
+    customFields: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.CUSTOM_FIELDS}`,
+    integrations: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.INTEGRATIONS}`
   },
 
   // Onboarding routes

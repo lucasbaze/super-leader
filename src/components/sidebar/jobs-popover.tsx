@@ -8,6 +8,7 @@ import { useRealtimeRunsWithTag } from '@trigger.dev/react-hooks';
 import { toast } from 'sonner';
 
 import { BrainCog, Loader } from '@/components/icons';
+import { SyncLinkedInConnectionsJobNotifier } from '@/components/notifiers/jobs/sync-linkedin-connections-notifier';
 import { UpdateAISummaryJobNotifier } from '@/components/notifiers/jobs/update-ai-summary-notifier';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -157,11 +158,7 @@ export function JobsPopover({ userId }: { userId: string }) {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button variant='ghost' size='icon' className='relative'>
-          {hasExecutingJobs ? (
-            <Loader className='size-5 animate-spin' />
-          ) : (
-            <BrainCog className='size-5' />
-          )}
+          {hasExecutingJobs ? <Loader className='size-5 animate-spin' /> : <BrainCog className='size-5' />}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-[24rem] p-0' align='end' side='bottom'>
@@ -184,20 +181,15 @@ export function JobsPopover({ userId }: { userId: string }) {
           ) : runs?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).length ? (
             runs.map((run) => {
               if (run.taskIdentifier === JOBS.UPDATE_AI_SUMMARY) {
-                return (
-                  <UpdateAISummaryJobNotifier
-                    key={run.id}
-                    run={run}
-                    onClick={() => handleRunClick(run)}
-                  />
-                );
+                return <UpdateAISummaryJobNotifier key={run.id} run={run} onClick={() => handleRunClick(run)} />;
+              }
+              if (run.taskIdentifier === JOBS.SYNC_LINKEDIN_CONTACTS) {
+                return <SyncLinkedInConnectionsJobNotifier key={run.id} run={run} />;
               }
               return null;
             })
           ) : (
-            <div className='p-4 text-center text-sm text-muted-foreground'>
-              No background AI tasks run this session
-            </div>
+            <div className='p-4 text-center text-sm text-muted-foreground'>No background AI tasks run this session</div>
           )}
         </div>
       </PopoverContent>

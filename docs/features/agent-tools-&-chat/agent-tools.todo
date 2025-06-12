@@ -1,3 +1,6 @@
+New:
+  ☐ The ability to do a COmmand + K or shortcut to make one-off chat requests or updates, so that I can "do it from anywhere". It doesn't "feel" right to do it in context of the person I'm within... especiallly if it's about another person?
+
 Now:
   ☐ Need to get the AI to ask follow up questions after creating an interaction somehow.
   ☐ Need to figure out a way to not say "User did x" and use the actual name of the user?
@@ -10,6 +13,7 @@ Now:
 
 Bugs: 
   ☐ See bugs in development/todo/today.md
+  ☐ There is a bug when creating tasks into the near future because I think that the server time is later than the local time. And so we need to make time based decisions on when to follow up based upon the users local time. And this is exemplified when creating tasks that are at the same day. So for example, right now it's 12 and I wanted it to create a task at two, but that end time is before the UTC time that the servers is on.
 
 
 Done: 

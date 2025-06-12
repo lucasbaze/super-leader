@@ -15,15 +15,15 @@ export function mapAuthStatusToUIStatus(authStatus: AuthStatus): IntegrationUISt
     case AUTH_STATUS.CREATION_SUCCESS:
     case AUTH_STATUS.RECONNECTED:
     case AUTH_STATUS.SYNC_SUCCESS:
-      return 'CONNECTED';
+      return INTEGRATION_UI_STATUS.CONNECTED;
     case AUTH_STATUS.STOPPED:
-    case AUTH_STATUS.DELETED:
     case AUTH_STATUS.CREDENTIALS:
     case AUTH_STATUS.ERROR:
-      return 'NEEDS_RECONNECTION';
+      return INTEGRATION_UI_STATUS.NEEDS_RECONNECTION;
     case AUTH_STATUS.CONNECTING:
-      return 'PROCESSING';
+      return INTEGRATION_UI_STATUS.PROCESSING;
+    case AUTH_STATUS.DELETED:
     default:
-      return 'UNCONNECTED';
+      return INTEGRATION_UI_STATUS.UNCONNECTED;
   }
 }

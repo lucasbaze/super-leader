@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { ACCOUNT_NAMES, ACCOUNT_STATUS, AUTH_STATUS } from '@/types/custom';
+import { ACCOUNT_NAMES, ACCOUNT_STATUS, AccountName, AccountStatus, AUTH_STATUS, AuthStatus } from '@/types/custom';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { CreateIntegratedAccountParams } from '@/types/integrations/unipile';
 import { ServiceResponse } from '@/types/service-response';
 
 // Validation schema for the account parameters
@@ -28,6 +28,16 @@ export const ERRORS = {
     displayMessage: 'Invalid account information provided'
   })
 };
+
+// https://developer.unipile.com/docs/account-lifecycle
+export interface CreateIntegratedAccountParams {
+  db: DBClient;
+  userId: string;
+  accountId: string;
+  accountName: AccountName;
+  accountStatus: AccountStatus;
+  authStatus: AuthStatus;
+}
 
 export async function createIntegratedAccount({
   db,

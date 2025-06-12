@@ -1,7 +1,8 @@
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
+import { AccountStatus, AuthStatus } from '@/types/custom';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { UpdateIntegratedAccountParams } from '@/types/integrations/unipile';
 import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
@@ -12,6 +13,13 @@ export const ERRORS = {
     displayMessage: 'Unable to update account'
   })
 };
+
+export interface UpdateIntegratedAccountParams {
+  db: DBClient;
+  accountId: string;
+  authStatus: AuthStatus;
+  accountStatus?: AccountStatus;
+}
 
 export async function updateIntegratedAccount({
   db,

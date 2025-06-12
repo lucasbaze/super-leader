@@ -74,11 +74,6 @@ export async function handleAccountCreationCallback({
     }
 
     // 3. Validate user exists
-    console.log('Raw userId:', payload.userId);
-    console.log('Trimmed userId:', payload.userId.trim());
-    console.log('userId length:', payload.userId.length);
-    console.log('userId type:', typeof payload.userId);
-
     const { data: userProfile } = await getUserProfile({
       db,
       userId: payload.userId.trim()
@@ -107,10 +102,15 @@ export async function handleAccountCreationCallback({
     if (payload.accountName === ACCOUNT_NAMES.LINKEDIN) {
       console.log('Triggering LinkedIn sync');
 
-      await initialLinkedInContactSyncTask.trigger({
-        userId: payload.userId,
-        accountId: payload.accountId
-      });
+      await initialLinkedInContactSyncTask.trigger(
+        {
+          userId: payload.userId,
+          accountId: payload.accountId
+        },
+        {
+          tags: [`user:${payload.userId}`]
+        }
+      );
     }
 
     console.log('Handle Account Creation Callback Result', newAccount);

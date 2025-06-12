@@ -1,7 +1,7 @@
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
+import { AccountName, AccountStatus } from '@/types/custom';
 import { ErrorType } from '@/types/errors';
-import { UnipileAccountDetails } from '@/types/integrations/unipile';
 import { ServiceResponse } from '@/types/service-response';
 
 export const ERRORS = {
@@ -12,6 +12,12 @@ export const ERRORS = {
     displayMessage: 'Unable to fetch account details'
   })
 };
+export interface UnipileAccountDetails {
+  id: string;
+  type: AccountName;
+  status: AccountStatus;
+  name: string;
+}
 
 export async function getAccountDetails(
   unipileClient: any,

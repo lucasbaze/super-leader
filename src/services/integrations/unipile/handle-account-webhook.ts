@@ -1,10 +1,13 @@
+import { z } from 'zod';
+
 import { createErrorV2 } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { AuthStatus } from '@/types/custom';
+import { AUTH_STATUS, AuthStatus } from '@/types/custom';
+import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
-import { HandleAccountWebhookParams } from '@/types/integrations/unipile';
 import { ServiceResponse } from '@/types/service-response';
 
+import { deleteIntegratedAccount } from './delete-integrated-account';
 import { updateIntegratedAccount } from './update-integrated-account';
 
 export const ERRORS = {
@@ -22,37 +25,71 @@ export const ERRORS = {
   })
 };
 
-export async function handleAccountWebhook({
-  db,
-  payload,
-  unipileClient
-}: HandleAccountWebhookParams): Promise<ServiceResponse<any>> {
+// https://developer.unipile.com/docs/account-lifecycle
+export const unipileAccountStatusWebhookSchema = z.object({
+  AccountStatus: z.object({
+    account_id: z.string(),
+    account_type: z.string(),
+    message: z.string() // This will be the AuthStatus value
+  })
+});
+
+export type UnipileWebhookPayload = z.infer<typeof unipileAccountStatusWebhookSchema>;
+export interface HandleAccountWebhookParams {
+  db: DBClient;
+  payload: UnipileWebhookPayload;
+}
+
+export async function handleAccountWebhook({ db, payload }: HandleAccountWebhookParams): Promise<ServiceResponse<any>> {
   try {
+    const validatedBody = unipileAccountStatusWebhookSchema.safeParse(payload);
+
+    if (!validatedBody.success) {
+      console.error('[Unipile Callback] Error parsing body', validatedBody.error);
+      return { data: null, error: ERRORS.HANDLE_WEBHOOK_FAILED };
+    }
+
+    const { account_id, account_type, message } = validatedBody.data.AccountStatus;
+
+    // 0. Check if the message is
+
     // 1. Check if account exists
     const { data: existingAccount } = await db
       .from('integrated_accounts')
       .select()
-      .eq('account_id', payload.account_id)
+      .eq('account_id', account_id)
       .single();
 
     if (!existingAccount) {
       return { data: null, error: ERRORS.ACCOUNT_NOT_FOUND };
     }
 
-    // 2. If status differs, update
-    if (existingAccount.auth_status !== payload.message) {
+    // 2. If the account is deleted, delete it
+    if (existingAccount && message === AUTH_STATUS.DELETED) {
+      const { data: deletedAccount, error: deleteError } = await deleteIntegratedAccount({
+        db,
+        accountId: account_id
+      });
+
+      if (deleteError) throw deleteError;
+
+      return { data: deletedAccount, error: null };
+    }
+
+    // 3. If status differs, update
+    if (existingAccount.auth_status !== message) {
       const { data: updatedAccount, error: updateError } = await updateIntegratedAccount({
         db,
-        accountId: payload.account_id,
-        authStatus: payload.message as AuthStatus
+        accountId: account_id,
+        authStatus: message as AuthStatus
       });
 
       if (updateError) throw updateError;
 
       // Handle CREDENTIALS status
-      if (payload.message === 'CREDENTIALS') {
+      if (message === AUTH_STATUS.CREDENTIALS) {
         // TODO: Trigger email or UI notification
-        console.log('Credentials need to be updated for account:', payload.account_id);
+        console.log('Credentials need to be updated for account:', account_id);
       }
 
       return { data: updatedAccount, error: null };
@@ -64,29 +101,3 @@ export async function handleAccountWebhook({
     return { data: null, error: ERRORS.HANDLE_WEBHOOK_FAILED };
   }
 }
-
-/*
-
-Webhook
-
-"AccountStatus": {  
-    "account_id": "h_EKCy2lRLef5NzHp0iw4A",  
-    "account_type": "LINKEDIN",  
-    "message": "CREDENTIALS"  
-  } 
-  
-Update the account status and trigger any side-effects
-  
-
-  Callback
-
-Unipile Callback Called {
-    status: 'CREATION_SUCCESS',
-    account_id: 'EKpfqXZ3QCeO2MVdvycIsg',
-    name: 'c86eb445-a7cd-44c1-a0e0-3dd661ebb526'
-    account_name: 'LINKEDIN' // I'm injecting this one
-  }
-
-Create the account, and trigger the initial sync
-
-*/

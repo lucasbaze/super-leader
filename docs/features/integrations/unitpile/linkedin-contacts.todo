@@ -17,6 +17,7 @@ Phase 3:
 12:00a -> 2:47
 6:00p -> 3:12
 12p ->)
+   - Need to handle the case if the account is deleted before the job is triggered.
 
 
 # Cleanup

@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import { F } from 'node_modules/@faker-js/faker/dist/airline-D6ksJFwG';
 
 import { createErrorV2 as createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
@@ -13,6 +14,7 @@ import { updatePersonField, updatePersonWebsite } from '../person/update-person-
 
 // Development mode settings
 const MAX_BATCHES = process.env.NODE_ENV === 'development' ? 2 : Infinity;
+const LIMIT = process.env.NODE_ENV === 'production' ? 50 : 5;
 const BATCH_DELAY_MS = 1000; // 1 second delay between batches
 
 // Helper function to create a delay
@@ -112,13 +114,15 @@ export interface SyncContactsParams {
   userId: string;
   accountId: string;
   cursor?: string;
+  quickSync?: boolean;
 }
 
 export async function syncLinkedInContacts({
   db,
   userId,
   accountId,
-  cursor
+  cursor,
+  quickSync = false
 }: SyncContactsParams): Promise<ServiceResponse<SyncContactsResult>> {
   const startTime = Date.now();
   logSync('Starting LinkedIn contacts sync', { userId, accountId, cursor });
@@ -159,7 +163,7 @@ export async function syncLinkedInContacts({
 
       const response = await getAllRelationsByAccountId({
         accountId,
-        limit: 5,
+        limit: LIMIT,
         cursor: currentCursor
       });
 
@@ -429,6 +433,11 @@ export async function syncLinkedInContacts({
       // Check if we should continue to the next page
       if (!response.has_more || !response.next_cursor) {
         logSync('No more pages to process', { userId, accountId, batchNumber: batchCount });
+        break;
+      }
+
+      if (quickSync && result.skipped.count == LIMIT) {
+        logSync('Skipped everyone in this batch, stopping sync', { userId, accountId, batchNumber: batchCount });
         break;
       }
 

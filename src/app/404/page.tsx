@@ -7,7 +7,6 @@ import { Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { routes } from '@/lib/routes';
 
 export default function NotFoundPage() {
   const router = useRouter();

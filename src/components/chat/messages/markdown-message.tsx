@@ -45,10 +45,7 @@ export function MarkdownMessage({ content, isUserMessage }: MarkdownMessageProps
                 </SyntaxHighlighter>
               ) : (
                 <code
-                  className={cn(
-                    'bg-muted-foreground/20 rounded px-1.5 py-0.5 font-mono text-sm',
-                    className
-                  )}
+                  className={cn('bg-muted-foreground/20 rounded px-1.5 py-0.5 font-mono text-sm', className)}
                   {...props}>
                   {children}
                 </code>
@@ -57,9 +54,7 @@ export function MarkdownMessage({ content, isUserMessage }: MarkdownMessageProps
             ul: ({ children }) => <ul className='mb-2 list-disc pl-4 last:mb-0'>{children}</ul>,
             ol: ({ children }) => <ol className='mb-2 list-decimal pl-4 last:mb-0'>{children}</ol>,
             li: ({ children }) => <li className='mb-1 last:mb-0'>{children}</li>,
-            h3: ({ children }) => (
-              <h3 className='mb-2 text-base font-medium last:mb-0'>{children}</h3>
-            ),
+            h3: ({ children }) => <h3 className='mb-2 text-base font-medium last:mb-0'>{children}</h3>,
             h4: ({ children }) => <h4 className='mb-2 text-sm font-medium last:mb-0'>{children}</h4>
           }}>
           {content}
@@ -68,11 +63,7 @@ export function MarkdownMessage({ content, isUserMessage }: MarkdownMessageProps
 
       {shouldCollapse && (
         <button onClick={() => setIsExpanded(!isExpanded)} className='absolute -bottom-4 -right-1'>
-          {isExpanded ? (
-            <ChevronUp className='size-5 text-white' />
-          ) : (
-            <ChevronDown className='size-5 text-white' />
-          )}
+          {isExpanded ? <ChevronUp className='size-5 text-white' /> : <ChevronDown className='size-5 text-white' />}
         </button>
       )}
     </div>

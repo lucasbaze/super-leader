@@ -3,13 +3,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Home, RefreshCw } from 'lucide-react';
+import { Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { routes } from '@/lib/routes';
 
-export default function ErrorPage({ error, reset }: { error?: Error & { digest?: string }; reset?: () => void }) {
+export default function ErrorPage() {
   return (
     <div className='flex min-h-[calc(100vh)] items-center justify-center bg-card p-4'>
       <Card className='w-full max-w-md border-none shadow-none'>
@@ -36,11 +36,6 @@ export default function ErrorPage({ error, reset }: { error?: Error & { digest?:
             <br />
             Please try again or head back home.
           </p>
-          {error?.message && (
-            <div className='rounded-md border border-black/10 bg-black/5 p-3'>
-              <p className='text-xs text-black/60'>{error.message}</p>
-            </div>
-          )}
         </CardContent>
         <CardFooter className='flex flex-col gap-2 border-t border-black/10 pt-4 sm:flex-row sm:justify-center'>
           <Link href={routes.home()}>
@@ -49,12 +44,6 @@ export default function ErrorPage({ error, reset }: { error?: Error & { digest?:
               <span>Go Home</span>
             </Button>
           </Link>
-          {reset && (
-            <Button className='bg-black text-white hover:bg-black/80' onClick={reset}>
-              <RefreshCw className='size-4' />
-              <span>Try Again</span>
-            </Button>
-          )}
         </CardFooter>
       </Card>
     </div>

@@ -29,7 +29,7 @@
     "test-content-suggestions": "ts-node -r tsconfig-paths/register --project tsconfig.scripts.json src/scripts/test-content-suggestions.ts"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^1.1.5",
+    "@ai-sdk/openai": "1.1.5",
     "@ai-sdk/perplexity": "^0.0.4",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -106,9 +106,9 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
     "react-intersection-observer": "^9.15.1",
-    "react-markdown": "^9.0.3",
+    "react-markdown": "9.0.3",
     "react-resizable-panels": "^2.1.7",
-    "react-syntax-highlighter": "^15.6.1",
+    "react-syntax-highlighter": "15.6.1",
     "react-voice-visualizer": "^2.0.8",
     "recharts": "^2.15.2",
     "sonner": "^1.7.4",
@@ -124,7 +124,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
-    "@faker-js/faker": "^9.4.0",
+    "@faker-js/faker": "9.4.0",
     "@next/bundle-analyzer": "15.1.6",
     "@next/eslint-plugin-next": "15.1.6",
     "@storybook/addon-essentials": "^8.5.3",

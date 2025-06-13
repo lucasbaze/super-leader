@@ -11,7 +11,7 @@ import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { JobsPopover } from '@/components/sidebar/jobs-popover';
 import { AnimatedTasks } from '@/components/tasks/animated-tasks';
-import { ThemeToggle } from '@/components/theme/theme-toggle';
+// import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { createClient } from '@/utils/supabase/server';
 
@@ -70,9 +70,9 @@ export default async function Page({ children }: { children: React.ReactNode }) 
                     <NavUser
                       user={{
                         id: data.user.id,
-                        name: 'John Doe',
-                        email: 'john.doe@example.com',
-                        avatar: 'https://github.com/shadcn.png'
+                        name: `${userProfile?.first_name} ${userProfile?.last_name}`,
+                        // email: userProfile?.email || 'john.doe@example.com',
+                        avatar: userProfile?.avatar || 'https://github.com/shadcn.png'
                       }}
                     />
                   </div>

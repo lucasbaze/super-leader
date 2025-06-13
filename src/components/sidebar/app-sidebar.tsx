@@ -34,29 +34,29 @@ const mainNavItems = [
     isActive: false
   },
   {
-    title: 'Network',
-    url: ROUTES.NETWORK,
-    icon: Orbit,
-    isActive: false
-  },
-  {
     title: 'Orgs',
     url: ROUTES.ORGANIZATIONS,
     icon: Hotel,
     isActive: false
   },
+  {
+    title: 'Network',
+    url: ROUTES.NETWORK,
+    icon: Orbit,
+    isActive: false
+  }
   // {
   //   title: 'Saved',
   //   url: ROUTES.BOOKMARKS,
   //   icon: Bookmark,
   //   isActive: false
   // },
-  {
-    title: 'Profile',
-    url: ROUTES.CONTEXT,
-    icon: CircleUser,
-    isActive: false
-  }
+  // {
+  //   title: 'Profile',
+  //   url: ROUTES.CONTEXT,
+  //   icon: CircleUser,
+  //   isActive: false
+  // }
 ];
 
 const data = {

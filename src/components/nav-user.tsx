@@ -4,14 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { logout } from '@/app/login/actions';
-import {
-  BadgeCheck,
-  ComponentPlaceholderIcon,
-  LifeBuoy,
-  LogOut,
-  Send,
-  Sparkles
-} from '@/components/icons';
+import { BadgeCheck, CircleUser, ComponentPlaceholderIcon, LifeBuoy, LogOut, Send, Sparkles } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -34,7 +27,6 @@ export function NavUser({
   user: {
     id: string;
     name: string;
-    email: string;
     avatar: string;
   };
 }) {
@@ -70,41 +62,43 @@ export function NavUser({
             </Avatar>
             <div className='grid flex-1 text-left text-sm leading-tight'>
               <span className='truncate font-semibold'>{user.name}</span>
-              <span className='truncate text-xs'>{user.email}</span>
+              <CopyWithTooltip content={user.id}>
+                <div className='w-36 truncate text-xs'>{user.id}</div>
+              </CopyWithTooltip>
             </div>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        {/* <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuGroup>
           <CopyWithTooltip content={user.id}>
             <DropdownMenuItem>
               <Sparkles />
               {user.id}
             </DropdownMenuItem>
           </CopyWithTooltip>
-          <DropdownMenuItem>
-            <Sparkles />
-            Upgrade to Pro
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <BadgeCheck />
             Account
-          </DropdownMenuItem>
-          <DropdownMenuItem>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuItem>
             <ComponentPlaceholderIcon />
             Billing
+          </DropdownMenuItem> */}
+          <DropdownMenuItem onClick={() => router.push(routes.context.root())}>
+            <CircleUser />
+            Profile
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => router.push(routes.settings.customFields())}>
             <LifeBuoy />
             Settings
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Send />
             Feedback
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} disabled={isPending}>

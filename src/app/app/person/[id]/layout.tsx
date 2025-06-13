@@ -93,7 +93,6 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
           <div className='col-span-2 h-full overflow-hidden'>
             <PersonHeader
               person={data?.person}
-              organizations={data?.organizations}
               groups={data?.groups}
               segment={segment}
               taskCount={tasks?.length ?? 0}
@@ -108,7 +107,14 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
           {/* Sidebar - Independent Scroll */}
           <div className='flex h-full flex-col overflow-hidden border-l bg-gray-100'>
             <div className='no-scrollbar flex-1 overflow-y-auto px-4 pb-4'>
-              <PersonBioSidebar data={data} />
+              <PersonBioSidebar
+                person={data?.person}
+                contactMethods={data?.contactMethods}
+                addresses={data?.addresses}
+                websites={data?.websites}
+                groups={data?.groups}
+                organizations={data?.organizations}
+              />
             </div>
           </div>
         </div>

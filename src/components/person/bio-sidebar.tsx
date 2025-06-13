@@ -13,23 +13,96 @@ import { usePersonUpdates } from '@/hooks/use-person-updates';
 import { PersonGroup } from '@/types/custom';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
-export interface BioSidebarData {
-  person: Person;
+import { OrganizationBadge } from '../organizations/organization-badge';
+
+export interface PersonBioSidebarProps {
+  person: Person | undefined;
   contactMethods?: ContactMethod[];
   addresses?: Address[];
   websites?: Website[];
   groups?: PersonGroup[];
+  organizations?: { id: string; name: string }[];
 }
 
-export interface PersonBioSidebarProps {
-  data: BioSidebarData | undefined;
-}
+export function PersonBioSidebar({
+  person,
+  contactMethods,
+  addresses,
+  websites,
+  groups,
+  organizations
+}: PersonBioSidebarProps) {
+  if (!person) return null;
 
-export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
-  if (!data) return null;
   const params = useParams();
   const personId = params.id as string;
+
   const updates = usePersonUpdates({ personId });
+
+  // Organizations Section
+  const renderOrganizations = () => {
+    return organizations && organizations.length > 0 ? (
+      <div>
+        <h3 className='mb-4 text-sm font-semibold text-muted-foreground'>Organizations</h3>
+        <div className='flex flex-wrap gap-2'>
+          {organizations.map((organization) => (
+            <OrganizationBadge key={organization.id} organization={organization} asLink />
+          ))}
+        </div>
+      </div>
+    ) : null;
+  };
+
+  // Custom Fields Sections
+  const renderPersonCustomFields = () => {
+    return (
+      <>
+        <CustomFieldsSection personId={personId} sectionType='person' />
+        <Separator />
+      </>
+    );
+  };
+
+  // Group Custom Fields Sections
+  const renderGroupCustomFields = () => {
+    return groups?.map((group) => (
+      <>
+        <CustomFieldsSection
+          key={group.id}
+          personId={personId}
+          groupId={group.id}
+          sectionType='group'
+          groupName={group.name}
+        />
+        <Separator />
+      </>
+    ));
+  };
+
+  // Basic Information Section
+  const renderBasicInfo = () => (
+    <section className='space-y-1'>
+      <h3 className='text-sm font-semibold text-muted-foreground'>Basic Information</h3>
+      <div className='space-y-2'>
+        <div className='space-y-1'>
+          <label className='text-xs text-muted-foreground'>Birthday</label>
+          <EditableDate
+            value={person.birthday}
+            onChange={(value) => updates.updateField('birthday', value)}
+            placeholder='Select birthday'
+          />
+        </div>
+        <div className='space-y-1'>
+          <label className='text-xs text-muted-foreground'>Date Met</label>
+          <EditableDate
+            value={person.date_met}
+            onChange={(value) => updates.updateField('date_met', value)}
+            placeholder='Select date met'
+          />
+        </div>
+      </div>
+    </section>
+  );
 
   // Contact Methods Section
   const renderContactMethods = () => (
@@ -52,7 +125,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         />
       </div>
       <div className='space-y-2'>
-        {data.contactMethods?.map((method) => (
+        {contactMethods?.map((method) => (
           <ContactMethodPopover
             key={method.id}
             contactMethod={{
@@ -93,7 +166,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         />
       </div>
       <div className='space-y-2'>
-        {data.addresses?.map((address) => (
+        {addresses?.map((address) => (
           <AddressPopover
             key={address.id}
             address={{
@@ -132,7 +205,7 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
         />
       </div>
       <div className='space-y-2'>
-        {data.websites?.map((website) => (
+        {websites?.map((website) => (
           <WebsitePopover
             key={website.id}
             website={{
@@ -147,60 +220,23 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
     </section>
   );
 
-  // Basic Information Section
-  const renderBasicInfo = () => (
-    <section className='space-y-3'>
-      <h3 className='text-sm font-semibold text-muted-foreground'>Basic Information</h3>
-      <div className='space-y-2'>
-        <div className='space-y-1'>
-          <label className='text-xs text-muted-foreground'>Birthday</label>
-          <EditableDate
-            value={data.person.birthday}
-            onChange={(value) => updates.updateField('birthday', value)}
-            placeholder='Select birthday'
-          />
-        </div>
-        <div className='space-y-1'>
-          <label className='text-xs text-muted-foreground'>Date Met</label>
-          <EditableDate
-            value={data.person.date_met}
-            onChange={(value) => updates.updateField('date_met', value)}
-            placeholder='Select date met'
-          />
-        </div>
-      </div>
-    </section>
-  );
-
-  const renderPersonCustomFields = () => {
-    return <CustomFieldsSection personId={personId} sectionType='person' />;
-  };
-
-  const renderGroupCustomFields = () => {
-    return data.groups?.map((group) => (
-      <CustomFieldsSection
-        key={group.id}
-        personId={personId}
-        groupId={group.id}
-        sectionType='group'
-        groupName={group.name}
-      />
-    ));
-  };
-
   // Record Details Section
   const renderRecordDetails = () => (
     <section className='space-y-3'>
       <h3 className='text-sm font-semibold text-muted-foreground'>Record Details</h3>
       <div className='space-y-1 text-xs text-muted-foreground'>
-        <p>Last Updated: {new Date(data.person.updated_at).toLocaleDateString()}</p>
-        <p>Created: {new Date(data.person.created_at).toLocaleDateString()}</p>
+        <p>Last Updated: {new Date(person.updated_at).toLocaleDateString()}</p>
+        <p>Created: {new Date(person.created_at).toLocaleDateString()}</p>
       </div>
     </section>
   );
 
   return (
     <div className='flex flex-col space-y-6 p-1 pt-4'>
+      {renderOrganizations()}
+      <Separator />
+      {renderPersonCustomFields()}
+      {renderGroupCustomFields()}
       {renderBasicInfo()}
       <Separator />
       {renderContactMethods()}
@@ -209,9 +245,6 @@ export function PersonBioSidebar({ data }: PersonBioSidebarProps) {
       <Separator />
       {renderWebsites()}
       <Separator />
-      {renderPersonCustomFields()}
-      <Separator />
-      {renderGroupCustomFields()}
       {/* <Separator /> */}
       {renderRecordDetails()}
     </div>

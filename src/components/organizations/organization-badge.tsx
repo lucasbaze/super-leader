@@ -20,7 +20,7 @@ export function OrganizationBadge({
 }: OrganizationBadgeProps) {
   const badge = (
     <Badge
-      variant='secondary'
+      variant='outline'
       className={cn(
         'flex items-center gap-1 pl-1 pr-2',
         asLink && 'hover:bg-muted',

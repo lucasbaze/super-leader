@@ -18,13 +18,12 @@ import { OrganizationBadge } from '../organizations/organization-badge';
 interface PersonHeaderProps {
   person: Person | undefined;
   groups?: PersonGroup[];
-  organizations?: { id: string; name: string }[];
   segment: string | null;
   taskCount: number;
 }
 
 // TODO: Do something with thhe "contact Methods"
-export function PersonHeader({ person, groups = [], segment, taskCount, organizations = [] }: PersonHeaderProps) {
+export function PersonHeader({ person, groups = [], segment, taskCount }: PersonHeaderProps) {
   const router = useRouter();
   const initials = `${person?.first_name[0]}${person?.last_name?.[0] || ''}`;
 
@@ -38,13 +37,6 @@ export function PersonHeader({ person, groups = [], segment, taskCount, organiza
           <h1 className='text-lg font-medium'>
             {person?.first_name} {person?.last_name}
           </h1>
-          {organizations.length > 0 && (
-            <div className='flex flex-wrap gap-2'>
-              {organizations.map((organization) => (
-                <OrganizationBadge key={organization.id} organization={organization} asLink />
-              ))}
-            </div>
-          )}
         </div>
         <div className='ml-10'>
           <div className='mb-2 text-sm text-muted-foreground'>{person?.title}</div>

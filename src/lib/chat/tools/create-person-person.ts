@@ -19,7 +19,7 @@ export const createPersonPersonTool: ChatTool<
   },
   CreatePersonPersonJoinServiceResult['data'] | ToolError
 > = {
-  name: CHAT_TOOLS.CREATE_PERSON_ORG,
+  name: CHAT_TOOLS.LINK_TWO_PEOPLE,
   displayName: 'Link Two People',
   description:
     'Create a relationship between a person and another person such as a wife, husband, brother, colleague, boss, neighbor,etc...',
@@ -33,7 +33,11 @@ export const createPersonPersonTool: ChatTool<
   parameters: z.object({
     node_person_id: z.string().describe('The ID of the person to associate with the organization'),
     edge_person_id: z.string().describe('The ID of the organization to associate with the person'),
-    relation: z.string().describe('The relationship between the two people'),
+    relation: z
+      .string()
+      .describe(
+        'The relationship between the two people. Make sure to capitalize the first letter of the relationship.'
+      ),
     note: z.string().describe('A note about the relationship')
   }),
   execute: async (db, { node_person_id, edge_person_id, relation, note }, { userId }) => {
@@ -57,16 +61,19 @@ export const createPersonPersonTool: ChatTool<
 
       return result.data;
     } catch (error) {
-      console.error('Creating person-organization relationship error:', error);
-      return handleToolError(error, 'create person-organization relationship');
+      console.error('Creating person-person relationship error:', error);
+      return handleToolError(error, 'create person-person relationship');
     }
   },
   onSuccessEach: true,
   onSuccess: ({ queryClient, args }) => {
     queryClient.invalidateQueries({ queryKey: ['person-person-relations'] });
-    if (args?.node_person_id) {
+    if (args?.node_person_id || args?.edge_person_id) {
       queryClient.invalidateQueries({
         queryKey: ['person', args.node_person_id, 'about', { withOrganizations: true }]
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['person', args.edge_person_id, 'about', { withOrganizations: true }]
       });
     }
   }

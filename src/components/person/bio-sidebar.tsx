@@ -5,10 +5,11 @@ import { ContactMethodPopover } from '@/components/editable/contact-method-popov
 import { EditableDate } from '@/components/editable/editable-date';
 import { EditableField } from '@/components/editable/editable-field';
 import { WebsitePopover } from '@/components/editable/website-popover';
-import { Plus } from '@/components/icons';
+import { Loader, Plus } from '@/components/icons';
 import { CustomFieldsSection } from '@/components/person/custom-fields-section';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { UsePersonHookResult } from '@/hooks/use-person';
 import { usePersonUpdates } from '@/hooks/use-person-updates';
 import { PersonGroup } from '@/types/custom';
@@ -50,7 +51,23 @@ export function PersonBioSidebar({
         <h3 className='mb-4 text-sm font-semibold text-muted-foreground'>Associated People</h3>
         <div className='flex flex-wrap gap-2'>
           {associatedPeople.map((person) => (
-            <PersonBadge key={person.id} person={{ id: person.id, name: person.name }} asLink />
+            <TooltipProvider delayDuration={0} key={person.id}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className='flex w-fit cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground'>
+                    <PersonBadge key={person.id} person={{ id: person.id, name: person.name }} asLink />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent
+                  className='max-h-24 w-80 overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md'
+                  sideOffset={10}>
+                  <div className='space-y-2'>
+                    <p className='text-sm font-medium'>{person.relation}</p>
+                    <p className='text-xs text-muted-foreground'>{person.note}</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ))}
         </div>
       </div>

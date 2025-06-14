@@ -11,6 +11,7 @@ import {
   createTaskTool,
   createUserContextTool,
   deletePersonOrgTool,
+  deletePersonPersonTool,
   findOrganizationsTool,
   findPersonTool,
   getContentSuggestionsTool,
@@ -39,5 +40,6 @@ ChatTools.register(createPersonOrgTool);
 ChatTools.register(deletePersonOrgTool);
 ChatTools.register(updatePersonDetailsTool);
 ChatTools.register(createPersonPersonTool);
+ChatTools.register(deletePersonPersonTool);
 
 export { ChatTools };

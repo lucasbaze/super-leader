@@ -15,5 +15,7 @@ export const CHAT_TOOLS = {
   UPDATE_ONBOARDING_STATUS: 'updateOnboardingStatus',
   GET_CONTENT_SUGGESTIONS: 'getContentSuggestions',
   CREATE_ORGANIZATION: 'createOrganization',
-  UPDATE_PERSON_DETAILS: 'updatePersonDetails'
+  UPDATE_PERSON_DETAILS: 'updatePersonDetails',
+  LINK_TWO_PEOPLE: 'linkTwoPeople',
+  UNLINK_TWO_PEOPLE: 'unlinkTwoPeople'
 } as const;

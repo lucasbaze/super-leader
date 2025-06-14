@@ -3,25 +3,12 @@
 // Working example of column & row pinning. https://github.com/GlebKodrik/table
 import { CSSProperties } from 'react';
 
-import {
-  type Column,
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable
-} from '@tanstack/react-table';
+import { type Column, type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { format } from 'date-fns';
 
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Person } from '@/types/database';
 
 import { ProfileCompleteness } from '../indicators/profile-completeness';
@@ -42,11 +29,7 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
   };
 };
 
-export function PeopleTableV2({
-  people,
-  onRowClick,
-  emptyMessage = 'No contacts found'
-}: TanStackPeopleTableProps) {
+export function PeopleTableV2({ people, onRowClick, emptyMessage = 'No contacts found' }: TanStackPeopleTableProps) {
   const columns: ColumnDef<Person>[] = [
     {
       accessorKey: 'name',
@@ -55,7 +38,7 @@ export function PeopleTableV2({
       enablePinning: true,
       cell: ({ row }) => (
         <div
-          className='flex cursor-pointer items-center gap-2 pl-3'
+          className='flex max-w-[250px] cursor-pointer items-center gap-2 truncate pl-3'
           onClick={() => onRowClick?.(row.original.id)}>
           <Avatar className='size-6 shrink-0'>
             <AvatarFallback className='text-xs'>{row.original.first_name?.[0]}</AvatarFallback>
@@ -72,12 +55,7 @@ export function PeopleTableV2({
       size: 120,
       cell: ({ row }) => (
         <div className='flex items-center'>
-          <FollowUpIndicator
-            value={row.original.follow_up_score ?? 0}
-            size='sm'
-            personId={row.original.id}
-            editable
-          />
+          <FollowUpIndicator value={row.original.follow_up_score ?? 0} size='sm' personId={row.original.id} editable />
         </div>
       )
     },
@@ -149,9 +127,7 @@ export function PeopleTableV2({
     <div className='h-full'>
       <div className='h-full overflow-y-auto'>
         <div className='overflow-x-auto' style={{ position: 'relative' }}>
-          <Table
-            className='border-separate border-spacing-0'
-            style={{ width: table.getTotalSize() }}>
+          <Table className='border-separate border-spacing-0' style={{ width: table.getTotalSize() }}>
             <TableHeader>
               <TableRow>
                 {table.getHeaderGroups().map((headerGroup) =>

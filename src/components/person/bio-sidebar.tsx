@@ -10,6 +10,7 @@ import { CustomFieldsSection } from '@/components/person/custom-fields-section';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useCustomFieldValues } from '@/hooks/use-custom-fields';
 import { UsePersonHookResult } from '@/hooks/use-person';
 import { usePersonUpdates } from '@/hooks/use-person-updates';
 import { PersonGroup } from '@/types/custom';
@@ -26,6 +27,31 @@ export interface PersonBioSidebarProps {
   groups?: PersonGroup[];
   organizations?: { id: string; name: string }[];
   associatedPeople?: UsePersonHookResult['personPersonRelations'];
+}
+
+// Custom Fields Section with Separator
+function CustomFieldsSectionWithSeparator({
+  personId,
+  groupId,
+  sectionType,
+  groupName
+}: {
+  personId: string;
+  groupId?: string;
+  sectionType: 'person' | 'group';
+  groupName?: string;
+}) {
+  const { fields, isLoading } = useCustomFieldValues(groupId || personId, sectionType);
+  const hasFields = !isLoading && fields && fields.length > 0;
+
+  if (!hasFields) return null;
+
+  return (
+    <>
+      <CustomFieldsSection personId={personId} groupId={groupId} sectionType={sectionType} groupName={groupName} />
+      <Separator />
+    </>
+  );
 }
 
 export function PersonBioSidebar({
@@ -47,30 +73,33 @@ export function PersonBioSidebar({
   // Organizations Section
   const renderAssociatedPeople = () => {
     return associatedPeople && associatedPeople.length > 0 ? (
-      <div>
-        <h3 className='mb-4 text-sm font-semibold text-muted-foreground'>Associated People</h3>
-        <div className='flex flex-wrap gap-2'>
-          {associatedPeople.map((person) => (
-            <TooltipProvider delayDuration={0} key={person.id}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className='flex w-fit cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground'>
-                    <PersonBadge key={person.id} person={{ id: person.id, name: person.name }} asLink />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent
-                  className='max-h-24 w-80 overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md'
-                  sideOffset={10}>
-                  <div className='space-y-2'>
-                    <p className='text-sm font-medium'>{person.relation}</p>
-                    <p className='text-xs text-muted-foreground'>{person.note}</p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ))}
+      <>
+        <div>
+          <h3 className='mb-4 text-sm font-semibold text-muted-foreground'>Associated People</h3>
+          <div className='flex flex-wrap gap-2'>
+            {associatedPeople.map((person) => (
+              <TooltipProvider delayDuration={0} key={person.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className='flex w-fit cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground'>
+                      <PersonBadge key={person.id} person={{ id: person.id, name: person.name }} asLink />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className='max-h-24 w-80 overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md'
+                    sideOffset={10}>
+                    <div className='space-y-2'>
+                      <p className='text-sm font-medium'>{person.relation}</p>
+                      <p className='text-xs text-muted-foreground'>{person.note}</p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
+          </div>
         </div>
-      </div>
+        <Separator />
+      </>
     ) : null;
   };
 
@@ -90,27 +119,19 @@ export function PersonBioSidebar({
 
   // Custom Fields Sections
   const renderPersonCustomFields = () => {
-    return (
-      <>
-        <CustomFieldsSection personId={personId} sectionType='person' />
-        <Separator />
-      </>
-    );
+    return <CustomFieldsSectionWithSeparator personId={personId} sectionType='person' />;
   };
 
   // Group Custom Fields Sections
   const renderGroupCustomFields = () => {
     return groups?.map((group) => (
-      <>
-        <CustomFieldsSection
-          key={group.id}
-          personId={personId}
-          groupId={group.id}
-          sectionType='group'
-          groupName={group.name}
-        />
-        <Separator />
-      </>
+      <CustomFieldsSectionWithSeparator
+        key={group.id}
+        personId={personId}
+        groupId={group.id}
+        sectionType='group'
+        groupName={group.name}
+      />
     ));
   };
 
@@ -270,7 +291,6 @@ export function PersonBioSidebar({
     <div className='flex flex-col space-y-6 p-1 pt-4'>
       {renderAssociatedPeople()}
       {renderOrganizations()}
-      <Separator />
       {renderPersonCustomFields()}
       {renderGroupCustomFields()}
       {renderBasicInfo()}

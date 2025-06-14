@@ -2,26 +2,41 @@
 
 Superleader is a platform to help you get, keep, and grow your network. This is the next.js implementation of the platform.
 
-### What's inside?
+## Development
 
-This Turborepo includes the following packages/apps:
+1. Clone the repo
+2. Run `yarn install`
+3. Start Supabase with Docker running locally
+4. Run `yarn dev`
+5. Load the supabase client at localhost:54321
+6. Navigate to auth and create a new auth user with a password
+7. Grab the id and run the script `src/scripts/setup-new-user.ts` with the id.
 
-### Apps and Packages
 
-- `native`: a [react-native](https://reactnative.dev/) app built with [expo](https://docs.expo.dev/)
-- `web`: a [Next.js](https://nextjs.org/) app built with [react-native-web](https://necolas.github.io/react-native-web/)
-- `@repo/ui`: a stub [react-native](https://reactnative.dev/) component library shared by both `web` and `native` applications
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Production Data dump for development
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+1. Download the latest production database dump from Supabase
+2. Run `psql -h localhost -p 54322 -U postgres -d postgres -f "/path/to/data.backup`
 
-### Utilities
+### Trigger.dev
 
-This Turborepo has some additional tools already setup for you:
+All async tasks are handled by Trigger.dev in the src/trigger folder.
 
-- [Expo](https://docs.expo.dev/) for native development
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [Prettier](https://prettier.io) for code formatting
+1. Run `npx trigger.dev dev` to run the tasks locally
+2. Run `npx trigger.dev deploy` to deploy the changes to production
+
+Make sure that you have the TRIGGER_SECRET_KEY environment variable set in your .env.local file.
+
+You also need to make sure that trigger.dev has any environment variables in the trigger.dev dashboard as those methods are hosted on trigger.dev.
+
+
+### NGROK - Tunneling for Integrations
+
+Update the NEXT_PUBLIC_API_TUNNEL_URL environment variable in the .env.local file to the ngrok URL.
+
+```bash
+> ngrok http http://localhost:3000
+```
 
 ### Common Commands
 
@@ -96,39 +111,3 @@ or if you just want to apply the last migration that was added
 > npx supabase link 
 Link to the test database for testing purposes
 > npx supabase db push 
-
-
-
-
-## Development
-
-1. Clone the repo
-2. Run `yarn install`
-3. Start Supabase with Docker running locally
-4. Run `yarn dev`
-
-
-### Production Data dump for development
-
-1. Download the latest production database dump from Supabase
-2. Run `psql -h localhost -p 54322 -U postgres -d postgres -f "/path/to/data.backup`
-
-### Trigger.dev
-
-All async tasks are handled by Trigger.dev in the src/trigger folder.
-
-1. Run `npx trigger.dev dev` to run the tasks locally
-2. Run `npx trigger.dev deploy` to deploy the changes to production
-
-Make sure that you have the TRIGGER_SECRET_KEY environment variable set in your .env.local file.
-
-You also need to make sure that trigger.dev has any environment variables in the trigger.dev dashboard as those methods are hosted on trigger.dev.
-
-
-### NGROK - Tunneling for Integrations
-
-Update the NEXT_PUBLIC_API_TUNNEL_URL environment variable in the .env.local file to the ngrok URL.
-
-```bash
-> ngrok http http://localhost:3000
-```

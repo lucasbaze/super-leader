@@ -6,6 +6,7 @@ import {
   createInteractionTool,
   createOrganizationTool,
   createPersonOrgTool,
+  createPersonPersonTool,
   createPersonTool,
   createTaskTool,
   createUserContextTool,
@@ -37,5 +38,6 @@ ChatTools.register(findOrganizationsTool);
 ChatTools.register(createPersonOrgTool);
 ChatTools.register(deletePersonOrgTool);
 ChatTools.register(updatePersonDetailsTool);
+ChatTools.register(createPersonPersonTool);
 
 export { ChatTools };

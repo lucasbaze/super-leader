@@ -16,6 +16,7 @@ export interface UsePersonHookResult {
   interactions?: TInteraction[];
   tasks?: GetTaskSuggestionResult[];
   organizations?: GetPersonResult['organizations'];
+  personPersonRelations?: GetPersonResult['personPersonRelations'];
 }
 
 interface UsePersonOptions {
@@ -26,6 +27,7 @@ interface UsePersonOptions {
   withInteractions?: boolean;
   withTasks?: boolean;
   withOrganizations?: boolean;
+  withPersonPersonRelations?: boolean;
 }
 
 export function usePerson(id: string | null, options: UsePersonOptions = {}) {
@@ -40,6 +42,7 @@ export function usePerson(id: string | null, options: UsePersonOptions = {}) {
       if (options.withInteractions) params.append('withInteractions', 'true');
       if (options.withTasks) params.append('withTasks', 'true');
       if (options.withOrganizations) params.append('withOrganizations', 'true');
+      if (options.withPersonPersonRelations) params.append('withPersonPersonRelations', 'true');
 
       const queryString = params.toString();
       const url = `/api/person/${id}${queryString ? `?${queryString}` : ''}`;

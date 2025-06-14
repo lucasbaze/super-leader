@@ -26,7 +26,8 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
     withAddresses: true,
     withWebsites: true,
     withGroups: true,
-    withOrganizations: true
+    withOrganizations: true,
+    withPersonPersonRelations: true
   });
 
   const { data: tasks } = useTasks(params.id as string);
@@ -43,6 +44,8 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
       });
     }
   }, [data?.person, addRecentlyViewed]);
+
+  console.log('Person data', data);
 
   if (isLoading) return <PersonLayoutSkeleton />;
 
@@ -114,6 +117,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
                 websites={data?.websites}
                 groups={data?.groups}
                 organizations={data?.organizations}
+                associatedPeople={data?.personPersonRelations}
               />
             </div>
           </div>

@@ -15,3 +15,4 @@ export { findOrganizationsTool } from './find-organizations';
 export { createPersonOrgTool } from './create-person-org';
 export { deletePersonOrgTool } from './delete-person-org';
 export { updatePersonDetailsTool } from './update-person-details';
+export { createPersonPersonTool } from './create-person-person';

@@ -579,6 +579,48 @@ export type Database = {
           }
         ];
       };
+      person_person_relation: {
+        Row: {
+          created_at: string;
+          edge_person_id: string;
+          id: string;
+          node_person_id: string;
+          note: string | null;
+          relation: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          edge_person_id: string;
+          id?: string;
+          node_person_id: string;
+          note?: string | null;
+          relation?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          edge_person_id?: string;
+          id?: string;
+          node_person_id?: string;
+          note?: string | null;
+          relation?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'people_relations_edge_person_id_fkey';
+            columns: ['edge_person_id'];
+            isOneToOne: false;
+            referencedRelation: 'person';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'people_relations_node_person_id_fkey';
+            columns: ['node_person_id'];
+            isOneToOne: false;
+            referencedRelation: 'person';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
       suggestions: {
         Row: {
           bad: boolean;
@@ -717,6 +759,7 @@ export type Database = {
       };
       user_profile: {
         Row: {
+          avatar_url: string | null;
           context_summary: Json | null;
           context_summary_completeness_score: number;
           created_at: string;
@@ -728,6 +771,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          avatar_url?: string | null;
           context_summary?: Json | null;
           context_summary_completeness_score?: number;
           created_at?: string;
@@ -739,6 +783,7 @@ export type Database = {
           user_id: string;
         };
         Update: {
+          avatar_url?: string | null;
           context_summary?: Json | null;
           context_summary_completeness_score?: number;
           created_at?: string;

@@ -1,5 +1,6 @@
 import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
+import { getPersonPersonRelations } from '@/services/person-person/get-person-person-relations';
 import { GetTaskSuggestionResult } from '@/services/tasks/types';
 import { Person, PersonGroup } from '@/types/custom';
 import { Address, ContactMethod, DBClient, Website } from '@/types/database';
@@ -9,6 +10,7 @@ import { ServiceResponse } from '@/types/service-response';
 import { TInteraction } from './person-activity';
 
 type GetPersonOrganization = { id: string; name: string };
+type GetPersonPersonRelation = { id: string; name: string; note: string; relation: string };
 export interface GetPersonResult {
   person: Person;
   contactMethods?: ContactMethod[];
@@ -18,6 +20,7 @@ export interface GetPersonResult {
   groups?: PersonGroup[];
   tasks?: GetTaskSuggestionResult[];
   organizations?: GetPersonOrganization[];
+  personPersonRelations?: GetPersonPersonRelation[];
 }
 
 export interface GetPersonParams {
@@ -30,6 +33,7 @@ export interface GetPersonParams {
   withGroups?: boolean;
   withTasks?: boolean;
   withOrganizations?: boolean;
+  withPersonPersonRelations?: boolean;
 }
 
 interface GroupMemberWithGroup {
@@ -98,7 +102,8 @@ export async function getPerson({
   withInteractions = false,
   withGroups = false,
   withTasks = false,
-  withOrganizations = false
+  withOrganizations = false,
+  withPersonPersonRelations = false
 }: GetPersonParams): Promise<ServiceResponse<GetPersonResult>> {
   try {
     // Get person
@@ -263,6 +268,20 @@ export async function getPerson({
           return acc;
         }, []) || [];
     }
+
+    if (withPersonPersonRelations) {
+      const relationsResult = await getPersonPersonRelations({ db, personId });
+      if (relationsResult.error) {
+        errorLogger.log(relationsResult.error);
+        return { data: null, error: relationsResult.error };
+      }
+      result.personPersonRelations = (relationsResult.data || []).map((rel) => ({
+        ...rel,
+        note: rel.note ?? '',
+        relation: rel.relation ?? ''
+      }));
+    }
+    console.log('result', result);
 
     return { data: result, error: null };
   } catch (error) {

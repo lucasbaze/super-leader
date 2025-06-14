@@ -9,11 +9,13 @@ import { Plus } from '@/components/icons';
 import { CustomFieldsSection } from '@/components/person/custom-fields-section';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { UsePersonHookResult } from '@/hooks/use-person';
 import { usePersonUpdates } from '@/hooks/use-person-updates';
 import { PersonGroup } from '@/types/custom';
 import type { Address, ContactMethod, Person, Website } from '@/types/database';
 
 import { OrganizationBadge } from '../organizations/organization-badge';
+import { PersonBadge } from './person-badge';
 
 export interface PersonBioSidebarProps {
   person: Person | undefined;
@@ -22,6 +24,7 @@ export interface PersonBioSidebarProps {
   websites?: Website[];
   groups?: PersonGroup[];
   organizations?: { id: string; name: string }[];
+  associatedPeople?: UsePersonHookResult['personPersonRelations'];
 }
 
 export function PersonBioSidebar({
@@ -30,7 +33,8 @@ export function PersonBioSidebar({
   addresses,
   websites,
   groups,
-  organizations
+  organizations,
+  associatedPeople
 }: PersonBioSidebarProps) {
   if (!person) return null;
 
@@ -38,6 +42,20 @@ export function PersonBioSidebar({
   const personId = params.id as string;
 
   const updates = usePersonUpdates({ personId });
+
+  // Organizations Section
+  const renderAssociatedPeople = () => {
+    return associatedPeople && associatedPeople.length > 0 ? (
+      <div>
+        <h3 className='mb-4 text-sm font-semibold text-muted-foreground'>Associated People</h3>
+        <div className='flex flex-wrap gap-2'>
+          {associatedPeople.map((person) => (
+            <PersonBadge key={person.id} person={{ id: person.id, name: person.name }} asLink />
+          ))}
+        </div>
+      </div>
+    ) : null;
+  };
 
   // Organizations Section
   const renderOrganizations = () => {
@@ -233,6 +251,7 @@ export function PersonBioSidebar({
 
   return (
     <div className='flex flex-col space-y-6 p-1 pt-4'>
+      {renderAssociatedPeople()}
       {renderOrganizations()}
       <Separator />
       {renderPersonCustomFields()}

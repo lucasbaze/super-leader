@@ -24,6 +24,7 @@ export type TaskSuggestion = Database['public']['Tables']['task_suggestion']['Ro
 export type TaskSuggestionInsert = Database['public']['Tables']['task_suggestion']['Insert'];
 export type Organization = Database['public']['Tables']['organization']['Row'];
 export type IntegratedAccount = Database['public']['Tables']['integrated_accounts']['Row'];
+export type PersonPersonRelation = Database['public']['Tables']['person_person_relation']['Row'];
 
 export type UserProfile = Database['public']['Tables']['user_profile']['Row'] & {
   onboarding: Onboarding;

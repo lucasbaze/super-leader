@@ -21,7 +21,6 @@ describe('person service', () => {
     person: {
       first_name: 'John',
       last_name: 'Doe',
-      user_id: 'test-user-id',
       ...overrides
     }
   });
@@ -34,7 +33,8 @@ describe('person service', () => {
 
           const result = await createPerson({
             db,
-            data: buildPersonData({ user_id: testUser.id })
+            data: buildPersonData(),
+            userId: testUser.id
           });
 
           expect(result.error).toBeNull();
@@ -54,11 +54,11 @@ describe('person service', () => {
           const result = await createPerson({
             db,
             data: buildPersonData({
-              user_id: testUser.id,
               first_name: 'Alice',
               last_name: 'Johnson',
               date_met: dateMet
-            })
+            }),
+            userId: testUser.id
           });
 
           expect(result.error).toBeNull();
@@ -99,11 +99,11 @@ describe('person service', () => {
 
           const result = await createPerson({
             db,
+            userId: testUser.id,
             data: {
               person: {
                 first_name: 'John',
-                last_name: 'Doe',
-                user_id: testUser.id
+                last_name: 'Doe'
               },
               addresses: [address],
               contactMethods: [contactMethod],
@@ -133,8 +133,9 @@ describe('person service', () => {
           const note = 'Met at conference';
           const result = await createPerson({
             db,
+            userId: testUser.id,
             data: {
-              ...buildPersonData({ user_id: testUser.id, first_name: 'Jane', last_name: 'Smith' }),
+              ...buildPersonData({ first_name: 'Jane', last_name: 'Smith' }),
               note
             }
           });
@@ -176,29 +177,11 @@ describe('person service', () => {
 
           const result = await createPerson({
             db,
+            userId: testUser.id,
             data: {
               person: {
                 first_name: '',
-                last_name: 'Doe',
-                user_id: testUser.id
-              }
-            }
-          });
-
-          expect(result.data).toBeNull();
-          expect(result.error).toMatchObject(ERRORS.VALIDATION_ERROR);
-        });
-      });
-
-      it('should return error for missing user_id', async () => {
-        await withTestTransaction(supabase, async (db) => {
-          const result = await createPerson({
-            db,
-            data: {
-              person: {
-                first_name: 'John',
-                last_name: 'Doe',
-                user_id: ''
+                last_name: 'Doe'
               }
             }
           });
@@ -212,11 +195,11 @@ describe('person service', () => {
         await withTestTransaction(supabase, async (db) => {
           const result = await createPerson({
             db,
+            userId: 'invalid-uuid',
             data: {
               person: {
                 first_name: 'John',
-                last_name: 'Doe',
-                user_id: 'invalid-uuid'
+                last_name: 'Doe'
               }
             }
           });

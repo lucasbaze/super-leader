@@ -1,7 +1,12 @@
 import { stripIndents } from 'common-tags';
 import { z } from 'zod';
 
-import { PersonCreateFormData, personCreateSchema } from '@/lib/schemas/person-create';
+import {
+  CreateExtendedPersonLLMInput,
+  createExtendedPersonLLMInputSchema,
+  PersonCreateFormData,
+  personCreateSchema
+} from '@/lib/schemas/person-create';
 import { createPerson, CreatePersonServiceResult } from '@/services/person/create-person';
 
 import { ChatTool } from '../chat-tool-registry';
@@ -10,7 +15,7 @@ import { CHAT_TOOLS } from './constants';
 
 export const createPersonTool: ChatTool<
   {
-    details: PersonCreateFormData;
+    details: CreateExtendedPersonLLMInput;
   },
   CreatePersonServiceResult['data'] | ToolError
 > = {
@@ -23,26 +28,17 @@ export const createPersonTool: ChatTool<
     - Before creating a new person, use findPerson to see if the person already exists. If you get no result, then you can go ahead and create the person.
     - You can provide addresses, contact methods, and websites in the details object.
   `,
-  // TODO: Fix this type error... I think z.infer is not working as expected
-  // @ts-ignore
   parameters: z.object({
-    details: personCreateSchema.describe(
+    details: createExtendedPersonLLMInputSchema.describe(
       'The details for the new person, including person, contactMethods, addresses, and websites'
     )
   }),
   execute: async (db, { details }, { userId }) => {
     try {
-      // Always ensure user_id is set
-      const detailsWithUserId = {
-        ...details,
-        person: {
-          ...details.person,
-          user_id: userId
-        }
-      };
       const result = await createPerson({
         db,
-        data: detailsWithUserId
+        data: details,
+        userId
       });
       if (result.error) {
         throw result.error;

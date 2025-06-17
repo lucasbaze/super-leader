@@ -7,6 +7,7 @@ import { BaseHeader } from '@/components/headers/base-header';
 import { ChevronLeft, Loader, Sparkles } from '@/components/icons';
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { PersonBioSidebar } from '@/components/person/bio-sidebar';
+import { DeletePersonModal } from '@/components/person/delete-person-modal';
 import { PersonHeader } from '@/components/person/person-header';
 import { PersonLayoutSkeleton } from '@/components/skeletons/person-layout-skeleton';
 import { Button } from '@/components/ui/button';
@@ -31,7 +32,6 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
   });
 
   const { data: tasks } = useTasks(params.id as string);
-
   const updateAISummary = useUpdateAISummary();
 
   // Add to recently viewed when data loads
@@ -44,8 +44,6 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
       });
     }
   }, [data?.person, addRecentlyViewed]);
-
-  console.log('Person data', data);
 
   if (isLoading) return <PersonLayoutSkeleton />;
 
@@ -86,6 +84,7 @@ export default function PersonLayout({ children }: { children: React.ReactNode }
               </>
             )}
           </Button>
+          {data?.person && <DeletePersonModal person={data.person} />}
         </div>
       </BaseHeader>
 

@@ -1,6 +1,9 @@
+import { useRouter } from 'next/navigation';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
+import { routes } from '@/lib/routes';
 import type { GetPersonResult } from '@/services/person/get-person';
 import type { TInteraction } from '@/services/person/person-activity';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
@@ -63,6 +66,7 @@ export function usePerson(id: string | null, options: UsePersonOptions = {}) {
 
 export function useDeletePerson() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (personId: string) => {
@@ -79,9 +83,10 @@ export function useDeletePerson() {
     },
     onSuccess: () => {
       // Invalidate all person-related queries
-      queryClient.invalidateQueries({ queryKey: ['person'] });
-      // Also invalidate groups since person might be in groups
+      queryClient.refetchQueries({ queryKey: ['people'] });
       queryClient.invalidateQueries({ queryKey: ['groups'] });
+
+      router.push(routes.people.root());
     }
   });
 }

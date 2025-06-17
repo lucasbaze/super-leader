@@ -51,8 +51,8 @@ describe('person-person join service', () => {
 
           expect(result.error).toBeNull();
           expect(result.data).toMatchObject({
-            edgePersonId: personA.id,
-            nodePersonId: personB.id,
+            edge_person_id: personA.id,
+            node_person_id: personB.id,
             note,
             relation
           });

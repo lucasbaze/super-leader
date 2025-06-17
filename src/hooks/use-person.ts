@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
 import type { GetPersonResult } from '@/services/person/get-person';
@@ -58,5 +58,30 @@ export function usePerson(id: string | null, options: UsePersonOptions = {}) {
       return json.data;
     },
     enabled: !!id // Query will not execute if id is null/undefined/empty string
+  });
+}
+
+export function useDeletePerson() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (personId: string) => {
+      const response = await fetch(`/api/person/${personId}`, {
+        method: 'DELETE'
+      });
+
+      const json = await response.json();
+      if (json.error) {
+        errorToast.show(json.error);
+        throw json.error;
+      }
+      return json.data;
+    },
+    onSuccess: () => {
+      // Invalidate all person-related queries
+      queryClient.invalidateQueries({ queryKey: ['person'] });
+      // Also invalidate groups since person might be in groups
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+    }
   });
 }

@@ -8,7 +8,6 @@ export function transformToPersonData(relation: UnipileUserRelation, userId: str
       first_name: relation.first_name,
       last_name: relation.last_name,
       title: relation.headline,
-      user_id: userId,
       linkedin_public_id: relation.public_identifier
     },
     websites: [

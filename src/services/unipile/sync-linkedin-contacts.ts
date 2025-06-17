@@ -368,6 +368,7 @@ export async function syncLinkedInContacts({
 
             const createResult = await createPerson({
               db,
+              userId,
               data: {
                 ...personData,
                 note: 'Imported via LinkedIn'

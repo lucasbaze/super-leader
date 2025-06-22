@@ -1,0 +1,14 @@
+Todo:
+  ☐ Add a description and "cadence" for any groups.
+  ☐ Add and fetch some "default" custom fields, like "relationship stage"
+  ☐ Need to somehow insert / track user taken actions / completed actions.
+  ☐ Need to include an output of "add more people" to a probable group.
+  ☐ Need to include the user's current onboarding stage.
+  ☐ Need to include a "tags" / "labels" section on the outputs to enable the AI to filter the actions based on the user's preferences or input / output types. 
+      - i.e. "relationship building", "operational", "crm maintenance", "newsletter", "gift", "intro", "follow up", "event", "insight share", "content collaboration", "onboarding", etc...
+  ☐ For people, need to fetch last completed tasks related to the person, context, notes, etc... and build a small profile about the user in a way the AI can digest.
+  ☐ Need to pass in the previous day's action plan to the AI to help it understand the user's context and preferences, and which tasks were completed or skipped.
+
+
+Ideas:
+  ☐ A "monthly" progress report / overview of the user's progress.

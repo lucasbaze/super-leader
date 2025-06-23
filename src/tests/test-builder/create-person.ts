@@ -8,10 +8,13 @@ export interface TestPerson {
   bio?: string;
   title?: string;
   birthday?: string;
+  follow_up_score?: number;
+  date_met?: string;
   linkedin_public_id?: string;
   contactMethods?: Array<{
     type: string;
     value: string;
+    is_primary?: boolean;
   }>;
   addresses?: Array<{
     type: string;
@@ -20,6 +23,7 @@ export interface TestPerson {
     state: string;
     // postal_code: string;
     country: string;
+    is_primary?: boolean;
   }>;
   websites?: Array<{
     url: string;
@@ -45,6 +49,8 @@ export async function createTestPerson({ db, data, withPrefix = true }: CreateTe
       bio: data.bio ? `${testPrefix}${data.bio}` : null,
       user_id: data.user_id,
       birthday: data.birthday || null,
+      date_met: data.date_met || null,
+      follow_up_score: data.follow_up_score || 0.5,
       completeness_score: data.completeness_score || null,
       linkedin_public_id: data.linkedin_public_id || null,
       title: data.title || null
@@ -61,7 +67,7 @@ export async function createTestPerson({ db, data, withPrefix = true }: CreateTe
         user_id: data.user_id,
         type: `${testPrefix}${cm.type}`,
         value: `${testPrefix}${cm.value}`,
-        is_primary: false,
+        is_primary: cm.is_primary || false,
         is_contact_method: true,
         label: `${testPrefix}${cm.type}`
       }))
@@ -79,7 +85,7 @@ export async function createTestPerson({ db, data, withPrefix = true }: CreateTe
         state: addr.state,
         // postal_code: addr.postal_code,
         country: `${testPrefix}${addr.country}`,
-        is_primary: false,
+        is_primary: addr.is_primary || false,
         label: `${testPrefix}${addr.type}`
       }))
     );

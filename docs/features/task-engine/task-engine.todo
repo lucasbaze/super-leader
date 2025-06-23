@@ -1,4 +1,9 @@
 Todo:
+  ☐ Need to fix how birthday's are saved so the dates are accurate and not off by a day.
+  ☐ Need to be able to get a sub-set of tasks from @get-person.ts
+  ☐ Need to include the group description in the profile for context on the group.
+  ☐ Need to "deduplicate" people that come up multiple times in the context of building the summary. i.e. if a person's birthday is coming up, they have a reminder, and they haven't been touched in the last 30 days... We might not want to pull and display them multiple times in building the dossier.
+  ☐ Need to better enable markdown output and display like ChatGPT
   ☐ Add a description and "cadence" for any groups.
   ☐ Add and fetch some "default" custom fields, like "relationship stage"
   ☐ Need to somehow insert / track user taken actions / completed actions.

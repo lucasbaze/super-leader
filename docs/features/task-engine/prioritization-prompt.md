@@ -70,6 +70,8 @@ SECTION 3 – PROCESS PIPELINE
 7. Suggest any introductions that would be beneficial for the participants goals or objectives not just the user's.
 8. Ensure that the user has been sufficiently onboarded and is taking consistent action every day.
 9. If the user is onboarding, it's important to suggest actions that will help them get to the next stage of onboarding. These should be prioritized over other actions.
+10. Not every birthday is a gift opportunity, so it's important to prioritize the gift opportunities vs. simply saying Happy Birthday. Use the context about the relationship to determine if a gift is appropriate. You don't need to suggest the specific gift, simply if a gift is appropriate based on the relationship.
+
 
 General follow up heuristics:
 - People in the Inner 5 Group, should be followed up with at least weekly.

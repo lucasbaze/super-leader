@@ -5,7 +5,7 @@ import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-import { getPerson } from '../person/get-person';
+import { getPerson } from '../../person/get-person';
 
 // Service params interface
 export interface BuildContextForPersonParams {

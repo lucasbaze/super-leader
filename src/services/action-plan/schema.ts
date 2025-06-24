@@ -20,6 +20,12 @@ const TaskSchema = z.object({
 
 export type ActionPlanTask = z.infer<typeof TaskSchema>;
 
+const ActionPlanTaskWithIdSchema = TaskSchema.extend({
+  id: z.string().describe('The UUID of the task.')
+});
+
+export type ActionPlanTaskWithId = z.infer<typeof ActionPlanTaskWithIdSchema>;
+
 const GroupSectionSchema = z.object({
   title: z.string(),
   icon: z.string(),

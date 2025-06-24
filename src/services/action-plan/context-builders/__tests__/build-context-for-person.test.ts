@@ -49,6 +49,7 @@ describe('buildContextForPerson service', () => {
 
         // Should contain basic information
         expect(profile).toContain('# John Doe');
+        expect(profile).toContain(`(${testPerson.id})`);
         expect(profile).toContain('## Contact Information');
         expect(profile).toContain('No contact methods available');
         expect(profile).toContain('## Addresses');
@@ -175,6 +176,7 @@ describe('buildContextForPerson service', () => {
 
         // Should contain enhanced information
         expect(profile).toContain('# Jane Smith');
+        expect(profile).toContain(`(${testPerson.id})`);
         expect(profile).toContain('**Title:** Software Engineer');
         expect(profile).toContain('**Bio:** Passionate about building great software');
         // expect(profile).toContain('**Birthday:** 5/15/1990');
@@ -413,6 +415,7 @@ describe('buildContextForPerson service', () => {
 
         // Should contain comprehensive information
         expect(profile).toContain('# Michael Johnson');
+        expect(profile).toContain(`(${testPerson.id})`);
         expect(profile).toContain('**Title:** Senior Product Manager');
         expect(profile).toContain('**Bio:** Experienced product leader with 10+ years in tech');
         // expect(profile).toContain('**Birthday:** 8/22/1985');

@@ -13,7 +13,8 @@ const TaskSchema = z.object({
   personName: z.string().describe('The name of the person to assign to the task.'),
   taskContext: z.string().describe('The context of the task.'),
   taskType: z.nativeEnum(SUGGESTED_ACTION_TYPE_SLUGS).describe('The type of task to assign to the person.'),
-  taskDueDate: z.string().describe('The ISO8601 formatted due date of the task that is in the future.')
+  callToAction: z.string().describe('An extremely brief call to action related to the task.'),
+  taskDueDate: z.string().datetime().describe('The ISO8601 formatted date AND TIME of the task that is in the future.')
   // task_priority: z.enum(['low', 'medium', 'high', 'urgent']),
   // task_due_date: z.string(),
 });

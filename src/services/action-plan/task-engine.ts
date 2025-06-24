@@ -1,9 +1,13 @@
+import fs from 'fs';
+
 import { createError, errorLogger, toError } from '@/lib/errors';
+import { SuggestedActionType } from '@/lib/tasks/constants';
 import { buildTask } from '@/services/tasks/build-task';
 import { ActionPlan, DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
+import { buildTask as buildTaskV2 } from './build-task-v2';
 import { generateActionPlan } from './generators/generate-action-plan';
 import { ActionPlanTask, GenerateActionPlan } from './schema';
 
@@ -22,10 +26,21 @@ const ERRORS = {
   )
 };
 
-export const buildActionPlan = async (db: DBClient, userId: string): Promise<ServiceResponse<ActionPlan>> => {
+interface BuildActionPlanParams {
+  db: DBClient;
+  userId: string;
+}
+
+export const buildActionPlan = async ({
+  db,
+  userId
+}: BuildActionPlanParams): Promise<ServiceResponse<ActionPlan | any>> => {
   try {
     // Generate the action plan
-    const generatedActionPlan = await generateActionPlan({ db, userId });
+    // const generatedActionPlan = await generateActionPlan({ db, userId });
+    const generatedActionPlan = JSON.parse(
+      fs.readFileSync('src/services/action-plan/example-raw-action-plan.json', 'utf8')
+    );
 
     // Add the id property to the tasks as pre-processing
     // const groupSections = generatedActionPlan.groupSections;
@@ -58,23 +73,43 @@ export const buildActionPlan = async (db: DBClient, userId: string): Promise<Ser
 
     // Generate and save the tasks associated with the action plan
     const taskData = groupSections.flatMap((section) => section.tasks);
+
+    console.log('About to build', taskData.length, 'tasks');
+    console.log('First task data:', JSON.stringify(taskData[0], null, 2));
+
     const buildTasksResult = await Promise.all(
-      taskData.map((task) =>
-        buildTask({
-          db,
-          userId,
-          personId: task.personId,
-          trigger: task.taskType,
-          endAt: task.taskDueDate,
-          context: task.taskContext
-        })
-      )
+      taskData.map(async (task, index) => {
+        console.log(`Building task ${index + 1}/${taskData.length} for person ${task.personId}`);
+        try {
+          const result = await buildTaskV2({
+            db,
+            userId,
+            personId: task.personId,
+            endAt: task.taskDueDate,
+            taskContext: task.taskContext,
+            callToAction: task.callToAction,
+            actionType: task.taskType as SuggestedActionType
+          });
+          console.log(`Task ${index + 1} result:`, result.error ? 'ERROR' : 'SUCCESS', result);
+          return result;
+        } catch (error) {
+          console.error(`Task ${index + 1} threw error:`, error);
+          return { data: null, error: toError(error) };
+        }
+      })
+    );
+
+    console.log(
+      'All build results:',
+      buildTasksResult.map((r, i) => `${i}: ${r.error ? 'ERROR' : 'SUCCESS'}`)
     );
 
     const taskIdMap = new Map();
     buildTasksResult.forEach((result, idx) => {
       if (result.data) {
-        taskIdMap.set(`${result.data.task.person_id}-${taskData[idx].taskType}`, result.data.task.id);
+        taskIdMap.set(result.data.task.person_id, result.data.task.id);
+      } else {
+        console.error(`Task ${idx} failed:`, result.error);
       }
     });
 
@@ -82,13 +117,9 @@ export const buildActionPlan = async (db: DBClient, userId: string): Promise<Ser
     const updatedActionPlan = JSON.parse(JSON.stringify(rawActionPlan)) as GenerateActionPlan;
     updatedActionPlan.groupSections.forEach((section) => {
       section.tasks.forEach((task) => {
-        const key = `${task.personId}-${task.taskType}`;
-        if (taskIdMap.has(key)) {
-          task = {
-            ...task,
-            // @ts-ignore
-            taskId: taskIdMap.get(key)
-          };
+        if (taskIdMap.has(task.personId)) {
+          // @ts-ignore
+          task.id = taskIdMap.get(task.personId);
         }
       });
     });
@@ -107,7 +138,7 @@ export const buildActionPlan = async (db: DBClient, userId: string): Promise<Ser
     }
 
     return {
-      data: actionPlanData,
+      data: generatedActionPlan,
       error: null
     };
   } catch (error) {
@@ -117,8 +148,4 @@ export const buildActionPlan = async (db: DBClient, userId: string): Promise<Ser
       error: { ...ERRORS.GENERATING_ACTION_PLAN_FAILED, details: toError(error) }
     };
   }
-
-  // Re-inject the tasks into the action plan
-
-  // Re-save the action plan with the tasks injected
 };

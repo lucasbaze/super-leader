@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { generateActionPlan } from '@/services/action-plan/task-engine';
+import { buildActionPlan } from '@/services/action-plan/task-engine';
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
@@ -15,9 +15,10 @@ export async function POST(request: NextRequest) {
       return apiResponse.unauthorized(toError(authResult.error));
     }
 
-    const result = await generateActionPlan({
+    const result = await buildActionPlan({
       db: supabase,
       userId: authResult.data.id
+      // personId
     });
 
     if (result.error) {

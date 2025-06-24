@@ -227,7 +227,7 @@ export async function buildContextForPerson({
     const { person } = personData;
 
     // Build the human-readable profile
-    let profile = `# ${person.first_name}${person.last_name ? ` ${person.last_name}` : ''}\n\n`;
+    let profile = `# ${person.first_name}${person.last_name ? ` ${person.last_name}` : ''} (${personId})\n\n`;
 
     // Basic information
     if (person.title) {

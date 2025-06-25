@@ -21,12 +21,6 @@ const TaskSchema = z.object({
 
 export type ActionPlanTask = z.infer<typeof TaskSchema>;
 
-const ActionPlanTaskWithIdSchema = TaskSchema.extend({
-  id: z.string().describe('The UUID of the task.')
-});
-
-export type ActionPlanTaskWithId = z.infer<typeof ActionPlanTaskWithIdSchema>;
-
 const GroupSectionSchema = z.object({
   title: z.string(),
   icon: z.string(),
@@ -42,3 +36,19 @@ export const GenerateActionPlanSchema = z.object({
 });
 
 export type GenerateActionPlan = z.infer<typeof GenerateActionPlanSchema>;
+
+const ActionPlanTaskWithIdSchema = TaskSchema.extend({
+  id: z.string().describe('The UUID of the task.')
+});
+
+export type ActionPlanTaskWithId = z.infer<typeof ActionPlanTaskWithIdSchema>;
+
+const GroupSectionWithTaskIdsSchema = GroupSectionSchema.extend({
+  tasks: z.array(ActionPlanTaskWithIdSchema)
+});
+
+const ActionPlanWithTaskIdsSchema = GenerateActionPlanSchema.extend({
+  groupSections: z.array(GroupSectionWithTaskIdsSchema)
+});
+
+export type ActionPlanWithTaskIds = z.infer<typeof ActionPlanWithTaskIdsSchema>;

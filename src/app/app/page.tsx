@@ -1,107 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 
-import { HomeHeader } from '@/components/home/home-header';
-import { TaskList } from '@/components/tasks/task-list';
-import { useTasks } from '@/hooks/use-tasks';
-import {
-  filterAllTasks,
-  groupTasksByDay,
-  groupTasksByReverseTimeframe,
-  groupTasksByTimeframe,
-  groupTasksByWeek,
-  TaskGroup
-} from '@/lib/tasks/task-groups';
-import { TimePeriod } from '@/lib/tasks/time-periods';
-import { cn } from '@/lib/utils';
+import { Loader } from '@/components/icons';
+import { ActionPlanTaskList } from '@/components/tasks/action-plan-task-list';
+import { useActionPlan } from '@/hooks/use-action-plan';
 
-export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<TimePeriod>('this-week');
-  const { data: tasks, isLoading, error } = useTasks(undefined, activeTab);
+export default function ActionPlanHomePage() {
+  const { data, isLoading, error } = useActionPlan();
 
-  let taskGroups: TaskGroup[] = [];
-  if (tasks) {
-    switch (activeTab) {
-      case 'this-week':
-        taskGroups = groupTasksByDay(tasks);
-        break;
-      case 'this-month':
-        taskGroups = groupTasksByWeek(tasks);
-        break;
-      case 'overdue':
-        taskGroups = groupTasksByReverseTimeframe(tasks);
-        break;
-      case 'all':
-      default:
-        taskGroups = groupTasksByTimeframe(filterAllTasks(tasks));
-        break;
-    }
-  }
+  // Build a map of taskId -> task for fast lookup
+  const tasksById = useMemo(() => {
+    if (!data?.tasks) return {};
+    const map: Record<string, any> = {};
+    data.tasks.forEach((task) => {
+      if (task.id) map[task.id] = task;
+    });
+    return map;
+  }, [data?.tasks]);
 
   return (
-    <div className='absolute inset-0'>
-      <HomeHeader />
-      <div className='absolute inset-0 top-[48px] mt-[1px] overflow-auto'>
-        <div className='mb-4 border-b bg-background'>
-          <div className='flex items-center px-3 py-2'>
-            <button
-              onClick={() => setActiveTab('overdue')}
-              className={cn(
-                'rounded-md px-2 py-1 text-sm font-medium',
-                activeTab === 'overdue' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
-              )}>
-              Overdue
-            </button>
-            <div className='mx-2 h-4 w-px bg-border'></div>
-            <button
-              onClick={() => setActiveTab('this-week')}
-              className={cn(
-                'rounded-md px-2 py-1 text-sm font-medium',
-                activeTab === 'this-week' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
-              )}>
-              This Week
-            </button>
-            <div className='mx-2 h-4 w-px bg-border'></div>
-            <button
-              onClick={() => setActiveTab('this-month')}
-              className={cn(
-                'rounded-md px-2 py-1 text-sm font-medium',
-                activeTab === 'this-month' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
-              )}>
-              This Month
-            </button>
-            <div className='mx-2 h-4 w-px bg-border'></div>
-            <button
-              onClick={() => setActiveTab('all')}
-              className={cn(
-                'rounded-md px-2 py-1 text-sm font-medium',
-                activeTab === 'all' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
-              )}>
-              All Tasks
-            </button>
+    <div className='absolute inset-0 flex flex-col'>
+      <div className='border-b bg-background px-8 py-6'>
+        <h1 className='mb-1 text-2xl font-bold'>Good Morning</h1>
+        <div className='mb-2 text-sm text-muted-foreground'>
+          {new Date().toLocaleDateString(undefined, {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </div>
+        {isLoading ? (
+          <div className='flex items-center gap-2 text-muted-foreground'>
+            <Loader className='size-4 animate-spin' /> Loading your action plan...
           </div>
-        </div>
-        <div className='p-4'>
-          {isLoading ? (
-            <div className='text-sm text-muted-foreground'>Loading tasks...</div>
-          ) : error ? (
-            <div className='text-sm text-red-500'>Failed to load tasks</div>
-          ) : !taskGroups?.length ? (
-            <div className='text-sm text-muted-foreground'>
-              No tasks available for{' '}
-              {activeTab === 'this-week'
-                ? 'this week'
-                : activeTab === 'this-month'
-                  ? 'this month'
-                  : activeTab === 'overdue'
-                    ? 'overdue tasks'
-                    : 'any date'}
-            </div>
-          ) : (
-            <TaskList groups={taskGroups} />
-          )}
-        </div>
+        ) : error ? (
+          <div className='text-red-500'>Failed to load action plan</div>
+        ) : data && data.actionPlan ? (
+          <div className='mb-2'>
+            <div className='mb-1 text-lg font-semibold'>{data.actionPlan.executiveSummary.title}</div>
+            <div className='mb-1 text-base'>{data.actionPlan.executiveSummary.description}</div>
+            <div className='text-sm text-muted-foreground'>{data.actionPlan.executiveSummary.content}</div>
+          </div>
+        ) : null}
+      </div>
+      <div className='flex-1 overflow-y-auto px-8 py-6'>
+        {isLoading ? (
+          <div className='flex items-center gap-2 text-muted-foreground'>
+            <Loader className='size-4 animate-spin' /> Loading tasks...
+          </div>
+        ) : error ? (
+          <div className='text-red-500'>Failed to load tasks</div>
+        ) : data && data.actionPlan ? (
+          <ActionPlanTaskList groupSections={data.actionPlan.groupSections} tasksById={tasksById} />
+        ) : (
+          <div className='text-muted-foreground'>No action plan available for today.</div>
+        )}
       </div>
     </div>
   );

@@ -213,8 +213,8 @@ export async function getPerson({
         .select(
           `
         id,
-        type,
-        content,
+        suggested_action_type,
+        context,
         end_at,
         completed_at,
         skipped_at,

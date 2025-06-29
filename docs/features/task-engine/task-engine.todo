@@ -1,0 +1,19 @@
+Todo:
+  ☐ Need to fix how birthday's are saved so the dates are accurate and not off by a day.
+  ☐ Need to be able to get a sub-set of tasks from @get-person.ts
+  ☐ Need to include the group description in the profile for context on the group.
+  ☐ Need to "deduplicate" people that come up multiple times in the context of building the summary. i.e. if a person's birthday is coming up, they have a reminder, and they haven't been touched in the last 30 days... We might not want to pull and display them multiple times in building the dossier.
+  ☐ Need to better enable markdown output and display like ChatGPT
+  ☐ Add a description and "cadence" for any groups.
+  ☐ Add and fetch some "default" custom fields, like "relationship stage"
+  ☐ Need to somehow insert / track user taken actions / completed actions.
+  ☐ Need to include an output of "add more people" to a probable group.
+  ☐ Need to include the user's current onboarding stage.
+  ☐ Need to include a "tags" / "labels" section on the outputs to enable the AI to filter the actions based on the user's preferences or input / output types. 
+      - i.e. "relationship building", "operational", "crm maintenance", "newsletter", "gift", "intro", "follow up", "event", "insight share", "content collaboration", "onboarding", etc...
+  ☐ For people, need to fetch last completed tasks related to the person, context, notes, etc... and build a small profile about the user in a way the AI can digest.
+  ☐ Need to pass in the previous day's action plan to the AI to help it understand the user's context and preferences, and which tasks were completed or skipped.
+
+
+Ideas:
+  ☐ A "monthly" progress report / overview of the user's progress.

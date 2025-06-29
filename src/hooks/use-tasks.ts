@@ -61,3 +61,29 @@ export function useGenerateTasks() {
     }
   });
 }
+
+export function useGenerateActionPlan() {
+  // const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/action-plan/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const result = await response.json();
+      if (result.error) {
+        throw result.error;
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      // Invalidate tasks queries to refresh the data
+      // queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+    onError: (error: any) => {
+      errorToast.show(error);
+    }
+  });
+}

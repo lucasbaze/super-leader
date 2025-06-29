@@ -21,11 +21,11 @@ export type TGenerateObjectOptions =
       model?: string;
     };
 
-export async function generateObject({ messages, prompt, schema }: TGenerateObjectOptions) {
+export async function generateObject({ messages, prompt, schema, model }: TGenerateObjectOptions) {
   try {
     const completion = await generateObjectAi({
       // TODO: Used for generating the summaries about individuals... may not be needed if 4o is good enough
-      model: openai('gpt-4o', {
+      model: openai(model || 'gpt-4o', {
         structuredOutputs: true
       }),
       messages,
@@ -33,7 +33,7 @@ export async function generateObject({ messages, prompt, schema }: TGenerateObje
       schema
     });
 
-    console.log('AI::GenerateObject::Completion', completion);
+    console.log('AI::GenerateObject::Completion', JSON.stringify(completion, null, 2));
 
     return completion.object;
   } catch (err) {

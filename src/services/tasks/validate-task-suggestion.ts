@@ -114,14 +114,15 @@ export function validateTaskSuggestion({
     };
   }
 
+  // TODO: Determine if I want to keep this concept...
   // Validate trigger
-  if (!isValidTaskTrigger(trigger)) {
-    return {
-      valid: false,
-      data: null,
-      error: ERRORS.TASK_SUGGESTION.INVALID_TRIGGER
-    };
-  }
+  // if (!isValidTaskTrigger(trigger)) {
+  //   return {
+  //     valid: false,
+  //     data: null,
+  //     error: ERRORS.TASK_SUGGESTION.INVALID_TRIGGER
+  //   };
+  // }
 
   // Validate context schema
   try {

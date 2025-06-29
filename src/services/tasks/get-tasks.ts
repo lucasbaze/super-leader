@@ -208,6 +208,7 @@ export async function getTasks({
     const allTasks = [...(activeTasksResult.data || []), ...(todayTasksResult.data || [])];
     const uniqueTasks = Array.from(new Map(allTasks.map((task) => [task.id, task])).values());
 
+    // TODO: Fix this garbage
     const formattedTasks: GetTaskSuggestionResult[] = uniqueTasks.map((task) => ({
       ...task,
       trigger: task.trigger as TaskTrigger,

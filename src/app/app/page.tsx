@@ -44,7 +44,7 @@ export default function HomePage() {
       <HomeHeader />
       <div className='absolute inset-0 top-[48px] mt-[1px] overflow-auto'>
         <div className='mb-4 border-b bg-background'>
-          <div className='flex items-center px-3 py-2'>
+          <div className='flex items-center justify-end px-3 py-2'>
             <button
               onClick={() => setActiveTab('overdue')}
               className={cn(

@@ -37,7 +37,7 @@ export interface GetActionPlanParams {
 }
 
 export interface GetActionPlanServiceResult {
-  actionPlan: GenerateActionPlan;
+  actionPlan: ActionPlanWithTaskIds;
   tasks: GetTaskSuggestionResult[];
 }
 

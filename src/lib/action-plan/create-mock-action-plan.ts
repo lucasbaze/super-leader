@@ -113,6 +113,7 @@ export const mockActionPlan: ActionPlanWithTaskIds = {
           id: 'task-1',
           personId: 'fa37fc95-f4ee-48d7-bf16-43d45bb51cc8',
           personName: 'Sergio Abbud',
+          taskTrigger: TASK_TRIGGERS.FOLLOW_UP.slug,
           taskContext:
             "It's been four months since your chat about touring Riot Platforms. Ask if he ever scheduled the visit and how Hippo Social Club's community vision is evolving.",
           taskType: 'send-message' as const,
@@ -123,6 +124,7 @@ export const mockActionPlan: ActionPlanWithTaskIds = {
           id: 'task-2',
           personId: '72c293d1-0656-4d22-96e3-b5e99a61baac',
           personName: 'Tyllen Bicakcic',
+          taskTrigger: TASK_TRIGGERS.FOLLOW_UP.slug,
           taskContext:
             'Check how the accelerator program is going, offer intros to fintech/AI investors, and see how Alma and the baby are enjoying California.',
           taskType: 'send-message' as const,
@@ -133,6 +135,7 @@ export const mockActionPlan: ActionPlanWithTaskIds = {
           id: 'task-3',
           personId: 'e2e368b8-b9f0-48ed-b428-57a0e7f238fd',
           personName: 'Leon Coe',
+          taskTrigger: TASK_TRIGGERS.FOLLOW_UP.slug,
           taskContext:
             'Congratulate him on the upcoming second child and ask how the Houston AI Club sessions are progressing; offer help or a guest talk.',
           taskType: 'send-message' as const,
@@ -150,6 +153,7 @@ export const mockActionPlan: ActionPlanWithTaskIds = {
           id: 'task-4',
           personId: 'ad2957b9-97dd-4a44-ad2c-1a573b8071c9',
           personName: 'Bob Warren',
+          taskTrigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
           taskContext:
             'Send a recent article on sustainable drilling practices—ties his energy expertise with his CSR focus and sparks a meaningful discussion.',
           taskType: 'share-content' as const,
@@ -167,6 +171,7 @@ export const mockActionPlan: ActionPlanWithTaskIds = {
           id: 'task-5',
           personId: 'f5af6fc5-1049-4776-b324-9b9e2930b268',
           personName: 'Michelle Beygelman',
+          taskTrigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
           taskContext:
             "Add note: confirm Michelle's birthday and current research focus at Arrae to raise profile completeness and enable more personalized follow-ups.",
           taskType: 'add-note' as const,

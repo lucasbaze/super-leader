@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SUGGESTED_ACTION_TYPE_SLUGS } from '@/lib/tasks/constants';
+import { SUGGESTED_ACTION_TYPE_SLUGS, TASK_TRIGGER_SLUGS } from '@/lib/tasks/constants';
 
 const ExecutiveSummarySchema = z.object({
   title: z.string(),
@@ -13,6 +13,7 @@ const TaskSchema = z.object({
   personName: z.string().describe('The name of the person to assign to the task.'),
   taskContext: z.string().describe('The context of the task.'),
   taskType: z.nativeEnum(SUGGESTED_ACTION_TYPE_SLUGS).describe('The type of task to assign to the person.'),
+  taskTrigger: z.nativeEnum(TASK_TRIGGER_SLUGS).describe('The trigger of the task.'),
   callToAction: z.string().describe('An extremely brief call to action related to the task.'),
   taskDueDate: z.string().datetime().describe('The ISO8601 formatted date AND TIME of the task that is in the future.')
 });

@@ -112,7 +112,9 @@ export async function buildTask({
 
     const suggestedAction = await generateTaskAction({
       db,
-      taskContext: taskContextAndActionType
+      context: taskContextAndActionType.context,
+      callToAction: taskContextAndActionType.callToAction,
+      actionType: taskContextAndActionType.actionType
     });
 
     console.log('AI::GenerateObject::SuggestedAction', suggestedAction);

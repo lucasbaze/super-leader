@@ -73,8 +73,8 @@ describe('createTask', () => {
         expect(createdTask.suggestedAction).toEqual(taskData.suggestedAction);
         expect(dateHandler(createdTask.endAt).isSame(dateHandler(taskData.endAt))).toBe(true);
         expect(createdTask.person.id).toBe(person.id);
-        expect(createdTask.person.firstName).toBe('test_John');
-        expect(createdTask.person.lastName).toBe('test_Doe');
+        expect(createdTask.person.firstName).toBe('John');
+        expect(createdTask.person.lastName).toBe('Doe');
       });
     });
 

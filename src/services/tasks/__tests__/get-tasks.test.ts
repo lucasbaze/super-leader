@@ -77,8 +77,8 @@ describe('getTasks service', () => {
           suggestedAction: taskData.suggestedAction,
           person: {
             id: testPerson.id,
-            firstName: 'test_John',
-            lastName: 'test_Doe'
+            firstName: 'John',
+            lastName: 'Doe'
           }
         });
       });
@@ -234,8 +234,8 @@ describe('getTasks service', () => {
         expect(result.error).toBeNull();
         expect(result.data).toHaveLength(1);
         expect(result.data![0].person).toMatchObject({
-          firstName: 'test_John',
-          lastName: 'test_Doe'
+          firstName: 'John',
+          lastName: 'Doe'
         });
       });
     });

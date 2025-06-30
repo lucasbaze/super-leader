@@ -43,7 +43,7 @@ describe('get-initial-message-service', () => {
           expect(result.data).toHaveLength(1); // Initial messages for person
           const messages = result.data;
 
-          expect(messages?.[0]).toContain('test_John');
+          expect(messages?.[0]).toContain('John');
         });
       });
 

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { createTestTask } from '@/lib/tasks/create-test-task';
 
 import { AddNoteTask } from './add-note-task';
 
@@ -17,22 +18,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    task: {
+    task: createTestTask({
       id: '123',
       person: {
         id: '456',
-        first_name: 'Michael',
-        last_name: 'Bashour'
+        firstName: 'Michael',
+        lastName: 'Bashour'
       },
       trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
-      completed_at: null,
-      created_at: '2024-01-01T00:00:00Z',
-      end_at: '2024-01-01T00:00:00Z',
-      bad_suggestion: false,
-      bad_suggestion_reason: null,
-      skipped_at: null,
-      snoozed_at: null,
-      updated_at: '2024-01-01T00:00:00Z',
       context: {
         context: 'You recently had a lunch meeting with Michael',
         callToAction: 'Add a note recapping the meeting with any important details'
@@ -58,6 +51,6 @@ export const Default: Story = {
           }
         ]
       }
-    }
+    })
   }
 };

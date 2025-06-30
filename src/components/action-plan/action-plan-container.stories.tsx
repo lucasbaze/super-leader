@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { mockActionPlan, mockTasks } from '@/lib/action-plan/create-mock-action-plan';
+
 import { ActionPlanContainer } from './action-plan-container';
-import { mockActionPlan, mockTasks } from './test-data';
 
 const meta = {
   title: 'ActionPlan/Container',

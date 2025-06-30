@@ -53,17 +53,17 @@ export function BaseTaskCard({ task, actionBody }: BaseTaskCardProps) {
           <Avatar className='mr-4 size-10 flex-shrink-0'>
             <AvatarImage
               src={`https://i.pravatar.cc/150?u=${task.person.id}`}
-              alt={`${task.person.first_name} ${task.person.last_name}`}
+              alt={`${task.person.firstName} ${task.person.lastName}`}
             />
-            <AvatarFallback>{task.person.first_name[0]}</AvatarFallback>
+            <AvatarFallback>{task.person.firstName[0]}</AvatarFallback>
           </Avatar>
 
           <div className='min-w-0 flex-1'>
             <div className='flex items-start justify-between'>
               <h3 className='font-medium'>
-                {task.person.first_name} {task.person.last_name}
+                {task.person.firstName} {task.person.lastName}
               </h3>
-              <span className='text-sm text-muted-foreground'>{dateHandler(task.end_at).format('ddd, MMM D')}</span>
+              <span className='text-sm text-muted-foreground'>{dateHandler(task.endAt).format('ddd, MMM D')}</span>
             </div>
 
             <div className='mt-1 flex items-center justify-between'>

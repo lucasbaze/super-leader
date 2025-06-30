@@ -13,12 +13,12 @@ interface TaskRendererProps {
 
 export const TaskRenderer = ({ task }: TaskRendererProps) => {
   // Handle completed tasks
-  if (task.completed_at) {
+  if (task.completedAt) {
     return <StatusTaskCard task={task} status='completed' />;
   }
 
   // Handle skipped tasks
-  if (task.skipped_at) {
+  if (task.skippedAt) {
     return <StatusTaskCard task={task} status='skipped' />;
   }
 

@@ -1,42 +1,7 @@
-import { dateHandler } from '@/lib/dates/helpers';
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { createTestTask } from '@/lib/tasks/create-test-task';
 import type { ActionPlanWithTaskIds } from '@/services/action-plan/schema';
 import { GetTaskSuggestionResult } from '@/services/tasks/types';
-
-// Helper function to create test tasks
-export function createTestTask(overrides = {}): GetTaskSuggestionResult {
-  return {
-    id: '1',
-    trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
-    context: {
-      context: 'Follow up on project discussion',
-      callToAction: 'Send a message to check on project progress'
-    },
-    end_at: dateHandler().toISOString(),
-    completed_at: null,
-    skipped_at: null,
-    snoozed_at: null,
-    created_at: dateHandler().subtract(1, 'day').toISOString(),
-    updated_at: dateHandler().subtract(1, 'day').toISOString(),
-    person: {
-      id: '123',
-      first_name: 'John',
-      last_name: 'Doe'
-    },
-    bad_suggestion: null,
-    bad_suggestion_reason: null,
-    suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug,
-    suggestedAction: {
-      messageVariants: [
-        {
-          tone: 'friendly',
-          message: 'Hey, how is the project going?'
-        }
-      ]
-    },
-    ...overrides
-  };
-}
 
 // Pre-built mock tasks
 export const mockTasks: GetTaskSuggestionResult[] = [
@@ -49,8 +14,8 @@ export const mockTasks: GetTaskSuggestionResult[] = [
     },
     person: {
       id: 'fa37fc95-f4ee-48d7-bf16-43d45bb51cc8',
-      first_name: 'Sergio',
-      last_name: 'Abbud'
+      firstName: 'Sergio',
+      lastName: 'Abbud'
     },
     trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
     suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug
@@ -64,8 +29,8 @@ export const mockTasks: GetTaskSuggestionResult[] = [
     },
     person: {
       id: '72c293d1-0656-4d22-96e3-b5e99a61baac',
-      first_name: 'Tyllen',
-      last_name: 'Bicakcic'
+      firstName: 'Tyllen',
+      lastName: 'Bicakcic'
     },
     trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
     suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug
@@ -79,8 +44,8 @@ export const mockTasks: GetTaskSuggestionResult[] = [
     },
     person: {
       id: 'e2e368b8-b9f0-48ed-b428-57a0e7f238fd',
-      first_name: 'Leon',
-      last_name: 'Coe'
+      firstName: 'Leon',
+      lastName: 'Coe'
     },
     trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
     suggestedActionType: SUGGESTED_ACTION_TYPES.SEND_MESSAGE.slug
@@ -94,8 +59,8 @@ export const mockTasks: GetTaskSuggestionResult[] = [
     },
     person: {
       id: 'ad2957b9-97dd-4a44-ad2c-1a573b8071c9',
-      first_name: 'Bob',
-      last_name: 'Warren'
+      firstName: 'Bob',
+      lastName: 'Warren'
     },
     trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
     suggestedActionType: SUGGESTED_ACTION_TYPES.SHARE_CONTENT.slug
@@ -109,8 +74,8 @@ export const mockTasks: GetTaskSuggestionResult[] = [
     },
     person: {
       id: 'f5af6fc5-1049-4776-b324-9b9e2930b268',
-      first_name: 'Michelle',
-      last_name: 'Beygelman'
+      firstName: 'Michelle',
+      lastName: 'Beygelman'
     },
     trigger: TASK_TRIGGERS.CONTEXT_GATHER.slug,
     suggestedActionType: SUGGESTED_ACTION_TYPES.ADD_NOTE.slug

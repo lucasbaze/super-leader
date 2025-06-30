@@ -116,7 +116,7 @@ export function AnimatedTasks() {
 
   // Filter to get only completed tasks for today
   const todayCompletedCount = tasks.filter(
-    (task) => task.completed_at && task.completed_at.startsWith(new Date().toISOString().split('T')[0])
+    (task) => task.completedAt && task.completedAt.startsWith(new Date().toISOString().split('T')[0])
   ).length;
 
   return <AnimatedTasksRenderer router={router} completedCount={todayCompletedCount} />;

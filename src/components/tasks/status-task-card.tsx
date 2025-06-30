@@ -26,21 +26,21 @@ export function StatusTaskCard({ task, status }: StatusTaskCardProps) {
           <Avatar className='mr-3 size-8 flex-shrink-0'>
             <AvatarImage
               src={`https://i.pravatar.cc/150?u=${task.person.id}`}
-              alt={`${task.person.first_name} ${task.person.last_name}`}
+              alt={`${task.person.firstName} ${task.person.lastName}`}
             />
-            <AvatarFallback>{task.person.first_name[0]}</AvatarFallback>
+            <AvatarFallback>{task.person.firstName[0]}</AvatarFallback>
           </Avatar>
 
           <div className='min-w-0 flex-1'>
             <div className='flex items-start justify-between'>
               <div className='flex items-center gap-2'>
                 <h3 className='text-sm font-medium text-muted-foreground'>
-                  {task.person.first_name} {task.person.last_name}
+                  {task.person.firstName} {task.person.lastName}
                 </h3>
                 {isCompleted ? <Check className='size-3.5 text-green-500' /> : <X className='size-3.5 text-red-500' />}
               </div>
               <span className='text-xs text-muted-foreground'>
-                {dateHandler(isCompleted ? task.completed_at : task.skipped_at || task.end_at).format('h:mm A')}
+                {dateHandler(isCompleted ? task.completedAt : task.skippedAt || task.endAt).format('h:mm A')}
               </span>
             </div>
 

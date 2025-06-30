@@ -11,6 +11,7 @@ import { BrainCog, Loader } from '@/components/icons';
 import { ActionPlanNotifier } from '@/components/notifiers/jobs/action-plan-notifier';
 import { SyncLinkedInConnectionsJobNotifier } from '@/components/notifiers/jobs/sync-linkedin-connections-notifier';
 import { UpdateAISummaryJobNotifier } from '@/components/notifiers/jobs/update-ai-summary-notifier';
+import { ImportContactsNotifier } from '@/components/notifiers/jobs/import-contacts-notifier';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { JOBS } from '@/lib/jobs/constants';
@@ -189,6 +190,9 @@ export function JobsPopover({ userId }: { userId: string }) {
               }
               if (run.taskIdentifier === JOBS.GENERATE_ACTION_PLAN) {
                 return <ActionPlanNotifier key={run.id} run={run} onClick={() => setIsOpen(false)} />;
+              }
+              if (run.taskIdentifier === JOBS.IMPORT_CONTACTS_CSV) {
+                return <ImportContactsNotifier key={run.id} run={run} />;
               }
               return null;
             })

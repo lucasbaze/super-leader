@@ -1,7 +1,9 @@
 'use client';
 
+import React from 'react';
+
 import { BaseHeader } from '@/components/headers/base-header';
-import { ListFilter, MoreHorizontal, Users } from '@/components/icons';
+import { ListFilter, MoreHorizontal, Upload, Users } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -15,6 +17,16 @@ interface PeopleHeaderProps {
 }
 
 export function PeopleHeader({ peopleCount }: PeopleHeaderProps) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    await fetch('/api/files', { method: 'POST', body: formData });
+  };
+
   return (
     <BaseHeader className='flex flex-1 items-center justify-between'>
       <div className='flex items-center gap-3'>
@@ -36,6 +48,16 @@ export function PeopleHeader({ peopleCount }: PeopleHeaderProps) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <Button variant='outline' size='sm' onClick={() => fileInputRef.current?.click()}>
+          <Upload className='mr-2 size-4' /> Import CSV
+        </Button>
+        <input
+          ref={fileInputRef}
+          type='file'
+          accept='.csv'
+          onChange={handleFileChange}
+          className='hidden'
+        />
       </div>
 
       <div className='flex items-center gap-2'>

@@ -76,7 +76,7 @@ export function ActionPlanContainer({ actionPlan, tasks, isLoading = false, erro
 
   return (
     <div className='flex flex-col'>
-      <div className='border-b bg-background px-8 py-6'>
+      <div className='border-b bg-background px-8 pb-6 pt-2'>
         <h1 className='mb-1 text-2xl font-bold'>Good Morning</h1>
         <div className='mb-2 text-sm text-muted-foreground'>
           {new Date().toLocaleDateString(undefined, {

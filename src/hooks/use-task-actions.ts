@@ -30,6 +30,7 @@ export function useTaskActions() {
     onSuccess: () => {
       // Invalidate the tasks query to refresh the data
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['action-plan'] });
     },
     onError: (error: any) => {
       errorToast.show(error);
@@ -37,8 +38,7 @@ export function useTaskActions() {
   });
 
   return {
-    completeTask: (taskId: string) =>
-      updateTask.mutateAsync({ taskId, action: TaskActionType.COMPLETE }),
+    completeTask: (taskId: string) => updateTask.mutateAsync({ taskId, action: TaskActionType.COMPLETE }),
     skipTask: (taskId: string) => updateTask.mutateAsync({ taskId, action: TaskActionType.SKIP }),
     isLoading: updateTask.isPending
   };

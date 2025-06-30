@@ -27,20 +27,19 @@ export default function HomePage() {
   };
 
   return (
-    <div className='absolute inset-0'>
+    <div className='absolute inset-0 flex flex-col'>
       <HomeHeader />
-      <div className='absolute inset-0 top-[48px] mt-[1px] overflow-auto'>
-        <div className='mb-4 border-b bg-background'>
-          <div className='flex items-center justify-end px-3 py-2'>
-            <button
-              onClick={() => setActiveTab('action-plan')}
-              className={cn(
-                'rounded-md px-2 py-1 text-sm font-medium',
-                activeTab === 'action-plan' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
-              )}>
-              Action Plan
-            </button>
-            <div className='mx-2 h-4 w-px bg-border'></div>
+      <div className='flex-shrink-0 border-b bg-background'>
+        <div className='flex items-center justify-between px-3 py-2'>
+          <button
+            onClick={() => setActiveTab('action-plan')}
+            className={cn(
+              'rounded-md px-2 py-1 text-sm font-medium',
+              activeTab === 'action-plan' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
+            )}>
+            Action Plan
+          </button>
+          <div className='flex items-center'>
             <button
               onClick={() => setActiveTab('overdue')}
               className={cn(
@@ -78,6 +77,8 @@ export default function HomePage() {
             </button>
           </div>
         </div>
+      </div>
+      <div className='flex-1 overflow-auto'>
         <div className='p-4'>{renderTabContent()}</div>
       </div>
     </div>

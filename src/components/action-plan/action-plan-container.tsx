@@ -7,6 +7,7 @@ import type { ActionPlanWithTaskIds } from '@/services/action-plan/schema';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
 import { ActionPlanTaskList } from './action-plan-list';
+import { ActionPlanProgress } from './action-plan-progress';
 
 interface ActionPlanContainerProps {
   actionPlan?: ActionPlanWithTaskIds;
@@ -44,8 +45,8 @@ export function ActionPlanContainer({ actionPlan, tasks, isLoading = false, erro
       return (
         <div className='mb-2'>
           <div className='mb-1 text-lg font-semibold'>{actionPlan.executiveSummary.title}</div>
-          <div className='mb-1 text-base'>{actionPlan.executiveSummary.description}</div>
-          <div className='text-sm text-muted-foreground'>{actionPlan.executiveSummary.content}</div>
+          <div className='mb-1 text-base sm:max-w-[90%] md:max-w-[60%]'>{actionPlan.executiveSummary.description}</div>
+          <ActionPlanProgress actionPlan={actionPlan} tasks={tasks} />
         </div>
       );
     }
@@ -75,7 +76,7 @@ export function ActionPlanContainer({ actionPlan, tasks, isLoading = false, erro
   };
 
   return (
-    <div className='flex flex-col'>
+    <div className='relative flex flex-col'>
       <div className='border-b bg-background px-8 pb-6 pt-2'>
         <h1 className='mb-1 text-2xl font-bold'>Good Morning</h1>
         <div className='mb-2 text-sm text-muted-foreground'>

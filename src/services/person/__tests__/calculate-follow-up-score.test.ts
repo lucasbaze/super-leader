@@ -184,8 +184,8 @@ describe('calculateFollowUpScore', () => {
           expect.objectContaining({
             person: expect.objectContaining({
               id: person.id,
-              first_name: 'test_John',
-              last_name: 'test_Doe'
+              first_name: 'John',
+              last_name: 'Doe'
             }),
             interactions: expect.arrayContaining([
               expect.objectContaining({
@@ -243,8 +243,8 @@ describe('calculateFollowUpScore', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_John',
-            last_name: 'test_Doe'
+            first_name: 'John',
+            last_name: 'Doe'
           }
         });
 

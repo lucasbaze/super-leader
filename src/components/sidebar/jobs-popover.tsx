@@ -8,6 +8,7 @@ import { useRealtimeRunsWithTag } from '@trigger.dev/react-hooks';
 import { toast } from 'sonner';
 
 import { BrainCog, Loader } from '@/components/icons';
+import { ActionPlanNotifier } from '@/components/notifiers/jobs/action-plan-notifier';
 import { SyncLinkedInConnectionsJobNotifier } from '@/components/notifiers/jobs/sync-linkedin-connections-notifier';
 import { UpdateAISummaryJobNotifier } from '@/components/notifiers/jobs/update-ai-summary-notifier';
 import { Button } from '@/components/ui/button';
@@ -186,6 +187,9 @@ export function JobsPopover({ userId }: { userId: string }) {
               if (run.taskIdentifier === JOBS.SYNC_LINKEDIN_CONTACTS) {
                 return <SyncLinkedInConnectionsJobNotifier key={run.id} run={run} />;
               }
+              if (run.taskIdentifier === JOBS.GENERATE_ACTION_PLAN) {
+                return <ActionPlanNotifier key={run.id} run={run} onClick={() => setIsOpen(false)} />;
+              }
               return null;
             })
           ) : (
@@ -196,27 +200,3 @@ export function JobsPopover({ userId }: { userId: string }) {
     </Popover>
   );
 }
-
-// function UnreadBadge({
-//   userId,
-//   seenRuns,
-//   token
-// }: {
-//   userId: string;
-//   seenRuns: Set<string>;
-//   token: string;
-// }) {
-//   const { runs } = useRealtimeRunsWithTag(`user:${userId}`, {
-//     accessToken: token
-//   });
-
-//   const unreadCount = runs?.filter((run) => !seenRuns.has(run.id)).length ?? 0;
-
-//   if (unreadCount === 0) return null;
-
-//   return (
-//     <span className='absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground'>
-//       {unreadCount}
-//     </span>
-//   );
-// }

@@ -102,7 +102,12 @@ export async function getTasks({
       }
 
       const formattedTasks: GetTaskSuggestionResult[] = (overdueResult.data || []).map((task) => ({
-        ...task,
+        id: task.id,
+        person: {
+          id: task.person.id,
+          firstName: task.person.first_name,
+          lastName: task.person.last_name
+        },
         trigger: task.trigger as TaskTrigger,
         context: task.context as TaskContext,
         suggestedActionType: task.suggested_action_type as SuggestedActionType,
@@ -209,7 +214,12 @@ export async function getTasks({
     const uniqueTasks = Array.from(new Map(allTasks.map((task) => [task.id, task])).values());
 
     const formattedTasks: GetTaskSuggestionResult[] = uniqueTasks.map((task) => ({
-      ...task,
+      id: task.id,
+      person: {
+        id: task.person.id,
+        firstName: task.person.first_name,
+        lastName: task.person.last_name
+      },
       trigger: task.trigger as TaskTrigger,
       context: task.context as TaskContext,
       suggestedActionType: task.suggested_action_type as SuggestedActionType,

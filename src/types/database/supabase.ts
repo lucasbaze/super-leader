@@ -28,6 +28,30 @@ export type Database = {
   };
   public: {
     Tables: {
+      action_plan: {
+        Row: {
+          action_plan: Json;
+          created_at: string;
+          id: string;
+          state: string;
+          user_id: string;
+        };
+        Insert: {
+          action_plan: Json;
+          created_at?: string;
+          id?: string;
+          state: string;
+          user_id: string;
+        };
+        Update: {
+          action_plan?: Json;
+          created_at?: string;
+          id?: string;
+          state?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       addresses: {
         Row: {
           city: string | null;
@@ -587,6 +611,7 @@ export type Database = {
           node_person_id: string;
           note: string | null;
           relation: string | null;
+          user_id: string;
         };
         Insert: {
           created_at?: string;
@@ -595,6 +620,7 @@ export type Database = {
           node_person_id: string;
           note?: string | null;
           relation?: string | null;
+          user_id: string;
         };
         Update: {
           created_at?: string;
@@ -603,6 +629,7 @@ export type Database = {
           node_person_id?: string;
           note?: string | null;
           relation?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {

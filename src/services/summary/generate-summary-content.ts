@@ -55,7 +55,7 @@ export async function generateSummaryContent({
     const response = await generateObject({
       messages,
       schema: SinglePersonSummarySchema,
-      model: 'openai/gpt-4o'
+      model: 'gpt-4o'
     });
 
     if (!response) {

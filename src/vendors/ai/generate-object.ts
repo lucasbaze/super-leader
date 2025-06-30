@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { toError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 
-export type TGenerateObjectOptions =
+export type GenerateObjectOptions =
   | {
       messages: CoreMessage[];
       prompt?: never;
@@ -21,19 +21,16 @@ export type TGenerateObjectOptions =
       model?: string;
     };
 
-export async function generateObject({ messages, prompt, schema }: TGenerateObjectOptions) {
+export async function generateObject({ messages, prompt, schema, model }: GenerateObjectOptions) {
   try {
     const completion = await generateObjectAi({
-      // TODO: Used for generating the summaries about individuals... may not be needed if 4o is good enough
-      model: openai('gpt-4o', {
+      model: openai(model || 'gpt-4o', {
         structuredOutputs: true
       }),
       messages,
       prompt,
       schema
     });
-
-    console.log('AI::GenerateObject::Completion', completion);
 
     return completion.object;
   } catch (err) {

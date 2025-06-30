@@ -1,6 +1,6 @@
 import { dateHandler } from '@/lib/dates/helpers';
 
-export type TimePeriod = 'today' | 'this-week' | 'this-month' | 'all' | 'overdue';
+export type TimePeriod = 'action-plan' | 'today' | 'this-week' | 'this-month' | 'all' | 'overdue';
 
 export interface DateRange {
   after: string;

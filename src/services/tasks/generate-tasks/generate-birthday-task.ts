@@ -6,7 +6,7 @@ import { DBClient, Person } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
-import { buildTask } from '../build-task';
+import { buildTask } from '../build-task-from-trigger';
 import { getTasks } from '../get-tasks';
 
 // Service params interface

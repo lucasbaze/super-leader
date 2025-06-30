@@ -103,13 +103,13 @@ describe('getGroupMembers service', () => {
           expect.arrayContaining([
             expect.objectContaining({
               id: testPerson1.id,
-              first_name: 'test_John',
-              last_name: 'test_Doe'
+              first_name: 'John',
+              last_name: 'Doe'
             }),
             expect.objectContaining({
               id: testPerson2.id,
-              first_name: 'test_Jane',
-              last_name: 'test_Smith'
+              first_name: 'Jane',
+              last_name: 'Smith'
             })
           ])
         );
@@ -186,8 +186,8 @@ describe('getGroupMembers service', () => {
 
         expect(result.data).toHaveLength(1);
         expect(result.data![0]).toMatchObject({
-          first_name: 'test_John',
-          last_name: 'test_Doe'
+          first_name: 'John',
+          last_name: 'Doe'
         });
       });
     });

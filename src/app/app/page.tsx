@@ -2,49 +2,44 @@
 
 import { useState } from 'react';
 
+import { ActionPlanTab } from '@/components/home/action-plan-tab';
 import { HomeHeader } from '@/components/home/home-header';
-import { TaskList } from '@/components/tasks/task-list';
-import { useTasks } from '@/hooks/use-tasks';
-import {
-  filterAllTasks,
-  groupTasksByDay,
-  groupTasksByReverseTimeframe,
-  groupTasksByTimeframe,
-  groupTasksByWeek,
-  TaskGroup
-} from '@/lib/tasks/task-groups';
+import { TasksTab } from '@/components/home/tasks-tab';
 import { TimePeriod } from '@/lib/tasks/time-periods';
 import { cn } from '@/lib/utils';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<TimePeriod>('this-week');
-  const { data: tasks, isLoading, error } = useTasks(undefined, activeTab);
+  const [activeTab, setActiveTab] = useState<TimePeriod>('action-plan');
 
-  let taskGroups: TaskGroup[] = [];
-  if (tasks) {
+  const renderTabContent = () => {
     switch (activeTab) {
+      case 'action-plan':
+        return <ActionPlanTab />;
+      case 'today':
       case 'this-week':
-        taskGroups = groupTasksByDay(tasks);
-        break;
       case 'this-month':
-        taskGroups = groupTasksByWeek(tasks);
-        break;
       case 'overdue':
-        taskGroups = groupTasksByReverseTimeframe(tasks);
-        break;
       case 'all':
+        return <TasksTab activeTab={activeTab} />;
       default:
-        taskGroups = groupTasksByTimeframe(filterAllTasks(tasks));
-        break;
+        return <ActionPlanTab />;
     }
-  }
+  };
 
   return (
-    <div className='absolute inset-0'>
+    <div className='absolute inset-0 flex flex-col'>
       <HomeHeader />
-      <div className='absolute inset-0 top-[48px] mt-[1px] overflow-auto'>
-        <div className='mb-4 border-b bg-background'>
-          <div className='flex items-center px-3 py-2'>
+      <div className='flex-shrink-0 border-b bg-background'>
+        <div className='flex items-center justify-between px-3 py-2'>
+          <button
+            onClick={() => setActiveTab('action-plan')}
+            className={cn(
+              'rounded-md px-2 py-1 text-sm font-medium',
+              activeTab === 'action-plan' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted'
+            )}>
+            Action Plan
+          </button>
+          <div className='flex items-center'>
             <button
               onClick={() => setActiveTab('overdue')}
               className={cn(
@@ -82,26 +77,9 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        <div className='p-4'>
-          {isLoading ? (
-            <div className='text-sm text-muted-foreground'>Loading tasks...</div>
-          ) : error ? (
-            <div className='text-sm text-red-500'>Failed to load tasks</div>
-          ) : !taskGroups?.length ? (
-            <div className='text-sm text-muted-foreground'>
-              No tasks available for{' '}
-              {activeTab === 'this-week'
-                ? 'this week'
-                : activeTab === 'this-month'
-                  ? 'this month'
-                  : activeTab === 'overdue'
-                    ? 'overdue tasks'
-                    : 'any date'}
-            </div>
-          ) : (
-            <TaskList groups={taskGroups} />
-          )}
-        </div>
+      </div>
+      <div className='flex-1 overflow-auto'>
+        <div className='p-4'>{renderTabContent()}</div>
       </div>
     </div>
   );

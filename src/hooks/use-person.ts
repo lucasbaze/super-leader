@@ -1,6 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { errorToast } from '@/components/errors/error-toast';
+import { routes } from '@/lib/routes';
 import type { GetPersonResult } from '@/services/person/get-person';
 import type { TInteraction } from '@/services/person/person-activity';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
@@ -58,5 +61,32 @@ export function usePerson(id: string | null, options: UsePersonOptions = {}) {
       return json.data;
     },
     enabled: !!id // Query will not execute if id is null/undefined/empty string
+  });
+}
+
+export function useDeletePerson() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async (personId: string) => {
+      const response = await fetch(`/api/person/${personId}`, {
+        method: 'DELETE'
+      });
+
+      const json = await response.json();
+      if (json.error) {
+        errorToast.show(json.error);
+        throw json.error;
+      }
+      return json.data;
+    },
+    onSuccess: () => {
+      // Invalidate all person-related queries
+      queryClient.refetchQueries({ queryKey: ['people'] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+
+      router.push(routes.people.root());
+    }
   });
 }

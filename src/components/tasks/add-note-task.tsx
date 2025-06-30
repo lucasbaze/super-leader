@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { Info } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { addNoteActionSchema, GetTaskSuggestionResult } from '@/services/tasks/types';
 
@@ -25,9 +24,7 @@ export const AddNoteTask = ({ task }: { task: GetTaskSuggestionResult }) => {
   return (
     <BaseTaskCard
       task={task}
-      actionBody={
-        <AddNoteCardActionBody questionVariants={task.suggestedAction.questionVariants} />
-      }
+      actionBody={<AddNoteCardActionBody questionVariants={task.suggestedAction.questionVariants} />}
     />
   );
 };
@@ -38,9 +35,7 @@ type AddNoteCardActionBodyProps = {
 
 const AddNoteCardActionBody = ({ questionVariants }: AddNoteCardActionBodyProps) => {
   const [note, setNote] = useState('');
-  const [selectedQuestionType, setSelectedQuestionType] = useState<string>(
-    questionVariants[0].type
-  );
+  const [selectedQuestionType, setSelectedQuestionType] = useState<string>(questionVariants[0].type);
 
   const selectedQuestions = questionVariants.filter((q) => q.type === selectedQuestionType);
 

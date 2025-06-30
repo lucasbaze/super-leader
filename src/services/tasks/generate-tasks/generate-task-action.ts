@@ -33,7 +33,9 @@ const ERRORS = {
 // Define the service parameters
 interface GenerateTaskActionParams {
   db: DBClient;
-  taskContext: TaskContext & { actionType: SuggestedActionType };
+  context: TaskContext['context'];
+  callToAction: TaskContext['callToAction'];
+  actionType: SuggestedActionType;
 }
 
 // Define the service response type
@@ -45,10 +47,16 @@ type GenerateTaskActionResult = ServiceResponse<SendMessageAction | any>;
  */
 export async function generateTaskAction({
   db,
-  taskContext
+  actionType,
+  callToAction,
+  context
 }: GenerateTaskActionParams): Promise<GenerateTaskActionResult> {
+  const taskContext = {
+    context,
+    callToAction
+  };
+
   try {
-    const { actionType } = taskContext;
     let suggestedAction: any;
 
     // Generate the appropriate action based on the action type

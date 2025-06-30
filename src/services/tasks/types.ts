@@ -90,15 +90,23 @@ export type CreateTaskSuggestion = z.infer<typeof taskSuggestionSchema>;
 
 export type TaskContext = z.infer<typeof taskContextSchema>;
 
-export type GetTaskSuggestionResult = Omit<
-  TaskSuggestion,
-  'trigger' | 'context' | 'suggested_action_type' | 'suggested_action' | 'person_id' | 'user_id'
-> & {
+export type GetTaskSuggestionResult = {
+  id: string;
   trigger: (typeof TASK_TRIGGERS)[keyof typeof TASK_TRIGGERS]['slug'];
   context: TaskContext;
   suggestedActionType: SuggestedActionType;
   suggestedAction: CreateTaskSuggestion['suggestedAction'];
-  person: Pick<Person, 'id' | 'first_name' | 'last_name'>;
+  endAt: string;
+  completedAt: string | null;
+  skippedAt: string | null;
+  snoozedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  person: {
+    id: string;
+    firstName: string;
+    lastName: string | null;
+  };
 };
 
 export enum TaskActionType {

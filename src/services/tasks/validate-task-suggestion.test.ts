@@ -133,7 +133,7 @@ describe('validateTaskSuggestion', () => {
     it('should reject invalid trigger', () => {
       const result = validateTaskSuggestion({
         ...validInput,
-        // @ts-expect-error
+        // @ts-ignore
         trigger: 'INVALID_TRIGGER'
       });
 

@@ -196,27 +196,3 @@ export function JobsPopover({ userId }: { userId: string }) {
     </Popover>
   );
 }
-
-// function UnreadBadge({
-//   userId,
-//   seenRuns,
-//   token
-// }: {
-//   userId: string;
-//   seenRuns: Set<string>;
-//   token: string;
-// }) {
-//   const { runs } = useRealtimeRunsWithTag(`user:${userId}`, {
-//     accessToken: token
-//   });
-
-//   const unreadCount = runs?.filter((run) => !seenRuns.has(run.id)).length ?? 0;
-
-//   if (unreadCount === 0) return null;
-
-//   return (
-//     <span className='absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground'>
-//       {unreadCount}
-//     </span>
-//   );
-// }

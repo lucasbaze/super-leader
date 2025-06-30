@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
-import { buildActionPlan } from '@/services/action-plan/build-action-plan';
+import { generateActionPlanTask } from '@/trigger/generate-action-plan';
 import { createClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
@@ -15,16 +15,20 @@ export async function POST(request: NextRequest) {
       return apiResponse.unauthorized(toError(authResult.error));
     }
 
-    const result = await buildActionPlan({
-      db: supabase,
-      userId: authResult.data.id
+    // Trigger the background job
+    const handle = await generateActionPlanTask.trigger(
+      {
+        userId: authResult.data.id
+      },
+      {
+        tags: [`user:${authResult.data.id}`]
+      }
+    );
+
+    return apiResponse.success({
+      message: 'Action plan generation started',
+      taskId: handle.id
     });
-
-    if (result.error) {
-      return apiResponse.error(result.error);
-    }
-
-    return apiResponse.success(result.data);
   } catch (error) {
     return apiResponse.error(toError(error));
   }

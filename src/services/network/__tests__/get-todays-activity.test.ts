@@ -117,8 +117,8 @@ describe('getTodaysActivity service', () => {
         expect(result.data?.inner5).toEqual({
           count: 2,
           people: expect.arrayContaining([
-            { name: 'test_John test_Doe' },
-            { name: 'test_Jane test_Smith' }
+            { name: 'John Doe' },
+            { name: 'Jane Smith' }
           ])
         });
         expect(result.data?.central50.count).toBe(0);
@@ -183,7 +183,7 @@ describe('getTodaysActivity service', () => {
         expect(result.data?.strategic100.count).toBe(0);
         expect(result.data?.everyone).toEqual({
           count: 1,
-          people: [{ name: 'test_Bob test_Custom' }]
+          people: [{ name: 'Bob Custom' }]
         });
       });
     });
@@ -310,19 +310,19 @@ describe('getTodaysActivity service', () => {
         expect(result.data).toEqual({
           inner5: {
             count: 1,
-            people: [{ name: 'test_Inner test_Five' }]
+            people: [{ name: 'Inner Five' }]
           },
           central50: {
             count: 1,
-            people: [{ name: 'test_Central test_Fifty' }]
+            people: [{ name: 'Central Fifty' }]
           },
           strategic100: {
             count: 1,
-            people: [{ name: 'test_Strategic test_Hundred' }]
+            people: [{ name: 'Strategic Hundred' }]
           },
           everyone: {
             count: 1,
-            people: [{ name: 'test_Every test_One' }]
+            people: [{ name: 'Every One' }]
           }
         });
       });
@@ -404,7 +404,7 @@ describe('getTodaysActivity service', () => {
         expect(result.error).toBeNull();
         expect(result.data?.inner5).toEqual({
           count: 4,
-          people: [{ name: 'test_Michael test_Dedup' }]
+          people: [{ name: 'Michael Dedup' }]
         });
         expect(result.data?.central50.count).toBe(0);
         expect(result.data?.strategic100.count).toBe(0);
@@ -528,8 +528,8 @@ describe('getTodaysActivity service', () => {
         expect(result.data?.inner5).toEqual({
           count: 6,
           people: expect.arrayContaining([
-            { name: 'test_Michael test_Multi' },
-            { name: 'test_Kendall test_Multi' }
+            { name: 'Michael Multi' },
+            { name: 'Kendall Multi' }
           ])
         });
         expect(result.data?.central50.count).toBe(0);

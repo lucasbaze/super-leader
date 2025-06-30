@@ -61,7 +61,7 @@ describe('person-activity service', () => {
             payload: {
               personId: testPerson.id,
               userId: testUser.id,
-              personName: 'test_John test_Doe'
+              personName: 'John Doe'
             },
             options: {}
           });
@@ -116,7 +116,7 @@ describe('person-activity service', () => {
             payload: {
               personId: testPerson.id,
               userId: testUser.id,
-              personName: 'test_John test_Doe'
+              personName: 'John Doe'
             },
             options: {}
           });

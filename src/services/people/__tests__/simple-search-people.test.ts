@@ -170,12 +170,12 @@ describe('searchPeople service', () => {
         expect(result.data).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              first_name: 'test_Anthony',
-              last_name: 'test_Davis'
+              first_name: 'Anthony',
+              last_name: 'Davis'
             }),
             expect.objectContaining({
-              first_name: 'test_Anthony',
-              last_name: 'test_Edwards'
+              first_name: 'Anthony',
+              last_name: 'Edwards'
             })
           ])
         );
@@ -205,8 +205,8 @@ describe('searchPeople service', () => {
 
         expect(result1.data).toHaveLength(1);
         expect(result1.data![0]).toMatchObject({
-          first_name: 'test_Michael',
-          last_name: 'test_Jordan'
+          first_name: 'Michael',
+          last_name: 'Jordan'
         });
 
         // Should also find with full search term in bio
@@ -218,9 +218,9 @@ describe('searchPeople service', () => {
 
         expect(result2.data).toHaveLength(1);
         expect(result2.data![0]).toMatchObject({
-          first_name: 'test_Michael',
-          last_name: 'test_Jordan',
-          bio: 'test_Basketball legend'
+          first_name: 'Michael',
+          last_name: 'Jordan',
+          bio: 'Basketball legend'
         });
       });
     });

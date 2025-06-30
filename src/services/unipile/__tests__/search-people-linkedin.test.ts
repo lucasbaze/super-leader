@@ -26,8 +26,7 @@ describe('searchPerson service', () => {
             last_name: 'Doe',
             linkedin_public_id: 'john-doe-123',
             title: 'Software Engineer'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({
@@ -62,8 +61,7 @@ describe('searchPerson service', () => {
             first_name: 'John',
             last_name: 'Doe',
             linkedin_public_id: 'john-doe-123'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({
@@ -97,8 +95,7 @@ describe('searchPerson service', () => {
             first_name: 'John',
             last_name: 'Doe',
             linkedin_public_id: 'john-doe-123'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({
@@ -151,8 +148,7 @@ describe('searchPerson service', () => {
             first_name: 'John',
             last_name: 'Doe',
             linkedin_public_id: 'john-doe-123'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({
@@ -178,8 +174,7 @@ describe('searchPerson service', () => {
             first_name: 'Valerie',
             last_name: 'Soto M. Psych, MSpED.',
             linkedin_public_id: 'valeriesoto2025'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({
@@ -213,8 +208,7 @@ describe('searchPerson service', () => {
             first_name: 'Valerie',
             last_name: 'Soto M. Psych, MSpED.',
             linkedin_public_id: 'valeriesoto2025'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({
@@ -248,8 +242,7 @@ describe('searchPerson service', () => {
             first_name: 'Valerie',
             last_name: 'Soto M. Psych, MSpED.',
             linkedin_public_id: 'valeriesoto2025'
-          },
-          withPrefix: false
+          }
         });
 
         const result = await searchPersonByNameAndLinkedInId({

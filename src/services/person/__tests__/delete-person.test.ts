@@ -31,8 +31,7 @@ describe('person service', () => {
               user_id: testUser.id,
               first_name: 'John',
               last_name: 'Doe'
-            },
-            withPrefix: false
+            }
           });
 
           // Create another person for relationship

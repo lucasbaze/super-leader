@@ -96,7 +96,7 @@ describe('generateBirthdayTasks', () => {
             personId: person1.id,
             trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
             endAt: dateHandler(birthdayInTwoWeeks).subtract(7, 'days').startOf('day').toISOString(),
-            context: expect.stringContaining('test_Alice has a birthday coming up')
+            context: expect.stringContaining('Alice has a birthday coming up')
           })
         );
 
@@ -107,7 +107,7 @@ describe('generateBirthdayTasks', () => {
             personId: person2.id,
             trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
             endAt: dateHandler(birthdayInAWeek).subtract(7, 'days').startOf('day').toISOString(),
-            context: expect.stringContaining('test_Bob has a birthday coming up')
+            context: expect.stringContaining('Bob has a birthday coming up')
           })
         );
       });

@@ -67,8 +67,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Inner',
-            last_name: 'test_Five'
+            first_name: 'Inner',
+            last_name: 'Five'
           }
         });
 
@@ -76,8 +76,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Central',
-            last_name: 'test_Fifty'
+            first_name: 'Central',
+            last_name: 'Fifty'
           }
         });
 
@@ -177,8 +177,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Custom',
-            last_name: 'test_Period'
+            first_name: 'Custom',
+            last_name: 'Period'
           }
         });
 
@@ -265,8 +265,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Inner',
-            last_name: 'test_Five'
+            first_name: 'Inner',
+            last_name: 'Five'
           }
         });
 
@@ -274,8 +274,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Central',
-            last_name: 'test_Fifty'
+            first_name: 'Central',
+            last_name: 'Fifty'
           }
         });
 
@@ -283,8 +283,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Strategic',
-            last_name: 'test_Hundred'
+            first_name: 'Strategic',
+            last_name: 'Hundred'
           }
         });
 
@@ -292,8 +292,8 @@ describe('getNetworkActivity service', () => {
           db,
           data: {
             user_id: testUser.id,
-            first_name: 'test_Everyone',
-            last_name: 'test_Else'
+            first_name: 'Everyone',
+            last_name: 'Else'
           }
         });
 

@@ -23,8 +23,7 @@ describe('getPersonPersonRelations service', () => {
           user_id: testUser.id,
           first_name: 'Alice',
           last_name: 'Smith'
-        },
-        withPrefix: false
+        }
       });
       const personB = await createTestPerson({
         db,
@@ -32,8 +31,7 @@ describe('getPersonPersonRelations service', () => {
           user_id: testUser.id,
           first_name: 'Bob',
           last_name: 'Jones'
-        },
-        withPrefix: false
+        }
       });
       const personC = await createTestPerson({
         db,
@@ -41,8 +39,7 @@ describe('getPersonPersonRelations service', () => {
           user_id: testUser.id,
           first_name: 'Carol',
           last_name: 'Lee'
-        },
-        withPrefix: false
+        }
       });
 
       // Create two relations: A->B and C->A

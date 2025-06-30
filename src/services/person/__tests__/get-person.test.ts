@@ -34,8 +34,8 @@ describe('getPerson service', () => {
 
         expect(result.data?.person).toMatchObject({
           id: testPerson.id,
-          first_name: 'test_John',
-          last_name: 'test_Doe'
+          first_name: 'John',
+          last_name: 'Doe'
         });
         expect(result.data?.contactMethods).toBeUndefined();
         expect(result.data?.addresses).toBeUndefined();

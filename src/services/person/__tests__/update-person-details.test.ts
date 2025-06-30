@@ -14,9 +14,7 @@ import {
   updatePersonWebsite
 } from '../../person/update-person-details';
 
-// Helper to add test_ prefix for assertions
-const testPrefix = 'test_';
-const prefixed = (val: string) => `${testPrefix}${val}`;
+
 
 // Helper to create a test user and person
 async function setupUserAndPerson(db: SupabaseClient, personData: any = {}) {

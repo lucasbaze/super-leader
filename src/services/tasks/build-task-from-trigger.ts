@@ -117,7 +117,7 @@ export async function buildTask({
       actionType: taskContextAndActionType.actionType
     });
 
-    console.log('AI::GenerateObject::SuggestedAction', suggestedAction);
+    console.log('AI::GenerateObject::SuggestedAction', JSON.stringify(suggestedAction, null, 2));
 
     // create the task and insert into the database
     const { data: task, error: taskError } = await createTask({

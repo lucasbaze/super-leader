@@ -1,13 +1,15 @@
 'use client';
 
 import { BaseHeader } from '@/components/headers/base-header';
-import { ListChecks, Loader } from '@/components/icons';
+import { ListChecks, ListTodo, Loader } from '@/components/icons';
+import { useGenerateActionPlan } from '@/hooks/use-action-plan';
 import { useGenerateTasks } from '@/hooks/use-tasks';
 
 import { Button } from '../ui/button';
 
 export function HomeHeader() {
   const generateTasks = useGenerateTasks();
+  const generateActionPlan = useGenerateActionPlan();
 
   return (
     <BaseHeader className='flex flex-1 items-center justify-between'>
@@ -31,6 +33,27 @@ export function HomeHeader() {
             <>
               <ListChecks className='mr-2 size-4' />
               Generate Tasks
+            </>
+          )}
+        </Button>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => {
+            // if (data?.person?.id) {
+            generateActionPlan.mutate();
+            // }
+          }}
+          disabled={generateActionPlan.isPending}>
+          {generateActionPlan.isPending ? (
+            <>
+              <Loader className='mr-2 size-4 animate-spin' />
+              Generating...
+            </>
+          ) : (
+            <>
+              <ListTodo className='mr-2 size-4' />
+              Generate Action Plan
             </>
           )}
         </Button>

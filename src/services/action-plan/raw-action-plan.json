@@ -16,24 +16,27 @@
           "personName": "Sergio Abbud",
           "taskContext": "It’s been four months since your chat about touring Riot Platforms. Ask if he ever scheduled the visit and how Hippo Social Club’s community vision is evolving.",
           "taskType": "send-message",
+          "taskTrigger": "follow-up",
           "callToAction": "Follow up on tour & club",
-          "taskDueDate": "2025-06-25T12:00:00Z"
+          "taskDueDate": "2025-06-30T21:00:00Z"
         },
         {
           "personId": "72c293d1-0656-4d22-96e3-b5e99a61baac",
           "personName": "Tyllen Bicakcic",
           "taskContext": "Check how the accelerator program is going, offer intros to fintech/AI investors, and see how Alma and the baby are enjoying California.",
           "taskType": "send-message",
+          "taskTrigger": "follow-up",
           "callToAction": "Support Payman.ai",
-          "taskDueDate": "2025-06-25T12:00:00Z"
+          "taskDueDate": "2025-06-30T21:00:00Z"
         },
         {
           "personId": "e2e368b8-b9f0-48ed-b428-57a0e7f238fd",
           "personName": "Leon Coe",
           "taskContext": "Congratulate him on the upcoming second child and ask how the Houston AI Club sessions are progressing; offer help or a guest talk.",
           "taskType": "send-message",
+          "taskTrigger": "follow-up",
           "callToAction": "Celebrate family & AI",
-          "taskDueDate": "2025-06-25T12:00:00Z"
+          "taskDueDate": "2025-06-30T21:00:00Z"
         }
       ]
     },
@@ -47,8 +50,9 @@
           "personName": "Bob Warren",
           "taskContext": "Send a recent article on sustainable drilling practices—ties his energy expertise with his CSR focus and sparks a meaningful discussion.",
           "taskType": "share-content",
+          "taskTrigger": "follow-up",
           "callToAction": "Send article",
-          "taskDueDate": "2025-06-25T12:00:00Z"
+          "taskDueDate": "2025-06-30T21:00:00Z"
         }
       ]
     },
@@ -62,8 +66,9 @@
           "personName": "Michelle Beygelman",
           "taskContext": "Add note: confirm Michelle’s birthday and current research focus at Arrae to raise profile completeness and enable more personalized follow-ups.",
           "taskType": "add-note",
+          "taskTrigger": "context-gather",
           "callToAction": "Update profile",
-          "taskDueDate": "2025-06-25T12:00:00Z"
+          "taskDueDate": "2025-06-30T21:00:00Z"
         }
       ]
     }

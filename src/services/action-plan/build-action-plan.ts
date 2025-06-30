@@ -36,8 +36,8 @@ export const buildActionPlan = async ({
 }: BuildActionPlanParams): Promise<ServiceResponse<ActionPlan | any>> => {
   try {
     // Generate the action plan
-    // const generatedActionPlan = await generateActionPlan({ db, userId });
-    const generatedActionPlan = JSON.parse(fs.readFileSync('src/services/action-plan/raw-action-plan.json', 'utf8'));
+    const generatedActionPlan = await generateActionPlan({ db, userId });
+    // const generatedActionPlan = JSON.parse(fs.readFileSync('src/services/action-plan/raw-action-plan.json', 'utf8'));
 
     // Save the action plan in it's base state
     const { data: actionPlanData, error: actionPlanError } = await db

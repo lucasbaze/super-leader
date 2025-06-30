@@ -8,7 +8,7 @@ import { withTestTransaction } from '@/tests/utils/test-setup';
 import { createClient } from '@/utils/supabase/server';
 
 // Import the mocked function
-import { buildTask } from '../../build-task';
+import { buildTask } from '../../build-task-from-trigger';
 import { generateBirthdayTasks } from '../generate-birthday-task';
 
 // Mock the buildTask function

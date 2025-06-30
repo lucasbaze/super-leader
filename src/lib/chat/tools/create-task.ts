@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { dateHandler } from '@/lib/dates/helpers';
 import { TASK_TRIGGERS, TaskTrigger } from '@/lib/tasks/constants';
-import { buildTask } from '@/services/tasks/build-task';
+import { buildTask } from '@/services/tasks/build-task-from-trigger';
 import { BuildTaskServiceResult } from '@/services/tasks/types';
 
 import { ChatTool } from '../chat-tool-registry';

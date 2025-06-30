@@ -293,7 +293,7 @@ describe('format-person-summary service', () => {
     } = options;
 
     // Always check for basic info
-    expect(summary).toContain('test_Darian test_Bajmanlou');
+    expect(summary).toContain('Darian Bajmanlou');
 
     // Check for optional content based on options
     if (includeGroups) {

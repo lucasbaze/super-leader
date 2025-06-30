@@ -14,9 +14,9 @@ interface TaskGroupProps {
 
 function TaskGroup({ group }: TaskGroupProps) {
   const isToday = group.title.toLowerCase().includes('today');
-  const completedTasks = group.tasks.filter((task) => task.completed_at);
-  const skippedTasks = group.tasks.filter((task) => task.skipped_at);
-  const activeTasks = group.tasks.filter((task) => !task.completed_at && !task.skipped_at);
+  const completedTasks = group.tasks.filter((task) => task.completedAt);
+  const skippedTasks = group.tasks.filter((task) => task.skippedAt);
+  const activeTasks = group.tasks.filter((task) => !task.completedAt && !task.skippedAt);
 
   return (
     <div className='space-y-4'>

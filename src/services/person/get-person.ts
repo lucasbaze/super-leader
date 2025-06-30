@@ -7,6 +7,7 @@ import { Address, ContactMethod, DBClient, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
+import { getTasks } from '../tasks/get-tasks';
 import { TInteraction } from './person-activity';
 
 type GetPersonOrganization = { id: string; name: string };
@@ -208,41 +209,12 @@ export async function getPerson({
     }
 
     if (withTasks) {
-      const { data: tasks, error: tasksError } = await db
-        .from('task_suggestion')
-        .select(
-          `
-        id,
-        type,
-        content,
-        end_at,
-        completed_at,
-        skipped_at,
-        snoozed_at,
-        created_at,
-        updated_at,
-        person:person!inner (
-          id,
-          first_name,
-          last_name
-        )
-      `
-        )
-        .eq('person_id', personId)
-        .is('completed_at', null)
-        .is('skipped_at', null)
-        .is('snoozed_at', null)
-        .order('end_at', { ascending: true })
-        .returns<GetTaskSuggestionResult[]>();
-
-      if (tasksError) {
-        const error = { ...ERRORS.PERSON.TASKS_ERROR, details: tasksError };
-        errorLogger.log(error);
-
-        return { data: null, error };
+      const tasksResult = await getTasks({ db, userId: result.person.user_id, personId });
+      if (tasksResult.error) {
+        errorLogger.log(tasksResult.error);
+        return { data: null, error: tasksResult.error };
       }
-
-      result.tasks = tasks;
+      result.tasks = tasksResult.data || [];
     }
 
     if (withOrganizations) {

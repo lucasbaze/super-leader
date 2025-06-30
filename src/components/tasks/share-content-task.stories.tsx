@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { SUGGESTED_ACTION_TYPES, TASK_TRIGGERS } from '@/lib/tasks/constants';
+import { createTestTask } from '@/lib/tasks/create-test-task';
 
 import { ShareContentTask } from './share-content-task';
 
@@ -18,22 +19,14 @@ type Story = StoryObj<typeof ShareContentTask>;
 
 export const Default: Story = {
   args: {
-    task: {
+    task: createTestTask({
       id: '123',
       person: {
         id: '456',
-        first_name: 'Michael',
-        last_name: 'Bashour'
+        firstName: 'Michael',
+        lastName: 'Bashour'
       },
       trigger: TASK_TRIGGERS.FOLLOW_UP.slug,
-      completed_at: null,
-      created_at: '2024-01-01T00:00:00Z',
-      end_at: '2024-01-01T00:00:00Z',
-      bad_suggestion: false,
-      bad_suggestion_reason: null,
-      skipped_at: null,
-      snoozed_at: null,
-      updated_at: '2024-01-01T00:00:00Z',
       context: {
         context: "You requested to be notified about Michael's recent trip",
         callToAction: "Share an interesting article about the Himalaya's in reference to his upcoming trip."
@@ -82,6 +75,6 @@ export const Default: Story = {
           }
         ]
       }
-    }
+    })
   }
 };

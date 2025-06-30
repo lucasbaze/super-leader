@@ -41,8 +41,8 @@ export function groupTasksByTimeframe(tasks: GetTaskSuggestionResult[]): TaskGro
 
   // Group tasks by timeframe
   tasks.forEach((task) => {
-    if (task.end_at) {
-      const timeframe = getTaskTimeframe(task.end_at);
+    if (task.endAt) {
+      const timeframe = getTaskTimeframe(task.endAt);
       groups[timeframe].push(task);
     } else {
       // If no end_at, put in today
@@ -89,8 +89,8 @@ export function groupTasksByDay(tasks: GetTaskSuggestionResult[]): TaskGroup[] {
     tasks: [],
     subGroups: thisWeekDays.map((day) => {
       const dayTasks = tasks.filter((task) => {
-        if (!task.end_at) return false;
-        return dateHandler(task.end_at).isSame(day, 'day');
+        if (!task.endAt) return false;
+        return dateHandler(task.endAt).isSame(day, 'day');
       });
 
       const isToday = day.isSame(today, 'day');
@@ -116,8 +116,8 @@ export function groupTasksByDay(tasks: GetTaskSuggestionResult[]): TaskGroup[] {
     tasks: [],
     subGroups: nextWeekDays.map((day) => {
       const dayTasks = tasks.filter((task) => {
-        if (!task.end_at) return false;
-        return dateHandler(task.end_at).isSame(day, 'day');
+        if (!task.endAt) return false;
+        return dateHandler(task.endAt).isSame(day, 'day');
       });
 
       return {
@@ -177,8 +177,8 @@ export function groupTasksByWeek(tasks: GetTaskSuggestionResult[]): TaskGroup[] 
       tasks: [],
       subGroups: monthWeeks.map(({ start: weekStart, end: weekEnd }) => {
         const weekTasks = tasks.filter((task) => {
-          if (!task.end_at) return false;
-          const taskDate = dateHandler(task.end_at);
+          if (!task.endAt) return false;
+          const taskDate = dateHandler(task.endAt);
           return (
             (taskDate.isAfter(weekStart.subtract(1, 'day'), 'day') || taskDate.isSame(weekStart, 'day')) &&
             (taskDate.isBefore(weekEnd.add(1, 'day'), 'day') || taskDate.isSame(weekEnd, 'day'))
@@ -203,8 +203,8 @@ export function groupTasksByWeek(tasks: GetTaskSuggestionResult[]): TaskGroup[] 
 
 export function filterTodayTasks(tasks: GetTaskSuggestionResult[]): GetTaskSuggestionResult[] {
   return tasks.filter((task) => {
-    if (!task.end_at) return true;
-    return getTaskTimeframe(task.end_at) === 'today';
+    if (!task.endAt) return true;
+    return getTaskTimeframe(task.endAt) === 'today';
   });
 }
 
@@ -228,8 +228,8 @@ export function groupTasksByReverseTimeframe(tasks: GetTaskSuggestionResult[]): 
   };
 
   tasks.forEach((task) => {
-    if (!task.end_at) return;
-    const endAt = dateHandler(task.end_at);
+    if (!task.endAt) return;
+    const endAt = dateHandler(task.endAt);
     if (endAt.isSame(yesterday, 'day')) {
       groups.yesterday.push(task);
     } else if (endAt.isSame(startOfLastWeek, 'week')) {

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { mockGroupSections, mockTasksById } from '@/lib/action-plan/create-mock-action-plan';
+
 import { ActionPlanTaskList } from './action-plan-list';
-import { mockGroupSections, mockTasksById } from './test-data';
 
 const meta = {
   title: 'ActionPlan/TaskList',

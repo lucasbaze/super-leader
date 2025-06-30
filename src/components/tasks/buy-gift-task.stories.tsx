@@ -21,18 +21,16 @@ export const Default: Story = {
       id: '123',
       person: {
         id: '456',
-        first_name: 'Rodrigo',
-        last_name: 'Silva'
+        firstName: 'Rodrigo',
+        lastName: 'Silva'
       },
       trigger: TASK_TRIGGERS.BIRTHDAY_REMINDER.slug,
-      completed_at: null,
-      created_at: '2024-01-01T00:00:00Z',
-      end_at: '2024-01-01T00:00:00Z',
-      bad_suggestion: false,
-      bad_suggestion_reason: null,
-      skipped_at: null,
-      snoozed_at: null,
-      updated_at: '2024-01-01T00:00:00Z',
+      completedAt: null,
+      createdAt: '2024-01-01T00:00:00Z',
+      endAt: '2024-01-01T00:00:00Z',
+      skippedAt: null,
+      snoozedAt: null,
+      updatedAt: '2024-01-01T00:00:00Z',
       context: {
         context: "Rodrigo's birthday is coming up in a few days",
         callToAction: 'I found a few gift ideas you could consider buying.'

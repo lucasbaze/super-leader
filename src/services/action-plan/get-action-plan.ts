@@ -21,12 +21,6 @@ export const ERRORS = {
       ErrorType.VALIDATION_ERROR,
       'User ID is required',
       'User identifier is missing'
-    ),
-    NOT_FOUND: createError(
-      'action_plan_not_found',
-      ErrorType.NOT_FOUND,
-      'Action plan not found for today',
-      'No action plan found for today'
     )
   }
 };
@@ -56,7 +50,7 @@ export async function getActionPlan({
     const endOfDay = today.endOf('day').toISOString();
 
     // Fetch the action plan for today
-    const { data: actionPlanData, error } = await db
+    const { data: actionPlanData, error: dbError } = await db
       .from('action_plan')
       .select('*')
       .eq('user_id', userId)
@@ -65,16 +59,20 @@ export async function getActionPlan({
       .eq('state', 'injected') // Only get completed action plans with task IDs
       .order('created_at', { ascending: false })
       .limit(1)
-      .single<ActionPlan>();
+      .single();
 
-    if (error) {
+    if (dbError?.code === 'PGRST116') {
+      return { data: null, error: null };
+    }
+
+    if (dbError) {
       const serviceError = ERRORS.ACTION_PLAN.FETCH_ERROR;
-      errorLogger.log(serviceError, { details: error });
+      errorLogger.log(serviceError, { details: dbError });
       return { data: null, error: serviceError };
     }
 
     if (!actionPlanData) {
-      return { data: null, error: ERRORS.ACTION_PLAN.NOT_FOUND };
+      return { data: null, error: null };
     }
 
     // Parse the action plan JSON

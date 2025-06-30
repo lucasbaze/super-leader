@@ -3,6 +3,8 @@
 import { useMemo } from 'react';
 
 import { Loader } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/toast';
 import type { ActionPlanWithTaskIds } from '@/services/action-plan/schema';
 import type { GetTaskSuggestionResult } from '@/services/tasks/types';
 
@@ -72,7 +74,17 @@ export function ActionPlanContainer({ actionPlan, tasks, isLoading = false, erro
       return <ActionPlanTaskList groupSections={actionPlan.groupSections} tasksById={tasksById} />;
     }
 
-    return <div className='text-muted-foreground'>No action plan available for today.</div>;
+    return (
+      <div className='flex flex-col items-center justify-center space-y-4 py-12'>
+        <div className='text-center'>
+          <h3 className='mb-2 text-lg font-medium text-foreground'>No Action Plan Generated Yet</h3>
+          <p className='mb-4 max-w-md text-muted-foreground'>
+            Superleader will generate a daily, personalized action plan based on your network and goals.
+          </p>
+          <p className='max-w-md text-muted-foreground'>If there should be an action plan, please contact support.</p>
+        </div>
+      </div>
+    );
   };
 
   return (

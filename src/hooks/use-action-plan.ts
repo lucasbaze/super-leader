@@ -25,19 +25,20 @@ export function useGenerateActionPlan() {
 }
 
 export function useActionPlan() {
-  return useQuery<GetActionPlanServiceResult>({
+  return useQuery<GetActionPlanServiceResult | null>({
     queryKey: ['action-plan'],
     queryFn: async () => {
       const response = await fetch('/api/action-plan', { credentials: 'include' });
       const json: ServiceResponse<GetActionPlanServiceResult> = await response.json();
-      if (!json || json.error || !json.data) {
+      if (!json || json.error) {
         if (json && json.error) errorToast.show(json.error);
         throw json?.error || new Error('No action plan data');
       }
-      return json.data;
+      return json.data || null;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnMount: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: false
   });
 }

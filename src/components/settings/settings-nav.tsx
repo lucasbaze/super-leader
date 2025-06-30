@@ -14,6 +14,10 @@ const SETTINGS_SECTIONS = [
   {
     title: 'Integrations',
     href: routes.settings.integrations()
+  },
+  {
+    title: 'Imports',
+    href: routes.settings.imports()
   }
   // Add more sections here as needed
 ];

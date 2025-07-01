@@ -1,15 +1,11 @@
 import { z } from 'zod';
 
-// import { personInsertSchema } from './database';
-
-// Import shared field schemas from person-edit
 import {
   addressSchema as baseAddressSchema,
   contactMethodSchema as baseContactMethodSchema,
   personSchema as basePersonSchema,
   websiteSchema
 } from './person-edit';
-import { removeOptionalMethodFromField } from './utils';
 
 export const personCreateFieldsSchema = basePersonSchema.extend({
   first_name: z.string().min(1, 'First name is required')
@@ -101,7 +97,7 @@ export type CreateExtendedPersonLLMInput = z.infer<typeof createExtendedPersonLL
 
 /*
  *
- * Without optional fields
+ * Without optional fields for LLM input & output because they don't allow for non-required fields
  *
  */
 

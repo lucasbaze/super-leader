@@ -7,7 +7,8 @@ const meta: Meta<typeof UpdateAISummaryJobNotifier> = {
   component: UpdateAISummaryJobNotifier,
   parameters: {
     layout: 'centered'
-  }
+  },
+  tags: ['autodocs']
 };
 
 export default meta;

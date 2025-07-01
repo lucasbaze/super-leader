@@ -1,4 +1,3 @@
-// src/services/people/csv-import-people.ts
 import { stripIndents } from 'common-tags';
 import { parse } from 'csv-parse';
 import { Readable } from 'stream';
@@ -8,7 +7,6 @@ import { createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
 import {
   CreateExtendedPersonLLMInput,
-  createExtendedPersonLLMInputSchema,
   createExtendedPersonLLMInputSchemaWithoutOptional
 } from '@/lib/schemas/person-create';
 import { DBClient } from '@/types/database';
@@ -19,7 +17,6 @@ import { generateObject } from '@/vendors/ai';
 
 import { createPerson } from '../person/create-person';
 
-// Define errors
 export const ERRORS = {
   CSV_IMPORT: {
     PARSE_ERROR: createError(
@@ -206,14 +203,6 @@ export async function importCSV({
             });
             console.log('createResult', createResult);
           }
-
-          // // Here you would call bulkImportPeople with the transformed data
-          // // For now, we'll just count the processed records
-          // const bulkImportResult = await createPerson({
-          //   db: db,
-          //   userId,
-          //   people: result.data
-          // });
 
           processed += result.data.length;
         }

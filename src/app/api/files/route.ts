@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { apiResponse } from '@/lib/api-response';
 import { validateAuthentication } from '@/lib/auth/validate-authentication';
 import { toError } from '@/lib/errors';
+import { createFile } from '@/services/files/create-file';
 import { getFiles } from '@/services/files/get-files';
 import { importContactsTask } from '@/trigger/import-contacts';
 import { createClient } from '@/utils/supabase/server';
@@ -42,18 +43,23 @@ export async function POST(req: NextRequest) {
     return apiResponse.error(toError(error));
   }
 
-  const { data, error } = await db
-    .from('files')
-    .insert({ name: file.name, path, user_id: authResult.data.id })
-    .select()
-    .single();
+  const result = await createFile({
+    db,
+    data: {
+      name: file.name,
+      path,
+      user_id: authResult.data.id
+    }
+  });
 
-  if (error || !data) return apiResponse.error(toError(error));
+  if (result.error || !result.data) {
+    return apiResponse.error(result.error || toError(new Error('Failed to create file record')));
+  }
 
   await importContactsTask.trigger(
     { userId: authResult.data.id, filePath: path },
     { tags: [`user:${authResult.data.id}`] }
   );
 
-  return apiResponse.success(data);
+  return apiResponse.success(result.data);
 }

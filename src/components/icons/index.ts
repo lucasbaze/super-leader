@@ -95,6 +95,7 @@ export {
   Users,
   UserPlus,
   MessageCircle,
+  Upload,
   MoreHorizontal,
   Settings,
   Bookmark,

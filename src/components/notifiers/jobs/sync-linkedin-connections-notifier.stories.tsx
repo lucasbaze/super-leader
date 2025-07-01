@@ -7,7 +7,8 @@ const meta: Meta<typeof SyncLinkedInConnectionsJobNotifier> = {
   component: SyncLinkedInConnectionsJobNotifier,
   parameters: {
     layout: 'centered'
-  }
+  },
+  tags: ['autodocs']
 };
 
 export default meta;

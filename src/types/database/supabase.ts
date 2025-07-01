@@ -314,6 +314,30 @@ export type Database = {
           }
         ];
       };
+      files: {
+        Row: {
+          created_at: string;
+          id: number;
+          name: string;
+          path: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          name: string;
+          path: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          name?: string;
+          path?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       group: {
         Row: {
           created_at: string;

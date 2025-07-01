@@ -1,9 +1,14 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { z } from 'zod';
 
 import { createErrorV2 as createError } from '@/lib/errors';
 import { errorLogger } from '@/lib/errors/error-logger';
-import { PersonCreateFormData, personCreateSchema } from '@/lib/schemas/person-create';
+import {
+  CreateExtendedPersonLLMInput,
+  createExtendedPersonLLMInputSchema,
+  PersonCreateFormData,
+  personCreateSchema
+} from '@/lib/schemas/person-create';
+import { recursivelyRemoveNullish } from '@/lib/utils/recursively-remove-nullish';
 import { Address, ContactMethod, Interaction, Person, Website } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -14,8 +19,8 @@ export const ERRORS = {
   VALIDATION_ERROR: createError({
     name: 'validation_error',
     type: ErrorType.VALIDATION_ERROR,
-    message: 'First name and user ID are required',
-    displayMessage: 'Please provide a first name and user ID'
+    message: 'Data validation failed',
+    displayMessage: 'Please ensure the data matches the expected schema'
   }),
   CREATE_FAILED: createError({
     name: 'create_person_failed',
@@ -41,33 +46,42 @@ export type CreatePersonServiceResult = ServiceResponse<{
 
 export async function createPerson({
   db,
-  data
+  data,
+  userId
 }: {
   db: SupabaseClient;
-  data: PersonCreateFormData;
+  data: CreateExtendedPersonLLMInput;
+  userId: string;
 }): Promise<CreatePersonServiceResult> {
   try {
-    const validationResult = personCreateSchema.safeParse(data);
+    // Clean the data
+    const cleanedData = recursivelyRemoveNullish(data);
+
+    // Validate the cleaned data matches the schema
+    const validationResult = createExtendedPersonLLMInputSchema.safeParse(cleanedData);
     if (!validationResult.success) {
       errorLogger.log(ERRORS.VALIDATION_ERROR, {
         details: { validationError: validationResult.error }
       });
       return { data: null, error: ERRORS.VALIDATION_ERROR };
     }
-    const { person, contactMethods, addresses, websites, note } = validationResult.data;
+    const { person, contactMethods, addresses, websites, note } = cleanedData;
 
     // Create the person
-    const { data: personRecord, error: personError } = await db.from('person').insert(person).select().single();
+    const { data: personRecord, error: personError } = await db
+      .from('person')
+      .insert({ ...person, user_id: userId })
+      .select()
+      .single();
 
     if (personError || !personRecord) {
       errorLogger.log(ERRORS.CREATE_FAILED, {
-        details: { ...personError, userId: person.user_id }
+        details: { ...personError, userId }
       });
       return { data: null, error: ERRORS.CREATE_FAILED };
     }
 
     const personId = personRecord.id;
-    const userId = person.user_id;
 
     // Optionally create initial interaction
     let createdInteraction = null;
@@ -150,7 +164,7 @@ export async function createPerson({
     };
   } catch (error) {
     errorLogger.log(ERRORS.CREATE_FAILED, {
-      details: { ...(error as Error), userId: data.person?.user_id }
+      details: { ...(error as Error), userId }
     });
     return { data: null, error: ERRORS.CREATE_FAILED };
   }

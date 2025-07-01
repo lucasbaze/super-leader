@@ -1,26 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { ActionPlanNotifier } from './action-plan-notifier';
+import { ImportContactsNotifier } from './import-contacts-notifier';
 
-const meta: Meta<typeof ActionPlanNotifier> = {
-  title: 'Jobs/ActionPlanNotifier',
-  component: ActionPlanNotifier,
+const meta: Meta<typeof ImportContactsNotifier> = {
+  title: 'Jobs/ImportContactsNotifier',
+  component: ImportContactsNotifier,
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs'],
-  argTypes: {
-    onClick: { action: 'clicked' }
-  }
+  tags: ['autodocs']
 };
 
 export default meta;
-type Story = StoryObj<typeof ActionPlanNotifier>;
+type Story = StoryObj<typeof ImportContactsNotifier>;
 
 const baseRun = {
-  id: 'action-plan-123',
+  id: 'import-contacts-123',
   payload: {
-    userId: 'user-123'
+    filePath: 'uploads/1706183400000-contacts.csv'
   },
   createdAt: new Date('2024-01-15T10:30:00Z')
 };
@@ -86,6 +83,31 @@ export const OldRun: Story = {
       ...baseRun,
       status: 'COMPLETED',
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days ago
+    }
+  }
+};
+
+export const LongFileName: Story = {
+  args: {
+    run: {
+      ...baseRun,
+      status: 'EXECUTING',
+      payload: {
+        filePath: 'uploads/1706183400000-very-long-filename-for-contacts-import-test.csv'
+      }
+    }
+  }
+};
+
+export const DifferentFileType: Story = {
+  args: {
+    run: {
+      ...baseRun,
+      status: 'COMPLETED',
+      payload: {
+        filePath: 'uploads/1706183400000-leads-data.csv'
+      },
+      createdAt: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes ago
     }
   }
 };

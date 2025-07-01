@@ -1,7 +1,10 @@
 'use client';
 
+import React from 'react';
+
 import { BaseHeader } from '@/components/headers/base-header';
 import { ListFilter, MoreHorizontal, Users } from '@/components/icons';
+import { ImportCSVButton } from '@/components/people/import-csv-button';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -36,6 +39,7 @@ export function PeopleHeader({ peopleCount }: PeopleHeaderProps) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <ImportCSVButton />
       </div>
 
       <div className='flex items-center gap-2'>

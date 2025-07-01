@@ -6,6 +6,7 @@ import { toError } from '@/lib/errors';
 import { getFiles } from '@/services/files/get-files';
 import { importContactsTask } from '@/trigger/import-contacts';
 import { createClient } from '@/utils/supabase/server';
+import { createServiceRoleClient } from '@/utils/supabase/service-role';
 
 export async function GET(req: NextRequest) {
   const db = await createClient();
@@ -31,10 +32,15 @@ export async function POST(req: NextRequest) {
     return apiResponse.validationError(toError(new Error('File missing')));
   }
 
-  // Placeholder upload logic - actual Supabase storage integration needed
   const arrayBuffer = await file.arrayBuffer();
   const path = `uploads/${Date.now()}-${file.name}`;
-  await db.storage.from('imports').upload(path, arrayBuffer);
+  try {
+    const supabase = await createServiceRoleClient();
+    await supabase.storage.from('imports').upload(path, arrayBuffer);
+  } catch (error) {
+    console.error('Error uploading file', error);
+    return apiResponse.error(toError(error));
+  }
 
   const { data, error } = await db
     .from('files')

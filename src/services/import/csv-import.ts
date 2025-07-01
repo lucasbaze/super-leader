@@ -1,7 +1,7 @@
 // src/services/people/csv-import-people.ts
 import { stripIndents } from 'common-tags';
 import { parse } from 'csv-parse';
-import { createReadStream } from 'fs';
+import { Readable } from 'stream';
 import { z } from 'zod';
 
 import { createError } from '@/lib/errors';
@@ -14,6 +14,7 @@ import {
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
+import { createServiceRoleClient } from '@/utils/supabase/service-role';
 import { generateObject } from '@/vendors/ai';
 
 import { createPerson } from '../person/create-person';
@@ -38,6 +39,12 @@ export const ERRORS = {
       ErrorType.VALIDATION_ERROR,
       'Invalid CSV data',
       'Some records could not be imported due to validation errors'
+    ),
+    FILE_DOWNLOAD_ERROR: createError(
+      'file_download_error',
+      ErrorType.API_ERROR,
+      'Failed to download file from storage',
+      'Unable to access the uploaded file'
     )
   }
 };
@@ -143,8 +150,26 @@ export async function importCSV({
   let processed = 0;
 
   try {
+    // Download the file from Supabase storage
+    const supabase = await createServiceRoleClient();
+    const { data: fileData, error: downloadError } = await supabase.storage.from('imports').download(filePath);
+
+    if (downloadError || !fileData) {
+      const serviceError = {
+        ...ERRORS.CSV_IMPORT.FILE_DOWNLOAD_ERROR,
+        details: downloadError
+      };
+      errorLogger.log(serviceError);
+      return { data: null, error: serviceError };
+    }
+
+    // Convert the blob to a readable stream
+    const arrayBuffer = await fileData.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const stream = Readable.from(buffer);
+
     // Create a parser with headers
-    const parser = createReadStream(filePath).pipe(
+    const parser = stream.pipe(
       parse({
         columns: true,
         skip_empty_lines: true,

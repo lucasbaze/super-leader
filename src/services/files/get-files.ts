@@ -1,5 +1,5 @@
 import { createError, errorLogger } from '@/lib/errors';
-import { DBClient } from '@/types/database';
+import { DBClient, File } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
 
@@ -20,14 +20,12 @@ export const ERRORS = {
   }
 };
 
-type FileRow = Database['public']['Tables']['files']['Row'];
-
 export interface GetFilesParams {
   db: DBClient;
   userId: string;
 }
 
-export async function getFiles({ db, userId }: GetFilesParams): Promise<ServiceResponse<FileRow[]>> {
+export async function getFiles({ db, userId }: GetFilesParams): Promise<ServiceResponse<File[]>> {
   try {
     if (!userId) {
       return { data: null, error: ERRORS.FILES.MISSING_USER_ID };

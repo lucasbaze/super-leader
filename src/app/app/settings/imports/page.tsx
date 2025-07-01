@@ -1,5 +1,6 @@
 'use client';
 
+import { ImportCSVButton } from '@/components/people/import-csv-button';
 import { useFiles } from '@/hooks/use-files';
 
 export default function ImportsPage() {
@@ -7,13 +8,16 @@ export default function ImportsPage() {
 
   return (
     <div className='mx-auto max-w-xl py-12'>
-      <h1 className='mb-6 text-2xl font-bold'>Imports</h1>
+      <div className='mb-6 flex items-center justify-between'>
+        <h1 className='text-2xl font-bold'>Contact Imports</h1>
+        <ImportCSVButton />
+      </div>
       {isLoading ? (
         <div>Loading...</div>
       ) : (
         <ul className='space-y-2'>
           {files?.map((file) => (
-            <li key={file.id} className='border p-2 rounded'>
+            <li key={file.id} className='rounded border p-2'>
               {file.name}
             </li>
           ))}

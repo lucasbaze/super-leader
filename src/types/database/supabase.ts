@@ -316,25 +316,25 @@ export type Database = {
       };
       files: {
         Row: {
-          id: string;
-          user_id: string;
+          created_at: string;
+          id: number;
           name: string;
           path: string;
-          created_at: string;
+          user_id: string;
         };
         Insert: {
-          id?: string;
-          user_id: string;
+          created_at?: string;
+          id?: number;
           name: string;
           path: string;
-          created_at?: string;
+          user_id: string;
         };
         Update: {
-          id?: string;
-          user_id?: string;
+          created_at?: string;
+          id?: number;
           name?: string;
           path?: string;
-          created_at?: string;
+          user_id?: string;
         };
         Relationships: [];
       };

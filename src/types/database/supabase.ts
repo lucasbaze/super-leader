@@ -550,6 +550,7 @@ export type Database = {
           id: string;
           last_name: string | null;
           linkedin_public_id: string | null;
+          avatar_url: string | null;
           title: string | null;
           updated_at: string;
           user_id: string;
@@ -566,6 +567,7 @@ export type Database = {
           id?: string;
           last_name?: string | null;
           linkedin_public_id?: string | null;
+          avatar_url?: string | null;
           title?: string | null;
           updated_at?: string;
           user_id: string;
@@ -582,6 +584,7 @@ export type Database = {
           id?: string;
           last_name?: string | null;
           linkedin_public_id?: string | null;
+          avatar_url?: string | null;
           title?: string | null;
           updated_at?: string;
           user_id?: string;

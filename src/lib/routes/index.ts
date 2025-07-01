@@ -2,6 +2,16 @@
 type PersonIdParam = { id: string };
 type GroupIdParam = { id: string };
 
+export const PUBLIC_SEGMENTS = {
+  BITCOIN: 'bitcoin'
+} as const;
+
+export const LEGAL_SEGMENTS = {
+  ROOT: 'legal',
+  TERMS: 'terms',
+  PRIVACY: 'privacy'
+} as const;
+
 // Define route segments
 export const APP_SEGMENTS = {
   APP: 'app',
@@ -32,11 +42,19 @@ const SETTINGS_SEGMENTS = {
 // Base path
 export const BASE_PATH = '/';
 export const APP_BASE_PATH = `/${APP_SEGMENTS.APP}`;
+export const LEGAL_BASE_PATH = `/${LEGAL_SEGMENTS.ROOT}`;
 
 // Route builder functions
 export const routes = {
   // Home routes
   home: () => BASE_PATH,
+
+  // public routes
+  public: {
+    terms: () => `${LEGAL_BASE_PATH}/${LEGAL_SEGMENTS.TERMS}`,
+    privacy: () => `${LEGAL_BASE_PATH}/${LEGAL_SEGMENTS.PRIVACY}`,
+    bitcoin: () => `/${PUBLIC_SEGMENTS.BITCOIN}`
+  },
 
   // Auth routes
   auth: {
@@ -125,5 +143,8 @@ export const ROUTES = {
   CONTEXT: routes.context.root(),
   SETTINGS: routes.settings.root(),
   ONBOARDING: routes.onboarding.root(),
-  ORGANIZATIONS: routes.organization.root()
+  ORGANIZATIONS: routes.organization.root(),
+  TERMS: routes.public.terms(),
+  PRIVACY: routes.public.privacy(),
+  BITCOIN: routes.public.bitcoin()
 } as const;

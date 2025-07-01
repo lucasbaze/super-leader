@@ -48,10 +48,12 @@ export function WaitlistForm() {
       } else {
         setStatus({
           type: 'success',
-          message:
-            "Thank you for your interest. If you'd like to skip the line, email lucas@superleader.ai"
+          message: "Thank you for your interest. You're on the waitlist."
         });
         setEmail('');
+
+        // Open Calendly in a new tab
+        window.open('https://calendly.com/lucas-superleader/pre-onboarding', '_blank');
       }
     } catch (error) {
       setStatus({
@@ -93,9 +95,7 @@ export function WaitlistForm() {
         </Button>
       </div>
       {status.message && (
-        <p className={`text-sm ${status.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-          {status.message}
-        </p>
+        <p className={`text-sm ${status.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>{status.message}</p>
       )}
     </div>
   );

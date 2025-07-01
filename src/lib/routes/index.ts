@@ -4,7 +4,7 @@ type GroupIdParam = { id: string };
 
 // Define route segments
 export const APP_SEGMENTS = {
-  ROOT: 'app',
+  APP: 'app',
   PERSON: 'person',
   GROUPS: 'groups',
   NETWORK: 'network',
@@ -30,7 +30,8 @@ const SETTINGS_SEGMENTS = {
 } as const;
 
 // Base path
-export const BASE_PATH = `/${APP_SEGMENTS.ROOT}`;
+export const BASE_PATH = '/';
+export const APP_BASE_PATH = `/${APP_SEGMENTS.APP}`;
 
 // Route builder functions
 export const routes = {
@@ -42,48 +43,51 @@ export const routes = {
     login: () => `/${APP_SEGMENTS.LOGIN}`
   },
 
+  // App routes
+  app: () => APP_BASE_PATH,
+
   // Person routes
   person: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.PERSON}`,
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.PERSON}`,
     byId: (params: PersonIdParam) => `${routes.person.root()}/${params.id}`,
     summary: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.SUMMARY}`,
     tasks: (params: PersonIdParam) => `${routes.person.byId(params)}/${PERSON_SEGMENTS.TASKS}`
   },
 
   organization: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.ORGANIZATIONS}`,
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.ORGANIZATIONS}`,
     byId: ({ id }: { id: string }) => `${routes.organization.root()}/${id}`
   },
 
   // Group routes
   groups: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.GROUPS}`,
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.GROUPS}`,
     byId: (params: GroupIdParam) => `${routes.groups.root()}/${params.id}`
   },
 
   // Network routes
   network: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.NETWORK}`
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.NETWORK}`
   },
 
   // People routes
   people: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.PEOPLE}`
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.PEOPLE}`
   },
 
   // Bookmarks routes
   bookmarks: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.BOOKMARKS}`
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.BOOKMARKS}`
   },
 
   // Context routes
   context: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.CONTEXT}`
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.CONTEXT}`
   },
 
   // Settings routes
   settings: {
-    root: () => `${BASE_PATH}/${APP_SEGMENTS.SETTINGS}`,
+    root: () => `${APP_BASE_PATH}/${APP_SEGMENTS.SETTINGS}`,
     customFields: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.CUSTOM_FIELDS}`,
     integrations: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.INTEGRATIONS}`,
     imports: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.IMPORTS}`
@@ -110,6 +114,7 @@ export const isPath = {
 
 // Static routes for direct use
 export const ROUTES = {
+  APP: routes.app(),
   HOME: routes.home(),
   LOGIN: routes.auth.login(),
   PERSON: routes.person.root(),

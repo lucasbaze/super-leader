@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { Bitcoin } from '@/components/icons';
 import { AvatarGroup } from '@/components/marketing/avatar-group';
 import { Logo } from '@/components/marketing/logo';
 import { WaitlistForm } from '@/components/marketing/waitlist-form';
@@ -20,7 +21,7 @@ export default function Home() {
               <h1 className='text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl'>You, but Super</h1>
 
               <h2 className='text-xl font-medium text-gray-700 sm:text-2xl md:text-3xl'>
-                An AI first, Personal CRM to help you nurture and scale your relationships for life.
+                An AI first, Personal CRM to help you nurture and scale your relationships.
               </h2>
 
               <p className='text-lg font-bold sm:text-xl'>Join the Superleader waitlist.</p>
@@ -41,7 +42,15 @@ export default function Home() {
           <div className='mt-6 md:mt-8'>
             <div className='mt-6 text-xs text-gray-400 sm:text-sm md:mt-8'>
               <div className='flex flex-col gap-2 sm:flex-row sm:gap-6'>
-                <span>© 2025 Superleader AI, Inc.</span>
+                <div className='flex items-center gap-6'>
+                  <span>© {new Date().getFullYear()} Superleader AI, Inc.</span>
+                  <Link
+                    href='/bitcoin'
+                    className='flex items-center gap-1 text-orange-500 transition-colors hover:text-orange-600'>
+                    <Bitcoin size={14} />
+                    <span>Backed by Bitcoin</span>
+                  </Link>
+                </div>
                 <div className='flex gap-4'>
                   <Link href='/legal/terms' className='hover:text-gray-600'>
                     Terms of Use

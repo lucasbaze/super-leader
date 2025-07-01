@@ -51,7 +51,7 @@ export default function Header() {
             <>
               <span className='text-sm text-gray-600'>{email}</span>
               <Link
-                href={ROUTES.HOME}
+                href={ROUTES.APP}
                 className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500'>
                 Go to Dashboard
               </Link>

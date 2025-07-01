@@ -38,7 +38,7 @@ export default function ErrorPage() {
           </p>
         </CardContent>
         <CardFooter className='flex flex-col gap-2 border-t border-black/10 pt-4 sm:flex-row sm:justify-center'>
-          <Link href={routes.home()}>
+          <Link href={routes.app()}>
             <Button variant='outline' className='border-black text-black'>
               <Home className='size-4' />
               <span>Go Home</span>

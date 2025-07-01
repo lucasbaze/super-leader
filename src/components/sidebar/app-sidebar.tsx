@@ -23,7 +23,7 @@ import { Logo } from '../icons/custom/logo';
 const mainNavItems = [
   {
     title: 'Home',
-    url: ROUTES.HOME,
+    url: ROUTES.APP,
     icon: Home,
     isActive: true
   },

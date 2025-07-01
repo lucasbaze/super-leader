@@ -41,7 +41,7 @@ export function AnimatedTasksRenderer({ router, completedCount }: AnimatedTasksR
   return (
     <div className='flex items-center gap-2'>
       <div
-        onClick={() => router.push(routes.home())}
+        onClick={() => router.push(routes.app())}
         className='flex cursor-pointer items-center rounded-full border bg-background px-2 py-1.5'>
         <TooltipProvider delayDuration={0}>
           <Tooltip>

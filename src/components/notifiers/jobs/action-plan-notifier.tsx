@@ -41,7 +41,7 @@ export function ActionPlanNotifier({ run, onClick }: ActionPlanJobProps) {
 
   return (
     <Link
-      href={routes.home()}
+      href={routes.app()}
       onClick={onClick}
       className='flex w-full items-start gap-3 border-b bg-background px-4 py-3 transition-colors hover:bg-accent'>
       <JobStatusIcon status={run.status} />

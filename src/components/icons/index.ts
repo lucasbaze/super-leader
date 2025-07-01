@@ -111,6 +111,7 @@ export { CaretSortIcon, ComponentPlaceholderIcon, ChevronRightIcon, DotsHorizont
 export { OneRing } from './custom/one-ring';
 export { TwoRing } from './custom/two-ring';
 export { ThreeRing } from './custom/three-ring';
+export { Bitcoin } from './custom/bitcoin';
 
 export { type LucideIcon } from 'lucide-react';
 

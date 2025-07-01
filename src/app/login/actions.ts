@@ -23,8 +23,8 @@ export async function login(formData: FormData) {
     redirect('/error');
   }
 
-  revalidatePath(ROUTES.HOME, 'layout');
-  redirect(ROUTES.HOME);
+  revalidatePath(ROUTES.APP, 'layout');
+  redirect(ROUTES.APP);
 }
 
 export async function logout() {
@@ -37,7 +37,7 @@ export async function logout() {
   clearQueryCache();
 
   // Revalidate all protected routes
-  revalidatePath(ROUTES.HOME, 'layout');
+  revalidatePath(ROUTES.APP, 'layout');
 
   // Redirect to login page
   redirect(ROUTES.LOGIN);

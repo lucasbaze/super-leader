@@ -148,8 +148,7 @@ export async function importCSV({
 
   try {
     // Download the file from Supabase storage
-    const supabase = await createServiceRoleClient();
-    const { data: fileData, error: downloadError } = await supabase.storage.from('imports').download(filePath);
+    const { data: fileData, error: downloadError } = await db.storage.from('imports').download(filePath);
 
     if (downloadError || !fileData) {
       const serviceError = {
@@ -222,6 +221,14 @@ export async function importCSV({
       if (result.error) {
         errors.push(result.error);
       } else if (result.data) {
+        for (const person of result.data) {
+          const createResult = await createPerson({
+            db: db,
+            userId,
+            data: person
+          });
+          console.log('createResult', createResult);
+        }
         processed += result.data.length;
       }
     }

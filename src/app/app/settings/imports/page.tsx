@@ -14,14 +14,19 @@ export default function ImportsPage() {
       </div>
       {isLoading ? (
         <div>Loading...</div>
-      ) : (
+      ) : files && files.length > 0 ? (
         <ul className='space-y-2'>
-          {files?.map((file) => (
+          {files.map((file) => (
             <li key={file.id} className='rounded border p-2'>
               {file.name}
             </li>
           ))}
         </ul>
+      ) : (
+        <div className='py-8 text-center text-muted-foreground'>
+          <p>No files imported yet.</p>
+          <p className='mt-1 text-sm'>Use the Import CSV button above to get started.</p>
+        </div>
       )}
     </div>
   );

@@ -23,7 +23,7 @@ async function main(userId: string) {
   console.log(`Setting up groups for user ${userId}`);
 
   try {
-    const result = await setupNewUser({ db: supabase, userId });
+    const result = await setupNewUser({ db: supabase, userId, firstName: 'New', lastName: 'User' });
 
     if (result.error) {
       throw result.error;

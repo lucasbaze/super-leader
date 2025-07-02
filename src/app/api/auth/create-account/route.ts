@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 
 import { apiResponse } from '@/lib/api-response';
 import { createError } from '@/lib/errors';
-import { ROUTES } from '@/lib/routes';
 import { createAccount, createAccountSchema } from '@/services/auth/create-account';
 import { ErrorType } from '@/types/errors';
 import { createClient } from '@/utils/supabase/server';
@@ -49,8 +48,7 @@ export async function POST(request: NextRequest) {
 
     return apiResponse.success({
       message: 'Account created successfully',
-      userId: result.data.userId,
-      redirectUrl: ROUTES.APP
+      userId: result.data.userId
     });
   } catch (error) {
     const serverError = createError(

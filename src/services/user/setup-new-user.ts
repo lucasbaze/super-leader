@@ -57,11 +57,15 @@ export const DEFAULT_GROUPS = [
 export type TSetupNewUserParams = {
   db: DBClient;
   userId: string;
+  firstName: string;
+  lastName: string;
 };
 
 export async function setupNewUser({
   db,
-  userId
+  userId,
+  firstName,
+  lastName
 }: TSetupNewUserParams): Promise<ServiceResponse<boolean | null>> {
   try {
     if (!userId) {
@@ -87,8 +91,8 @@ export async function setupNewUser({
       // Create user profile
       db.from('user_profile').insert({
         user_id: userId,
-        first_name: 'New',
-        last_name: 'User',
+        first_name: firstName,
+        last_name: lastName,
         onboarding: buildNewOnboardingObject()
       })
     ]);

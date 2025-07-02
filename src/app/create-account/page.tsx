@@ -1,5 +1,5 @@
 import { OrbitalAvatars } from '@/components/animated/orbital-avatars';
-import { CreateAccountForm } from '@/components/create-account-form';
+import { CreateAccountForm } from '@/components/auth/create-account-form';
 
 export default function CreateAccountPage() {
   return (

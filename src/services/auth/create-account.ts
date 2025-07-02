@@ -18,7 +18,7 @@ export const createAccountSchema = z.object({
   lastName: z.string().min(1, 'Last name is required')
 });
 
-export type TCreateAccountParams = {
+export type CreateAccountParams = {
   db: DBClient;
   email: string;
   password: string;
@@ -26,7 +26,7 @@ export type TCreateAccountParams = {
   lastName: string;
 };
 
-export type TCreateAccountResult = {
+export type CreateAccountResult = {
   userId: string;
   email: string;
 };
@@ -77,7 +77,7 @@ export async function createAccount({
   password,
   firstName,
   lastName
-}: TCreateAccountParams): Promise<ServiceResponse<TCreateAccountResult>> {
+}: CreateAccountParams): Promise<ServiceResponse<CreateAccountResult>> {
   try {
     // Validate input
     const validation = createAccountSchema.safeParse({
@@ -132,33 +132,11 @@ export async function createAccount({
 
     try {
       // Set up the user with default groups and profile
-      const setupResult = await setupNewUser({ db, userId });
+      const setupResult = await setupNewUser({ db, userId, firstName, lastName });
 
       if (setupResult.error) {
         errorLogger.log(ERRORS.USER_SETUP_FAILED, { details: setupResult.error, userId, email });
-        // User was created but setup failed - this is a partial failure
-        // We could choose to return success with a warning, or fail completely
         return { data: null, error: ERRORS.USER_SETUP_FAILED };
-      }
-
-      // Update the user profile with the provided first and last name
-      const { error: profileUpdateError } = await db
-        .from('user_profile')
-        .update({
-          first_name: firstName,
-          last_name: lastName
-        })
-        .eq('user_id', userId);
-
-      if (profileUpdateError) {
-        errorLogger.log(ERRORS.USER_SETUP_FAILED, {
-          details: profileUpdateError,
-          userId,
-          email,
-          context: 'profile update'
-        });
-        // Profile update failed, but user and setup succeeded
-        // This is a minor issue, we can still return success
       }
 
       return {

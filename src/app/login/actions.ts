@@ -5,26 +5,46 @@ import { redirect } from 'next/navigation';
 
 import { clearQueryCache } from '@/lib/react-query';
 import { ROUTES } from '@/lib/routes';
+import { login as loginService } from '@/services/auth/login';
 import { createClient } from '@/utils/supabase/server';
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string
-  };
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  // Use the login service
+  const result = await loginService({
+    db: supabase,
+    email,
+    password
+  });
 
-  if (error) {
+  if (result.error) {
+    // For email confirmation errors, redirect to login with error state
+    if (result.error.name === 'email_not_confirmed') {
+      redirect(`/login?error=email_not_confirmed&email=${encodeURIComponent(email)}`);
+    }
+
+    // For other errors, redirect to error page
     redirect('/error');
   }
 
+  // Clear cache and redirect to app
   revalidatePath(ROUTES.APP, 'layout');
   redirect(ROUTES.APP);
+}
+
+export async function resendConfirmationEmail(email: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email: email
+  });
+
+  return { success: !error, error: error?.message };
 }
 
 export async function logout() {

@@ -852,16 +852,19 @@ export type Database = {
           created_at: string;
           email: string;
           id: number;
+          enabled: boolean;
         };
         Insert: {
           created_at?: string;
           email: string;
           id?: number;
+          enabled?: boolean;
         };
         Update: {
           created_at?: string;
           email?: string;
           id?: number;
+          enabled?: boolean;
         };
         Relationships: [];
       };

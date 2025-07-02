@@ -21,6 +21,8 @@ export const APP_SEGMENTS = {
   PEOPLE: 'people',
   BOOKMARKS: 'bookmarks',
   LOGIN: 'login',
+  CREATE_ACCOUNT: 'create-account',
+  VERIFY_EMAIL: 'verify-email',
   CONTEXT: 'context',
   SETTINGS: 'settings',
   ONBOARDING: 'onboarding',
@@ -58,7 +60,9 @@ export const routes = {
 
   // Auth routes
   auth: {
-    login: () => `/${APP_SEGMENTS.LOGIN}`
+    login: () => `/${APP_SEGMENTS.LOGIN}`,
+    createAccount: () => `/${APP_SEGMENTS.CREATE_ACCOUNT}`,
+    verifyEmail: () => `/${APP_SEGMENTS.VERIFY_EMAIL}`
   },
 
   // App routes
@@ -135,6 +139,8 @@ export const ROUTES = {
   APP: routes.app(),
   HOME: routes.home(),
   LOGIN: routes.auth.login(),
+  CREATE_ACCOUNT: routes.auth.createAccount(),
+  VERIFY_EMAIL: routes.auth.verifyEmail(),
   PERSON: routes.person.root(),
   GROUPS: routes.groups.root(),
   NETWORK: routes.network.root(),

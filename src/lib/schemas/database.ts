@@ -817,19 +817,22 @@ export const userProfileUpdateSchema = z.object({
 export const waitlistRowSchema = z.object({
   created_at: z.string(),
   email: z.string(),
-  id: z.number()
+  id: z.number(),
+  enabled: z.boolean()
 });
 
 export const waitlistInsertSchema = z.object({
   created_at: z.string().optional(),
   email: z.string(),
-  id: z.number().optional()
+  id: z.number().optional(),
+  enabled: z.boolean().optional()
 });
 
 export const waitlistUpdateSchema = z.object({
   created_at: z.string().optional(),
   email: z.string().optional(),
-  id: z.number().optional()
+  id: z.number().optional(),
+  enabled: z.boolean().optional()
 });
 
 export const websitesRowSchema = z.object({

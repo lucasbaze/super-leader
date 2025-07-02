@@ -77,6 +77,12 @@ export function LoginForm({ className, onSubmit }: LoginFormProps) {
               <a href='#' className='text-center text-sm underline-offset-2 hover:underline'>
                 Forgot your password?
               </a>
+              <div className='text-center text-sm'>
+                Need an account?{' '}
+                <Link href={ROUTES.CREATE_ACCOUNT} className='text-primary hover:underline'>
+                  Create Account
+                </Link>
+              </div>
             </div>
           </form>
         </CardContent>

@@ -54,6 +54,8 @@ export async function checkWaitlistAccess({
       .eq('email', email)
       .single();
 
+    console.log('waitlistEntry', waitlistEntry, dbError);
+
     if (dbError && dbError.code !== 'PGRST116') {
       // PGRST116 is "not found" - that's expected for emails not on waitlist
       errorLogger.log(ERRORS.DATABASE_ERROR, { details: dbError, email });

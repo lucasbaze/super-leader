@@ -157,9 +157,9 @@ export function LoginForm({
                 className='flex h-12 w-full items-center justify-center rounded-md bg-gradient-to-r from-primary to-blue-500 px-6 text-sm text-white hover:opacity-90 disabled:opacity-50'>
                 Login
               </button>
-              <a href='#' className='text-center text-sm underline-offset-2 hover:underline'>
+              <Link href={ROUTES.RESET_PASSWORD} className='text-center text-sm underline-offset-2 hover:underline'>
                 Forgot your password?
-              </a>
+              </Link>
               <div className='text-center text-sm'>
                 Need an account?{' '}
                 <Link href={ROUTES.CREATE_ACCOUNT} className='text-primary hover:underline'>

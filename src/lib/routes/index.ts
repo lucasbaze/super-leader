@@ -23,6 +23,8 @@ export const APP_SEGMENTS = {
   LOGIN: 'login',
   CREATE_ACCOUNT: 'create-account',
   VERIFY_EMAIL: 'verify-email',
+  RESET_PASSWORD: 'reset-password',
+  UPDATE_PASSWORD: 'update-password',
   CONTEXT: 'context',
   SETTINGS: 'settings',
   ONBOARDING: 'onboarding',
@@ -62,7 +64,9 @@ export const routes = {
   auth: {
     login: () => `/${APP_SEGMENTS.LOGIN}`,
     createAccount: () => `/${APP_SEGMENTS.CREATE_ACCOUNT}`,
-    verifyEmail: () => `/${APP_SEGMENTS.VERIFY_EMAIL}`
+    verifyEmail: () => `/${APP_SEGMENTS.VERIFY_EMAIL}`,
+    resetPassword: () => `/${APP_SEGMENTS.RESET_PASSWORD}`,
+    updatePassword: () => `/${APP_SEGMENTS.UPDATE_PASSWORD}`
   },
 
   // App routes
@@ -141,6 +145,8 @@ export const ROUTES = {
   LOGIN: routes.auth.login(),
   CREATE_ACCOUNT: routes.auth.createAccount(),
   VERIFY_EMAIL: routes.auth.verifyEmail(),
+  RESET_PASSWORD: routes.auth.resetPassword(),
+  UPDATE_PASSWORD: routes.auth.updatePassword(),
   PERSON: routes.person.root(),
   GROUPS: routes.groups.root(),
   NETWORK: routes.network.root(),

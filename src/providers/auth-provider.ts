@@ -10,6 +10,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
 
   useEffect(() => {
+    // Listen for auth changes
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      console.log('Auth event:', _event);
+      console.log('Session:', session);
+    });
+
     // Get initial session
     supabase.auth
       .getUser()
@@ -22,13 +31,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error fetching user:', error);
         setUser(null);
       });
-
-    // Listen for auth changes
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
 
     return () => {
       subscription.unsubscribe();

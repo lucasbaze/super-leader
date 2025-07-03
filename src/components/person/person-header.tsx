@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { GroupBadge } from '@/components/groups/group-badge';
 import { FollowUpIndicator } from '@/components/indicators/follow-up-indicator';
 import { UpdateFollowUpScoreButton } from '@/components/person/update-follow-up-score-button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { AvatarUpload } from '@/components/images/avatar-upload';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { routes } from '@/lib/routes';
 import type { PersonGroup } from '@/types/custom';
@@ -31,9 +31,20 @@ export function PersonHeader({ person, groups = [], segment, taskCount }: Person
     <div className='px-5'>
       <div className='mt-4 flex flex-col gap-1 pb-2'>
         <div className='flex items-center gap-3 pb-0'>
-          <Avatar className='size-8'>
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
+          <AvatarUpload
+            name={person?.first_name || ''}
+            imageUrl={person?.avatar_url || null}
+            className='size-8'
+            onUpload={async (file) => {
+              const formData = new FormData();
+              formData.append('file', file);
+              await fetch(`/api/person/${person?.id}/avatar`, {
+                method: 'POST',
+                body: formData
+              });
+              router.refresh();
+            }}
+          />
           <h1 className='text-lg font-medium'>
             {person?.first_name} {person?.last_name}
           </h1>

@@ -8,6 +8,10 @@ import { cn } from '@/lib/utils';
 
 const SETTINGS_SECTIONS = [
   {
+    title: 'Account',
+    href: routes.settings.account()
+  },
+  {
     title: 'Custom Fields',
     href: routes.settings.customFields()
   },

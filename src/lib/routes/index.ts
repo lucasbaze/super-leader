@@ -24,6 +24,7 @@ const PERSON_SEGMENTS = {
 } as const;
 
 const SETTINGS_SEGMENTS = {
+  ACCOUNT: 'account',
   CUSTOM_FIELDS: 'custom-fields',
   INTEGRATIONS: 'integrations',
   IMPORTS: 'imports'
@@ -84,6 +85,7 @@ export const routes = {
   // Settings routes
   settings: {
     root: () => `${BASE_PATH}/${APP_SEGMENTS.SETTINGS}`,
+    account: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.ACCOUNT}`,
     customFields: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.CUSTOM_FIELDS}`,
     integrations: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.INTEGRATIONS}`,
     imports: () => `${routes.settings.root()}/${SETTINGS_SEGMENTS.IMPORTS}`

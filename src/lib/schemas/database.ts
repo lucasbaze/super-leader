@@ -511,6 +511,7 @@ export const personRowSchema = z.object({
   id: z.string(),
   last_name: z.string().nullable(),
   linkedin_public_id: z.string().nullable(),
+  avatar_url: z.string().nullable(),
   title: z.string().nullable(),
   updated_at: z.string(),
   user_id: z.string()
@@ -528,6 +529,7 @@ export const personInsertSchema = z.object({
   id: z.string().optional(),
   last_name: z.string().optional().nullable(),
   linkedin_public_id: z.string().optional().nullable(),
+  avatar_url: z.string().optional().nullable(),
   title: z.string().optional().nullable(),
   updated_at: z.string().optional(),
   user_id: z.string()
@@ -545,6 +547,7 @@ export const personUpdateSchema = z.object({
   id: z.string().optional(),
   last_name: z.string().optional().nullable(),
   linkedin_public_id: z.string().optional().nullable(),
+  avatar_url: z.string().optional().nullable(),
   title: z.string().optional().nullable(),
   updated_at: z.string().optional(),
   user_id: z.string().optional()

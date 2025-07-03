@@ -2,10 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import { Eye, EyeOff } from '@/components/icons';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { ROUTES } from '@/lib/routes';
@@ -26,13 +25,25 @@ export function LoginForm({
   showUnknownError = false,
   emailForConfirmation = ''
 }: LoginFormProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsLoading(true);
+    try {
+      await onSubmit(formData);
+    } finally {
+      // Reset loading state after submission
+      // Note: This will only run if there's an error or if the submission doesn't redirect
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={cn('flex flex-col gap-6', className)}>
       <Card className='mx-auto w-[100%] max-w-md overflow-hidden border border-white/20 bg-white/95 shadow-xl backdrop-blur-sm'>
         <CardContent className='p-8'>
-          <form action={onSubmit}>
+          <form action={handleSubmit}>
             <div className='flex flex-col gap-6'>
               <div className='flex flex-col items-center text-center'>
                 <Link href={ROUTES.HOME} className='mb-6'>
@@ -113,8 +124,9 @@ export function LoginForm({
               </div>
               <button
                 type='submit'
+                disabled={isLoading}
                 className='flex h-12 w-full items-center justify-center rounded-md bg-gradient-to-r from-primary to-blue-500 px-6 text-sm text-white hover:opacity-90 disabled:opacity-50'>
-                Login
+                {isLoading ? 'Logging in...' : 'Login'}
               </button>
               <Link href={ROUTES.RESET_PASSWORD} className='text-center text-sm underline-offset-2 hover:underline'>
                 Forgot your password?

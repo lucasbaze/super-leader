@@ -21,6 +21,8 @@ describe('setupNewUser', () => {
         // Setup groups for the user
         const result = await setupNewUser({
           db,
+          firstName: 'Test',
+          lastName: 'User',
           userId: testUser.id
         });
 
@@ -41,7 +43,9 @@ describe('setupNewUser', () => {
       await withTestTransaction(supabase, async (db) => {
         const result = await setupNewUser({
           db,
-          userId: ''
+          userId: '',
+          firstName: 'Test',
+          lastName: 'User'
         });
 
         expect(result.error).toEqual(ERRORS.INVALID_USER);

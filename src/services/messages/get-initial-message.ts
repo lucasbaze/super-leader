@@ -1,10 +1,7 @@
 import { createError, errorLogger } from '@/lib/errors';
 import { RESERVED_GROUP_SLUGS } from '@/lib/groups/constants';
 import { APP_SEGMENTS } from '@/lib/routes';
-import {
-  CONVERSATION_OWNER_TYPES,
-  ConversationOwnerType
-} from '@/services/conversations/constants';
+import { CONVERSATION_OWNER_TYPES, ConversationOwnerType } from '@/services/conversations/constants';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
@@ -128,7 +125,7 @@ export async function getInitialMessages({
 
     if (ownerType === CONVERSATION_OWNER_TYPES.ROUTE) {
       // Handle other paths
-      if (APP_SEGMENTS.ROOT === ownerIdentifier) {
+      if (APP_SEGMENTS.APP === ownerIdentifier) {
         return { data: INITIAL_MESSAGES.home, error: null };
       }
       if (APP_SEGMENTS.PEOPLE === ownerIdentifier) {

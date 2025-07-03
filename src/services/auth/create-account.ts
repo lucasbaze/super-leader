@@ -6,6 +6,7 @@ import { ROUTES } from '@/lib/routes';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
+import { createClient } from '@/utils/supabase/server';
 
 import { setupNewUser } from '../user/setup-new-user';
 import { checkWaitlistAccess } from './check-waitlist-access';
@@ -105,13 +106,8 @@ export async function createAccount({
     // Create user in Supabase Auth
     const { data: authResult, error: authError } = await db.auth.signUp({
       email: email.toLowerCase(),
-      password,
-      options: {
-        emailRedirectTo: ROUTES.VERIFY_EMAIL
-      }
+      password
     });
-
-    console.log('authResult', authResult);
 
     if (authError) {
       // Check if it's a duplicate email error
@@ -131,7 +127,6 @@ export async function createAccount({
     const userId = authResult.user.id;
 
     try {
-      // Set up the user with default groups and profile
       const setupResult = await setupNewUser({ db, userId, firstName, lastName });
 
       if (setupResult.error) {

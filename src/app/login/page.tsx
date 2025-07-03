@@ -10,6 +10,8 @@ type LoginPageProps = {
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
   const showConfirmationError = params.error === 'email_not_confirmed';
+  const showUserNotFoundError = params.error === 'user_not_found';
+  const showUnknownError = params.error === 'unknown_error';
   const emailForConfirmation = params.email || '';
 
   // Client action wrapper for resend confirmation
@@ -31,7 +33,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           onSubmit={login}
           onResendConfirmation={handleResendConfirmation}
           showConfirmationError={showConfirmationError}
+          showUserNotFoundError={showUserNotFoundError}
           emailForConfirmation={emailForConfirmation}
+          showUnknownError={showUnknownError}
         />
       </div>
     </div>

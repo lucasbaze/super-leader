@@ -16,6 +16,8 @@ type LoginFormProps = {
   onSubmit: (formData: FormData) => Promise<void>;
   onResendConfirmation?: (email: string) => Promise<{ success: boolean; error?: string }>;
   showConfirmationError?: boolean;
+  showUserNotFoundError?: boolean;
+  showUnknownError?: boolean;
   emailForConfirmation?: string;
 };
 
@@ -24,6 +26,8 @@ export function LoginForm({
   onSubmit,
   onResendConfirmation,
   showConfirmationError = false,
+  showUserNotFoundError = false,
+  showUnknownError = false,
   emailForConfirmation = ''
 }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -56,6 +60,28 @@ export function LoginForm({
                 <h1 className='text-2xl font-bold'>Welcome Super Leader</h1>
                 <p className='text-balance text-muted-foreground'>Let's login to your super life</p>
               </div>
+
+              {showUnknownError && (
+                <div className='rounded-md border border-amber-200 bg-amber-50 p-4'>
+                  <div className='flex flex-col gap-3'>
+                    <div className='text-sm text-amber-800'>
+                      <strong>Unknown Error</strong>
+                      <p>Please check your email and password and try again.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {showUserNotFoundError && (
+                <div className='rounded-md border border-amber-200 bg-amber-50 p-4'>
+                  <div className='flex flex-col gap-3'>
+                    <div className='text-sm text-amber-800'>
+                      <strong>User Not Found</strong>
+                      <p>Please check your email and password and try again.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {showConfirmationError && (
                 <div className='rounded-md border border-amber-200 bg-amber-50 p-4'>

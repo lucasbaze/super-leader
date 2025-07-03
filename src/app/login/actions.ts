@@ -22,13 +22,17 @@ export async function login(formData: FormData) {
   });
 
   if (result.error) {
+    if (result.error.name === 'user_not_found') {
+      redirect(`/login?error=user_not_found&email=${encodeURIComponent(email)}`);
+    }
+
     // For email confirmation errors, redirect to login with error state
     if (result.error.name === 'email_not_confirmed') {
       redirect(`/login?error=email_not_confirmed&email=${encodeURIComponent(email)}`);
     }
 
     // For other errors, redirect to error page
-    redirect('/error');
+    redirect(`/login?error=unknown_error&email=${encodeURIComponent(email)}`);
   }
 
   // Clear cache and redirect to app

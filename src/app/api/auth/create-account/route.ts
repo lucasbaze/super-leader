@@ -4,7 +4,7 @@ import { apiResponse } from '@/lib/api-response';
 import { createError } from '@/lib/errors';
 import { createAccount, createAccountSchema } from '@/services/auth/create-account';
 import { ErrorType } from '@/types/errors';
-import { createClient } from '@/utils/supabase/server';
+import { createServiceRoleClient } from '@/utils/supabase/service-role';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, password, firstName, lastName } = validation.data;
-    const supabase = await createClient();
+    const supabase = await createServiceRoleClient();
 
     // Create the account
     const result = await createAccount({

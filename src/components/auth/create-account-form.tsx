@@ -149,7 +149,7 @@ export function CreateAccountForm({ className }: CreateAccountFormProps) {
           <Label htmlFor='email' className='text-sm font-medium'>
             Email
           </Label>
-          <Input
+          <input
             id='email'
             name='email'
             type='email'

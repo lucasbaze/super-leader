@@ -4,6 +4,7 @@ import { createError, errorLogger } from '@/lib/errors';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
+import { createClient } from '@/utils/supabase/server';
 
 // Request schema
 export const loginSchema = z.object({
@@ -32,6 +33,7 @@ export const ERRORS = {
     'Invalid login credentials',
     'Please check your email and password'
   ),
+  USER_NOT_FOUND: createError('user_not_found', ErrorType.UNAUTHORIZED, 'User not found', 'Invalid email or password'),
   LOGIN_FAILED: createError('login_failed', ErrorType.UNAUTHORIZED, 'Login failed', 'Invalid email or password'),
   EMAIL_NOT_CONFIRMED: createError(
     'email_not_confirmed',
@@ -68,12 +70,7 @@ export async function login({ db, email, password }: TLoginParams): Promise<Serv
     });
 
     if (authError || !authResult.user) {
-      // Check if it's an unconfirmed email error
-      if (authError?.message?.toLowerCase().includes('email not confirmed')) {
-        return { data: null, error: ERRORS.EMAIL_NOT_CONFIRMED };
-      }
-
-      return { data: null, error: ERRORS.LOGIN_FAILED };
+      return { data: null, error: ERRORS.USER_NOT_FOUND };
     }
 
     const user = authResult.user;
@@ -83,10 +80,13 @@ export async function login({ db, email, password }: TLoginParams): Promise<Serv
       return { data: null, error: ERRORS.EMAIL_NOT_CONFIRMED };
     }
 
-    // Check if user profile exists
-    const { data: userProfile, error: profileError } = await db
+    // Create a new server client to pick up the session that was just created
+    const authenticatedDb = await createClient();
+
+    // Check if user profile exists (now with authenticated session)
+    const { data: userProfile, error: profileError } = await authenticatedDb
       .from('user_profile')
-      .select('user_id, confirmed')
+      .select('user_id')
       .eq('user_id', user.id)
       .single();
 

@@ -51,7 +51,7 @@ export async function checkWaitlistAccess({
     const { data: waitlistEntry, error: dbError } = await db
       .from('waitlist')
       .select('id, email, enabled')
-      .eq('email', email.toLowerCase())
+      .eq('email', email)
       .single();
 
     if (dbError && dbError.code !== 'PGRST116') {

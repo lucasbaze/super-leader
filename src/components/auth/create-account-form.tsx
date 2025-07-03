@@ -1,7 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 import { Eye, EyeOff } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import { cn } from '@/lib/utils';
 
 type CreateAccountFormProps = {
   className?: string;
+  onResendConfirmation: (email: string) => Promise<{ success: boolean; error?: string }>;
 };
 
 type FormStep = 'email' | 'password' | 'verify';
@@ -26,8 +28,11 @@ type FormData = {
   lastName: string;
 };
 
-export function CreateAccountForm({ className }: CreateAccountFormProps) {
+export function CreateAccountForm({ className, onResendConfirmation }: CreateAccountFormProps) {
   const [step, setStep] = useState<FormStep>('email');
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [resendError, setResendError] = useState('');
+  const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -77,6 +82,21 @@ export function CreateAccountForm({ className }: CreateAccountFormProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!onResendConfirmation || !formData.email) return;
+
+    startTransition(async () => {
+      const result = await onResendConfirmation(formData.email);
+      if (result.success) {
+        setResendSuccess(true);
+        setResendError('');
+      } else {
+        setResendError(result.error || 'Failed to resend confirmation email');
+        setResendSuccess(false);
+      }
+    });
   };
 
   const handlePasswordChange = (password: string) => {
@@ -142,6 +162,9 @@ export function CreateAccountForm({ className }: CreateAccountFormProps) {
     <form onSubmit={handleEmailSubmit}>
       <div className='flex flex-col gap-6'>
         <div className='flex flex-col items-center text-center'>
+          <Link href={ROUTES.HOME} className='mb-6'>
+            <Image src='/images/horizontal-logo.png' alt='Superleader' width={180} height={40} className='size-auto' />
+          </Link>
           <h1 className='text-2xl font-bold'>Create Your Account</h1>
           <p className='text-balance text-muted-foreground'>Let's get started with your super life</p>
         </div>
@@ -351,7 +374,19 @@ export function CreateAccountForm({ className }: CreateAccountFormProps) {
       </div>
 
       <div className='text-center text-sm text-gray-600'>
-        Didn't receive the email? Check your spam folder or contact support.
+        Didn't receive the email? Check your spam folder or{' '}
+        <button
+          type='button'
+          onClick={handleResendConfirmation}
+          disabled={isPending}
+          className='hover:text-primary/80 text-primary underline disabled:opacity-50'>
+          {isPending ? 'sending...' : 'resend confirmation email'}
+        </button>
+      </div>
+
+      <div className='flex flex-col gap-2'>
+        {resendSuccess && <p className='text-xs text-green-600'>Confirmation email sent! Please check your inbox.</p>}
+        {resendError && <p className='text-xs text-red-600'>{resendError}</p>}
       </div>
 
       <Link

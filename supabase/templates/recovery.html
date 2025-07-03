@@ -1,0 +1,68 @@
+<div style="background: #f5f8fa; min-height: 100vh; padding: 0; margin: 0">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif">
+    <tr>
+      <td align="center">
+        <table
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          style="
+            max-width: 430px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+          ">
+          <tr>
+            <td align="center" style="padding: 40px 40px 20px 40px">
+              <img
+                src="https://superleader.ai/icon.png"
+                width="48"
+                height="48"
+                alt="Superleader Logo"
+                style="margin-bottom: 18px" />
+              <h2 style="color: #346df1; font-size: 1.5rem; font-weight: 700; margin: 0 0 8px 0">
+                Reset Your Password
+              </h2>
+              <p style="font-size: 1rem; color: #444; margin: 0 0 20px 0">
+                Click the button below to reset your password:
+              </p>
+              <a
+                href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&redirectUrl={{ .RedirectTo }}"
+                style="
+                  display: inline-block;
+                  background: linear-gradient(90deg, #4a90e2, #346df1);
+                  color: #fff;
+                  text-decoration: none;
+                  font-weight: bold;
+                  padding: 14px 32px;
+                  border-radius: 8px;
+                  font-size: 1rem;
+                  margin: 12px 0 24px 0;
+                  box-shadow: 0 2px 8px rgba(52, 109, 241, 0.07);
+                  transition: background 0.3s;
+                "
+                target="_blank">
+                Reset Password
+              </a>
+              <p style="font-size: 0.95rem; color: #888; margin: 24px 0 0 0">
+                If you didn’t request this, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding: 16px 40px 36px 40px">
+              <hr style="border: none; border-top: 1px solid #eee; margin: 18px 0 18px 0" />
+              <p style="font-size: 0.85rem; color: #bbb">
+                &copy; {{year}} Superleader. All rights reserved.<br />
+                <a href="https://superleader.ai" style="color: #346df1; text-decoration: underline">superleader.ai</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>

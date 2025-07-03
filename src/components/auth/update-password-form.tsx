@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { getPasswordRequirementsList, validatePassword } from '@/lib/auth/password-validation';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
-import { supabasePKCE } from '@/utils/supabase/pkce';
+import { createClient } from '@/utils/supabase/client';
 
 type UpdatePasswordFormProps = {
   className?: string;
@@ -55,10 +55,10 @@ export function UpdatePasswordForm({ className }: UpdatePasswordFormProps) {
     }
 
     try {
-      const response = await supabasePKCE.auth.updateUser({
+      const supabase = createClient();
+      const response = await supabase.auth.updateUser({
         password
       });
-      console.log('response', response);
 
       if (!response.data.user) {
         setError(response.error?.message || 'Unable to update password');

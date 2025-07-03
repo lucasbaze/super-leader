@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -53,6 +54,9 @@ export function ResetPasswordForm({ className }: ResetPasswordFormProps) {
     <form onSubmit={handleSubmit}>
       <div className='flex flex-col gap-6'>
         <div className='flex flex-col items-center text-center'>
+          <Link href={ROUTES.HOME} className='mb-6'>
+            <Image src='/images/horizontal-logo.png' alt='Superleader' width={180} height={40} className='size-auto' />
+          </Link>
           <h1 className='text-2xl font-bold'>Reset Your Password</h1>
           <p className='text-balance text-muted-foreground'>
             Enter your email address and we'll send you a link to reset your password

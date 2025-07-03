@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Toaster } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
+import { AuthProvider } from '@/providers/auth-provider';
 import { QueryProvider } from '@/providers/query-provider';
 
 import './globals.css';
@@ -23,13 +24,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={cn('min-h-screen bg-background font-sans antialiased', inter.className)}
         style={{ backgroundColor: '#EEEEEE' }}>
-        <ThemeProvider>
-          <QueryProvider>
-            {children}
-            <ReactQueryDevtools initialIsOpen={true} />
-          </QueryProvider>
-          <Toaster />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <QueryProvider>
+              {children}
+              <ReactQueryDevtools initialIsOpen={true} />
+            </QueryProvider>
+            <Toaster />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

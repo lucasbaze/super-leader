@@ -3,10 +3,10 @@ import { z } from 'zod';
 import { passwordSchema } from '@/lib/auth/password-validation';
 import { createError, errorLogger } from '@/lib/errors';
 import { ROUTES } from '@/lib/routes';
+import { absoluteUrl } from '@/lib/utils/absolute-url';
 import { DBClient } from '@/types/database';
 import { ErrorType } from '@/types/errors';
 import { ServiceResponse } from '@/types/service-response';
-import { createClient } from '@/utils/supabase/server';
 
 import { setupNewUser } from '../user/setup-new-user';
 import { checkWaitlistAccess } from './check-waitlist-access';
@@ -106,7 +106,10 @@ export async function createAccount({
     // Create user in Supabase Auth
     const { data: authResult, error: authError } = await db.auth.signUp({
       email: email.toLowerCase(),
-      password
+      password,
+      options: {
+        emailRedirectTo: absoluteUrl(ROUTES.APP)
+      }
     });
 
     if (authError) {

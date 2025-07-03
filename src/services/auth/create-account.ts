@@ -108,7 +108,7 @@ export async function createAccount({
       email: email.toLowerCase(),
       password,
       options: {
-        emailRedirectTo: absoluteUrl(ROUTES.APP)
+        emailRedirectTo: absoluteUrl(ROUTES.LOGIN)
       }
     });
 

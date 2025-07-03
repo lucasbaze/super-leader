@@ -18,17 +18,15 @@
           <tr>
             <td align="center" style="padding: 40px 40px 20px 40px">
               <img
-                src="https://superleader.ai/images/icon.png"
-                width="48"
-                height="48"
+                src="https://superleader.ai/images/horizontal-logo.png"
                 alt="Superleader Logo"
-                style="margin-bottom: 18px" />
+                style="height: 48px; max-width: 200px; width: auto; margin-bottom: 18px; display: block" />
               <h2 style="color: #346df1; font-size: 1.5rem; font-weight: 700; margin: 0 0 8px 0">Confirm your email</h2>
               <p style="font-size: 1rem; color: #444; margin: 0 0 20px 0">
                 Click the button below to verify your email and complete your sign up:
               </p>
               <a
-                href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&redirectUrl={{ .RedirectTo }}"
+                href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&redirectUrl={{ .RedirectTo }}/login"
                 style="
                   display: inline-block;
                   background: linear-gradient(90deg, #4a90e2, #346df1);
@@ -54,7 +52,7 @@
             <td align="center" style="padding: 16px 40px 36px 40px">
               <hr style="border: none; border-top: 1px solid #eee; margin: 18px 0 18px 0" />
               <p style="font-size: 0.85rem; color: #bbb">
-                &copy; {{year}} Superleader. All rights reserved.<br />
+                &copy; 2025 Superleader. All rights reserved.<br />
                 <a href="https://superleader.ai" style="color: #346df1; text-decoration: underline">superleader.ai</a>
               </p>
             </td>

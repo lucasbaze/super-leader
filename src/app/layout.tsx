@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   description: 'Your strategic relationship manager',
   manifest: '/manifest.json',
   icons: {
-    icon: '/images/icon.png',
-    apple: '/images/icon.png'
+    icon: '/images/mobile-icon.png',
+    apple: '/images/mobile-icon.png'
   },
   themeColor: '#ffffff'
 };

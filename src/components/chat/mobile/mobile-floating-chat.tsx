@@ -90,18 +90,18 @@ export function MobileFloatingChat() {
 
       {/* Floating Chat Input Bar */}
       {!isExpanded && (
-        <div className='fixed bottom-4 left-4 right-4 z-50 md:hidden'>
+        <div className='fixed inset-x-4 bottom-4 z-50 md:hidden'>
           <div
             onClick={toggleExpanded}
             className={cn(
-              'flex items-center gap-3 rounded-lg border bg-background p-4 shadow-lg transition-all duration-200',
+              'flex items-center gap-3 rounded-xl border bg-background p-4 shadow-lg transition-all duration-200',
               'cursor-pointer hover:shadow-xl',
               hasNewMessages && 'animate-pulse'
             )}>
-            <MessageCircle className='h-5 w-5 text-muted-foreground' />
+            <MessageCircle className='size-5 text-muted-foreground' />
             <span className='flex-1 text-sm text-muted-foreground'>Send a message...</span>
-            <div className='flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-r from-primary to-blue-500'>
-              <SendHorizontal className='h-4 w-4 text-white' />
+            <div className='flex size-8 items-center justify-center rounded-sm bg-gradient-to-r from-primary to-blue-500'>
+              <SendHorizontal className='size-4 text-white' />
             </div>
           </div>
         </div>
@@ -115,8 +115,8 @@ export function MobileFloatingChat() {
           {/* Header with close button */}
           <div className='flex items-center justify-between border-b p-4'>
             <h2 className='text-lg font-semibold'>Chat Assistant</h2>
-            <Button variant='ghost' size='icon' onClick={closeChat} className='h-8 w-8'>
-              <X className='h-4 w-4' />
+            <Button variant='ghost' size='icon' onClick={closeChat} className='size-8'>
+              <X className='size-4' />
             </Button>
           </div>
 

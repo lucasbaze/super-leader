@@ -5,6 +5,7 @@ import { MainChat } from '@/components/chat/main/main-chat';
 import { MainContentLayout } from '@/components/layout/main-content-layout';
 import { MainContentWrapper } from '@/components/layout/main-content-wrapper';
 import { MobileResponsiveLayout } from '@/components/layout/mobile-responsive-layout';
+import { SidebarRouteListener } from '@/components/layout/sidebar-route-listener';
 import { GlobalSearch } from '@/components/search/global-search';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 // import { ThemeToggle } from '@/components/theme/theme-toggle';
@@ -35,6 +36,7 @@ export default async function Page({ children }: { children: React.ReactNode }) 
 
   return (
     <SidebarProvider>
+      <SidebarRouteListener />
       <AppSidebar user={data.user} />
       <main className='flex flex-1 flex-col pr-2'>
         <MobileResponsiveLayout

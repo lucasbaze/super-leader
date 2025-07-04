@@ -15,7 +15,13 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Superleader',
-  description: 'Your strategic relationship manager'
+  description: 'Your strategic relationship manager',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/images/icon.png',
+    apple: '/images/icon.png'
+  },
+  themeColor: '#ffffff'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

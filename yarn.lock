@@ -5189,6 +5189,11 @@
   dependencies:
     minimatch "*"
 
+"@types/minimatch@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.0.tgz#a8b68c324817169b6004b432a598478a5d8f025a"
+  integrity sha512-BnRgLPs1oy9gV8b4dAW8jilIa7Kpe3uNucAvv4RkY7Yt6rj9E6Kk4Qa/18LOSinA+XDBPdzx3MqYPEP5mw8rDA==
+
 "@types/ms@*":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-2.1.0.tgz#052aa67a48eccc4309d7f0191b7e41434b90bb78"
